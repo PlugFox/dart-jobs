@@ -1,0 +1,140 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+// https://medium.com/@danieln.llewellyn/flutter-github-actions-for-a-signed-apk-fcdf9878f660
+// https://habr.com/ru/post/506700/
+def release_store_password
+def release_key_password
+def release_key_alias
+def keystore_file = rootProject.file("keystore.properties")
+
+Properties keystoreProperties = new Properties()
+
+if (keystore_file.exists()) {
+    keystoreProperties.load(new FileInputStream(keystore_file))
+    release_store_password = keystoreProperties.getProperty("STORE_PASS")
+    release_key_password = keystoreProperties.getProperty("KEY_PASS")
+    release_key_alias = keystoreProperties.getProperty("KEY_ALIAS")
+} else {
+    release_store_password = System.env.STORE_PASS
+    release_key_password = System.env.KEY_PASS
+    release_key_alias = System.env.KEY_ALIAS
+}
+
+
+android {
+    signingConfigs {
+        release {
+            storeFile file("../keystore.jks")
+            storePassword release_store_password
+            keyAlias release_key_alias
+            keyPassword release_key_password
+        }
+
+        debug {
+            storeFile file("${System.getProperty("user.home")}/.android/debug.keystore.jks")
+        }
+    }
+
+    compileSdkVersion 30
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "dev.plugfox.dart_jobs"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
+            aaptOptions {
+                ignoreAssetsPattern 'app-debug.apk'
+            }
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            aaptOptions {
+                ignoreAssetsPattern 'app-debug.apk'
+            }
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Multidex support
+    // https://developer.android.com/studio/build/multidex
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+    // If you aren't using AndroidX, add the following deprecated
+    // support library dependency instead:
+    //implementation 'com.android.support:multidex:1.0.3'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:28.3.1')
+
+    // Add the dependency for the Firebase SDK
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    //implementation 'com.google.firebase:firebase-functions-ktx'
+    //implementation 'com.google.firebase:firebase-messaging-ktx'
+    //implementation 'com.google.firebase:firebase-storage-ktx'
+    //implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    //implementation 'com.google.firebase:firebase-database-ktx'
+    //implementation 'com.google.firebase:firebase-config-ktx'
+}

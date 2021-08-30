@@ -1,0 +1,7 @@
+{
+  "@@locale": "ru",
+  "title": "DART JOBS",
+  "@title": {
+    "description": "Заголовок приложения"
+  }
+}

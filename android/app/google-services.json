@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "174403318860",
+    "project_id": "dart-job",
+    "storage_bucket": "dart-job.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174403318860:android:d9554625313e2f288230e9",
+        "android_client_info": {
+          "package_name": "dev.plugfox.dart_jobs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174403318860-8febsjk05jafs4u5ru5te1ilu7aiiv1b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dart_jobs",
+            "certificate_hash": "45e1c39af86039dfd430661f64c0f5348e731d4b"
+          }
+        },
+        {
+          "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE8gu9EAmneynKOrubIZAr3sLJRRYpNNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
