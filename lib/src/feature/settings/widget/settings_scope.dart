@@ -123,7 +123,7 @@ class _InheritedSettings extends InheritedModel<String> {
       : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()!.widget as _InheritedSettings);
 
   static UserSettings aspectOf(BuildContext context, String aspect) =>
-      InheritedModel.inheritFrom<_InheritedSettings>(context, aspect: aspect)!.settings;
+      InheritedModel.inheritFrom<_InheritedSettings>(context, aspect: aspect)?.settings ?? UserSettings.initial;
 
   static _SettingsScopeState stateOf(BuildContext context) => of(context, listen: false).state;
 }

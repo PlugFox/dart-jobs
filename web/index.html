@@ -16,10 +16,18 @@
   -->
   <base href="$FLUTTER_BASE_HREF">
 
+  <!--TITLE-->
+  <title>Foxy</title>
+
+  <!--META-->
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="keywords" content="foxy, project, odometer, car, vehicle, transport, fox, plague, plugfox, flutter, dart, pwa, progressive, web, app">
   <meta name="description" content="Dart Jobs">
+  <meta name="author" content="@plugfox">
 
+  <!-- Favicon -->
+  <!-- Favicon Generator. For real. https://realfavicongenerator.net -->
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -27,7 +35,74 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <title>dart_jobs</title>
+
+  <!-- Manifest -->
   <link rel="manifest" href="manifest.json">
+
+  <!-- STYLE -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFF;
+      overflow: hidden;
+    }
+    .noscript-center {
+      position: absolute;
+      text-align: center;
+      margin: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3vw;
+    }
+  </style>
+
+  <!-- SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+  <!--
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-performance.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-remote-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-functions.js"></script>
+  -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBst2CWEUfNuaHh9OA3XW3JdZ3vpLGPMcg",
+      authDomain: "dart-job.firebaseapp.com",
+      projectId: "dart-job",
+      storageBucket: "dart-job.appspot.com",
+      messagingSenderId: "174403318860",
+      appId: "1:174403318860:web:d8f54a5b305667d08230e9",
+      measurementId: "G-BYS0GKHDNS"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Analytics
+    firebase.analytics.isSupported().then((isSupported) => {
+        if (isSupported) {
+          firebase.analytics();
+        } else {
+          console.warn("Analytics is not supported");
+        }
+      });
+
+    //console.log(firebase.app().name);
+    //var defaultStorage = firebase.storage();
+    //var defaultFirestore = firebase.firestore();
+  </script>
 </head>
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to

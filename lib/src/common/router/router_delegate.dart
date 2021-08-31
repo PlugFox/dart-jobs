@@ -2,8 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../feature/home/widget/home_page.dart';
+import '../../feature/feed/widget/feed_page.dart';
 import 'configuration.dart';
+import 'root_route.dart';
 
 class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNotifier {
   AppRouterDelegate({required final AppConfiguration initialConfiguration})
@@ -15,17 +16,10 @@ class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNoti
   @override
   Widget build(BuildContext context) => Navigator(
         key: _navigatorKey,
-        //transitionDelegate: NoAnimationTransitionDelegate(),
+        transitionDelegate: const DefaultTransitionDelegate<Object?>(),
         pages: const <Page<Object?>>[
-          HomePage(),
+          FeedPage(),
           /*
-          MaterialPage(
-            key: ValueKey('BooksListPage'),
-            child: BooksListScreen(
-              books: books,
-              onTapped: _handleBookTapped,
-            ),
-          ),
           if (_selectedBook != null) BookDetailsPage(book: _selectedBook)
           */
         ],
@@ -34,11 +28,9 @@ class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNoti
           if (!route.didPop(result)) {
             return false;
           }
-
           // Update the list of pages by setting _selectedBook to null
           //_selectedBook = null;
           notifyListeners();
-
           return true;
         },
       );
@@ -71,7 +63,6 @@ class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNoti
   }
 }
 
-/*
 class NoAnimationTransitionDelegate extends TransitionDelegate<void> {
   @override
   Iterable<RouteTransitionRecord> resolve({
@@ -101,4 +92,3 @@ class NoAnimationTransitionDelegate extends TransitionDelegate<void> {
     }
   }
 }
-*/
