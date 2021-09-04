@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
+import '../../job/model/job.dart';
 import '../bloc/feed_bloc.dart';
-import '../model/job.dart';
 import 'feed_tile.dart';
 
 @immutable

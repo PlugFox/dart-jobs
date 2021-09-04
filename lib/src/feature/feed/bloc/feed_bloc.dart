@@ -5,7 +5,7 @@ import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
-import '../model/job.dart';
+import '../../job/model/job.dart';
 import '../model/proposal.dart';
 
 part 'feed_bloc.freezed.dart';

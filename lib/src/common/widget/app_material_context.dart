@@ -7,6 +7,7 @@ import '../../feature/settings/widget/settings_scope.dart';
 import '../localization/localizations.dart';
 import '../router/configuration.dart';
 import '../router/route_information_parser.dart';
+import '../router/route_information_provider.dart';
 import '../router/router_delegate.dart';
 
 @immutable
@@ -24,8 +25,13 @@ class AppMaterialContext extends StatefulWidget {
 }
 
 class _AppMaterialContextState extends State<AppMaterialContext> {
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(initialConfiguration: AppConfiguration());
+  final AppRouterDelegate _routerDelegate = AppRouterDelegate(
+    initialConfiguration: FeedRouteConfiguration(),
+  );
   final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
+  final AppRouteInformationProvider _routeInformationProvider = AppRouteInformationProvider(
+    initialRouteInformation: const RouteInformation(),
+  );
 
   @override
   void initState() {
@@ -36,6 +42,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
 
   @override
   void dispose() {
+    _routeInformationProvider.dispose();
     _routerDelegate.dispose();
     super.dispose();
   }
@@ -50,6 +57,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
       onGenerateTitle: (context) => context.localization.title,
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
+      routeInformationProvider: _routeInformationProvider,
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         for (final locale in supportedLocales) {
           if (locale.languageCode == currentLocale.languageCode) {

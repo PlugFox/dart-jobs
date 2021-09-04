@@ -5,7 +5,11 @@ import 'package:platform_info/platform_info.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../common/constant/layout_constraints.dart';
-import '../../feed/model/job.dart';
+import '../../../common/router/app_router.dart';
+import '../../../common/router/configuration.dart';
+import '../../job/model/job.dart';
+
+typedef FeedTileOnPressed = void Function(BuildContext context);
 
 @immutable
 abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
@@ -23,7 +27,7 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
   final Widget subtitle;
   final Widget location;
   final Widget salary;
-  final VoidCallback? onPressed;
+  final FeedTileOnPressed? onPressed;
 
   const FeedTile._({
     required final this.title,
@@ -46,7 +50,8 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final enabled = onPressed != null;
+    final callback = onPressed;
+    final enabled = callback != null;
     return Center(
       child: SizedBox.fromSize(
         size: _preferredSize,
@@ -57,7 +62,7 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
           ),
           elevation: 1,
           child: InkWell(
-            onTap: onPressed,
+            onTap: callback == null ? null : () => callback(context),
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -98,7 +103,7 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
+                        children: const <Widget>[
                           Spacer(flex: 1),
                           Icon(
                             Icons.add,
@@ -135,11 +140,14 @@ class _JobFeedTile extends FeedTile {
     required final this.job,
     Key? key,
   }) : super._(
-          title: _ShimmerTitle(text: 'Title (Job name, Developer name)'),
-          subtitle: _ShimmerText(text: 'Subtitle (Company, Developer occupation)'),
-          location: _ShimmerText(text: 'Location'),
-          salary: _ShimmerText(text: 'Salary'),
-          onPressed: () {},
+          title: const _ShimmerTitle(text: 'Title (Job name, Developer name)'),
+          subtitle: const _ShimmerText(text: 'Subtitle (Company, Developer occupation)'),
+          location: const _ShimmerText(text: 'Location'),
+          salary: const _ShimmerText(text: 'Salary'),
+          onPressed: (context) => AppRouter.navigate(
+            context,
+            (configuration) => JobRouteConfiguration(id: job.id),
+          ),
           key: key,
         );
 }

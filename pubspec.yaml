@@ -84,6 +84,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/image/dart_logo/
 
 # Flutter assets codegen
 flutter_gen:

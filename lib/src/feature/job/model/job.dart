@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 import '../../../common/utils/date_util.dart';
-import 'proposal.dart';
+import '../../feed/model/proposal.dart';
 
 part 'job.g.dart';
 

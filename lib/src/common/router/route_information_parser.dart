@@ -1,26 +1,40 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'configuration.dart';
 
-class AppRouteInformationParser implements RouteInformationParser<AppConfiguration> {
+class AppRouteInformationParser implements RouteInformationParser<RouteConfiguration> {
   @override
-  Future<AppConfiguration> parseRouteInformation(RouteInformation routeInformation) async {
-    final location = routeInformation.location;
-    //final uri = Uri.parse(location);
-    return AppConfiguration();
+  Future<RouteConfiguration> parseRouteInformation(RouteInformation routeInformation) {
+    final location = routeInformation.location ?? '/';
+    final uri = Uri.parse(location);
+    final path = uri.pathSegments;
+    switch (path.firstOrNull) {
+      case 'profile':
+        return SynchronousFuture<RouteConfiguration>(ProfileRouteConfiguration());
+      case 'settings':
+        return SynchronousFuture<RouteConfiguration>(SettingsRouteConfiguration());
+      case 'job':
+        final id = path.length > 1 ? path[1] : '';
+        if (id.isEmpty) break;
+        return SynchronousFuture<RouteConfiguration>(
+          JobRouteConfiguration(id: id),
+        );
+      case '':
+      case '/':
+      case 'feed':
+      case null:
+      default:
+        break;
+    }
+    return SynchronousFuture<RouteConfiguration>(FeedRouteConfiguration());
   }
 
   @override
-  RouteInformation? restoreRouteInformation(AppConfiguration path) {
-    //if (path.isHomePage) {
-    //  return RouteInformation(location: '/');
-    //}
-    //if (path.isDetailsPage) {
-    //  return RouteInformation(location: '/book/${path.id}');
-    //}
-    if (DateTime.now().isUtc) {
-      return const RouteInformation(location: '/');
-    }
-    return null;
+  RouteInformation? restoreRouteInformation(RouteConfiguration configuration) {
+    final uri = configuration.toUri();
+    final location = uri.toString();
+    return RouteInformation(location: location);
   }
 }
