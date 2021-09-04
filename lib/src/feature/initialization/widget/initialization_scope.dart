@@ -50,7 +50,8 @@ class _InitializationScopeState extends State<InitializationScope> {
   void initState() {
     super.initState();
     final _initializationHelper = InitializationHelper();
-    _bloc = InitializationBLoC(initializationHelper: _initializationHelper);
+    _bloc = InitializationBLoC(initializationHelper: _initializationHelper)
+      ..add(const InitializationEvent.initialize());
   }
 
   @override
@@ -70,7 +71,7 @@ class _InitializationScopeState extends State<InitializationScope> {
       builder: (context, state) => _InheritedInitialization(
         state: this,
         bloc: bloc,
-        child: state.maybeWhen(
+        child: state.maybeWhen<Widget>(
           orElse: () => widget.initializationScreen,
           initialized: (_) => widget.child,
         ),

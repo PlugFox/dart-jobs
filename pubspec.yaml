@@ -54,6 +54,10 @@ dependencies:
   sign_button: ^2.0.0 # Кнопки аутентификации
   google_sign_in: ^5.0.3
 
+  # UI & Widgets
+  shimmer: ^2.0.0
+  #google_fonts: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -80,6 +84,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/image/dart_logo/
 
 # Flutter assets codegen
 flutter_gen:

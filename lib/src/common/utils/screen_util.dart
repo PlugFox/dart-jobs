@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart' show Orientation;
 import 'package:meta/meta.dart';
 
@@ -20,6 +21,25 @@ abstract class ScreenUtil {
   static ScreenSize screenSize() {
     final window = ui.window;
     final size = window.physicalSize ~/ window.devicePixelRatio;
+    return _screenSizeFromSize(size);
+  }
+
+  /// Get current screen logical size representation
+  ///
+  /// extra small - ~320..599 dp, 4 column (phone)
+  /// small - 600..1023 dp, 8 column (tablet)
+  /// medium - 1024..1439 dp, 12 column (large tablet)
+  /// large - 1440..1919 dp, 12 column
+  /// extra large - 1920+ dp, 12 column
+  ///
+  /// [Breakpoints](https://material.io/design/layout/responsive-layout-grid.html#breakpoints)
+  ///
+  static ScreenSize screenSizeOf(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return _screenSizeFromSize(size);
+  }
+
+  static ScreenSize _screenSizeFromSize(Size size) {
     if (size.width <= ScreenSize.extraSmall.max) {
       return ScreenSize.extraSmall;
     } else if (size.width <= ScreenSize.small.max) {
@@ -67,7 +87,7 @@ class ScreenSize {
   String toString() => '<ScreenSize $representation $min..$max>';
 
   // ignore: long-parameter-list
-  ScreenSizeWhenResult when<ScreenSizeWhenResult>({
+  ScreenSizeWhenResult when<ScreenSizeWhenResult extends Object?>({
     required final ScreenSizeWhenResult Function() extraSmall,
     required final ScreenSizeWhenResult Function() small,
     required final ScreenSizeWhenResult Function() medium,
@@ -88,6 +108,29 @@ class ScreenSize {
         return extraLarge();
     }
   }
+
+  /// The [maybeWhen] method is equivalent to [when],
+  /// but doesn't require all callbacks to be specified.
+  ///
+  /// On the other hand, it adds an extra [orElse] required parameter,
+  /// for fallback behavior.
+  ///
+  //ignore: long-parameter-list
+  ScreenSizeWhenResult maybeWhen<ScreenSizeWhenResult extends Object?>({
+    required final ScreenSizeWhenResult Function() orElse,
+    final ScreenSizeWhenResult Function()? extraSmall,
+    final ScreenSizeWhenResult Function()? small,
+    final ScreenSizeWhenResult Function()? medium,
+    final ScreenSizeWhenResult Function()? large,
+    final ScreenSizeWhenResult Function()? extraLarge,
+  }) =>
+      when<ScreenSizeWhenResult>(
+        extraSmall: extraSmall ?? orElse,
+        small: small ?? orElse,
+        medium: medium ?? orElse,
+        large: large ?? orElse,
+        extraLarge: extraLarge ?? orElse,
+      );
 
   @override
   int get hashCode => representation.hashCode;

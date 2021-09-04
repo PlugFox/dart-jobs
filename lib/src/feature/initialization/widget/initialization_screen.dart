@@ -28,33 +28,36 @@ class _InitializationScreenState extends State<InitializationScreen> {
   //endregion
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Center(
-          child: StreamBuilder<InitializationState>(
-            initialData: const InitializationState.notInitialized(),
-            stream: _stream,
-            builder: (context, snapshot) =>
-                snapshot.data?.map<Widget>(
-                  initialized: (_) => const InitializationProgressWidget(
+  Widget build(BuildContext context) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Center(
+            child: StreamBuilder<InitializationState>(
+              initialData: const InitializationState.notInitialized(),
+              stream: _stream,
+              builder: (context, snapshot) =>
+                  snapshot.data?.map<Widget>(
+                    initialized: (_) => const InitializationProgressWidget(
+                      progress: 0,
+                      message: 'Initialized',
+                    ),
+                    notInitialized: (_) => const InitializationProgressWidget(
+                      progress: 0,
+                      message: 'Not initialized',
+                    ),
+                    initializationInProgress: (state) => InitializationProgressWidget(
+                      message: state.message,
+                      progress: state.progress,
+                    ),
+                  ) ??
+                  const InitializationProgressWidget(
                     progress: 0,
-                    message: 'Initialized',
+                    message: 'Initialization error',
                   ),
-                  notInitialized: (_) => const InitializationProgressWidget(
-                    progress: 0,
-                    message: 'Not initialized',
-                  ),
-                  initializationInProgress: (state) => InitializationProgressWidget(
-                    message: state.message,
-                    progress: state.progress,
-                  ),
-                ) ??
-                const InitializationProgressWidget(
-                  progress: 0,
-                  message: 'Initialization error',
-                ),
+            ),
           ),
         ),
       );

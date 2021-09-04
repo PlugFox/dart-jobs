@@ -2,66 +2,63 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../feature/home/widget/home_page.dart';
+import '../../feature/authentication/widget/profile_page.dart';
+import '../../feature/feed/widget/feed_page.dart';
+import '../../feature/job/widget/job_page.dart';
+import '../../feature/settings/widget/settings_page.dart';
 import 'configuration.dart';
+import 'root_route.dart';
 
-class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNotifier {
-  AppRouterDelegate({required final AppConfiguration initialConfiguration})
-      : _currentConfiguration = initialConfiguration,
+class AppRouterDelegate extends RouterDelegate<RouteConfiguration> with ChangeNotifier {
+  AppRouterDelegate({
+    required final RouteConfiguration initialConfiguration,
+  })  : _currentConfiguration = initialConfiguration,
         _navigatorKey = GlobalKey<NavigatorState>();
 
   final GlobalKey<NavigatorState> _navigatorKey;
 
   @override
-  Widget build(BuildContext context) => Navigator(
-        key: _navigatorKey,
-        //transitionDelegate: NoAnimationTransitionDelegate(),
-        pages: const <Page<Object?>>[
-          HomePage(),
-          /*
-          MaterialPage(
-            key: ValueKey('BooksListPage'),
-            child: BooksListScreen(
-              books: books,
-              onTapped: _handleBookTapped,
-            ),
-          ),
+  Widget build(BuildContext context) {
+    final conf = currentConfiguration;
+    return Navigator(
+      key: _navigatorKey,
+      transitionDelegate: const DefaultTransitionDelegate<Object?>(),
+      pages: <Page<Object?>>[
+        const FeedPage(),
+        /*
           if (_selectedBook != null) BookDetailsPage(book: _selectedBook)
           */
-        ],
-        onPopPage: (Route<Object?> route, Object? result) {
-          if (route is RootRoute) return false;
-          if (!route.didPop(result)) {
-            return false;
-          }
-
-          // Update the list of pages by setting _selectedBook to null
-          //_selectedBook = null;
-          notifyListeners();
-
-          return true;
-        },
-      );
-
-  @override
-  Future<void> setNewRoutePath(AppConfiguration configuration) async {
-    /*
-    if (configuration.isDetailsPage) {
-      _selectedBook = books[configuration.id!];
-    }
-    */
-    _currentConfiguration = configuration;
+        if (conf is ProfileRouteConfiguration) const ProfilePage(),
+        if (conf is SettingsRouteConfiguration) const SettingsPage(),
+        if (conf is JobRouteConfiguration) JobPage(id: conf.id),
+      ],
+      onPopPage: (Route<Object?> route, Object? result) {
+        if (route is RootRoute || !route.didPop(result)) {
+          return false;
+        }
+        _currentConfiguration = FeedRouteConfiguration();
+        notifyListeners();
+        return true;
+      },
+    );
   }
 
   @override
-  AppConfiguration get currentConfiguration => _currentConfiguration;
-  AppConfiguration _currentConfiguration;
+  Future<void> setNewRoutePath(RouteConfiguration configuration) {
+    _currentConfiguration = configuration;
+    notifyListeners();
+    return SynchronousFuture(null);
+  }
 
   @override
-  Future<void> setInitialRoutePath(AppConfiguration configuration) => setNewRoutePath(configuration);
+  RouteConfiguration get currentConfiguration => _currentConfiguration;
+  RouteConfiguration _currentConfiguration;
 
   @override
-  Future<void> setRestoredRoutePath(AppConfiguration configuration) => setNewRoutePath(configuration);
+  Future<void> setInitialRoutePath(RouteConfiguration configuration) => setNewRoutePath(configuration);
+
+  @override
+  Future<void> setRestoredRoutePath(RouteConfiguration configuration) => setNewRoutePath(configuration);
 
   @override
   Future<bool> popRoute() async {

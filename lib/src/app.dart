@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'common/widget/app_material_context.dart';
 import 'common/widget/global_context.dart';
 import 'feature/authentication/widget/authentication_scope.dart';
+import 'feature/feed/widget/feed_scope.dart';
 import 'feature/initialization/widget/initialization_scope.dart';
 import 'feature/initialization/widget/initialization_screen.dart';
 import 'feature/settings/widget/settings_scope.dart';
@@ -24,7 +25,9 @@ class App extends StatelessWidget {
           initializationScreen: InitializationScreen(),
           child: AuthenticationScope(
             child: SettingsScope(
-              child: AppMaterialContext(),
+              child: FeedScope(
+                child: AppMaterialContext(),
+              ),
             ),
           ),
         ),

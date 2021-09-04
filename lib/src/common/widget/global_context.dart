@@ -15,5 +15,5 @@ class GlobalContext extends StatefulWidget {
 
 class _GlobalContextState extends State<GlobalContext> {
   @override
-  Widget build(BuildContext context) => const Placeholder();
+  Widget build(BuildContext context) => widget.child;
 }
