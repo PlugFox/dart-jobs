@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../feature/initialization/widget/initialization_scope.dart';
 import '../../feature/settings/widget/settings_scope.dart';
 import '../localization/localizations.dart';
-import '../router/configuration.dart';
+import '../router/initial_route_configuration.dart';
 import '../router/route_information_parser.dart';
 import '../router/route_information_provider.dart';
 import '../router/router_delegate.dart';
@@ -25,18 +25,17 @@ class AppMaterialContext extends StatefulWidget {
 }
 
 class _AppMaterialContextState extends State<AppMaterialContext> {
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(
-    initialConfiguration: FeedRouteConfiguration(),
-  );
   final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
   final AppRouteInformationProvider _routeInformationProvider = AppRouteInformationProvider(
-    initialRouteInformation: const RouteInformation(),
+    initialRouteInformation: InitialRouteConfiguration.instance().routeInformation,
+  );
+  final AppRouterDelegate _routerDelegate = AppRouterDelegate(
+    initialConfiguration: InitialRouteConfiguration.instance().routeConfiguration,
   );
 
   @override
   void initState() {
     super.initState();
-
     final repoStore = InitializationScope.storeOf(context);
   }
 

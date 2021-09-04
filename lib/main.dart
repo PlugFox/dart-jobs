@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:l/l.dart';
 
-import 'runner_io.dart'
+import 'runner_stub.dart'
+    // ignore: uri_does_not_exist
+    if (dart.library.io) 'runner_io.dart'
     // ignore: uri_does_not_exist
     if (dart.library.html) 'runner_web.dart' as runner;
 

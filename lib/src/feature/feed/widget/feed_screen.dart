@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:l/l.dart';
 
 import '../../../common/widget/custom_scroll_view_smooth.dart';
 import '../bloc/feed_bloc.dart';
@@ -61,7 +62,12 @@ class _FeedScrollableState extends State<_FeedScrollable> {
   /// При окончании загрузки очередной порции
   void _checkPagination() {
     final screenHeight = _screenHeight;
-    final triggerFetchMoreSize = controller.position.maxScrollExtent - screenHeight;
+    var triggerFetchMoreSize = .0;
+    try {
+      triggerFetchMoreSize = controller.position.maxScrollExtent - screenHeight;
+    } on Object catch (err) {
+      l.w('Не могу высчитать triggerFetchMoreSize: $err');
+    }
     if (controller.position.pixels < triggerFetchMoreSize) return;
     // Загрузить еще контента на 5 экранов в высоту
     FeedScope.paginateOf(context, count: (screenHeight * 5) ~/ FeedTile.height);

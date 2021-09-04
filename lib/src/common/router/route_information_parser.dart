@@ -9,26 +9,8 @@ class AppRouteInformationParser implements RouteInformationParser<RouteConfigura
   Future<RouteConfiguration> parseRouteInformation(RouteInformation routeInformation) {
     final location = routeInformation.location ?? '/';
     final uri = Uri.parse(location);
-    final path = uri.pathSegments;
-    switch (path.firstOrNull) {
-      case 'profile':
-        return SynchronousFuture<RouteConfiguration>(ProfileRouteConfiguration());
-      case 'settings':
-        return SynchronousFuture<RouteConfiguration>(SettingsRouteConfiguration());
-      case 'job':
-        final id = path.length > 1 ? path[1] : '';
-        if (id.isEmpty) break;
-        return SynchronousFuture<RouteConfiguration>(
-          JobRouteConfiguration(id: id),
-        );
-      case '':
-      case '/':
-      case 'feed':
-      case null:
-      default:
-        break;
-    }
-    return SynchronousFuture<RouteConfiguration>(FeedRouteConfiguration());
+    final configuration = uriToRouteConfiguration(uri);
+    return SynchronousFuture<RouteConfiguration>(configuration);
   }
 
   @override
@@ -36,5 +18,26 @@ class AppRouteInformationParser implements RouteInformationParser<RouteConfigura
     final uri = configuration.toUri();
     final location = uri.toString();
     return RouteInformation(location: location);
+  }
+
+  static RouteConfiguration uriToRouteConfiguration(Uri uri) {
+    final path = uri.pathSegments;
+    switch (path.firstOrNull) {
+      case 'profile':
+        return ProfileRouteConfiguration();
+      case 'settings':
+        return SettingsRouteConfiguration();
+      case 'job':
+        final id = path.length > 1 ? path[1] : '';
+        if (id.isEmpty) break;
+        return JobRouteConfiguration(id: id);
+      case '':
+      case '/':
+      case 'feed':
+      case null:
+      default:
+        break;
+    }
+    return FeedRouteConfiguration();
   }
 }
