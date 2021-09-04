@@ -95,11 +95,11 @@ flutter_gen:
 # Generate app icon
 # flutter pub run flutter_launcher_icons:main
 flutter_icons:
-  image_path: "assets/images/iconxxxhdpi.png"
-  image_path_android: "assets/images/iconxxxhdpi.png"
-  image_path_ios: "assets/images/iconxxxhdpi.png"
+  image_path: "assets/icon/1x/icon.png"
+  image_path_android: "assets/icon/1x/icon.png"
+  image_path_ios: "assets/icon/1x/icon.png"
   android: true # can specify file name here e.g. "ic_launcher"
-  ios: false # can specify file name here e.g. "My-Launcher-Icon"
+  ios: true # can specify file name here e.g. "My-Launcher-Icon"
   # adaptive_icon_background: "assets/icons/background.png" # only available for Android 8.0 devices and above
   # adaptive_icon_foreground: "assets/icons/foreground.png" # only available for Android 8.0 devices and above
 

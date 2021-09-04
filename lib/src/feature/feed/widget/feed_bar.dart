@@ -20,6 +20,7 @@ class FeedBar extends StatelessWidget {
         snap: false,
         toolbarHeight: kToolbarHeight,
         collapsedHeight: ScreenUtil.screenSizeOf(context).maybeWhen<double?>(
+          small: () => kToolbarHeight + 15,
           medium: () => kToolbarHeight + 15,
           large: () => kToolbarHeight + 15,
           extraLarge: () => kToolbarHeight + 15,
