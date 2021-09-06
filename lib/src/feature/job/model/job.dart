@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-import '../../../common/utils/date_util.dart';
 import '../../feed/model/proposal.dart';
 
 part 'job.g.dart';
@@ -10,114 +9,61 @@ part 'job.g.dart';
 /// Работа
 @immutable
 @JsonSerializable()
-class Job implements Proposal {
+class Job extends Proposal {
   static const String typeRepresentation = 'job';
 
-  bool get isEmpty => id.isEmpty;
-  bool get isNotEmpty => !isNotEmpty;
-
+  /// Тип
   @override
-  @JsonKey(name: 'type', required: true)
   String get type => typeRepresentation;
 
-  /// Идентификатор
-  @override
-  @JsonKey(name: 'id', required: true)
-  final String id;
-
-  @override
-  @JsonKey(name: 'title', required: true)
-  final String title;
-
-  /// Заведено в программе (Unixtime в милисекундах)
-  @override
-  @JsonKey(
-    name: 'created',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime created;
-
-  /// Обновлено (Unixtime в милисекундах)
-  @override
-  @JsonKey(
-    name: 'updated',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime updated;
-
-  /// Место работы
-  @JsonKey(name: 'location', required: true)
-  final ProposalLocation location;
-
-  /// Компания
-  @JsonKey(
-    name: 'company',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final Company? company;
-
-  /// Описание, до 1024 символов
-  @override
-  @JsonKey(
-    name: 'description',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final String? description;
-
-  /// TODO: зарплатная вилка (Salary)
-
-  /// TODO: уровень разработчика (Developer Level)
-
   /// Данные элемента
+  @override
   @JsonKey(
     name: 'attributes',
     required: true,
-    includeIfNull: false,
-    defaultValue: null,
-    disallowNullValue: false,
   )
-  final JobAttributes? attributes;
+  final JobAttributes attributes;
 
   const Job({
-    required this.id,
-    required this.created,
-    required this.updated,
-    required this.title,
-    this.location = const ProposalLocation.remote(),
-    this.company,
-    this.description,
-    this.attributes,
-  });
+    required final String id,
+    required final String title,
+    required final DateTime created,
+    required final DateTime updated,
+    final this.attributes = const JobAttributes.empty(),
+  }) : super(
+          id: id,
+          title: title,
+          created: created,
+          updated: updated,
+        );
+
+  factory Job.create({
+    required final String id,
+    required final String title,
+    final JobAttributes attributes = const JobAttributes.empty(),
+  }) {
+    final now = DateTime.now().toUtc();
+    return Job(
+      id: id,
+      title: title,
+      created: now,
+      updated: now,
+      attributes: attributes,
+    );
+  }
 
   /// Generate Class from Map<String, dynamic>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 
-  /// Преобразовать в JSON хэш таблицу
   @override
-  Map<String, Object?> toJson() => _$JobToJson(this);
+  Map<String, Object?> toJson() => _$JobToJson(this)
+    ..putIfAbsent(
+      'type',
+      () => type,
+    );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is Job && id == other.id);
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() => 'Job( '
-      'id: $id, '
-      'title: $title, '
-      'created: $created, '
-      'updated: $updated )';
+  String toString() => 'Job(${super.toString()})';
 
   @override
   Result map<Result extends Object>({
@@ -135,55 +81,182 @@ class Job implements Proposal {
       job == null ? orElse() : job(this);
 
   @override
-  int compareTo(Proposal other) => created.compareTo(other.created);
+  Job copyWith({
+    String? newTitle,
+    covariant JobAttributes? newAttributes,
+  }) =>
+      Job(
+        id: id,
+        title: newTitle ?? title,
+        created: created,
+        updated: DateTime.now().toUtc(),
+        attributes: newAttributes ?? attributes,
+      );
 }
 
 /// Детальное описание работы
 @immutable
-class JobAttributes extends Iterable<JobAttribute> {
-  final List<JobAttribute> _list;
+class JobAttributes extends ProposalAttributes<JobAttribute> {
+  const JobAttributes.empty() : super.empty();
 
-  @literal
-  const JobAttributes.empty() : _list = const <JobAttribute>[];
-
-  JobAttributes(Iterable<JobAttribute> source) : _list = List<JobAttribute>.of(source, growable: false);
-
-  @override
-  Iterator<JobAttribute> get iterator => _list.iterator;
-
-  JobAttribute operator [](int index) => _list[index];
-
-  @override
-  bool operator ==(Object other) =>
-      identical(other, this) ||
-      (other is JobAttributes &&
-          const ListEquality<JobAttribute>().equals(
-            other._list,
-            _list,
-          ));
-
-  @override
-  int get hashCode => _list.hashCode;
+  JobAttributes(Iterable<JobAttribute> source) : super(source);
 
   /// Generate Class from List<Object?>
   factory JobAttributes.fromJson(List<Object?> json) => JobAttributes(
-        json.whereType<Map<String, Object?>>().map<JobAttribute>(
-              (e) => JobAttribute.fromJson(e),
-            ),
+        json.whereType<Map<String, Object?>>().map<JobAttribute?>(JobAttribute.fromJson).whereNotNull(),
       );
-
-  /// Преобразовать в JSON список
-  List<Object?> toJson() => _list.map<Map<String, Object?>>((e) => e.toJson()).toList();
 }
 
 /// Аттрибут работы
 @immutable
-abstract class JobAttribute {
-  String get type;
-
-  factory JobAttribute.fromJson(Map<String, Object?> json) {
-    throw UnimplementedError('Not implemented yet "$json" to JobAttribute');
+abstract class JobAttribute extends ProposalAttribute {
+  @factory
+  static JobAttribute? fromJson(Map<String, Object?> json) {
+    switch (json['type']) {
+      case 'company':
+        return CompanyJobAttribute.fromJson(json);
+      case 'description':
+        return DescriptionJobAttribute.fromJson(json);
+      case 'location':
+        return LocationJobAttribute.fromJson(json);
+      case '':
+      case null:
+      default:
+        break;
+    }
+    return null;
   }
-
-  Map<String, Object?> toJson();
 }
+
+/// Аттрибут работы - Компания (Company)
+@immutable
+@JsonSerializable()
+class CompanyJobAttribute implements JobAttribute {
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => 'company';
+
+  @JsonKey(name: 'title', required: true)
+  final String title;
+
+  @JsonKey(
+    name: 'url',
+    required: false,
+    includeIfNull: false,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final String? url;
+
+  @JsonKey(
+    name: 'description',
+    required: false,
+    includeIfNull: false,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final String? description;
+
+  const CompanyJobAttribute({
+    required this.title,
+    this.description,
+    this.url,
+  });
+
+  factory CompanyJobAttribute.fromJson(Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$CompanyJobAttributeToJson(this);
+}
+
+/// Аттрибут работы - Описание (Description)
+@immutable
+@JsonSerializable()
+class DescriptionJobAttribute implements JobAttribute {
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => 'description';
+
+  @JsonKey(
+    name: 'description',
+    required: false,
+    includeIfNull: false,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final String description;
+
+  const DescriptionJobAttribute({
+    required this.description,
+  });
+
+  DescriptionJobAttribute changeDescription(String newDescription) => DescriptionJobAttribute(
+        description: newDescription,
+      );
+
+  factory DescriptionJobAttribute.fromJson(Map<String, Object?> json) => _$DescriptionJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$DescriptionJobAttributeToJson(this);
+}
+
+/// Аттрибут работы - Местоположение (Location)
+@immutable
+@JsonSerializable()
+class LocationJobAttribute implements JobAttribute {
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => 'location';
+
+  @JsonKey(name: 'title', required: true)
+  final String title;
+
+  @JsonKey(
+    name: 'latitude',
+    required: false,
+    includeIfNull: true,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final double? latitude;
+
+  @JsonKey(
+    name: 'longitude',
+    required: false,
+    includeIfNull: true,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final double? longitude;
+
+  const LocationJobAttribute({
+    required this.title,
+    this.latitude,
+    this.longitude,
+  });
+
+  LocationJobAttribute changeTitle(String newTitle) => LocationJobAttribute(
+        title: newTitle,
+        latitude: latitude,
+        longitude: longitude,
+      );
+
+  LocationJobAttribute copyWithCoordinates({
+    required double? newLatitude,
+    required double? newLongitude,
+  }) =>
+      LocationJobAttribute(
+        title: title,
+        latitude: newLatitude,
+        longitude: newLongitude,
+      );
+
+  factory LocationJobAttribute.fromJson(Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$LocationJobAttributeToJson(this);
+}
+
+/// TODO: Зарплатная вилка (Salary)
+
+/// TODO: Уровень разработчика (Developer level)

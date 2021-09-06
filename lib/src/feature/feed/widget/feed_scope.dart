@@ -1,9 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
 import '../../initialization/widget/initialization_scope.dart';
 import '../bloc/feed_bloc.dart';
+import '../model/proposal.dart';
 
 @immutable
 class FeedScope extends StatelessWidget {
@@ -36,6 +38,18 @@ class FeedScope extends StatelessWidget {
         count: count,
       ),
     );
+  }
+
+  static R? proposalOf<R extends Proposal>(
+    BuildContext context,
+    bool Function(R proposal) test,
+  ) {
+    // ignore: close_sinks
+    final bloc = BlocScope.of<FeedBLoC>(
+      context,
+      listen: false,
+    );
+    return bloc.state.list.whereType<R>().firstWhereOrNull(test);
   }
 
   @override

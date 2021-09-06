@@ -14,7 +14,7 @@ abstract class IFeedRepository {
 }
 
 class FeedRepositoryFirebase implements IFeedRepository {
-  /// Коллекция транспорта
+  /// Коллекция
   final CollectionReference _collection;
 
   FeedRepositoryFirebase({
@@ -71,9 +71,6 @@ class FeedRepositoryFake implements IFeedRepository {
           title: 'Job #${lastDate.millisecondsSinceEpoch * 1000 + i}',
           created: lastDate,
           updated: lastDate,
-          location: const ProposalLocation.remote(),
-          company: null,
-          attributes: null,
         );
       },
     ).take(count);

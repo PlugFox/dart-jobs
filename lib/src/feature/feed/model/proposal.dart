@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -11,14 +12,46 @@ export '../../resume/model/resume.dart';
 part 'proposal.g.dart';
 
 @immutable
+@JsonSerializable()
 abstract class Proposal implements Comparable<Proposal> {
-  String get type;
-  String get id;
-  String get title;
-  DateTime get created;
-  DateTime get updated;
-  String? get description;
+  bool get isEmpty => id.isEmpty;
+  bool get isNotEmpty => id.isNotEmpty;
 
+  @JsonKey(name: 'type', required: true)
+  String get type;
+
+  @JsonKey(name: 'id', required: true)
+  final String id;
+
+  @JsonKey(name: 'title', required: true)
+  final String title;
+
+  @JsonKey(
+    name: 'created',
+    required: true,
+    toJson: DateUtil.dateToUnixTime,
+    fromJson: DateUtil.dateFromUnixTime,
+  )
+  final DateTime created;
+
+  @JsonKey(
+    name: 'updated',
+    required: true,
+    toJson: DateUtil.dateToUnixTime,
+    fromJson: DateUtil.dateFromUnixTime,
+  )
+  final DateTime updated;
+
+  ProposalAttributes get attributes;
+
+  const Proposal({
+    required final this.id,
+    required final this.title,
+    required final this.created,
+    required final this.updated,
+  });
+
+  /// Generate Class from Map<String, dynamic>
   factory Proposal.fromJson(Map<String, Object?> json) {
     final type = json['type']?.toString();
     switch (type) {
@@ -33,7 +66,8 @@ abstract class Proposal implements Comparable<Proposal> {
     }
   }
 
-  Map<String, Object?> toJson();
+  /// Преобразовать в JSON хэш таблицу
+  Map<String, Object?> toJson() => _$ProposalToJson(this);
 
   Result map<Result extends Object>({
     required final Result Function(Resume resume) resume,
@@ -45,100 +79,67 @@ abstract class Proposal implements Comparable<Proposal> {
     final Result Function(Resume resume)? resume,
     final Result Function(Job job)? job,
   });
+
+  Proposal copyWith({
+    String? newTitle,
+    covariant ProposalAttributes? newAttributes,
+  });
+
+  @override
+  int compareTo(Proposal other) => created.compareTo(other.created);
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || (other is Job && id == other.id);
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() => 'id: $id, '
+      'title: $title, '
+      'created: $created, '
+      'updated: $updated';
 }
 
 @immutable
-@JsonSerializable()
-class ProposalLocation {
-  static const String remoteTitle = 'remote';
+abstract class ProposalAttributes<T extends ProposalAttribute> extends Iterable<T> {
+  final List<T> _list;
 
-  bool get isRemote => title == remoteTitle;
+  @literal
+  const ProposalAttributes.empty() : _list = const [];
 
-  @JsonKey(name: 'title', required: true)
-  final String title;
+  ProposalAttributes(Iterable<T> source) : _list = List<T>.of(source, growable: false);
 
-  @JsonKey(
-    name: 'latitude',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final double? latitude;
+  @override
+  Iterator<T> get iterator => _list.iterator;
 
-  @JsonKey(
-    name: 'longitude',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final double? longitude;
+  T operator [](int index) => _list[index];
 
-  const ProposalLocation({
-    required this.title,
-    this.latitude,
-    this.longitude,
-  });
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) ||
+      (other is ProposalAttributes &&
+          const ListEquality<Object>().equals(
+            other._list,
+            _list,
+          ));
 
-  const ProposalLocation.remote()
-      : title = remoteTitle,
-        latitude = null,
-        longitude = null;
+  @override
+  int get hashCode => _list.hashCode;
 
-  factory ProposalLocation.fromJson(Map<String, Object?> json) => _$ProposalLocationFromJson(json);
-
-  Map<String, Object?> toJson() => _$ProposalLocationToJson(this);
+  /// Преобразовать в JSON список
+  List<Map<String, Object?>?> toJson() => _list
+      .map<Map<String, Object?>>((e) => e.toJson()
+        ..putIfAbsent(
+          'type',
+          () => e.type,
+        ))
+      .toList();
 }
 
-/// Компания
 @immutable
-@JsonSerializable()
-class Company {
-  /// Идентификатор
-  @JsonKey(name: 'id', required: true)
-  final String id;
+abstract class ProposalAttribute {
+  String get type;
 
-  @JsonKey(name: 'title', required: true)
-  final String title;
-
-  /// Заведено в программе (Unixtime в милисекундах)
-  @JsonKey(
-    name: 'created',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime created;
-
-  /// Обновлено (Unixtime в милисекундах)
-  @JsonKey(
-    name: 'updated',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime updated;
-
-  /// Описание, до 1024 символов
-  @JsonKey(
-    name: 'description',
-    required: false,
-    includeIfNull: true,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final String? description;
-
-  const Company({
-    required this.id,
-    required this.created,
-    required this.updated,
-    required this.title,
-    this.description,
-  });
-
-  factory Company.fromJson(Map<String, Object?> json) => _$CompanyFromJson(json);
-
-  Map<String, Object?> toJson() => _$CompanyToJson(this);
+  Map<String, Object?> toJson();
 }

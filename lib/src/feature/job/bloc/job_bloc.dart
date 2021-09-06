@@ -1,6 +1,7 @@
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../data/job_repository.dart';
 import '../model/job.dart';
 
 part 'job_bloc.freezed.dart';
@@ -8,11 +9,14 @@ part 'job_bloc.freezed.dart';
 @freezed
 class JobEvent with _$JobEvent {
   const JobEvent._();
-  const factory JobEvent.create() = _CreateJobEvent;
+  const factory JobEvent.create({
+    required String title,
+    @Default(JobAttributes.empty()) JobAttributes attributes,
+  }) = _CreateJobEvent;
 
   const factory JobEvent.fetch() = _FetchJobEvent;
 
-  const factory JobEvent.update() = _UpdateJobEvent;
+  const factory JobEvent.update(Job job) = _UpdateJobEvent;
 
   const factory JobEvent.delete() = _DeleteJobEvent;
 }
@@ -29,6 +33,10 @@ class JobState with _$JobState {
     required final Job job,
   }) = _FilledJobState;
 
+  const factory JobState.removed({
+    required final Job job,
+  }) = _FilledJobState;
+
   const factory JobState.error({
     required final Job job,
     required final String message,
@@ -36,9 +44,12 @@ class JobState with _$JobState {
 }
 
 class JobBLoC extends Bloc<JobEvent, JobState> {
+  final IJobRepository _repository;
   JobBLoC({
+    required final IJobRepository repository,
     required final JobState initialState,
-  }) : super(initialState);
+  })  : _repository = repository,
+        super(initialState);
 
   @override
   Stream<JobState> mapEventToState(JobEvent event) => event.when<Stream<JobState>>(
@@ -48,24 +59,52 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         delete: _delete,
       );
 
-  Stream<JobState> _create() async* {
-    throw UnsupportedError('Not implemented yet');
-    // ...
+  Stream<JobState> _create(String title, JobAttributes attributes) async* {
+    try {
+      yield JobState.fetching(job: state.job);
+      final job = await _repository.create(
+        title: title,
+        attributes: attributes,
+      );
+      yield JobState.filled(job: job);
+    } on Object {
+      yield JobState.error(job: state.job, message: 'Unsupported error');
+      rethrow;
+    }
   }
 
   Stream<JobState> _fetch() async* {
-    yield JobState.fetching(job: state.job);
-    await Future<void>.delayed(const Duration(seconds: 2));
-    yield JobState.error(job: state.job, message: 'Error');
+    try {
+      yield JobState.fetching(job: state.job);
+      final job = await _repository.fetch(state.job);
+      yield JobState.filled(job: job);
+    } on JobNotFoundException catch (err) {
+      yield JobState.error(job: state.job, message: err.toString());
+    } on Object {
+      yield JobState.error(job: state.job, message: 'Unsupported error');
+      rethrow;
+    }
   }
 
-  Stream<JobState> _update() async* {
-    throw UnsupportedError('Not implemented yet');
-    // ...
+  Stream<JobState> _update(Job job) async* {
+    try {
+      yield JobState.fetching(job: state.job);
+      await _repository.update(state.job);
+      yield JobState.filled(job: state.job);
+    } on Object {
+      yield JobState.error(job: state.job, message: 'Unsupported error');
+      rethrow;
+    }
   }
 
   Stream<JobState> _delete() async* {
-    throw UnsupportedError('Not implemented yet');
-    // ...
+    try {
+      yield JobState.fetching(job: state.job);
+      await _repository.delete(state.job);
+      yield JobState.removed(job: state.job);
+    } on Object {
+      yield JobState.error(job: state.job, message: 'Unsupported error');
+      rethrow;
+    }
   }
 }

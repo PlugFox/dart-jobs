@@ -16,6 +16,7 @@ import '../../../common/utils/screen_util.dart';
 import '../../authentication/data/authentication_repository.dart';
 import '../../authentication/model/user_entity.dart';
 import '../../feed/data/feed_repository.dart';
+import '../../job/data/job_repository.dart';
 import '../../settings/data/settings_repository.dart';
 import '../model/initialization_progress.dart';
 
@@ -105,6 +106,13 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
         newFeedRepository: kFake
             ? FeedRepositoryFake()
             : FeedRepositoryFirebase(
+                firestore: progress.firebaseFirestore!,
+              ),
+      ),
+  'Create a job repository': (progress) => progress.copyWith(
+        newJobRepository: kFake
+            ? JobRepositoryFake()
+            : JobRepositoryFirebase(
                 firestore: progress.firebaseFirestore!,
               ),
       ),
