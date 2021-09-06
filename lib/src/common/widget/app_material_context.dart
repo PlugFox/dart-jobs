@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../feature/initialization/widget/initialization_scope.dart';
 import '../../feature/settings/widget/settings_scope.dart';
 import '../localization/localizations.dart';
 import '../router/initial_route_configuration.dart';
@@ -36,7 +35,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
   @override
   void initState() {
     super.initState();
-    final repoStore = InitializationScope.storeOf(context);
+    //final repoStore = InitializationScope.storeOf(context);
   }
 
   @override

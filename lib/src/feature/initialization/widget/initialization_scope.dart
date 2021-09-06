@@ -17,20 +17,20 @@ class InitializationScope extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  /// Find _InitializationScopeState in BuildContext
-  static _InheritedInitialization? _of(BuildContext context) {
+  /// Find InitializationBLoC in BuildContext
+  static InitializationBLoC? _blocOf(BuildContext context) {
     final inheritedWidget = context.getElementForInheritedWidgetOfExactType<_InheritedInitialization>()?.widget;
-    return inheritedWidget is _InheritedInitialization ? inheritedWidget : null;
+    return inheritedWidget is _InheritedInitialization ? inheritedWidget.bloc : null;
   }
 
   /// Find Stream<InitializationState> in BuildContext
   static Stream<InitializationState> of(BuildContext context) =>
-      _of(context)?.bloc.stream ?? const Stream<InitializationState>.empty();
+      _blocOf(context)?.stream ?? const Stream<InitializationState>.empty();
 
   /// Получить результат инициализации из контекста
   /// Работает только в контексте проинициализированного приложения
   static RepositoryStore storeOf(BuildContext context) =>
-      _of(context)?.bloc.state.maybeWhen<RepositoryStore>(
+      _blocOf(context)?.state.maybeWhen<RepositoryStore>(
             orElse: _throwNotInitializedYet,
             initialized: (store) => store,
           ) ??

@@ -5,7 +5,7 @@ import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
-import '../../job/model/job.dart';
+import '../data/feed_repository.dart';
 import '../model/proposal.dart';
 
 part 'feed_bloc.freezed.dart';
@@ -55,9 +55,12 @@ class FeedState with _$FeedState {
 }
 
 class FeedBLoC extends Bloc<FeedEvent, FeedState> {
+  final IFeedRepository _repository;
   FeedBLoC({
+    required final IFeedRepository repository,
     FeedState initialState = const FeedState.empty(),
-  }) : super(initialState);
+  })  : _repository = repository,
+        super(initialState);
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
@@ -72,20 +75,14 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         loadingCount: loadingCount,
       );
 
-      /// TODO: запрос
-      final result = await Stream<Proposal>.periodic(
-        const Duration(milliseconds: 500), // const Duration(milliseconds: 250),
-        (_) => Job(
-          id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
-          created: DateTime.now(),
-          updated: DateTime.now(),
-          data: null,
-        ),
-      ).take(loadingCount).toList();
+      final createdBefore = state.list.lastOrNull?.created ?? DateTime.now();
+      final proposalsStream = _repository.paginate(count: loadingCount, createdBefore: createdBefore);
+      final proposals = (await proposalsStream.toList())..sort((a, b) => b.compareTo(a));
+      final endOfList = proposals.length < loadingCount;
 
       yield FeedState.filled(
-        list: List<Proposal>.of(state.list)..addAll(result),
-        endOfList: result.length < loadingCount,
+        list: List<Proposal>.of(state.list)..addAll(proposals),
+        endOfList: endOfList,
       );
     } on Object catch (err) {
       l.e('Произошла ошибка при обновлении ленты');

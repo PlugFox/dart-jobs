@@ -5,16 +5,15 @@ import 'package:meta/meta.dart';
 import '../../../common/utils/date_util.dart';
 import '../../feed/model/proposal.dart';
 
-part 'job.g.dart';
+part 'resume.g.dart';
 
-/// Работа
 @immutable
 @JsonSerializable()
-class Job implements Proposal {
-  static const String typeRepresentation = 'job';
+class Resume implements Proposal {
+  static const String typeRepresentation = 'resume';
 
   bool get isEmpty => id.isEmpty;
-  bool get isNotEmpty => !isNotEmpty;
+  bool get isNotEmpty => id.isNotEmpty;
 
   @override
   @JsonKey(name: 'type', required: true)
@@ -49,20 +48,6 @@ class Job implements Proposal {
   )
   final DateTime updated;
 
-  /// Место работы
-  @JsonKey(name: 'location', required: true)
-  final ProposalLocation location;
-
-  /// Компания
-  @JsonKey(
-    name: 'company',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final Company? company;
-
   /// Описание, до 1024 символов
   @override
   @JsonKey(
@@ -74,10 +59,6 @@ class Job implements Proposal {
   )
   final String? description;
 
-  /// TODO: зарплатная вилка (Salary)
-
-  /// TODO: уровень разработчика (Developer Level)
-
   /// Данные элемента
   @JsonKey(
     name: 'attributes',
@@ -86,34 +67,32 @@ class Job implements Proposal {
     defaultValue: null,
     disallowNullValue: false,
   )
-  final JobAttributes? attributes;
+  final ResumeAttributes? attributes;
 
-  const Job({
+  const Resume({
     required this.id,
+    required this.title,
     required this.created,
     required this.updated,
-    required this.title,
-    this.location = const ProposalLocation.remote(),
-    this.company,
     this.description,
     this.attributes,
   });
 
   /// Generate Class from Map<String, dynamic>
-  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
+  factory Resume.fromJson(Map<String, Object?> json) => _$ResumeFromJson(json);
 
   /// Преобразовать в JSON хэш таблицу
   @override
-  Map<String, Object?> toJson() => _$JobToJson(this);
+  Map<String, Object?> toJson() => _$ResumeToJson(this);
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is Job && id == other.id);
+  bool operator ==(Object other) => identical(this, other) || (other is Resume && id == other.id);
 
   @override
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Job( '
+  String toString() => 'Resume( '
       'id: $id, '
       'title: $title, '
       'created: $created, '
@@ -124,7 +103,7 @@ class Job implements Proposal {
     required final Result Function(Resume resume) resume,
     required final Result Function(Job job) job,
   }) =>
-      job(this);
+      resume(this);
 
   @override
   Result maybeMap<Result extends Object>({
@@ -132,32 +111,32 @@ class Job implements Proposal {
     final Result Function(Resume resume)? resume,
     final Result Function(Job job)? job,
   }) =>
-      job == null ? orElse() : job(this);
+      resume == null ? orElse() : resume(this);
 
   @override
   int compareTo(Proposal other) => created.compareTo(other.created);
 }
 
-/// Детальное описание работы
+/// Детальное описание резюме
 @immutable
-class JobAttributes extends Iterable<JobAttribute> {
-  final List<JobAttribute> _list;
+class ResumeAttributes extends Iterable<ResumeAttribute> {
+  final List<ResumeAttribute> _list;
 
   @literal
-  const JobAttributes.empty() : _list = const <JobAttribute>[];
+  const ResumeAttributes.empty() : _list = const <ResumeAttribute>[];
 
-  JobAttributes(Iterable<JobAttribute> source) : _list = List<JobAttribute>.of(source, growable: false);
+  ResumeAttributes(Iterable<ResumeAttribute> source) : _list = List<ResumeAttribute>.of(source, growable: false);
 
   @override
-  Iterator<JobAttribute> get iterator => _list.iterator;
+  Iterator<ResumeAttribute> get iterator => _list.iterator;
 
-  JobAttribute operator [](int index) => _list[index];
+  ResumeAttribute operator [](int index) => _list[index];
 
   @override
   bool operator ==(Object other) =>
       identical(other, this) ||
-      (other is JobAttributes &&
-          const ListEquality<JobAttribute>().equals(
+      (other is ResumeAttributes &&
+          const ListEquality<ResumeAttribute>().equals(
             other._list,
             _list,
           ));
@@ -166,9 +145,9 @@ class JobAttributes extends Iterable<JobAttribute> {
   int get hashCode => _list.hashCode;
 
   /// Generate Class from List<Object?>
-  factory JobAttributes.fromJson(List<Object?> json) => JobAttributes(
-        json.whereType<Map<String, Object?>>().map<JobAttribute>(
-              (e) => JobAttribute.fromJson(e),
+  factory ResumeAttributes.fromJson(List<Object?> json) => ResumeAttributes(
+        json.whereType<Map<String, Object?>>().map<ResumeAttribute>(
+              (e) => ResumeAttribute.fromJson(e),
             ),
       );
 
@@ -178,11 +157,11 @@ class JobAttributes extends Iterable<JobAttribute> {
 
 /// Аттрибут работы
 @immutable
-abstract class JobAttribute {
+abstract class ResumeAttribute {
   String get type;
 
-  factory JobAttribute.fromJson(Map<String, Object?> json) {
-    throw UnimplementedError('Not implemented yet "$json" to JobAttribute');
+  factory ResumeAttribute.fromJson(Map<String, Object?> json) {
+    throw UnimplementedError('Not implemented yet "$json" to ResumeAttribute');
   }
 
   Map<String, Object?> toJson();

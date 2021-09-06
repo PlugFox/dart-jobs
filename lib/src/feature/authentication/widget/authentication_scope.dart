@@ -11,6 +11,7 @@ class AuthenticationScope extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  /*
   /// Find _AuthenticationScopeState in BuildContext
   static _AuthenticationScopeState? _of(BuildContext context, {bool listen = false}) {
     if (listen) {
@@ -20,6 +21,7 @@ class AuthenticationScope extends StatefulWidget {
       return inheritedWidget is _InheritedAuthentication ? inheritedWidget.state : null;
     }
   }
+  */
 
   /// Получить пользователя из контекста
   static UserEntity userOf(BuildContext context, {bool listen = false}) {

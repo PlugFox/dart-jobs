@@ -10,10 +10,12 @@ import 'package:meta/meta.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../common/constant/environment.dart';
 import '../../../common/constant/pubspec.yaml.g.dart' as pubspec;
 import '../../../common/utils/screen_util.dart';
 import '../../authentication/data/authentication_repository.dart';
 import '../../authentication/model/user_entity.dart';
+import '../../feed/data/feed_repository.dart';
 import '../../settings/data/settings_repository.dart';
 import '../model/initialization_progress.dart';
 
@@ -98,6 +100,13 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       ),
   'Initializing local keystore': (progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
+      ),
+  'Create a feed repository': (progress) => progress.copyWith(
+        newFeedRepository: kFake
+            ? FeedRepositoryFake()
+            : FeedRepositoryFirebase(
+                firestore: progress.firebaseFirestore!,
+              ),
       ),
   'Get current settings': (progress) async {
     final repository = SettingsRepository(

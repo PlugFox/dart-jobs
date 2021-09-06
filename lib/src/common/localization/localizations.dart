@@ -1,6 +1,7 @@
 library localizations;
 
 import 'package:flutter/widgets.dart' show BuildContext, Localizations, Locale, LocalizationsDelegate;
+import 'package:intl/intl.dart';
 
 import 'l10n.dart';
 
@@ -11,11 +12,26 @@ extension AppLocalizationsX on BuildContext {
   Localized get localization => AppLocalization.localize(this);
   Locale get locale => AppLocalization.localeOf(this);
   List<Locale> get supportedLocales => AppLocalization.supportedLocales;
+  String formatDate(DateTime date, String pattern) =>
+      AppLocalization.dateFormat(pattern, AppLocalization.localeOf(this)).format(date);
 }
 
 /// Абстрактный класс для управления локализацией
 abstract class AppLocalization {
   const AppLocalization._();
+
+  static final Map<String, Map<Locale, DateFormat>> _dateFormatters = <String, Map<Locale, DateFormat>>{};
+  static DateFormat dateFormat(String pattern, [Locale locale = fallbackLocale]) {
+    final patternMap = _dateFormatters[pattern];
+    if (patternMap == null) {
+      final result = DateFormat(pattern);
+      _dateFormatters[pattern] = <Locale, DateFormat>{
+        locale: result,
+      };
+      return result;
+    }
+    return patternMap[locale] ??= DateFormat(pattern);
+  }
 
   static const Locale fallbackLocale = Locale('en');
 

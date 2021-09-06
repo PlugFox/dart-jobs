@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
+import '../../initialization/widget/initialization_scope.dart';
 import '../bloc/feed_bloc.dart';
 
 @immutable
@@ -39,7 +40,9 @@ class FeedScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocScope<FeedBLoC>.create(
-        create: (context) => FeedBLoC(),
+        create: (context) => FeedBLoC(
+          repository: InitializationScope.storeOf(context).feedRepository,
+        ),
         child: child,
       );
 }

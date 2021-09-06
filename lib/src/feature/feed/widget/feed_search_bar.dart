@@ -19,7 +19,7 @@ class FeedSearchBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.all(8),
           child: Center(
             child: Row(
-              children: [
+              children: const <Widget>[
                 Expanded(child: Placeholder()),
                 Text(' SEARCH... '),
                 Expanded(child: Placeholder()),

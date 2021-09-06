@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:l/l.dart';
 
 import 'configuration.dart';
 import 'platform/platform_io.dart'
@@ -30,7 +31,7 @@ class InitialRouteConfiguration {
 
   static FutureOr<void> init() async {
     final routeInformation = RouteInformation(location: _currentLocation.split('#').last);
-    print('* ${routeInformation.location}');
+    l.i('* ${routeInformation.location}');
     final routeConfiguration = AppRouteInformationParser.uriToRouteConfiguration(
       Uri.parse(routeInformation.location ?? '/'),
     );

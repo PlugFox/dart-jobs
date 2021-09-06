@@ -30,7 +30,8 @@ class CustomScrollViewSmooth extends StatelessWidget {
         );
 
   @override
-  Widget build(BuildContext context) => wrap(
+  Widget build(BuildContext context) => _CustomScrollViewSmoothWrap(
+        controller: _controller,
         child: CustomScrollView(
           controller: _controller,
           physics: _physics,
@@ -47,20 +48,26 @@ class CustomScrollViewSmooth extends StatelessWidget {
           cacheExtent: _cacheExtent,
           slivers: _slivers,
         ),
-        controller: _controller,
       );
+}
 
-  static Widget wrap({
-    required final Widget child,
-    required final ScrollController controller,
+@immutable
+class _CustomScrollViewSmoothWrap extends StatelessWidget {
+  final ScrollController controller;
+  final Widget child;
+  const _CustomScrollViewSmoothWrap({
+    required final this.controller,
+    required final this.child,
     Key? key,
-  }) =>
-      platform.isWeb
-          ? _SmoothScrollWeb(
-              controller: controller,
-              child: child,
-            )
-          : child;
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => platform.isWeb
+      ? _SmoothScrollWeb(
+          controller: controller,
+          child: child,
+        )
+      : child;
 }
 
 // 250

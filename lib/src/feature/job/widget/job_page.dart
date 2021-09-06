@@ -7,6 +7,8 @@ import '../model/job.dart';
 import 'job_screen.dart';
 
 class JobPage extends Page<void> {
+  static final DateTime _initialDate = DateTime.utc(1970);
+
   final String id;
   const JobPage({
     required final this.id,
@@ -19,9 +21,9 @@ class JobPage extends Page<void> {
             initialState: JobState.fetching(
               job: Job(
                 id: id,
-                updated: DateTime.now(),
-                created: DateTime.now(),
-                data: null,
+                updated: _initialDate,
+                created: _initialDate,
+                title: '',
               ),
             ),
           )..add(const JobEvent.fetch()),

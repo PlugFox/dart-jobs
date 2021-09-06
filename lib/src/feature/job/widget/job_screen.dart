@@ -15,9 +15,9 @@ class JobScreen extends StatelessWidget {
         appBar: AppBar(
           title: BlocBuilder<JobBLoC, JobState>(
             builder: (context, state) => state.when<Widget>(
-              fetching: (job) => Text('Job loading...'),
+              fetching: (job) => const Text('Job loading...'),
               filled: (job) => Text('Job #${job.id}'),
-              error: (job, message) => Text('Job error'),
+              error: (job, message) => const Text('Job error'),
             ),
           ),
         ),

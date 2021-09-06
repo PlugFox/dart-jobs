@@ -49,6 +49,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       );
 
   Stream<JobState> _create() async* {
+    throw UnsupportedError('Not implemented yet');
     // ...
   }
 
@@ -59,10 +60,12 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Stream<JobState> _update() async* {
+    throw UnsupportedError('Not implemented yet');
     // ...
   }
 
   Stream<JobState> _delete() async* {
+    throw UnsupportedError('Not implemented yet');
     // ...
   }
 }

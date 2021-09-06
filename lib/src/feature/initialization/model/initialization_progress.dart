@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../authentication/data/authentication_repository.dart';
+import '../../feed/data/feed_repository.dart';
 import '../../settings/data/settings_repository.dart';
 
 class InitializationProgress {
@@ -12,6 +13,7 @@ class InitializationProgress {
   final FirebaseFirestore? firebaseFirestore;
   final SharedPreferences? sharedPreferences;
   final ISettingsRepository? settingsRepository;
+  final IFeedRepository? feedRepository;
 
   const InitializationProgress({
     this.analytics,
@@ -19,6 +21,7 @@ class InitializationProgress {
     this.firebaseFirestore,
     this.sharedPreferences,
     this.settingsRepository,
+    this.feedRepository,
   });
 
   @factory
@@ -29,6 +32,7 @@ class InitializationProgress {
     FirebaseFirestore? newFirebaseFirestore,
     SharedPreferences? newSharedPreferences,
     ISettingsRepository? newSettingsRepository,
+    IFeedRepository? newFeedRepository,
   }) =>
       InitializationProgress(
         analytics: newAnalytics ?? analytics,
@@ -36,6 +40,7 @@ class InitializationProgress {
         firebaseFirestore: newFirebaseFirestore ?? firebaseFirestore,
         sharedPreferences: newSharedPreferences ?? sharedPreferences,
         settingsRepository: newSettingsRepository ?? settingsRepository,
+        feedRepository: newFeedRepository ?? feedRepository,
       );
 
   @factory
@@ -45,6 +50,7 @@ class InitializationProgress {
         firebaseFirestore: firebaseFirestore!,
         sharedPreferences: sharedPreferences!,
         settingsRepository: settingsRepository!,
+        feedRepository: feedRepository!,
       );
 }
 
@@ -55,6 +61,7 @@ class RepositoryStore {
   final FirebaseFirestore firebaseFirestore;
   final SharedPreferences sharedPreferences;
   final ISettingsRepository settingsRepository;
+  final IFeedRepository feedRepository;
 
   const RepositoryStore._({
     required this.analytics,
@@ -62,5 +69,6 @@ class RepositoryStore {
     required this.firebaseFirestore,
     required this.sharedPreferences,
     required this.settingsRepository,
+    required this.feedRepository,
   });
 }
