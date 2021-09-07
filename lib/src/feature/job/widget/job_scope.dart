@@ -72,9 +72,10 @@ class _JobScopeState extends ComponentElement {
         job: jobOrNull ??
             Job(
               id: id,
+              creatorId: '',
+              title: '',
               updated: DateTime.utc(1970),
               created: DateTime.utc(1970),
-              title: '...',
             ),
       ),
       repository: store.jobRepository,

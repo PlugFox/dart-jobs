@@ -27,12 +27,14 @@ class Job extends Proposal {
 
   const Job({
     required final String id,
+    required final String creatorId,
     required final String title,
     required final DateTime created,
     required final DateTime updated,
     final this.attributes = const JobAttributes.empty(),
   }) : super(
           id: id,
+          creatorId: creatorId,
           title: title,
           created: created,
           updated: updated,
@@ -40,12 +42,14 @@ class Job extends Proposal {
 
   factory Job.create({
     required final String id,
+    required final String creatorId,
     required final String title,
     final JobAttributes attributes = const JobAttributes.empty(),
   }) {
     final now = DateTime.now().toUtc();
     return Job(
       id: id,
+      creatorId: creatorId,
       title: title,
       created: now,
       updated: now,
@@ -88,6 +92,7 @@ class Job extends Proposal {
   }) =>
       Job(
         id: id,
+        creatorId: creatorId,
         title: newTitle ?? title,
         created: created,
         updated: DateTime.now().toUtc(),

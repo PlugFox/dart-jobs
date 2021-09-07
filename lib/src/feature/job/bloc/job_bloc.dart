@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../authentication/model/user_entity.dart';
 import '../data/job_repository.dart';
 import '../model/job.dart';
 
@@ -13,6 +14,7 @@ class JobEvent with _$JobEvent {
   const JobEvent._();
   const factory JobEvent.create({
     required String title,
+    required AuthenticatedUser user,
     @Default(JobAttributes.empty()) JobAttributes attributes,
   }) = _CreateJobEvent;
 
@@ -78,11 +80,12 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         transitionFn,
       );
 
-  Stream<JobState> _create(String title, JobAttributes attributes) async* {
+  Stream<JobState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
     try {
       yield JobState.fetching(job: state.job);
       final job = await _repository.create(
         title: title,
+        user: user,
         attributes: attributes,
       );
       yield JobState.filled(job: job);

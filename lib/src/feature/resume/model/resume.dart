@@ -25,12 +25,14 @@ class Resume extends Proposal {
 
   const Resume({
     required String id,
+    required final String creatorId,
     required String title,
     required DateTime created,
     required DateTime updated,
     this.attributes = const ResumeAttributes.empty(),
   }) : super(
           id: id,
+          creatorId: creatorId,
           title: title,
           created: created,
           updated: updated,
@@ -38,12 +40,14 @@ class Resume extends Proposal {
 
   factory Resume.create({
     required final String id,
+    required final String creatorId,
     required final String title,
     final ResumeAttributes attributes = const ResumeAttributes.empty(),
   }) {
     final now = DateTime.now().toUtc();
     return Resume(
       id: id,
+      creatorId: creatorId,
       title: title,
       created: now,
       updated: now,
@@ -86,6 +90,7 @@ class Resume extends Proposal {
   }) =>
       Resume(
         id: id,
+        creatorId: creatorId,
         title: newTitle ?? title,
         created: created,
         updated: DateTime.now().toUtc(),

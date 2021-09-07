@@ -26,6 +26,9 @@ abstract class Proposal implements Comparable<Proposal> {
   @JsonKey(name: 'id', required: true)
   final String id;
 
+  @JsonKey(name: 'creator_id', required: true)
+  final String creatorId;
+
   @JsonKey(name: 'title', required: true)
   final String title;
 
@@ -49,6 +52,7 @@ abstract class Proposal implements Comparable<Proposal> {
 
   const Proposal({
     required final this.id,
+    required final this.creatorId,
     required final this.title,
     required final this.created,
     required final this.updated,
