@@ -153,11 +153,11 @@ class _JobFeedTile extends FeedTile {
           title: _ShimmerTitle(
             text: job.title,
           ), // 'Title (Job name, Developer name)'
-          subtitle: _ShimmerText(
-            text: job.company?.title ?? 'Unknown company',
+          subtitle: const _ShimmerText(
+            text: 'Unknown company',
           ), // 'Subtitle (Company, Developer occupation)'
-          location: _ShimmerText(
-            text: job.location.isRemote ? 'Remote' : job.location.title,
+          location: const _ShimmerText(
+            text: 'Remote',
           ), // 'Location'
           salary: const _ShimmerText(
             text: 'Salary',

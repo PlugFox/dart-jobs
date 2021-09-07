@@ -9,94 +9,64 @@ part 'resume.g.dart';
 
 @immutable
 @JsonSerializable()
-class Resume implements Proposal {
+class Resume extends Proposal {
   static const String typeRepresentation = 'resume';
 
-  bool get isEmpty => id.isEmpty;
-  bool get isNotEmpty => id.isNotEmpty;
-
   @override
-  @JsonKey(name: 'type', required: true)
   String get type => typeRepresentation;
 
-  /// Идентификатор
-  @override
-  @JsonKey(name: 'id', required: true)
-  final String id;
-
-  @override
-  @JsonKey(name: 'title', required: true)
-  final String title;
-
-  /// Заведено в программе (Unixtime в милисекундах)
-  @override
-  @JsonKey(
-    name: 'created',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime created;
-
-  /// Обновлено (Unixtime в милисекундах)
-  @override
-  @JsonKey(
-    name: 'updated',
-    required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
-  )
-  final DateTime updated;
-
-  /// Описание, до 1024 символов
-  @override
-  @JsonKey(
-    name: 'description',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final String? description;
-
   /// Данные элемента
+  @override
   @JsonKey(
     name: 'attributes',
     required: true,
-    includeIfNull: false,
-    defaultValue: null,
-    disallowNullValue: false,
   )
-  final ResumeAttributes? attributes;
+  final ResumeAttributes attributes;
 
   const Resume({
-    required this.id,
-    required this.title,
-    required this.created,
-    required this.updated,
-    this.description,
-    this.attributes,
-  });
+    required String id,
+    required final String creatorId,
+    required String title,
+    required DateTime created,
+    required DateTime updated,
+    this.attributes = const ResumeAttributes.empty(),
+  }) : super(
+          id: id,
+          creatorId: creatorId,
+          title: title,
+          created: created,
+          updated: updated,
+        );
+
+  factory Resume.create({
+    required final String id,
+    required final String creatorId,
+    required final String title,
+    final ResumeAttributes attributes = const ResumeAttributes.empty(),
+  }) {
+    final now = DateTime.now().toUtc();
+    return Resume(
+      id: id,
+      creatorId: creatorId,
+      title: title,
+      created: now,
+      updated: now,
+      attributes: attributes,
+    );
+  }
 
   /// Generate Class from Map<String, dynamic>
   factory Resume.fromJson(Map<String, Object?> json) => _$ResumeFromJson(json);
 
-  /// Преобразовать в JSON хэш таблицу
   @override
-  Map<String, Object?> toJson() => _$ResumeToJson(this);
+  Map<String, Object?> toJson() => _$ResumeToJson(this)
+    ..putIfAbsent(
+      'type',
+      () => type,
+    );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is Resume && id == other.id);
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() => 'Resume( '
-      'id: $id, '
-      'title: $title, '
-      'created: $created, '
-      'updated: $updated )';
+  String toString() => 'Resume(${super.toString()})';
 
   @override
   Result map<Result extends Object>({
@@ -114,55 +84,77 @@ class Resume implements Proposal {
       resume == null ? orElse() : resume(this);
 
   @override
-  int compareTo(Proposal other) => created.compareTo(other.created);
+  Resume copyWith({
+    String? newTitle,
+    covariant ResumeAttributes? newAttributes,
+  }) =>
+      Resume(
+        id: id,
+        creatorId: creatorId,
+        title: newTitle ?? title,
+        created: created,
+        updated: DateTime.now().toUtc(),
+        attributes: newAttributes ?? attributes,
+      );
 }
 
 /// Детальное описание резюме
 @immutable
-class ResumeAttributes extends Iterable<ResumeAttribute> {
-  final List<ResumeAttribute> _list;
+class ResumeAttributes extends ProposalAttributes<ResumeAttribute> {
+  const ResumeAttributes.empty() : super.empty();
 
-  @literal
-  const ResumeAttributes.empty() : _list = const <ResumeAttribute>[];
-
-  ResumeAttributes(Iterable<ResumeAttribute> source) : _list = List<ResumeAttribute>.of(source, growable: false);
-
-  @override
-  Iterator<ResumeAttribute> get iterator => _list.iterator;
-
-  ResumeAttribute operator [](int index) => _list[index];
-
-  @override
-  bool operator ==(Object other) =>
-      identical(other, this) ||
-      (other is ResumeAttributes &&
-          const ListEquality<ResumeAttribute>().equals(
-            other._list,
-            _list,
-          ));
-
-  @override
-  int get hashCode => _list.hashCode;
+  ResumeAttributes(Iterable<ResumeAttribute> source) : super(source);
 
   /// Generate Class from List<Object?>
   factory ResumeAttributes.fromJson(List<Object?> json) => ResumeAttributes(
-        json.whereType<Map<String, Object?>>().map<ResumeAttribute>(
-              (e) => ResumeAttribute.fromJson(e),
-            ),
+        json.whereType<Map<String, Object?>>().map<ResumeAttribute?>(ResumeAttribute.fromJson).whereNotNull(),
       );
-
-  /// Преобразовать в JSON список
-  List<Object?> toJson() => _list.map<Map<String, Object?>>((e) => e.toJson()).toList();
 }
 
 /// Аттрибут работы
 @immutable
-abstract class ResumeAttribute {
-  String get type;
-
-  factory ResumeAttribute.fromJson(Map<String, Object?> json) {
-    throw UnimplementedError('Not implemented yet "$json" to ResumeAttribute');
+abstract class ResumeAttribute extends ProposalAttribute {
+  @factory
+  static ResumeAttribute? fromJson(Map<String, Object?> json) {
+    switch (json['type']) {
+      case 'description':
+        return DescriptionResumeAttribute.fromJson(json);
+      case '':
+      case null:
+      default:
+        break;
+    }
+    return null;
   }
+}
 
-  Map<String, Object?> toJson();
+/// Аттрибут резюме - Описание (Description)
+@immutable
+@JsonSerializable()
+class DescriptionResumeAttribute implements ResumeAttribute {
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => 'description';
+
+  @JsonKey(
+    name: 'description',
+    required: false,
+    includeIfNull: false,
+    disallowNullValue: false,
+    defaultValue: null,
+  )
+  final String description;
+
+  const DescriptionResumeAttribute({
+    required this.description,
+  });
+
+  DescriptionResumeAttribute changeDescription(String newDescription) => DescriptionResumeAttribute(
+        description: newDescription,
+      );
+
+  factory DescriptionResumeAttribute.fromJson(Map<String, Object?> json) => _$DescriptionResumeAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$DescriptionResumeAttributeToJson(this);
 }

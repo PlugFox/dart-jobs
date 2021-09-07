@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../authentication/data/authentication_repository.dart';
 import '../../feed/data/feed_repository.dart';
+import '../../job/data/job_repository.dart';
 import '../../settings/data/settings_repository.dart';
 
 class InitializationProgress {
@@ -14,6 +15,7 @@ class InitializationProgress {
   final SharedPreferences? sharedPreferences;
   final ISettingsRepository? settingsRepository;
   final IFeedRepository? feedRepository;
+  final IJobRepository? jobRepository;
 
   const InitializationProgress({
     this.analytics,
@@ -22,6 +24,7 @@ class InitializationProgress {
     this.sharedPreferences,
     this.settingsRepository,
     this.feedRepository,
+    this.jobRepository,
   });
 
   @factory
@@ -33,6 +36,7 @@ class InitializationProgress {
     SharedPreferences? newSharedPreferences,
     ISettingsRepository? newSettingsRepository,
     IFeedRepository? newFeedRepository,
+    IJobRepository? newJobRepository,
   }) =>
       InitializationProgress(
         analytics: newAnalytics ?? analytics,
@@ -41,6 +45,7 @@ class InitializationProgress {
         sharedPreferences: newSharedPreferences ?? sharedPreferences,
         settingsRepository: newSettingsRepository ?? settingsRepository,
         feedRepository: newFeedRepository ?? feedRepository,
+        jobRepository: newJobRepository ?? jobRepository,
       );
 
   @factory
@@ -51,6 +56,7 @@ class InitializationProgress {
         sharedPreferences: sharedPreferences!,
         settingsRepository: settingsRepository!,
         feedRepository: feedRepository!,
+        jobRepository: jobRepository!,
       );
 }
 
@@ -62,6 +68,7 @@ class RepositoryStore {
   final SharedPreferences sharedPreferences;
   final ISettingsRepository settingsRepository;
   final IFeedRepository feedRepository;
+  final IJobRepository jobRepository;
 
   const RepositoryStore._({
     required this.analytics,
@@ -70,5 +77,6 @@ class RepositoryStore {
     required this.sharedPreferences,
     required this.settingsRepository,
     required this.feedRepository,
+    required this.jobRepository,
   });
 }
