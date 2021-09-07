@@ -125,6 +125,8 @@ abstract class JobAttribute extends ProposalAttribute {
         return DescriptionJobAttribute.fromJson(json);
       case 'location':
         return LocationJobAttribute.fromJson(json);
+      case 'coordinates':
+        return CoordinatesJobAttribute.fromJson(json);
       case '':
       case null:
       default:
@@ -145,28 +147,8 @@ class CompanyJobAttribute implements JobAttribute {
   @JsonKey(name: 'title', required: true)
   final String title;
 
-  @JsonKey(
-    name: 'url',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final String? url;
-
-  @JsonKey(
-    name: 'description',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final String? description;
-
   const CompanyJobAttribute({
     required this.title,
-    this.description,
-    this.url,
   });
 
   factory CompanyJobAttribute.fromJson(Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
@@ -183,13 +165,7 @@ class DescriptionJobAttribute implements JobAttribute {
   @JsonKey(name: 'type', required: true)
   String get type => 'description';
 
-  @JsonKey(
-    name: 'description',
-    required: false,
-    includeIfNull: false,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
+  @JsonKey(name: 'description', required: true)
   final String description;
 
   const DescriptionJobAttribute({
@@ -214,48 +190,16 @@ class LocationJobAttribute implements JobAttribute {
   @JsonKey(name: 'type', required: true)
   String get type => 'location';
 
-  @JsonKey(name: 'title', required: true)
-  final String title;
+  @JsonKey(name: 'country', required: true)
+  final String country;
 
-  @JsonKey(
-    name: 'latitude',
-    required: false,
-    includeIfNull: true,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final double? latitude;
-
-  @JsonKey(
-    name: 'longitude',
-    required: false,
-    includeIfNull: true,
-    disallowNullValue: false,
-    defaultValue: null,
-  )
-  final double? longitude;
+  @JsonKey(name: 'address', required: true)
+  final String address;
 
   const LocationJobAttribute({
-    required this.title,
-    this.latitude,
-    this.longitude,
+    required this.country,
+    required this.address,
   });
-
-  LocationJobAttribute changeTitle(String newTitle) => LocationJobAttribute(
-        title: newTitle,
-        latitude: latitude,
-        longitude: longitude,
-      );
-
-  LocationJobAttribute copyWithCoordinates({
-    required double? newLatitude,
-    required double? newLongitude,
-  }) =>
-      LocationJobAttribute(
-        title: title,
-        latitude: newLatitude,
-        longitude: newLongitude,
-      );
 
   factory LocationJobAttribute.fromJson(Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
 
@@ -263,6 +207,36 @@ class LocationJobAttribute implements JobAttribute {
   Map<String, Object?> toJson() => _$LocationJobAttributeToJson(this);
 }
 
-/// TODO: Зарплатная вилка (Salary)
+/// Аттрибут работы - Координаты
+@immutable
+@JsonSerializable()
+class CoordinatesJobAttribute implements JobAttribute {
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => 'coordinates';
 
-/// TODO: Уровень разработчика (Developer level)
+  @JsonKey(name: 'latitude', required: true)
+  final double latitude;
+
+  @JsonKey(name: 'longitude', required: true)
+  final double longitude;
+
+  const CoordinatesJobAttribute({
+    required final this.latitude,
+    required final this.longitude,
+  });
+
+  factory CoordinatesJobAttribute.fromJson(Map<String, Object?> json) => _$CoordinatesJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$CoordinatesJobAttributeToJson(this);
+}
+
+/// TODO:
+/// + Зарплатная вилка (Salary)
+/// + Уровень разработчика (Developer level)
+/// + Теги популярных языков, фреймвоков, пакетов
+/// + Требования к разработчику
+/// + Бенефиты предоставляемые компанией
+/// + Контакты для обратной связи (емейл, сайт, различные мессенджеры)
+/// + Возможность релокации
