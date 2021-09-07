@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fox_flutter_bloc/bloc.dart';
 
 import '../../feed/model/proposal.dart';
 import '../../feed/widget/feed_scope.dart';
@@ -53,39 +54,54 @@ class _JobScopeState extends ComponentElement {
   @override
   JobScope get widget => super.widget as JobScope;
 
+  bool _mounted = false;
+
   //region Lifecycle
   @override
   void mount(Element? parent, Object? newSlot) {
     super.mount(parent, newSlot);
+    _mounted = true;
+  }
+
+  void initState() {
     final id = widget.id;
     final jobOrNull = FeedScope.proposalOf<Job>(this, (p) => p.id == id);
     final store = InitializationScope.storeOf(this);
     bloc = JobBLoC(
-      initialState: JobState.fetching(
+      initialState: JobState.filled(
         job: jobOrNull ??
             Job(
               id: id,
               updated: DateTime.utc(1970),
               created: DateTime.utc(1970),
-              title: 'Loading...',
+              title: '...',
             ),
       ),
       repository: store.jobRepository,
-    );
+    )..add(const JobEvent.fetch());
   }
 
   @override
   void unmount() {
+    _mounted = false;
     bloc?.close();
     super.unmount();
   }
   //endregion
 
   @override
-  Widget build() => _InheritedJobScope(
-        state: this,
+  Widget build() {
+    if (!_mounted) {
+      initState();
+    }
+    return _InheritedJobScope(
+      state: this,
+      child: BlocScope<JobBLoC>.value(
+        value: bloc!,
         child: widget.child,
-      );
+      ),
+    );
+  }
 }
 
 @immutable

@@ -12,7 +12,10 @@ export '../../resume/model/resume.dart';
 part 'proposal.g.dart';
 
 @immutable
-@JsonSerializable()
+@JsonSerializable(
+  createFactory: false,
+  createToJson: true,
+)
 abstract class Proposal implements Comparable<Proposal> {
   bool get isEmpty => id.isEmpty;
   bool get isNotEmpty => id.isNotEmpty;

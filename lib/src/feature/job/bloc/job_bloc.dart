@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -35,7 +37,7 @@ class JobState with _$JobState {
 
   const factory JobState.removed({
     required final Job job,
-  }) = _FilledJobState;
+  }) = _RemovedJobState;
 
   const factory JobState.error({
     required final Job job,
@@ -57,6 +59,23 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         fetch: _fetch,
         update: _update,
         delete: _delete,
+      );
+
+  @override
+  Stream<Transition<JobEvent, JobState>> transformEvents(
+    Stream<JobEvent> events,
+    TransitionFunction<JobEvent, JobState> transitionFn,
+  ) =>
+      super.transformEvents(
+        events.transform<JobEvent>(
+          StreamTransformer.fromHandlers(
+            handleData: (event, sink) => state.maybeMap(
+              orElse: () => sink.add(event),
+              fetching: (_) => null,
+            ),
+          ),
+        ),
+        transitionFn,
       );
 
   Stream<JobState> _create(String title, JobAttributes attributes) async* {

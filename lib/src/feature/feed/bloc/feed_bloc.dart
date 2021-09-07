@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -65,6 +66,23 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
         paginate: _paginate,
+      );
+
+  @override
+  Stream<Transition<FeedEvent, FeedState>> transformEvents(
+    Stream<FeedEvent> events,
+    TransitionFunction<FeedEvent, FeedState> transitionFn,
+  ) =>
+      super.transformEvents(
+        events.transform<FeedEvent>(
+          StreamTransformer.fromHandlers(
+            handleData: (event, sink) => state.maybeMap(
+              orElse: () => sink.add(event),
+              processed: (_) => null,
+            ),
+          ),
+        ),
+        transitionFn,
       );
 
   Stream<FeedState> _paginate(final int count) async* {

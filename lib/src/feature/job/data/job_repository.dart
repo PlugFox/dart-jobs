@@ -50,12 +50,8 @@ class JobRepositoryFirebase implements IJobRepository {
   @override
   Future<Job> fetchById(String id) async {
     final snapshot = await _collection.doc(id).get(const GetOptions(source: Source.serverAndCache));
-    if (!snapshot.exists) {
-      l.w('Работа по идентификатору "$id" не найдена');
-      _throwNotFound(id);
-    }
     final data = snapshot.data() as Map<String, Object?>?;
-    if (data == null) {
+    if (!snapshot.exists || data == null) {
       l.w('Работа по идентификатору "$id" не найдена');
       _throwNotFound(id);
     }
