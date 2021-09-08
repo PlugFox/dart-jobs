@@ -38,6 +38,7 @@ dependencies:
   geolocator: ^7.0.3
   permission_handler: ^8.0.0+2
   async: ^2.6.1
+  collection: ^1.15.0
 
   # Transformers
   rxdart: ^0.27.0

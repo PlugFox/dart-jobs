@@ -1,13 +1,15 @@
-import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
 import '../../../common/utils/date_util.dart';
 import '../../job/model/job.dart';
 import '../../resume/model/resume.dart';
+import 'attributes.dart';
 
 export '../../job/model/job.dart';
 export '../../resume/model/resume.dart';
+export 'attributes.dart';
 
 part 'proposal.g.dart';
 
@@ -16,7 +18,7 @@ part 'proposal.g.dart';
   createFactory: false,
   createToJson: true,
 )
-abstract class Proposal implements Comparable<Proposal> {
+abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implements Comparable<Proposal> {
   @JsonKey(ignore: true)
   bool get isEmpty => id.isEmpty;
 
@@ -54,8 +56,6 @@ abstract class Proposal implements Comparable<Proposal> {
   )
   final DateTime updated;
 
-  ProposalAttributes get attributes;
-
   const Proposal({
     required final this.id,
     required final this.creatorId,
@@ -63,20 +63,22 @@ abstract class Proposal implements Comparable<Proposal> {
     required final this.created,
     required final this.updated,
     final this.pinned = false,
-  });
+  }) : super();
 
   /// Generate Class from Map<String, dynamic>
-  factory Proposal.fromJson(Map<String, Object?> json) {
-    final type = json['type']?.toString();
+  static Proposal<Attribute> fromJson(Map<String, Object?> json) {
+    final type = json['type'];
     switch (type) {
-      case Job.typeRepresentation:
+      case Job.signature:
         return Job.fromJson(json);
-      case Resume.typeRepresentation:
+      case Resume.signature:
         return Resume.fromJson(json);
       case '':
       case null:
       default:
-        throw FormatException('Unknown proposal type: "$type"');
+        final message = 'Unknown proposal type: "$type"';
+        l.w(message);
+        throw FormatException(message);
     }
   }
 
@@ -94,9 +96,10 @@ abstract class Proposal implements Comparable<Proposal> {
     final Result Function(Job job)? job,
   });
 
-  Proposal copyWith({
+  @override
+  Proposal<T> copyWith({
     String? newTitle,
-    covariant ProposalAttributes? newAttributes,
+    covariant Attributes<T>? newAttributes,
   });
 
   @override
@@ -114,47 +117,4 @@ abstract class Proposal implements Comparable<Proposal> {
       'title: $title, '
       'created: $created, '
       'updated: $updated';
-}
-
-@immutable
-abstract class ProposalAttributes<T extends ProposalAttribute> extends Iterable<T> {
-  final List<T> _list;
-
-  @literal
-  const ProposalAttributes.empty() : _list = const [];
-
-  ProposalAttributes(Iterable<T> source) : _list = List<T>.of(source, growable: false);
-
-  @override
-  Iterator<T> get iterator => _list.iterator;
-
-  T operator [](int index) => _list[index];
-
-  @override
-  bool operator ==(Object other) =>
-      identical(other, this) ||
-      (other is ProposalAttributes &&
-          const ListEquality<Object>().equals(
-            other._list,
-            _list,
-          ));
-
-  @override
-  int get hashCode => _list.hashCode;
-
-  /// Преобразовать в JSON список
-  List<Map<String, Object?>?> toJson() => _list
-      .map<Map<String, Object?>>((e) => e.toJson()
-        ..putIfAbsent(
-          'type',
-          () => e.type,
-        ))
-      .toList();
-}
-
-@immutable
-abstract class ProposalAttribute {
-  String get type;
-
-  Map<String, Object?> toJson();
 }

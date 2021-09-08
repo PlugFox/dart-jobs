@@ -10,13 +10,13 @@ part 'job.g.dart';
 /// Работа
 @immutable
 @JsonSerializable()
-class Job extends Proposal {
-  static const String typeRepresentation = 'job';
+class Job extends Proposal<JobAttribute> {
+  static const String signature = 'job';
 
   /// Тип
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => typeRepresentation;
+  String get type => signature;
 
   /// Данные элемента
   @override
@@ -102,10 +102,20 @@ class Job extends Proposal {
 
 /// Детальное описание работы
 @immutable
-class JobAttributes extends ProposalAttributes<JobAttribute> {
+class JobAttributes extends Attributes<JobAttribute> {
   const JobAttributes.empty() : super.empty();
 
   JobAttributes(Iterable<JobAttribute> source) : super(source);
+
+  JobAttributes._set(Attributes<JobAttribute> attributes, JobAttribute attribute) : super.set(attributes, attribute);
+
+  JobAttributes._remove(Attributes<JobAttribute> attributes, String type) : super.remove(attributes, type);
+
+  @override
+  JobAttributes set(JobAttribute attribute) => JobAttributes._set(this, attribute);
+
+  @override
+  JobAttributes removeByType(String type) => JobAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
   factory JobAttributes.fromJson(List<Object?> json) => JobAttributes(
@@ -115,17 +125,17 @@ class JobAttributes extends ProposalAttributes<JobAttribute> {
 
 /// Аттрибут работы
 @immutable
-abstract class JobAttribute extends ProposalAttribute {
+abstract class JobAttribute extends Attribute {
   @factory
   static JobAttribute? fromJson(Map<String, Object?> json) {
     switch (json['type']) {
-      case 'company':
+      case CompanyJobAttribute.signature:
         return CompanyJobAttribute.fromJson(json);
-      case 'description':
+      case DescriptionJobAttribute.signature:
         return DescriptionJobAttribute.fromJson(json);
-      case 'location':
+      case LocationJobAttribute.signature:
         return LocationJobAttribute.fromJson(json);
-      case 'coordinates':
+      case CoordinatesJobAttribute.signature:
         return CoordinatesJobAttribute.fromJson(json);
       case '':
       case null:
@@ -140,9 +150,11 @@ abstract class JobAttribute extends ProposalAttribute {
 @immutable
 @JsonSerializable()
 class CompanyJobAttribute implements JobAttribute {
+  static const String signature = 'company';
+
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => 'company';
+  String get type => signature;
 
   @JsonKey(name: 'title', required: true)
   final String title;
@@ -161,9 +173,11 @@ class CompanyJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class DescriptionJobAttribute implements JobAttribute {
+  static const String signature = 'description';
+
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => 'description';
+  String get type => signature;
 
   @JsonKey(name: 'description', required: true)
   final String description;
@@ -186,9 +200,11 @@ class DescriptionJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class LocationJobAttribute implements JobAttribute {
+  static const String signature = 'location';
+
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => 'location';
+  String get type => signature;
 
   @JsonKey(name: 'country', required: true)
   final String country;
@@ -211,9 +227,11 @@ class LocationJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class CoordinatesJobAttribute implements JobAttribute {
+  static const String signature = 'coordinates';
+
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => 'coordinates';
+  String get type => signature;
 
   @JsonKey(name: 'latitude', required: true)
   final double latitude;

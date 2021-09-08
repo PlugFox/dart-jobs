@@ -9,12 +9,12 @@ part 'resume.g.dart';
 
 @immutable
 @JsonSerializable()
-class Resume extends Proposal {
-  static const String typeRepresentation = 'resume';
+class Resume extends Proposal<ResumeAttribute> {
+  static const String signature = 'resume';
 
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => typeRepresentation;
+  String get type => signature;
 
   /// Данные элемента
   @override
@@ -100,10 +100,21 @@ class Resume extends Proposal {
 
 /// Детальное описание резюме
 @immutable
-class ResumeAttributes extends ProposalAttributes<ResumeAttribute> {
+class ResumeAttributes extends Attributes<ResumeAttribute> {
   const ResumeAttributes.empty() : super.empty();
 
   ResumeAttributes(Iterable<ResumeAttribute> source) : super(source);
+
+  ResumeAttributes._set(Attributes<ResumeAttribute> attributes, ResumeAttribute attribute)
+      : super.set(attributes, attribute);
+
+  ResumeAttributes._remove(Attributes<ResumeAttribute> attributes, String type) : super.remove(attributes, type);
+
+  @override
+  ResumeAttributes set(ResumeAttribute attribute) => ResumeAttributes._set(this, attribute);
+
+  @override
+  ResumeAttributes removeByType(String type) => ResumeAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
   factory ResumeAttributes.fromJson(List<Object?> json) => ResumeAttributes(
@@ -113,11 +124,11 @@ class ResumeAttributes extends ProposalAttributes<ResumeAttribute> {
 
 /// Аттрибут работы
 @immutable
-abstract class ResumeAttribute extends ProposalAttribute {
+abstract class ResumeAttribute extends Attribute {
   @factory
   static ResumeAttribute? fromJson(Map<String, Object?> json) {
     switch (json['type']) {
-      case 'description':
+      case DescriptionResumeAttribute.signature:
         return DescriptionResumeAttribute.fromJson(json);
       case '':
       case null:
@@ -132,9 +143,11 @@ abstract class ResumeAttribute extends ProposalAttribute {
 @immutable
 @JsonSerializable()
 class DescriptionResumeAttribute implements ResumeAttribute {
+  static const String signature = 'description';
+
   @override
   @JsonKey(name: 'type', required: true)
-  String get type => 'description';
+  String get type => signature;
 
   @JsonKey(
     name: 'description',
