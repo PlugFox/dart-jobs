@@ -14,6 +14,7 @@ class JobPage extends Page<void> {
   Route<void> createRoute(BuildContext context) => MaterialPageRoute(
         builder: (context) => JobScope(
           id: id,
+          key: ValueKey<String>(id),
           child: const JobScreen(),
         ),
         settings: this,

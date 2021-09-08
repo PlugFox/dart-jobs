@@ -81,6 +81,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       );
 
   Stream<JobState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
+    if (state.job.isNotEmpty) return;
     try {
       yield JobState.fetching(job: state.job);
       final job = await _repository.create(
@@ -96,6 +97,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Stream<JobState> _fetch() async* {
+    if (state.job.isEmpty) return;
     try {
       yield JobState.fetching(job: state.job);
       final job = await _repository.fetch(state.job);
@@ -109,6 +111,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Stream<JobState> _update(Job job) async* {
+    if (state.job.isEmpty) return;
     try {
       yield JobState.fetching(job: state.job);
       await _repository.update(state.job);
@@ -120,6 +123,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Stream<JobState> _delete() async* {
+    if (state.job.isEmpty) return;
     try {
       yield JobState.fetching(job: state.job);
       await _repository.delete(state.job);

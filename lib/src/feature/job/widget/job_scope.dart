@@ -11,11 +11,12 @@ import '../bloc/job_bloc.dart';
 class JobScope extends ProxyWidget {
   final String id;
 
-  JobScope({
+  const JobScope({
     required final this.id,
     required final Widget child,
+    Key? key,
   }) : super(
-          key: ValueKey<String>(id),
+          key: key,
           child: child,
         );
 

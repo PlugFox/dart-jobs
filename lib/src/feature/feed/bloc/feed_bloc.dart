@@ -76,9 +76,13 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       super.transformEvents(
         events.transform<FeedEvent>(
           StreamTransformer.fromHandlers(
-            handleData: (event, sink) => state.maybeMap(
+            handleData: (event, sink) => event.maybeMap<void>(
               orElse: () => sink.add(event),
-              processed: (_) => null,
+              paginate: (_) => state.maybeMap<void>(
+                orElse: () => sink.add(event),
+                // ignore: no-empty-block
+                processed: (_) {},
+              ),
             ),
           ),
         ),
