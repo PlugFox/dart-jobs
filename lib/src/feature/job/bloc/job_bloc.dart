@@ -83,7 +83,14 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   Stream<JobState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
     if (state.job.isNotEmpty) return;
     try {
-      yield JobState.fetching(job: state.job);
+      yield JobState.fetching(
+        job: Job.create(
+          id: '',
+          creatorId: user.uid,
+          title: title,
+          attributes: attributes,
+        ),
+      );
       final job = await _repository.create(
         title: title,
         user: user,
@@ -111,13 +118,13 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Stream<JobState> _update(Job job) async* {
-    if (state.job.isEmpty) return;
+    if (job.isEmpty) return;
     try {
-      yield JobState.fetching(job: state.job);
-      await _repository.update(state.job);
-      yield JobState.filled(job: state.job);
+      yield JobState.fetching(job: job);
+      await _repository.update(job);
+      yield JobState.filled(job: job);
     } on Object {
-      yield JobState.error(job: state.job, message: 'Unsupported error');
+      yield JobState.error(job: job, message: 'Unsupported error');
       rethrow;
     }
   }

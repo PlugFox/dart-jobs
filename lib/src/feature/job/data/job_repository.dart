@@ -107,7 +107,7 @@ class JobRepositoryFake implements IJobRepository {
     await Future<void>.delayed(const Duration(seconds: 1));
     return _jobs[id] ??= Job.create(
       id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
-      creatorId: _rnd.nextInt(1024).toRadixString(36),
+      creatorId: _rnd.nextInt(2).toRadixString(36),
       title: 'Some job',
     );
   }

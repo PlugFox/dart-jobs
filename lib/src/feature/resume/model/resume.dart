@@ -2,8 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-import '../../../common/utils/date_util.dart';
-import '../../feed/model/proposal.dart';
+import '../../../common/model/proposal.dart';
 
 part 'resume.g.dart';
 
@@ -96,6 +95,11 @@ class Resume extends Proposal<ResumeAttribute> {
         updated: DateTime.now().toUtc(),
         attributes: newAttributes ?? attributes,
       );
+
+  @override
+  Resume setAttribute(covariant ResumeAttribute attribute) => copyWith(
+        newAttributes: attributes.set(attribute),
+      );
 }
 
 /// Детальное описание резюме
@@ -108,13 +112,13 @@ class ResumeAttributes extends Attributes<ResumeAttribute> {
   ResumeAttributes._set(Attributes<ResumeAttribute> attributes, ResumeAttribute attribute)
       : super.set(attributes, attribute);
 
-  ResumeAttributes._remove(Attributes<ResumeAttribute> attributes, String type) : super.remove(attributes, type);
+  ResumeAttributes._remove(Attributes<ResumeAttribute> attributes, Type type) : super.remove(attributes, type);
 
   @override
   ResumeAttributes set(ResumeAttribute attribute) => ResumeAttributes._set(this, attribute);
 
   @override
-  ResumeAttributes removeByType(String type) => ResumeAttributes._remove(this, type);
+  ResumeAttributes removeByType(Type type) => ResumeAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
   factory ResumeAttributes.fromJson(List<Object?> json) => ResumeAttributes(

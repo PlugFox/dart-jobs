@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
-import '../../feed/model/proposal.dart';
+import '../../../common/model/proposal.dart';
+import '../../authentication/model/user_entity.dart';
+import '../../authentication/widget/authentication_scope.dart';
 import '../../feed/widget/feed_scope.dart';
 import '../../initialization/widget/initialization_scope.dart';
 import '../bloc/job_bloc.dart';
@@ -20,7 +22,6 @@ class JobScope extends ProxyWidget {
           child: child,
         );
 
-  /*
   /// Find _JobScopeState in BuildContext
   static _JobScopeState? _of(BuildContext context, {bool listen = false}) {
     if (listen) {
@@ -30,7 +31,23 @@ class JobScope extends ProxyWidget {
       return inheritedWidget is _InheritedJobScope ? inheritedWidget.state : null;
     }
   }
-  */
+
+  static void saveJobOf(BuildContext context, Job job) {
+    final user = AuthenticationScope.userOf(context, listen: false);
+    if (user is! AuthenticatedUser) return;
+    if (job.isEmpty) {
+      _of(context, listen: false)?.bloc?.add(
+            JobEvent.create(
+              title: job.title,
+              user: user,
+              attributes: job.attributes,
+            ),
+          );
+    } else {
+      if (user.uid != job.creatorId) return;
+      _of(context, listen: false)?.bloc?.add(JobEvent.update(job));
+    }
+  }
 
   @override
   Element createElement() => _JobScopeState(this);

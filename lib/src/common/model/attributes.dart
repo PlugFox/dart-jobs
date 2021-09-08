@@ -6,7 +6,11 @@ abstract class AttributesOwner<T extends Attribute> {
   const AttributesOwner();
   Attributes<T> get attributes;
 
-  T? getAttribute(String type) => attributes[type];
+  R? getAttribute<R extends Attribute>() {
+    final attribute = attributes[R];
+    if (attribute is R) return attribute;
+    return null;
+  }
 
   AttributesOwner<T> copyWith({
     covariant Attributes<T>? newAttributes,
@@ -23,49 +27,49 @@ abstract class AttributesOwner<T extends Attribute> {
 
 @immutable
 abstract class Attributes<T extends Attribute> extends Iterable<T> {
-  final Map<String, T> _internal;
+  final Map<Type, T> _internal;
 
   @literal
   const Attributes.empty() : _internal = const {};
 
   Attributes(Iterable<T> source)
-      : _internal = <String, T>{
-          for (final a in source) a.type: a,
+      : _internal = <Type, T>{
+          for (final a in source) a.runtimeType: a,
         };
 
-  Attributes.of(Attributes<T> attributes) : _internal = Map<String, T>.of(attributes._internal);
+  Attributes.of(Attributes<T> attributes) : _internal = Map<Type, T>.of(attributes._internal);
 
   Attributes.set(Attributes<T> attributes, T attribute)
-      : _internal = Map<String, T>.of(attributes._internal)
+      : _internal = Map<Type, T>.of(attributes._internal)
           ..update(
-            attribute.type,
+            attribute.runtimeType,
             (_) => attribute,
             ifAbsent: () => attribute,
           );
 
-  Attributes.remove(Attributes<T> attributes, String type)
-      : _internal = Map<String, T>.of(attributes._internal)..remove(type);
+  Attributes.remove(Attributes<T> attributes, Type type)
+      : _internal = Map<Type, T>.of(attributes._internal)..remove(type);
 
   @override
   Iterator<T> get iterator => _internal.values.iterator;
 
   Iterable<T> get values => _internal.values;
 
-  T? operator [](String type) => get(type);
+  T? operator [](Type type) => get(type);
 
-  T? get(String type) => _internal[type];
+  T? get(Type type) => _internal[type];
 
   Attributes<T> set(T attribute);
 
-  Attributes<T> remove(T attribute) => removeByType(attribute.type);
+  Attributes<T> remove(T attribute) => removeByType(attribute.runtimeType);
 
-  Attributes<T> removeByType(String type);
+  Attributes<T> removeByType(Type type);
 
   @override
   bool operator ==(Object other) =>
       identical(other, this) ||
       (other is Attributes &&
-          const MapEquality<String, Object>().equals(
+          const MapEquality<Type, Object>().equals(
             other._internal,
             _internal,
           ));

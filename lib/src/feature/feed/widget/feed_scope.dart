@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
+import '../../../common/model/proposal.dart';
 import '../../initialization/widget/initialization_scope.dart';
 import '../bloc/feed_bloc.dart';
-import '../model/proposal.dart';
 
 @immutable
 class FeedScope extends StatelessWidget {

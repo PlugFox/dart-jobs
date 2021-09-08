@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
+import '../../../common/model/proposal.dart';
 import '../../../common/utils/date_util.dart';
-import '../../feed/model/proposal.dart';
 
 part 'job.g.dart';
 
@@ -98,6 +98,11 @@ class Job extends Proposal<JobAttribute> {
         updated: DateTime.now().toUtc(),
         attributes: newAttributes ?? attributes,
       );
+
+  @override
+  Job setAttribute(covariant JobAttribute attribute) => copyWith(
+        newAttributes: attributes.set(attribute),
+      );
 }
 
 /// Детальное описание работы
@@ -109,13 +114,13 @@ class JobAttributes extends Attributes<JobAttribute> {
 
   JobAttributes._set(Attributes<JobAttribute> attributes, JobAttribute attribute) : super.set(attributes, attribute);
 
-  JobAttributes._remove(Attributes<JobAttribute> attributes, String type) : super.remove(attributes, type);
+  JobAttributes._remove(Attributes<JobAttribute> attributes, Type type) : super.remove(attributes, type);
 
   @override
   JobAttributes set(JobAttribute attribute) => JobAttributes._set(this, attribute);
 
   @override
-  JobAttributes removeByType(String type) => JobAttributes._remove(this, type);
+  JobAttributes removeByType(Type type) => JobAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
   factory JobAttributes.fromJson(List<Object?> json) => JobAttributes(

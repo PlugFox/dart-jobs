@@ -2,13 +2,14 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
-import '../../../common/utils/date_util.dart';
-import '../../job/model/job.dart';
-import '../../resume/model/resume.dart';
+import '../../feature/job/model/job.dart';
+import '../../feature/resume/model/resume.dart';
+import '../utils/date_util.dart';
 import 'attributes.dart';
 
-export '../../job/model/job.dart';
-export '../../resume/model/resume.dart';
+export '../../feature/job/model/job.dart';
+export '../../feature/resume/model/resume.dart';
+export '../utils/date_util.dart';
 export 'attributes.dart';
 
 part 'proposal.g.dart';

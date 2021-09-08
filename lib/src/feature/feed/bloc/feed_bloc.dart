@@ -6,8 +6,8 @@ import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
+import '../../../common/model/proposal.dart';
 import '../data/feed_repository.dart';
-import '../model/proposal.dart';
 
 part 'feed_bloc.freezed.dart';
 
