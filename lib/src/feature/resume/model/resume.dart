@@ -13,14 +13,12 @@ class Resume extends Proposal {
   static const String typeRepresentation = 'resume';
 
   @override
+  @JsonKey(name: 'type', required: true)
   String get type => typeRepresentation;
 
   /// Данные элемента
   @override
-  @JsonKey(
-    name: 'attributes',
-    required: true,
-  )
+  @JsonKey(name: 'attributes', required: true)
   final ResumeAttributes attributes;
 
   const Resume({
@@ -29,6 +27,7 @@ class Resume extends Proposal {
     required String title,
     required DateTime created,
     required DateTime updated,
+    final bool pinned = false,
     this.attributes = const ResumeAttributes.empty(),
   }) : super(
           id: id,
@@ -36,6 +35,7 @@ class Resume extends Proposal {
           title: title,
           created: created,
           updated: updated,
+          pinned: pinned,
         );
 
   factory Resume.create({

@@ -15,14 +15,12 @@ class Job extends Proposal {
 
   /// Тип
   @override
+  @JsonKey(name: 'type', required: true)
   String get type => typeRepresentation;
 
   /// Данные элемента
   @override
-  @JsonKey(
-    name: 'attributes',
-    required: true,
-  )
+  @JsonKey(name: 'attributes', required: true)
   final JobAttributes attributes;
 
   const Job({
@@ -31,6 +29,7 @@ class Job extends Proposal {
     required final String title,
     required final DateTime created,
     required final DateTime updated,
+    final bool pinned = false,
     final this.attributes = const JobAttributes.empty(),
   }) : super(
           id: id,
@@ -38,6 +37,7 @@ class Job extends Proposal {
           title: title,
           created: created,
           updated: updated,
+          pinned: pinned,
         );
 
   factory Job.create({

@@ -17,11 +17,17 @@ part 'proposal.g.dart';
   createToJson: true,
 )
 abstract class Proposal implements Comparable<Proposal> {
+  @JsonKey(ignore: true)
   bool get isEmpty => id.isEmpty;
+
+  @JsonKey(ignore: true)
   bool get isNotEmpty => id.isNotEmpty;
 
   @JsonKey(name: 'type', required: true)
   String get type;
+
+  @JsonKey(name: 'pinned', required: false, disallowNullValue: false)
+  final bool pinned;
 
   @JsonKey(name: 'id', required: true)
   final String id;
@@ -56,6 +62,7 @@ abstract class Proposal implements Comparable<Proposal> {
     required final this.title,
     required final this.created,
     required final this.updated,
+    final this.pinned = false,
   });
 
   /// Generate Class from Map<String, dynamic>
@@ -99,6 +106,7 @@ abstract class Proposal implements Comparable<Proposal> {
   bool operator ==(Object other) => identical(this, other) || (other is Job && id == other.id);
 
   @override
+  @JsonKey(ignore: true)
   int get hashCode => id.hashCode;
 
   @override
