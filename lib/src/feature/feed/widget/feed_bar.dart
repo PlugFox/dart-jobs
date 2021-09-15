@@ -5,6 +5,7 @@ import '../../../common/localization/localizations.dart';
 import '../../../common/router/app_router.dart';
 import '../../../common/router/configuration.dart';
 import '../../../common/utils/screen_util.dart';
+import '../../authentication/widget/authentication_scope.dart';
 import 'feed_search_bar.dart';
 
 /// Шапка
@@ -105,19 +106,57 @@ class FeedBarAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () {
-          AppRouter.navigate(
+          AuthenticationScope.authenticateOr(
             context,
-            (configuration) => ProfileRouteConfiguration(),
+            (user) => AppRouter.navigate(
+              context,
+              (configuration) => ProfileRouteConfiguration(),
+            ),
           );
         },
         icon: const CircleAvatar(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Icon(
-              Icons.person,
-              size: 30,
+          radius: 30,
+          child: Padding(
+            padding: EdgeInsets.all(4),
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: _UserAvatarImage(),
+              ),
             ),
           ),
         ),
       );
+}
+
+@immutable
+class _UserAvatarImage extends StatelessWidget {
+  static const double radius = 26;
+
+  const _UserAvatarImage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final photoURL = AuthenticationScope.userOf(context, listen: true).when<String?>(
+      authenticated: (user) => user.photoURL,
+      notAuthenticated: () => null,
+    );
+    return photoURL == null || photoURL.isEmpty
+        ? const Icon(Icons.person, size: radius)
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(radius),
+            child: Image.network(
+              photoURL,
+              alignment: Alignment.center,
+              fit: BoxFit.scaleDown,
+              filterQuality: FilterQuality.medium,
+              width: radius * 2,
+              height: radius * 2,
+              cacheHeight: (radius * 2).truncate(),
+              cacheWidth: (radius * 2).truncate(),
+            ),
+          );
+  }
 }

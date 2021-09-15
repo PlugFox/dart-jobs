@@ -28,8 +28,8 @@ class JobScreen extends StatelessWidget {
           child: BlocListener<JobBLoC, JobState>(
             listener: (context, state) {
               // Если состояние загрузки - забираем возможность редактировать
-              state.maybeMap<void>(
-                orElse: () {},
+              state.maybeMap<Object?>(
+                orElse: () => null,
                 fetching: (_) => ProposalForm.switchToRead(context),
               );
             },
