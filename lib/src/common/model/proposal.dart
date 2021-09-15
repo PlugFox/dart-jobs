@@ -18,6 +18,7 @@ part 'proposal.g.dart';
 @JsonSerializable(
   createFactory: false,
   createToJson: true,
+  explicitToJson: true,
 )
 abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implements Comparable<Proposal> {
   @JsonKey(ignore: true)

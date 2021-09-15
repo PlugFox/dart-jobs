@@ -86,7 +86,7 @@ class _JobScopeState extends ComponentElement {
     final jobOrNull = FeedScope.proposalOf<Job>(this, (p) => p.id == id);
     final store = InitializationScope.storeOf(this);
     bloc = JobBLoC(
-      initialState: JobState.filled(
+      initialState: JobState.idle(
         job: jobOrNull ??
             Job(
               id: id,

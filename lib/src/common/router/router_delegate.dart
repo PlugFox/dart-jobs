@@ -30,7 +30,7 @@ class AppRouterDelegate extends RouterDelegate<RouteConfiguration> with ChangeNo
           */
         if (conf is ProfileRouteConfiguration) const ProfilePage(),
         if (conf is SettingsRouteConfiguration) const SettingsPage(),
-        if (conf is JobRouteConfiguration) JobPage(id: conf.id),
+        if (conf is JobRouteConfiguration) conf.creation ? const JobPage.create() : JobPage(id: conf.id),
       ],
       onPopPage: (Route<Object?> route, Object? result) {
         if (route is RootRoute || !route.didPop(result)) {

@@ -28,9 +28,8 @@ class AppRouteInformationParser implements RouteInformationParser<RouteConfigura
       case 'settings':
         return SettingsRouteConfiguration();
       case 'job':
-        final id = path.length > 1 ? path[1] : '';
-        if (id.isEmpty) break;
-        return JobRouteConfiguration(id: id);
+        final id = uri.queryParameters['id'];
+        return id == null || id.isEmpty ? JobRouteConfiguration.create() : JobRouteConfiguration(id: id);
       case '':
       case '/':
       case 'feed':

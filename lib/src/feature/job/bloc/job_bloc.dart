@@ -33,9 +33,9 @@ class JobState with _$JobState {
     required final Job job,
   }) = _FetchingJobState;
 
-  const factory JobState.filled({
+  const factory JobState.idle({
     required final Job job,
-  }) = _FilledJobState;
+  }) = _IdleJobState;
 
   const factory JobState.removed({
     required final Job job,
@@ -96,7 +96,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         user: user,
         attributes: attributes,
       );
-      yield JobState.filled(job: job);
+      yield JobState.idle(job: job);
     } on Object {
       yield JobState.error(job: state.job, message: 'Unsupported error');
       rethrow;
@@ -108,7 +108,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     try {
       yield JobState.fetching(job: state.job);
       final job = await _repository.fetch(state.job);
-      yield JobState.filled(job: job);
+      yield JobState.idle(job: job);
     } on JobNotFoundException catch (err) {
       yield JobState.error(job: state.job, message: err.toString());
     } on Object {
@@ -122,7 +122,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     try {
       yield JobState.fetching(job: job);
       await _repository.update(job);
-      yield JobState.filled(job: job);
+      yield JobState.idle(job: job);
     } on Object {
       yield JobState.error(job: job, message: 'Unsupported error');
       rethrow;

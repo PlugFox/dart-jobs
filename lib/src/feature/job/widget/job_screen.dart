@@ -25,6 +25,7 @@ class JobScreen extends StatelessWidget {
   Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
         builder: (context, state) => ProposalForm<Job>(
           initialData: state.job,
+          initialStatus: state.job.isEmpty ? ProposalFormStatus.edit : ProposalFormStatus.read,
           child: BlocListener<JobBLoC, JobState>(
             listener: (context, state) {
               // Если состояние загрузки - забираем возможность редактировать
@@ -37,7 +38,7 @@ class JobScreen extends StatelessWidget {
               appBar: AppBar(
                 title: state.when<Widget>(
                   fetching: (job) => const Text('Job loading...'),
-                  filled: (job) => Text('Job #${job.id}'),
+                  idle: (job) => Text('Job #${job.id}'),
                   error: (job, message) => const Text('Job error'),
                   removed: (job) => const Text('Removed'),
                 ),
@@ -106,7 +107,7 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
               child: child,
             ),
             child: Icon(
-              status == ProposalFormStatus.read ? Icons.edit : Icons.cancel_outlined,
+              status == ProposalFormStatus.read ? Icons.edit : Icons.save,
               key: ValueKey(status),
               size: 30,
             ),

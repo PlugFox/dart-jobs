@@ -46,8 +46,9 @@ class JobRepositoryFirebase implements IJobRepository {
       title: title,
       attributes: attributes,
     );
+    final json = newJob.toJson();
     await doc.set(
-      newJob.toJson(),
+      json,
       SetOptions(merge: false),
     );
     return newJob;

@@ -41,10 +41,10 @@ class FeedState with _$FeedState {
   /// Заполненная лента
   /// [list] - текущий список
   /// [endOfList] - достигнут конец списка и более старых элементов больше не будет
-  const factory FeedState.filled({
+  const factory FeedState.idle({
     required final List<Proposal> list,
     @Default(false) final bool endOfList,
-  }) = _FilledFeedState;
+  }) = _IdleFeedState;
 
   /// Ошибка получения ленты
   /// [list] - текущий список
@@ -102,7 +102,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       final proposals = (await proposalsStream.toList())..sort((a, b) => b.compareTo(a));
       final endOfList = proposals.length < loadingCount;
 
-      yield FeedState.filled(
+      yield FeedState.idle(
         list: List<Proposal>.of(state.list)..addAll(proposals),
         endOfList: endOfList,
       );

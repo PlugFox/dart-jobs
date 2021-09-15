@@ -5,6 +5,7 @@ import 'package:l/l.dart';
 import '../../../common/widget/custom_scroll_view_smooth.dart';
 import '../bloc/feed_bloc.dart';
 import 'feed_bar.dart';
+import 'feed_creation_buttons.dart';
 import 'feed_list.dart';
 import 'feed_scope.dart';
 import 'feed_tile.dart';
@@ -85,9 +86,13 @@ class _FeedScrollableState extends State<_FeedScrollable> {
           scrollBehavior: const ScrollBehavior(),
           controller: controller,
           slivers: const <Widget>[
-            /// Шапка
+            /// Шапка с поиском
             FeedBar(),
 
+            /// Создание новой работы
+            FeedCreationButtons(),
+
+            /// Лента
             FeedList(),
           ],
         ),

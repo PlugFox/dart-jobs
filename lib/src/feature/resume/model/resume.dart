@@ -7,7 +7,9 @@ import '../../../common/model/proposal.dart';
 part 'resume.g.dart';
 
 @immutable
-@JsonSerializable()
+@JsonSerializable(
+  explicitToJson: true,
+)
 class Resume extends Proposal<ResumeAttribute> {
   static const String signature = 'resume';
 

@@ -9,7 +9,9 @@ part 'job.g.dart';
 
 /// Работа
 @immutable
-@JsonSerializable()
+@JsonSerializable(
+  explicitToJson: true,
+)
 class Job extends Proposal<JobAttribute> {
   static const String signature = 'job';
 

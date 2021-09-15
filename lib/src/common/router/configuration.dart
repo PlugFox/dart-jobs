@@ -25,12 +25,16 @@ class SettingsRouteConfiguration extends RouteConfiguration {
 }
 
 class JobRouteConfiguration extends RouteConfiguration {
+  /// Идентификатор работы
   final String id;
 
-  JobRouteConfiguration({
-    required final this.id,
-  });
+  /// Если идентификатор пустой - создание новой работы
+  bool get creation => id.isEmpty;
+
+  JobRouteConfiguration({required final this.id});
+
+  JobRouteConfiguration.create() : id = '';
 
   @override
-  Uri toUri() => Uri.parse('/job/$id');
+  Uri toUri() => Uri.parse('/job?${creation ? 'creation' : 'id=$id'}');
 }

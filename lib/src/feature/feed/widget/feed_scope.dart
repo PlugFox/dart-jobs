@@ -31,7 +31,7 @@ class FeedScope extends StatelessWidget {
     if (bloc.state.maybeWhen<bool>(
       orElse: () => true,
       empty: (_) => false,
-      filled: (_, endOfList) => endOfList,
+      idle: (_, endOfList) => endOfList,
     )) return;
     bloc.add(
       FeedEvent.paginate(
