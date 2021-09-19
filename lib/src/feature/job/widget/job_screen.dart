@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../../common/widget/proposal_form.dart';
 import '../../authentication/model/user_entity.dart';
 import '../../authentication/widget/authentication_scope.dart';
 import '../bloc/job_bloc.dart';
@@ -136,7 +135,7 @@ class _CancelEditAppBarButton extends StatelessWidget {
             ),
             onPressed: () {
               BlocScope.of<JobBLoC>(context).add(const JobEvent.fetch());
-              ProposalForm.switchToRead(context);
+              JobForm.switchToRead(context);
             },
           ),
         ),

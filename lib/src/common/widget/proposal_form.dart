@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ import '../../feature/authentication/widget/authentication_scope.dart';
 import '../model/proposal.dart';
 
 @experimental
+@Deprecated('Пересмотреть реализацию')
 @immutable
 class ProposalForm<T extends Proposal> extends StatefulWidget {
   final Widget child;

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -9,9 +11,11 @@ import '../model/proposal.dart';
 import 'proposal_form.dart';
 
 @experimental
+@Deprecated('Пересмотреть реализацию')
 typedef ProposalFormTextFieldValueChanged<T extends Proposal> = T? Function(String value, T data);
 
 @experimental
+@Deprecated('Пересмотреть реализацию')
 @immutable
 abstract class ProposalFormTextField<T extends Proposal> extends StatelessWidget {
   final String Function(T data) text;
