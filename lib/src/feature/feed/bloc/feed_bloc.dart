@@ -15,6 +15,9 @@ part 'feed_bloc.freezed.dart';
 class FeedEvent with _$FeedEvent {
   const FeedEvent._();
 
+  /// TODO: добавить эвент запроса последних событий, начиная с первого
+  /// Вызывать его каждые N минут, а также при изменении в скоупе работы/резюме
+
   /// Запросить еще [count] элементов
   const factory FeedEvent.paginate({
     required final int count,

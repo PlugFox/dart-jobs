@@ -8,8 +8,10 @@ import 'package:meta/meta.dart';
 import '../model/proposal.dart';
 import 'proposal_form.dart';
 
+@experimental
 typedef ProposalFormTextFieldValueChanged<T extends Proposal> = T? Function(String value, T data);
 
+@experimental
 @immutable
 abstract class ProposalFormTextField<T extends Proposal> extends StatelessWidget {
   final String Function(T data) text;

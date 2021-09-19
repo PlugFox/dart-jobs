@@ -108,7 +108,8 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   int compareTo(Proposal other) => created.compareTo(other.created);
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is Job && id == other.id);
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is Job && id == other.id && updated == other.updated);
 
   @override
   @JsonKey(ignore: true)
