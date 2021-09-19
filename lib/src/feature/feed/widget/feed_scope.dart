@@ -30,7 +30,6 @@ class FeedScope extends StatelessWidget {
     // Не имеет если уже выполняется запрос
     if (bloc.state.maybeWhen<bool>(
       orElse: () => true,
-      empty: (_) => false,
       idle: (_, endOfList) => endOfList,
     )) return;
     bloc.add(

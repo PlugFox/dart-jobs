@@ -66,7 +66,7 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
         super(initialState ?? AuthenticationState.fromUser(authenticationRepository.currentUser)) {
     _authStateChangesSubscription = authenticationRepository.authStateChanges
         .map<AuthenticationState>(AuthenticationState.fromUser)
-        .listen(setState);
+        .listen(setState, cancelOnError: false);
   }
 
   @override

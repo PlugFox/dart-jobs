@@ -96,8 +96,8 @@ class ProfileWidget extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: const Placeholder(),
+          const Expanded(
+            child: Placeholder(),
           ),
         ],
       ),

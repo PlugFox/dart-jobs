@@ -33,16 +33,11 @@ class FeedState with _$FeedState {
     required final int loadingCount,
   }) = _ProcessedFeedState;
 
-  /// Пустая лента (изначальное состояние)
-  const factory FeedState.empty({
-    @Default(<Proposal>[]) final List<Proposal> list,
-  }) = _EmptyFeedState;
-
   /// Заполненная лента
   /// [list] - текущий список
   /// [endOfList] - достигнут конец списка и более старых элементов больше не будет
   const factory FeedState.idle({
-    required final List<Proposal> list,
+    @Default(<Proposal>[]) final List<Proposal> list,
     @Default(false) final bool endOfList,
   }) = _IdleFeedState;
 
@@ -59,7 +54,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   final IFeedRepository _repository;
   FeedBLoC({
     required final IFeedRepository repository,
-    FeedState initialState = const FeedState.empty(),
+    FeedState initialState = const FeedState.idle(),
   })  : _repository = repository,
         super(initialState);
 
