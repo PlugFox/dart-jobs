@@ -37,6 +37,14 @@ class AuthenticationScope extends StatefulWidget {
     }
   }
 
+  static bool isSameUid(BuildContext context, String uid, {bool listen = false}) => userOf(
+        context,
+        listen: listen,
+      ).when(
+        authenticated: (user) => user.uid == uid,
+        notAuthenticated: () => false,
+      );
+
   /// Выполнить коллбэк если аутентифицированы
   /// Войти с помощью гугла если не вошли
   /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
