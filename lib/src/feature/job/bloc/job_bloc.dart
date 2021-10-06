@@ -12,11 +12,11 @@ part 'job_bloc.freezed.dart';
 class JobEvent with _$JobEvent {
   const JobEvent._();
 
+  /// Запросить обновление по работе
   const factory JobEvent.fetch() = _FetchJobEvent;
 
+  /// Обновить работу
   const factory JobEvent.update(Job job) = _UpdateJobEvent;
-
-  const factory JobEvent.delete() = _DeleteJobEvent;
 }
 
 @freezed
@@ -30,10 +30,6 @@ class JobState with _$JobState {
   const factory JobState.idle({
     required final Job job,
   }) = _IdleJobState;
-
-  const factory JobState.removed({
-    required final Job job,
-  }) = _RemovedJobState;
 
   const factory JobState.error({
     required final Job job,
@@ -53,7 +49,6 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   Stream<JobState> mapEventToState(JobEvent event) => event.when<Stream<JobState>>(
         fetch: _fetch,
         update: _update,
-        delete: _delete,
       );
 
   @override
@@ -72,31 +67,6 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         ),
         transitionFn,
       );
-
-  /*
-  Stream<JobState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
-    if (state.job.isNotEmpty) return;
-    try {
-      yield JobState.fetching(
-        job: Job.create(
-          id: '',
-          creatorId: user.uid,
-          title: title,
-          attributes: attributes,
-        ),
-      );
-      final job = await _repository.create(
-        title: title,
-        user: user,
-        attributes: attributes,
-      );
-      yield JobState.idle(job: job);
-    } on Object {
-      yield JobState.error(job: state.job, message: 'Unsupported error');
-      rethrow;
-    }
-  }
-  */
 
   Stream<JobState> _fetch() async* {
     if (state.job.isEmpty) return;
@@ -120,18 +90,6 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       yield JobState.idle(job: job);
     } on Object {
       yield JobState.error(job: job, message: 'Unsupported error');
-      rethrow;
-    }
-  }
-
-  Stream<JobState> _delete() async* {
-    if (state.job.isEmpty) return;
-    try {
-      yield JobState.fetching(job: state.job);
-      await _repository.delete(state.job);
-      yield JobState.removed(job: state.job);
-    } on Object {
-      yield JobState.error(job: state.job, message: 'Unsupported error');
       rethrow;
     }
   }

@@ -108,18 +108,23 @@ class SettingsPageConfiguration extends PageConfiguration {
 }
 
 class JobPageConfiguration extends PageConfiguration {
-  /// Идентификатор работы
-  final String id;
-
   JobPageConfiguration({
     required final this.id,
+    final this.edit = false,
   }) : super(
           <String, Object?>{
             'job': <String, Object?>{
               'id': id,
+              'edit': edit,
             },
           },
         );
+
+  /// Идентификатор работы
+  final String id;
+
+  /// Открыть в режиме редактирования, а не просмотра
+  final bool edit;
 
   @override
   PageConfiguration? get previous => const FeedPageConfiguration();
@@ -130,6 +135,9 @@ class JobPageConfiguration extends PageConfiguration {
   @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
     yield* super.buildPages(context);
-    yield JobPage(id: id);
+    yield JobPage(
+      id: id,
+      edit: edit,
+    );
   }
 }

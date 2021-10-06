@@ -6,17 +6,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../common/constant/layout_constraints.dart';
+import '../../authentication/widget/authentication_scope.dart';
 import '../model/job.dart';
 
 @immutable
 class JobForm extends StatefulWidget {
-  final Job job;
-  final Widget child;
   const JobForm({
     required final this.job,
     required final this.child,
+    this.edit = false,
     Key? key,
   }) : super(key: key);
+
+  final Job job;
+
+  /// Изначальное состояние (если true - открыть форму в режиме редактирования)
+  final bool edit;
+
+  final Widget child;
 
   static void switchToRead(BuildContext context) =>
       context.findAncestorStateOfType<_JobFormState>()?.readOnlyController.value = true;
@@ -34,7 +41,7 @@ class JobForm extends StatefulWidget {
 }
 
 class _JobFormState extends State<JobForm> {
-  final ValueNotifier<bool> readOnlyController = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> readOnlyController = ValueNotifier<bool>(true);
   final TextEditingController jobTitleController = TextEditingController(text: '');
   final TextEditingController companyTitleController = TextEditingController(text: '');
   final TextEditingController locationCountryController = TextEditingController(text: '');
@@ -58,7 +65,11 @@ class _JobFormState extends State<JobForm> {
 
   void _fillControllers() {
     final job = widget.job;
-    readOnlyController.value = job.isNotEmpty;
+    if (widget.edit && AuthenticationScope.isSameUid(context, job.creatorId)) {
+      readOnlyController.value = false;
+    } else {
+      readOnlyController.value = true;
+    }
     jobTitleController.text = job.title;
     companyTitleController.text = job.getAttribute<CompanyJobAttribute>()?.title ?? '';
     locationCountryController.text = job.getAttribute<LocationJobAttribute>()?.country ?? '';

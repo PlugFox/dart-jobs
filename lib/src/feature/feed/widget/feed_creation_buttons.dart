@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../common/router/page_router.dart';
 import '../../authentication/widget/authentication_scope.dart';
+import 'feed_scope.dart';
 
 @immutable
 class FeedCreationButtons extends StatelessWidget {
@@ -29,10 +29,10 @@ class FeedCreationButtons extends StatelessWidget {
                       AuthenticationScope.authenticateOr(
                         context,
                         (user) {
-                          PageRouter.navigate(
+                          FeedScope.createJobOf(
                             context,
-                            (configuration) =>
-                                throw UnimplementedError('Не реализовано'), //JobPageConfiguration.create(),
+                            title: 'Best work ever',
+                            user: user,
                           );
                         },
                       );

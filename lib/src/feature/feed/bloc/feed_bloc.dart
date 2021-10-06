@@ -15,16 +15,8 @@ part 'feed_bloc.freezed.dart';
 class FeedEvent with _$FeedEvent {
   const FeedEvent._();
 
-  /*
-  const factory FeedEvent.createJob({
-    required String title,
-    required AuthenticatedUser user,
-    @Default(JobAttributes.empty()) JobAttributes attributes,
-  }) = _CreateJobFeedEvent;
-  */
-
-  /// TODO: добавить эвент запроса последних событий, начиная с первого
-  /// Вызывать его каждые N минут, а также при изменении в скоупе работы/резюме
+  /// Запросить самые новые элементы
+  const factory FeedEvent.fetchRecent() = _FetchRecentFeedEvent;
 
   /// Запросить еще [count] элементов
   const factory FeedEvent.paginate({
@@ -45,9 +37,10 @@ class FeedState with _$FeedState {
   /// Выполняется обработка/загрузка ленты
   /// [list] - текущий список
   /// [loadingCount] - количество запрашиваемых элементов
+  /// Если 0 - это не паджинация
   const factory FeedState.processed({
     required final List<Proposal> list,
-    required final int loadingCount,
+    @Default(0) final int loadingCount,
   }) = _ProcessedFeedState;
 
   /// Заполненная лента
@@ -77,6 +70,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
+        fetchRecent: _fetchRecent,
         paginate: _paginate,
       );
 
@@ -100,6 +94,8 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         ),
         transitionFn,
       );
+
+  Stream<FeedState> _fetchRecent() async* {}
 
   Stream<FeedState> _paginate(final int count) async* {
     final loadingCount = math.min(count, 100);

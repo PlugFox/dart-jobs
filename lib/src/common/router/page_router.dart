@@ -8,6 +8,8 @@ import 'package:meta/meta.dart';
 import 'configuration.dart';
 import 'router_delegate.dart';
 
+export 'configuration.dart';
+
 typedef NavigateCallback = PageConfiguration Function(PageConfiguration configuration);
 
 @immutable

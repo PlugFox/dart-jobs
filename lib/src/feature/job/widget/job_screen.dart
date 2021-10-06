@@ -12,13 +12,22 @@ import 'job_scope.dart';
 @immutable
 class JobScreen extends StatelessWidget {
   const JobScreen({
+    required final this.id,
+    this.edit = false,
     Key? key,
   }) : super(key: key);
+
+  /// Идентификатор работы
+  final String id;
+
+  /// Изначальное состояние (если true - открыть форму в режиме редактирования)
+  final bool edit;
 
   @override
   Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
         builder: (context, state) => JobForm(
           job: state.job,
+          edit: edit,
           child: BlocListener<JobBLoC, JobState>(
             listener: (context, state) {
               // Если состояние загрузки - забираем возможность редактировать
@@ -29,12 +38,7 @@ class JobScreen extends StatelessWidget {
             },
             child: Scaffold(
               appBar: AppBar(
-                title: state.when<Widget>(
-                  fetching: (job) => const Text('Job loading...'),
-                  idle: (job) => Text('Job #${job.id}'),
-                  error: (job, message) => const Text('Job error'),
-                  removed: (job) => const Text('Removed'),
-                ),
+                title: Text('Job #$id'),
                 actions: const <Widget>[
                   _CancelEditAppBarButton(),
                   SizedBox(width: 15),
