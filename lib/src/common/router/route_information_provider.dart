@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-class AppRouteInformationProvider extends PlatformRouteInformationProvider {
-  AppRouteInformationProvider({
+class PageInformationProvider extends PlatformRouteInformationProvider {
+  PageInformationProvider({
     required final RouteInformation initialRouteInformation,
   }) : super(initialRouteInformation: initialRouteInformation);
 }

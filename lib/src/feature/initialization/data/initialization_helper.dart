@@ -88,10 +88,16 @@ class InitializationProgressStatus {
 
 final Map<String, FutureOr<InitializationProgress> Function(InitializationProgress progress)> _initializationSteps = {
   'Initializing analytics': (progress) async {
-    final analytics = FirebaseAnalytics();
-    await analytics.setAnalyticsCollectionEnabled(kReleaseMode);
-    await analytics.logAppOpen();
-    return progress.copyWith(newAnalytics: analytics);
+    InitializationProgress newProgress;
+    try {
+      final analytics = FirebaseAnalytics();
+      newProgress = progress.copyWith(newAnalytics: analytics);
+      await analytics.setAnalyticsCollectionEnabled(kReleaseMode);
+      await analytics.logAppOpen();
+    } on Object {
+      newProgress = progress;
+    }
+    return newProgress;
   },
   'Preparing for authentication': (progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),

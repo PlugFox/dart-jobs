@@ -241,10 +241,9 @@ linter:
 dart_code_metrics:
   anti-patterns:
     - long-method
-    - long-parameter-list
   metrics:
     cyclomatic-complexity: 20
-    number-of-arguments: 4
+    number-of-arguments: 12
     maximum-nesting-level: 5
   metrics-exclude:
     - test/**

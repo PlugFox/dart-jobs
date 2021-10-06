@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'common/widget/app_material_context.dart';
-import 'common/widget/global_context.dart';
 import 'feature/authentication/widget/authentication_scope.dart';
 import 'feature/feed/widget/feed_scope.dart';
 import 'feature/initialization/widget/initialization_scope.dart';
@@ -20,14 +19,12 @@ class App extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const GlobalContext(
-        child: InitializationScope(
-          initializationScreen: InitializationScreen(),
-          child: AuthenticationScope(
-            child: SettingsScope(
-              child: FeedScope(
-                child: AppMaterialContext(),
-              ),
+  Widget build(BuildContext context) => const InitializationScope(
+        initializationScreen: InitializationScreen(),
+        child: AuthenticationScope(
+          child: SettingsScope(
+            child: FeedScope(
+              child: AppMaterialContext(),
             ),
           ),
         ),

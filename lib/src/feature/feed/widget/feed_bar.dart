@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constant/assets.gen.dart' as assets;
 import '../../../common/localization/localizations.dart';
-import '../../../common/router/app_router.dart';
 import '../../../common/router/configuration.dart';
+import '../../../common/router/page_router.dart';
 import '../../../common/utils/screen_util.dart';
 import '../../authentication/widget/authentication_scope.dart';
 import 'feed_search_bar.dart';
@@ -75,9 +75,9 @@ class FeedBarSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () {
-          AppRouter.navigate(
+          PageRouter.navigate(
             context,
-            (configuration) => SettingsRouteConfiguration(),
+            (configuration) => const SettingsPageConfiguration(),
           );
         },
         icon: const CircleAvatar(
@@ -108,9 +108,9 @@ class FeedBarAvatar extends StatelessWidget {
         onPressed: () {
           AuthenticationScope.authenticateOr(
             context,
-            (user) => AppRouter.navigate(
+            (user) => PageRouter.navigate(
               context,
-              (configuration) => ProfileRouteConfiguration(),
+              (configuration) => const ProfilePageConfiguration(),
             ),
           );
         },

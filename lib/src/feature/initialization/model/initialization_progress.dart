@@ -50,7 +50,7 @@ class InitializationProgress {
 
   @factory
   RepositoryStore getResult() => RepositoryStore._(
-        analytics: analytics!,
+        analytics: analytics,
         authenticationRepository: authenticationRepository!,
         firebaseFirestore: firebaseFirestore!,
         sharedPreferences: sharedPreferences!,
@@ -62,7 +62,7 @@ class InitializationProgress {
 
 @immutable
 class RepositoryStore {
-  final FirebaseAnalytics analytics;
+  final FirebaseAnalytics? analytics;
   final IAuthenticationRepository authenticationRepository;
   final FirebaseFirestore firebaseFirestore;
   final SharedPreferences sharedPreferences;

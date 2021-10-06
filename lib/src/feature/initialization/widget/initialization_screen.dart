@@ -36,7 +36,10 @@ class _InitializationScreenState extends State<InitializationScreen> {
           ),
           child: Center(
             child: StreamBuilder<InitializationState>(
-              initialData: const InitializationState.notInitialized(),
+              initialData: const InitializationState.initializationInProgress(
+                progress: 0,
+                message: 'Preparing for initialization',
+              ),
               stream: _stream,
               builder: (context, snapshot) =>
                   snapshot.data?.map<Widget>(
@@ -44,18 +47,20 @@ class _InitializationScreenState extends State<InitializationScreen> {
                       progress: 0,
                       message: 'Initialized',
                     ),
-                    notInitialized: (_) => const InitializationProgressWidget(
-                      progress: 0,
-                      message: 'Not initialized',
-                    ),
                     initializationInProgress: (state) => InitializationProgressWidget(
                       message: state.message,
                       progress: state.progress,
                     ),
+                    error: (state) => InitializationErrorWidget(
+                      message: state.message,
+                      error: state.error,
+                      stackTrace: state.stackTrace,
+                    ),
                   ) ??
-                  const InitializationProgressWidget(
-                    progress: 0,
+                  InitializationErrorWidget(
                     message: 'Initialization error',
+                    error: 'Unknown initialization state',
+                    stackTrace: StackTrace.current,
                   ),
             ),
           ),
@@ -89,5 +94,36 @@ class InitializationProgressWidget extends StatelessWidget {
             ],
           ),
         ),
+      );
+}
+
+@immutable
+class InitializationErrorWidget extends StatelessWidget {
+  final String message;
+  final Object error;
+  final StackTrace stackTrace;
+  const InitializationErrorWidget({
+    required final this.message,
+    required final this.error,
+    required final this.stackTrace,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 48,
+          ),
+          Text(message),
+          const Divider(),
+          Text(error.toString()),
+          Text(stackTrace.toString()),
+        ],
       );
 }

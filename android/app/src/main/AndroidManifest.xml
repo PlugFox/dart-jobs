@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.plugfox.dart_jobs">
    <application
-        android:label="dart_jobs"
+        android:label="Dart Jobs"
+        android:description="Dart Jobs"
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="true"
         android:allowBackup="true">

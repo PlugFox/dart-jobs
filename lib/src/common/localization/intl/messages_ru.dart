@@ -12,15 +12,14 @@
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
-final messages = new MessageLookup();
+final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
+typedef MessageIfAbsent = String Function(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "title": MessageLookupByLibrary.simpleMessage("DART JOBS")
-      };
+  static Map<String, Function> _notInlinedMessages(_) =>
+      <String, Function>{"title": MessageLookupByLibrary.simpleMessage("DART JOBS")};
 }

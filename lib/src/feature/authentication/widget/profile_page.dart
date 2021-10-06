@@ -4,10 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'profile_screen.dart';
 
 class ProfilePage extends Page<void> {
-  const ProfilePage();
+  const ProfilePage()
+      : super(
+          key: const ValueKey<String>('/profile'),
+          name: '/profile',
+          arguments: const <String, Object?>{},
+        );
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute(
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
         builder: (context) => const ProfileScreen(),
         settings: this,
       );

@@ -17,16 +17,32 @@ class InitializationEvent with _$InitializationEvent {
 class InitializationState with _$InitializationState {
   const InitializationState._();
 
-  const factory InitializationState.notInitialized() = _AppNotInitialized;
+  bool get isInitialized => maybeMap<bool>(
+        orElse: () => false,
+        initialized: (_) => true,
+      );
 
+  bool get isNotInitialized => !isInitialized;
+
+  /// Прогресс инициализации
+  /// [percent] - процент инициализации, от 0 до 100
+  /// [status] - статус инициализации, сообщение о задании
   const factory InitializationState.initializationInProgress({
     required final int progress,
     required final String message,
   }) = _AppInitializationInProgress;
 
+  /// Инициализировано
   const factory InitializationState.initialized({
     required final RepositoryStore result,
   }) = _AppInitialized;
+
+  /// Произошла ошибка инициализации
+  const factory InitializationState.error({
+    required String message,
+    required Object error,
+    required StackTrace stackTrace,
+  }) = _AppInitializationError;
 }
 
 class InitializationBLoC extends Bloc<InitializationEvent, InitializationState> {
@@ -34,22 +50,35 @@ class InitializationBLoC extends Bloc<InitializationEvent, InitializationState> 
 
   InitializationBLoC({
     required final InitializationHelper initializationHelper,
-    final InitializationState initialState = const InitializationState.notInitialized(),
+    final InitializationState initialState = const InitializationState.initializationInProgress(
+      progress: 0,
+      message: 'Preparing for initialization',
+    ),
   })  : _initializationHelper = initializationHelper,
         super(initialState);
 
   @override
   Stream<InitializationState> mapEventToState(InitializationEvent event) async* {
-    if (_initializationHelper.isInitialized) {
+    try {
+      if (_initializationHelper.isInitialized) {
+        yield InitializationState.initialized(result: _initializationHelper.getResult());
+      }
+      _initializationHelper.reset();
+      yield* _initializationHelper.initialize().map<InitializationState>(
+            (value) => InitializationState.initializationInProgress(
+              progress: value.progress,
+              message: value.message,
+            ),
+          );
       yield InitializationState.initialized(result: _initializationHelper.getResult());
+    } on Object catch (error, stackTrace) {
+      // Произошла непредвиденная ошибка
+      yield InitializationState.error(
+        message: 'Unsupported initialization error',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
-    _initializationHelper.reset();
-    yield* _initializationHelper.initialize().map<InitializationState>(
-          (value) => InitializationState.initializationInProgress(
-            progress: value.progress,
-            message: value.message,
-          ),
-        );
-    yield InitializationState.initialized(result: _initializationHelper.getResult());
   }
 }

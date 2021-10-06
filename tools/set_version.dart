@@ -21,10 +21,8 @@ void main() => runZonedGuarded<void>(
               .transform<String>(const LineSplitter())
               .asyncMap<String>((line) async {
                 if (notFound & line.startsWith('version:')) {
-                  final buildName =
-                      line.substring(8).split('+').first.trim(); // 1.2.3
-                  final buildNumber =
-                      DateTime.now().millisecondsSinceEpoch ~/ 1000; // 4
+                  final buildName = line.substring(8).split('+').first.trim(); // 1.2.3
+                  final buildNumber = DateTime.now().millisecondsSinceEpoch ~/ 1000; // 4
                   final version = '$buildName+$buildNumber'; // 1.2.3+4
                   io.stdout.writeln('Version: $version');
                   await versionEnv.writeAsString(
@@ -71,10 +69,7 @@ Future<void> prepare() async {
 }
 
 Future<void> run(String executable) {
-  final commands = executable
-      .split(' ')
-      .where((element) => element.isNotEmpty)
-      .toList(growable: false);
+  final commands = executable.split(' ').where((element) => element.isNotEmpty).toList(growable: false);
 
   return io.Process.start(
     commands.first,

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_info/platform_info.dart';
 
-import '../../../common/router/app_router.dart';
+import '../../../common/router/page_router.dart';
 import '../model/user_entity.dart';
 import 'authentication_scope.dart';
 
@@ -18,7 +18,7 @@ class ProfileWidget extends StatelessWidget {
     final user = AuthenticationScope.userOf(context);
     if (user is! AuthenticatedUser) {
       WidgetsBinding.instance?.addPostFrameCallback(
-        (_) => AppRouter.pop(context),
+        (_) => PageRouter.pop(context),
       );
       return const SizedBox.shrink();
     }
@@ -89,7 +89,7 @@ class ProfileWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: OutlinedButton(
                 onPressed: () {
-                  AppRouter.pop(context);
+                  PageRouter.pop(context);
                   AuthenticationScope.logOut(context);
                 },
                 child: const Text('Log out'),

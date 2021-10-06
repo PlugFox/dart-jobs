@@ -1,42 +1,86 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:l/l.dart';
 
 import 'configuration.dart';
 
-class AppRouteInformationParser implements RouteInformationParser<RouteConfiguration> {
+class PageInformationParser = RouteInformationParser<PageConfiguration>
+    with _RestoreRouteInformationMixin, _ParseRouteInformationMixin;
+
+mixin _RestoreRouteInformationMixin on RouteInformationParser<PageConfiguration> {
   @override
-  Future<RouteConfiguration> parseRouteInformation(RouteInformation routeInformation) {
-    final location = routeInformation.location ?? '/';
-    final uri = Uri.parse(location);
-    final configuration = uriToRouteConfiguration(uri);
-    return SynchronousFuture<RouteConfiguration>(configuration);
+  RouteInformation? restoreRouteInformation(PageConfiguration configuration) {
+    try {
+      final uri = configuration.toUri();
+      final location = uri.toString();
+      return RouteInformation(location: location, state: configuration.state);
+    } on Object catch (error) {
+      l.e('Ошибка навигации restoreRouteInformation: $error');
+      return const RouteInformation(location: '/');
+    }
+  }
+}
+
+mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
+  @override
+  Future<PageConfiguration> parseRouteInformation(RouteInformation routeInformation) {
+    try {
+      final location = routeInformation.location ?? '/';
+      final uri = Uri.parse(location);
+      final routeInformationState = routeInformation.state;
+      final state = <String, Object?>{if (routeInformationState is Map<String, Object?>) ...routeInformationState};
+      final configuration = _uriToConfiguration(uri, state);
+      return SynchronousFuture<PageConfiguration>(configuration);
+    } on Object catch (error) {
+      l.e('Ошибка навигации parseRouteInformation: $error');
+      return SynchronousFuture<PageConfiguration>(const NotFoundPageConfiguration());
+    }
   }
 
-  @override
-  RouteInformation? restoreRouteInformation(RouteConfiguration configuration) {
-    final uri = configuration.toUri();
-    final location = uri.toString();
-    return RouteInformation(location: location);
-  }
-
-  static RouteConfiguration uriToRouteConfiguration(Uri uri) {
+  static PageConfiguration _uriToConfiguration(Uri uri, Map<String, Object?> state) {
     final path = uri.pathSegments;
     switch (path.firstOrNull) {
-      case 'profile':
-        return ProfileRouteConfiguration();
+      case 'auth':
+      case 'login':
+      case 'enter':
+      case 'log_in':
       case 'settings':
-        return SettingsRouteConfiguration();
+        return const SettingsPageConfiguration();
+      case 'user':
+      case 'profile':
+        return const ProfilePageConfiguration();
       case 'job':
-        final id = uri.queryParameters['id'];
-        return id == null || id.isEmpty ? JobRouteConfiguration.create() : JobRouteConfiguration(id: id);
-      case '':
+      case 'jobs':
+        return _uriToJob(uri, state);
+      case 'proposal':
+      case 'proposals':
+      case 'items':
       case '/':
-      case 'feed':
+      case '*':
+      case '.':
+      case '':
       case null:
+        if (path.length < 2) {
+          return const FeedPageConfiguration();
+        }
+        break;
+      case 'item':
+      case 'feed':
+      case 'not_found':
       default:
         break;
     }
-    return FeedRouteConfiguration();
+    return const NotFoundPageConfiguration();
+  }
+
+  static PageConfiguration _uriToJob(Uri uri, Map<String, Object?> state) {
+    final path = uri.pathSegments;
+    final segment = path.skip(1).firstOrNull;
+    if (segment != null && segment.length > 2 && segment.startsWith('id')) {
+      final id = segment.substring(2);
+      return JobPageConfiguration(id: id);
+    }
+    return const FeedPageConfiguration();
   }
 }

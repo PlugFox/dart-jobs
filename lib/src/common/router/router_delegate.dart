@@ -1,71 +1,73 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../feature/authentication/widget/profile_page.dart';
-import '../../feature/feed/widget/feed_page.dart';
-import '../../feature/job/widget/job_page.dart';
-import '../../feature/settings/widget/settings_page.dart';
+import '../../feature/initialization/widget/initialization_scope.dart';
+import '../../feature/not_found/widget/not_found_screen.dart';
 import 'configuration.dart';
+import 'page_router.dart';
 import 'root_route.dart';
 
-class AppRouterDelegate extends RouterDelegate<RouteConfiguration> with ChangeNotifier {
-  AppRouterDelegate({
-    required final RouteConfiguration initialConfiguration,
-  })  : _currentConfiguration = initialConfiguration,
-        _navigatorKey = GlobalKey<NavigatorState>();
+class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
 
-  final GlobalKey<NavigatorState> _navigatorKey;
+class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNotifier {
+  PageRouterDelegate({
+    final PageConfiguration initialConfiguration = const FeedPageConfiguration(),
+  })  : _currentConfiguration = initialConfiguration,
+        pageObserver = PageObserver();
+
+  final PageObserver pageObserver;
+
+  @override
+  PageConfiguration get currentConfiguration => _currentConfiguration;
+  PageConfiguration _currentConfiguration;
 
   @override
   Widget build(BuildContext context) {
-    final conf = currentConfiguration;
-    return Navigator(
-      key: _navigatorKey,
-      transitionDelegate: const DefaultTransitionDelegate<Object?>(),
-      pages: <Page<Object?>>[
-        const FeedPage(),
-        /*
-          if (_selectedBook != null) BookDetailsPage(book: _selectedBook)
-          */
-        if (conf is ProfileRouteConfiguration) const ProfilePage(),
-        if (conf is SettingsRouteConfiguration) const SettingsPage(),
-        if (conf is JobRouteConfiguration) conf.creation ? const JobPage.create() : JobPage(id: conf.id),
-      ],
-      onPopPage: (Route<Object?> route, Object? result) {
-        if (route is RootRoute || !route.didPop(result)) {
-          return false;
-        }
-        _currentConfiguration = FeedRouteConfiguration();
-        notifyListeners();
-        return true;
-      },
+    final configuration = currentConfiguration;
+    final analytics = InitializationScope.storeOf(context).analytics;
+    return PageRouter(
+      routerDelegate: this,
+      child: Navigator(
+        transitionDelegate: const DefaultTransitionDelegate<Object?>(),
+        onUnknownRoute: _onUnknownRoute,
+        reportsRouteUpdateToEngine: true,
+        observers: <NavigatorObserver>[
+          pageObserver,
+          if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
+        ],
+        pages: configuration.buildPages(context).toList(growable: false),
+        onPopPage: (Route<Object?> route, Object? result) {
+          if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
+            return false;
+          }
+          setNewRoutePath(configuration.previous ?? const NotFoundPageConfiguration());
+          return true;
+        },
+      ),
     );
   }
 
   @override
-  Future<void> setNewRoutePath(RouteConfiguration configuration) {
+  Future<bool> popRoute() {
+    if (currentConfiguration.isRoot) return SynchronousFuture<bool>(false);
+    final navigator = pageObserver.navigator;
+    if (navigator == null) return SynchronousFuture<bool>(false);
+    return navigator.maybePop();
+  }
+
+  @override
+  Future<void> setNewRoutePath(PageConfiguration configuration) {
     _currentConfiguration = configuration;
     notifyListeners();
     return SynchronousFuture(null);
   }
 
-  @override
-  RouteConfiguration get currentConfiguration => _currentConfiguration;
-  RouteConfiguration _currentConfiguration;
-
-  @override
-  Future<void> setInitialRoutePath(RouteConfiguration configuration) => setNewRoutePath(configuration);
-
-  @override
-  Future<void> setRestoredRoutePath(RouteConfiguration configuration) => setNewRoutePath(configuration);
-
-  @override
-  Future<bool> popRoute() async {
-    final navigator = _navigatorKey.currentState;
-    if (navigator == null) return SynchronousFuture<bool>(false);
-    return navigator.maybePop();
-  }
+  Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(
+        settings: settings,
+        builder: (context) => const NotFoundScreen(),
+      );
 }
 
 /*

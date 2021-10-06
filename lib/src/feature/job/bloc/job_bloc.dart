@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../authentication/model/user_entity.dart';
 import '../data/job_repository.dart';
 import '../model/job.dart';
 
@@ -12,11 +11,6 @@ part 'job_bloc.freezed.dart';
 @freezed
 class JobEvent with _$JobEvent {
   const JobEvent._();
-  const factory JobEvent.create({
-    required String title,
-    required AuthenticatedUser user,
-    @Default(JobAttributes.empty()) JobAttributes attributes,
-  }) = _CreateJobEvent;
 
   const factory JobEvent.fetch() = _FetchJobEvent;
 
@@ -57,7 +51,6 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
 
   @override
   Stream<JobState> mapEventToState(JobEvent event) => event.when<Stream<JobState>>(
-        create: _create,
         fetch: _fetch,
         update: _update,
         delete: _delete,
@@ -80,6 +73,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         transitionFn,
       );
 
+  /*
   Stream<JobState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
     if (state.job.isNotEmpty) return;
     try {
@@ -102,6 +96,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       rethrow;
     }
   }
+  */
 
   Stream<JobState> _fetch() async* {
     if (state.job.isEmpty) return;

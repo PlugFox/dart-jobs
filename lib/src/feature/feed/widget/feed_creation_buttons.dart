@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../common/router/app_router.dart';
-import '../../../common/router/configuration.dart';
+import '../../../common/router/page_router.dart';
 import '../../authentication/widget/authentication_scope.dart';
 
 @immutable
@@ -30,9 +29,10 @@ class FeedCreationButtons extends StatelessWidget {
                       AuthenticationScope.authenticateOr(
                         context,
                         (user) {
-                          AppRouter.navigate(
+                          PageRouter.navigate(
                             context,
-                            (configuration) => JobRouteConfiguration.create(),
+                            (configuration) =>
+                                throw UnimplementedError('Не реализовано'), //JobPageConfiguration.create(),
                           );
                         },
                       );

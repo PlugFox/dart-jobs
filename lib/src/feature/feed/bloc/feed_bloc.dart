@@ -15,6 +15,14 @@ part 'feed_bloc.freezed.dart';
 class FeedEvent with _$FeedEvent {
   const FeedEvent._();
 
+  /*
+  const factory FeedEvent.createJob({
+    required String title,
+    required AuthenticatedUser user,
+    @Default(JobAttributes.empty()) JobAttributes attributes,
+  }) = _CreateJobFeedEvent;
+  */
+
   /// TODO: добавить эвент запроса последних событий, начиная с первого
   /// Вызывать его каждые N минут, а также при изменении в скоупе работы/резюме
 
@@ -27,6 +35,12 @@ class FeedEvent with _$FeedEvent {
 @freezed
 class FeedState with _$FeedState {
   const FeedState._();
+
+  /// Список не заполнен
+  bool get isEmpty => list.isEmpty;
+
+  /// Список заполнен
+  bool get isNotEmpty => list.isNotEmpty;
 
   /// Выполняется обработка/загрузка ленты
   /// [list] - текущий список

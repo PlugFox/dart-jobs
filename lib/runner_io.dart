@@ -5,16 +5,12 @@ import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:l/l.dart';
 
 import 'src/app.dart';
-import 'src/common/router/initial_route_configuration.dart';
 
 /// Запуск приложения как io
 void run() =>
     // Зона перехвата всех ошибок верхнего уровня
     runZonedGuarded<Future<void>>(
       () async {
-        // Установить изначальную локацию
-        await InitialRouteConfiguration.init();
-
         // Собирать логи для Crashlytics в релизе
         await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kReleaseMode);
 

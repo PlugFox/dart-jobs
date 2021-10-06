@@ -8,17 +8,18 @@ class JobPage extends Page<void> {
   /// Идентификатор работы
   final String id;
 
-  /// Это создание новой работы
-  bool get creation => id.isEmpty;
-
-  const JobPage({
+  JobPage({
     required final this.id,
-  });
-
-  const JobPage.create() : id = '';
+  }) : super(
+          key: ValueKey<String>('/job/id$id'),
+          name: '/job/id$id',
+          arguments: <String, Object?>{
+            'id': id,
+          },
+        );
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute(
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
         builder: (context) => JobScope(
           id: id,
           key: ValueKey<String>(id),

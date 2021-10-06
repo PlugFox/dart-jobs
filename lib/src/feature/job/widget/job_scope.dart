@@ -13,11 +13,12 @@ import '../bloc/job_bloc.dart';
 class JobScope extends ProxyWidget {
   final String id;
 
-  const JobScope({
+  JobScope({
     required final this.id,
     required final Widget child,
     Key? key,
-  }) : super(
+  })  : assert(id.isNotEmpty, 'ID работы должно быть заполненно'),
+        super(
           key: key,
           child: child,
         );
@@ -32,21 +33,12 @@ class JobScope extends ProxyWidget {
     }
   }
 
+  /// Обновить работу
   static void saveJobOf(BuildContext context, Job job) {
     final user = AuthenticationScope.userOf(context, listen: false);
     if (user is! AuthenticatedUser) return;
-    if (job.isEmpty) {
-      _of(context, listen: false)?.bloc?.add(
-            JobEvent.create(
-              title: job.title,
-              user: user,
-              attributes: job.attributes,
-            ),
-          );
-    } else {
-      if (user.uid != job.creatorId) return;
-      _of(context, listen: false)?.bloc?.add(JobEvent.update(job));
-    }
+    if (user.uid != job.creatorId) return;
+    _of(context, listen: false)?.bloc?.add(JobEvent.update(job));
   }
 
   @override

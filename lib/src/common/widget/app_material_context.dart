@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../../feature/settings/widget/settings_scope.dart';
 import '../localization/localizations.dart';
-import '../router/initial_route_configuration.dart';
+import '../router/configuration.dart';
 import '../router/route_information_parser.dart';
 import '../router/route_information_provider.dart';
 import '../router/router_delegate.dart';
@@ -24,12 +24,14 @@ class AppMaterialContext extends StatefulWidget {
 }
 
 class _AppMaterialContextState extends State<AppMaterialContext> {
-  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
-  final AppRouteInformationProvider _routeInformationProvider = AppRouteInformationProvider(
-    initialRouteInformation: InitialRouteConfiguration.instance().routeInformation,
+  final PageInformationParser _routeInformationParser = const PageInformationParser();
+  final PageInformationProvider _routeInformationProvider = PageInformationProvider(
+    initialRouteInformation: const RouteInformation(
+      location: '/',
+    ),
   );
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(
-    initialConfiguration: InitialRouteConfiguration.instance().routeConfiguration,
+  final PageRouterDelegate _routerDelegate = PageRouterDelegate(
+    initialConfiguration: const FeedPageConfiguration(),
   );
 
   @override
