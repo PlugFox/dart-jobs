@@ -37,7 +37,7 @@ class FeedList extends StatelessWidget {
               },
               childCount: state.maybeMap<int>(
                 orElse: () => length,
-                processed: (processed) => length + processed.loadingCount,
+                pagination: (processed) => length + processed.loadingCount,
               ),
             ),
           );

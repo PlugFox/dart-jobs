@@ -31,14 +31,14 @@ class JobScreen extends StatelessWidget {
           child: BlocListener<JobBLoC, JobState>(
             listener: (context, state) {
               // Если состояние загрузки - забираем возможность редактировать
-              state.maybeMap<Object?>(
-                orElse: () => null,
-                fetching: (_) => JobForm.switchToRead(context),
+              state.maybeMap<void>(
+                orElse: () {},
+                fetching: (_) {}, // JobForm.switchToRead(context),
               );
             },
             child: Scaffold(
               appBar: AppBar(
-                title: Text('Job #$id'),
+                title: Text(state.job.title),
                 actions: const <Widget>[
                   _CancelEditAppBarButton(),
                   SizedBox(width: 15),

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';
 
+import '../../../common/router/page_router.dart';
 import '../../../common/widget/custom_scroll_view_smooth.dart';
+import '../../../common/widget/error_snackbar.dart';
+import '../../job/bloc/job_manager_bloc.dart';
 import '../bloc/feed_bloc.dart';
 import 'feed_bar.dart';
 import 'feed_creation_buttons.dart';
@@ -75,26 +78,43 @@ class _FeedScrollableState extends State<_FeedScrollable> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocListener<FeedBLoC, FeedState>(
-        listenWhen: (prev, next) => next.maybeMap<bool>(
-          orElse: () => true,
-          processed: (_) => false,
+  Widget build(BuildContext context) => BlocListener<JobManagerBLoC, JobManagerState>(
+        listener: (context, state) => state.maybeMap<void>(
+          orElse: () {},
+          created: (state) {
+            l.i('Была создана новая работа - запросим обновление списка и перейдем к редактированию элемента.');
+            BlocScope.of<FeedBLoC>(context).add(const FeedEvent.fetchRecent());
+            PageRouter.navigate(
+              context,
+              (_) => JobPageConfiguration(
+                id: state.job.id,
+                edit: true,
+              ),
+            );
+          },
+          error: (error) => ErrorSnackBar.show(context),
         ),
-        listener: (context, state) => _checkPagination(),
-        child: CustomScrollViewSmooth(
-          physics: const ClampingScrollPhysics(),
-          scrollBehavior: const ScrollBehavior(),
-          controller: controller,
-          slivers: const <Widget>[
-            /// Шапка с поиском
-            FeedBar(),
+        child: BlocListener<FeedBLoC, FeedState>(
+          listenWhen: (prev, next) => next.maybeMap<bool>(
+            orElse: () => true,
+            pagination: (_) => false,
+          ),
+          listener: (context, state) => _checkPagination(),
+          child: CustomScrollViewSmooth(
+            physics: const ClampingScrollPhysics(),
+            scrollBehavior: const ScrollBehavior(),
+            controller: controller,
+            slivers: const <Widget>[
+              /// Шапка с поиском
+              FeedBar(),
 
-            /// Создание новой работы
-            FeedCreationButtons(),
+              /// Создание новой работы
+              FeedCreationButtons(),
 
-            /// Лента
-            FeedList(),
-          ],
+              /// Лента
+              FeedList(),
+            ],
+          ),
         ),
       );
 }

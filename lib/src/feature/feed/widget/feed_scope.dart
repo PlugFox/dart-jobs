@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:l/l.dart';
 
 import '../../../common/model/proposal.dart';
-import '../../../common/router/page_router.dart';
 import '../../authentication/model/user_entity.dart';
 import '../../initialization/widget/initialization_scope.dart';
 import '../../job/bloc/job_manager_bloc.dart';
@@ -57,7 +56,7 @@ class FeedScope extends StatelessWidget {
     return bloc.state.list.whereType<R>().firstWhereOrNull(test);
   }
 
-  /// Создать новую работу
+  /// Создать новую работу и открыть для редактирования
   static void createJobOf(
     BuildContext context, {
     required String title,
@@ -84,23 +83,7 @@ class FeedScope extends StatelessWidget {
           create: (context) => JobManagerBLoC(
             repository: InitializationScope.storeOf(context).jobRepository,
           ),
-          child: BlocListener<JobManagerBLoC, JobManagerState>(
-            listener: (context, state) => state.maybeMap<void>(
-              orElse: () {},
-              created: (state) {
-                l.i('Была создана новая работа - запросим обновление списка и перейдем к редактированию элемента.');
-                BlocScope.of<FeedBLoC>(context).add(const FeedEvent.fetchRecent());
-                PageRouter.navigate(
-                  context,
-                  (_) => JobPageConfiguration(
-                    id: state.job.id,
-                    edit: true,
-                  ),
-                );
-              },
-            ),
-            child: child,
-          ),
+          child: child,
         ),
       );
 }

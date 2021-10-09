@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
+import '../../authentication/widget/authentication_scope.dart';
 import 'job_scope.dart';
 import 'job_screen.dart';
 
@@ -26,8 +26,9 @@ class JobPage extends Page<void> {
   @override
   Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
         builder: (context) => JobScope(
+          key: ValueKey<String>('job_scope_$id'),
           id: id,
-          key: ValueKey<String>(id),
+          creatorId: edit ? AuthenticationScope.userOf(context).authenticatedOrNull?.uid : null,
           child: JobScreen(
             id: id,
             edit: edit,

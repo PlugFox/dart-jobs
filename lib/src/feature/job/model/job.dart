@@ -31,7 +31,6 @@ class Job extends Proposal<JobAttribute> {
     required final String title,
     required final DateTime created,
     required final DateTime updated,
-    final bool pinned = false,
     final this.attributes = const JobAttributes.empty(),
   }) : super(
           id: id,
@@ -39,7 +38,6 @@ class Job extends Proposal<JobAttribute> {
           title: title,
           created: created,
           updated: updated,
-          pinned: pinned,
         );
 
   factory Job.create({

@@ -28,7 +28,6 @@ class Resume extends Proposal<ResumeAttribute> {
     required String title,
     required DateTime created,
     required DateTime updated,
-    final bool pinned = false,
     this.attributes = const ResumeAttributes.empty(),
   }) : super(
           id: id,
@@ -36,7 +35,6 @@ class Resume extends Proposal<ResumeAttribute> {
           title: title,
           created: created,
           updated: updated,
-          pinned: pinned,
         );
 
   factory Resume.create({

@@ -10,8 +10,12 @@ import '../../../common/utils/iterable_to_stream_coverter.dart';
 
 // ignore: one_member_abstracts
 abstract class IFeedRepository {
+  Stream<Proposal> fetchRecent({
+    required final DateTime updatedAfter,
+  });
+
   Stream<Proposal> paginate({
-    required final DateTime createdBefore,
+    required final DateTime updatedBefore,
     required final int count,
   });
 }
@@ -25,22 +29,48 @@ class FeedRepositoryFirebase implements IFeedRepository {
   }) : _collection = firestore.collection('feed');
 
   @override
+  Stream<Proposal<Attribute>> fetchRecent({
+    required DateTime updatedAfter,
+  }) =>
+      Stream<QuerySnapshot<Object?>>.fromFuture(
+        _collection
+            .where(
+              'updated',
+              isGreaterThan: DateUtil.dateToUnixTime(updatedAfter),
+            )
+            .orderBy(
+              'updated',
+              descending: false,
+            )
+            .limit(100)
+            .get(
+              const GetOptions(
+                source: Source.serverAndCache,
+              ),
+            ),
+      ).asyncExpand<Proposal>(
+        (snapshot) => snapshot.docs
+            .where((doc) => doc.exists)
+            .map<Object?>((doc) => doc.data())
+            .whereType<Map<String, Object?>>()
+            .mapJsonLogException(Proposal.fromJson)
+            .whereType<Proposal>()
+            .convert(),
+      );
+
+  @override
   Stream<Proposal> paginate({
-    required final DateTime createdBefore,
+    required final DateTime updatedBefore,
     required final int count,
   }) =>
       Stream<QuerySnapshot<Object?>>.fromFuture(
         _collection
             .where(
-              'created',
-              isLessThan: DateUtil.dateToUnixTime(createdBefore),
-            )
-            .where(
-              'pinned',
-              isEqualTo: false,
+              'updated',
+              isLessThan: DateUtil.dateToUnixTime(updatedBefore),
             )
             .orderBy(
-              'created',
+              'updated',
               descending: true,
             )
             .limit(count)
@@ -81,11 +111,31 @@ class FeedRepositoryFake implements IFeedRepository {
   FeedRepositoryFake();
 
   @override
+  Stream<Proposal<Attribute>> fetchRecent({
+    required DateTime updatedAfter,
+  }) {
+    var lastDate = updatedAfter;
+    return Stream<Proposal>.periodic(
+      const Duration(milliseconds: 150),
+      (i) {
+        lastDate = lastDate.add(Duration(seconds: _rnd.nextInt(60 * 60)));
+        return Job(
+          id: lastDate.millisecondsSinceEpoch.toRadixString(36),
+          creatorId: '<creatorId>',
+          title: 'Job #${lastDate.millisecondsSinceEpoch * 1000 + i}',
+          created: lastDate,
+          updated: lastDate,
+        );
+      },
+    ).take(_rnd.nextInt(5));
+  }
+
+  @override
   Stream<Proposal> paginate({
-    required final DateTime createdBefore,
+    required final DateTime updatedBefore,
     required final int count,
   }) {
-    var lastDate = createdBefore;
+    var lastDate = updatedBefore;
     return Stream<Proposal>.periodic(
       const Duration(milliseconds: 150),
       (i) {

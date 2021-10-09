@@ -58,18 +58,14 @@ class _JobFormState extends State<JobForm> {
   @override
   void didUpdateWidget(covariant JobForm oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.job != oldWidget.job) {
+    if (widget.job.id != oldWidget.job.id) {
       _fillControllers();
     }
   }
 
   void _fillControllers() {
     final job = widget.job;
-    if (widget.edit && AuthenticationScope.isSameUid(context, job.creatorId)) {
-      readOnlyController.value = false;
-    } else {
-      readOnlyController.value = true;
-    }
+    readOnlyController.value = !widget.edit || !AuthenticationScope.isSameUid(context, job.creatorId);
     jobTitleController.text = job.title;
     companyTitleController.text = job.getAttribute<CompanyJobAttribute>()?.title ?? '';
     locationCountryController.text = job.getAttribute<LocationJobAttribute>()?.country ?? '';

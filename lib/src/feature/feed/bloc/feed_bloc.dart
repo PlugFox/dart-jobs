@@ -22,6 +22,9 @@ class FeedEvent with _$FeedEvent {
   const factory FeedEvent.paginate({
     required final int count,
   }) = _PaginateFeedEvent;
+
+  /// Обработать, очистить, избавиться от дубликатов, удаленных, упорядочить список
+  const factory FeedEvent.sanitize() = _SanitizeFeedEvent;
 }
 
 @freezed
@@ -37,16 +40,25 @@ class FeedState with _$FeedState {
   /// Выполняется запрос
   bool get isProcessed => maybeMap<bool>(
         orElse: () => false,
-        processed: (_) => true,
+        pagination: (_) => true,
+        fetchingLatest: (_) => true,
       );
 
-  /// Выполняется обработка/загрузка ленты
+  /// Выполняется обработка/загрузка ленты старых записей
+  /// [list] - текущий список
+  const factory FeedState.fetchingLatest({
+    required final List<Proposal> list,
+    @Default(false) final bool endOfList,
+  }) = _FetchingLatestFeedState;
+
+  /// Выполняется обработка/загрузка ленты старых записей
   /// [list] - текущий список
   /// [loadingCount] - количество запрашиваемых элементов
-  const factory FeedState.processed({
+  const factory FeedState.pagination({
     required final List<Proposal> list,
     required final int loadingCount,
-  }) = _ProcessedFeedState;
+    @Default(false) final bool endOfList,
+  }) = _PaginationFeedState;
 
   /// Заполненная лента
   /// [list] - текущий список
@@ -62,21 +74,31 @@ class FeedState with _$FeedState {
   const factory FeedState.error({
     required final List<Proposal> list,
     required final String message,
+    @Default(false) final bool endOfList,
   }) = _ErrorFeedState;
 }
 
 class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   final IFeedRepository _repository;
+  Timer? _fetchRecentTimer;
   FeedBLoC({
     required final IFeedRepository repository,
     FeedState initialState = const FeedState.idle(),
   })  : _repository = repository,
-        super(initialState);
+        super(initialState) {
+    _fetchRecentTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (timer) {
+        add(const FeedEvent.fetchRecent());
+      },
+    );
+  }
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
         fetchRecent: _fetchRecent,
         paginate: _paginate,
+        sanitize: _sanitize,
       );
 
   @override
@@ -92,7 +114,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
               paginate: (_) => state.maybeMap<void>(
                 orElse: () => sink.add(event),
                 // ignore: no-empty-block
-                processed: (_) {},
+                pagination: (_) {},
               ),
             ),
           ),
@@ -100,19 +122,62 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         transitionFn,
       );
 
-  Stream<FeedState> _fetchRecent() async* {}
-
-  Stream<FeedState> _paginate(final int count) async* {
-    final loadingCount = math.min(count, 100);
+  Stream<FeedState> _fetchRecent() async* {
     try {
-      yield FeedState.processed(
+      yield FeedState.fetchingLatest(
         list: state.list,
-        loadingCount: loadingCount,
+        endOfList: state.endOfList,
       );
 
-      final createdBefore = state.list.lastOrNull?.created ?? DateTime.now();
-      final proposalsStream = _repository.paginate(count: loadingCount, createdBefore: createdBefore);
-      final proposals = (await proposalsStream.toList())..sort((a, b) => b.compareTo(a));
+      final updatedAfter = state.list.firstOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
+      final proposalsStream = _repository.fetchRecent(updatedAfter: updatedAfter);
+      final proposals = (await proposalsStream.toList())..sort((a, b) => a.updated.compareTo(b.updated));
+
+      yield FeedState.idle(
+        list: List<Proposal>.of(proposals)..addAll(state.list),
+        endOfList: state.endOfList,
+      );
+    } on Object catch (err) {
+      l.e('Произошла ошибка при запросе последних элементов ленты');
+      yield FeedState.error(
+        list: state.list,
+        message: 'An error occurred while updating the feed: $err',
+        endOfList: false,
+      );
+      rethrow;
+    }
+  }
+
+  Stream<FeedState> _sanitize() async* {
+    try {} on Object catch (err) {
+      l.e('Произошла ошибка при очистке ленты');
+      yield FeedState.error(
+        list: state.list,
+        message: 'An error occurred while sanitizing the feed: $err',
+        endOfList: false,
+      );
+      rethrow;
+    }
+  }
+
+  Stream<FeedState> _paginate(final int count) async* {
+    if (state.endOfList) {
+      yield FeedState.idle(
+        list: state.list,
+        endOfList: true,
+      );
+    }
+    final loadingCount = math.min(count, 100);
+    try {
+      yield FeedState.pagination(
+        list: state.list,
+        loadingCount: loadingCount,
+        endOfList: false,
+      );
+
+      final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now();
+      final proposalsStream = _repository.paginate(count: loadingCount, updatedBefore: updatedBefore);
+      final proposals = (await proposalsStream.toList())..sort((a, b) => b.updated.compareTo(a.updated));
       final endOfList = proposals.length < loadingCount;
 
       yield FeedState.idle(
@@ -124,8 +189,15 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       yield FeedState.error(
         list: state.list,
         message: 'An error occurred while updating the feed: $err',
+        endOfList: false,
       );
       rethrow;
     }
+  }
+
+  @override
+  Future<void> close() {
+    _fetchRecentTimer?.cancel();
+    return super.close();
   }
 }

@@ -11,17 +11,22 @@ import '../bloc/job_bloc.dart';
 
 @immutable
 class JobScope extends ProxyWidget {
-  final String id;
-
   JobScope({
     required final this.id,
     required final Widget child,
+    final this.creatorId,
     Key? key,
   })  : assert(id.isNotEmpty, 'ID работы должно быть заполненно'),
         super(
           key: key,
           child: child,
         );
+
+  /// Идентификатор работы
+  final String id;
+
+  /// Идентификатор владельца, если не указан - null
+  final String? creatorId;
 
   /// Find _JobScopeState in BuildContext
   static _JobScopeState? _of(BuildContext context, {bool listen = false}) {
@@ -82,8 +87,8 @@ class _JobScopeState extends ComponentElement {
         job: jobOrNull ??
             Job(
               id: id,
-              creatorId: '',
-              title: '',
+              creatorId: widget.creatorId ?? '',
+              title: 'Job #$id',
               updated: DateTime.utc(1970),
               created: DateTime.utc(1970),
             ),

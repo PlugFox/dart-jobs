@@ -30,9 +30,6 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   @JsonKey(name: 'type', required: true)
   String get type;
 
-  @JsonKey(name: 'pinned', required: false, disallowNullValue: false)
-  final bool pinned;
-
   @JsonKey(name: 'id', required: true)
   final String id;
 
@@ -64,7 +61,6 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
     required final this.title,
     required final this.created,
     required final this.updated,
-    final this.pinned = false,
   }) : super();
 
   /// Generate Class from Map<String, dynamic>
