@@ -37,10 +37,11 @@ class AuthenticationScope extends StatefulWidget {
     }
   }
 
+  /// Проверить, совпадает ли идентификатор с текущим пользователем
   static bool isSameUid(BuildContext context, String uid, {bool listen = false}) => userOf(
         context,
         listen: listen,
-      ).when(
+      ).when<bool>(
         authenticated: (user) => user.uid == uid,
         notAuthenticated: () => false,
       );

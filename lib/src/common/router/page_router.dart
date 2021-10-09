@@ -13,20 +13,21 @@ export 'configuration.dart';
 typedef NavigateCallback = PageConfiguration Function(PageConfiguration configuration);
 
 @immutable
-class PageRouter extends InheritedWidget {
+class PageRouter extends InheritedNotifier {
   const PageRouter({
     required Widget child,
     required PageRouterDelegate routerDelegate,
     Key? key,
   })  : _routerDelegate = routerDelegate,
-        super(key: key, child: child);
+        super(
+          key: key,
+          child: child,
+          notifier: routerDelegate,
+        );
 
   final PageRouterDelegate _routerDelegate;
   PageRouterDelegate get router => _routerDelegate;
   NavigatorState? get navigator => router.pageObserver.navigator;
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 
   @doNotStore
   static PageRouter _of(BuildContext context, {bool listen = false}) {

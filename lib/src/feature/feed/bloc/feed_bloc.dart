@@ -34,13 +34,18 @@ class FeedState with _$FeedState {
   /// Список заполнен
   bool get isNotEmpty => list.isNotEmpty;
 
+  /// Выполняется запрос
+  bool get isProcessed => maybeMap<bool>(
+        orElse: () => false,
+        processed: (_) => true,
+      );
+
   /// Выполняется обработка/загрузка ленты
   /// [list] - текущий список
   /// [loadingCount] - количество запрашиваемых элементов
-  /// Если 0 - это не паджинация
   const factory FeedState.processed({
     required final List<Proposal> list,
-    @Default(0) final int loadingCount,
+    required final int loadingCount,
   }) = _ProcessedFeedState;
 
   /// Заполненная лента
@@ -81,7 +86,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   ) =>
       super.transformEvents(
         events.transform<FeedEvent>(
-          StreamTransformer.fromHandlers(
+          StreamTransformer<FeedEvent, FeedEvent>.fromHandlers(
             handleData: (event, sink) => event.maybeMap<void>(
               orElse: () => sink.add(event),
               paginate: (_) => state.maybeMap<void>(
