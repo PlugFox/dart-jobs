@@ -2,12 +2,14 @@
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:platform_info/platform_info.dart';
 
 import '../../feature/initialization/widget/initialization_scope.dart';
 import '../../feature/not_found/widget/not_found_screen.dart';
 import 'configuration.dart';
 import 'page_router.dart';
 import 'root_route.dart';
+import 'transition_delegate.dart';
 
 class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
 
@@ -30,7 +32,8 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
     return PageRouter(
       routerDelegate: this,
       child: Navigator(
-        transitionDelegate: const DefaultTransitionDelegate<Object?>(),
+        transitionDelegate:
+            platform.isWeb ? const NoAnimationTransitionDelegate() : const DefaultTransitionDelegate<void>(),
         onUnknownRoute: _onUnknownRoute,
         reportsRouteUpdateToEngine: true,
         observers: <NavigatorObserver>[
@@ -39,6 +42,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
         ],
         pages: configuration.buildPages(context).toList(growable: false),
         onPopPage: (Route<Object?> route, Object? result) {
+          /// TODO: проверить возврат значения роута
           if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
             return false;
           }
@@ -71,33 +75,5 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
 }
 
 /*
-class NoAnimationTransitionDelegate extends TransitionDelegate<void> {
-  @override
-  Iterable<RouteTransitionRecord> resolve({
-    required List<RouteTransitionRecord> newPageRouteHistory,
-    required Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
-    required Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
-  }) sync* {
-    for (final pageRoute in newPageRouteHistory) {
-      if (pageRoute.isWaitingForEnteringDecision) {
-        pageRoute.markForAdd();
-      }
-      yield pageRoute;
-    }
 
-    for (final exitingPageRoute in locationToExitingPageRoute.values) {
-      if (exitingPageRoute.isWaitingForExitingDecision) {
-        exitingPageRoute.markForRemove();
-        final pagelessRoutes = pageRouteToPagelessRoutes[exitingPageRoute];
-        if (pagelessRoutes != null) {
-          for (final pagelessRoute in pagelessRoutes) {
-            pagelessRoute.markForRemove();
-          }
-        }
-      }
-
-      yield exitingPageRoute;
-    }
-  }
-}
 */

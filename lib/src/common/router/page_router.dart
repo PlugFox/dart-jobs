@@ -29,8 +29,9 @@ class PageRouter extends InheritedNotifier {
   PageRouterDelegate get router => _routerDelegate;
   NavigatorState? get navigator => router.pageObserver.navigator;
 
+  /// Получить [PageRouter] из контекста
   @doNotStore
-  static PageRouter _of(BuildContext context, {bool listen = false}) {
+  static PageRouter of(BuildContext context, {bool listen = false}) {
     PageRouter? pageRouter;
     if (listen) {
       pageRouter = context.dependOnInheritedWidgetOfExactType<PageRouter>();
@@ -44,17 +45,30 @@ class PageRouter extends InheritedNotifier {
   @alwaysThrows
   static Never _notInScope() => throw UnsupportedError('Not in PageRouter scope');
 
+  /// Получить [PageRouter] из контекста, если не существует - null
+  @doNotStore
+  static PageRouter? maybeOf(BuildContext context, {bool listen = false}) {
+    PageRouter? pageRouter;
+    if (listen) {
+      pageRouter = context.dependOnInheritedWidgetOfExactType<PageRouter>();
+    } else {
+      final inhW = context.getElementForInheritedWidgetOfExactType<PageRouter>()?.widget;
+      pageRouter = inhW is PageRouter ? inhW : null;
+    }
+    return pageRouter;
+  }
+
   /// Получить навигатор из контекста
   /// [NavigatorState]
-  static NavigatorState? navigatorOf(BuildContext context) => _of(context, listen: false).navigator;
+  static NavigatorState? navigatorOf(BuildContext context) => of(context, listen: false).navigator;
 
   /// Получить роутер из контекста
   /// [RouterDelegate]
-  static PageRouterDelegate routerOf(BuildContext context) => _of(context, listen: false).router;
+  static PageRouterDelegate routerOf(BuildContext context) => of(context, listen: false).router;
 
   /// Получить обозреватель страниц из контекста
   /// [RouteObserver], [NavigatorObserver]
-  static PageObserver pageObserverOf(BuildContext context) => _of(context, listen: false).router.pageObserver;
+  static PageObserver pageObserverOf(BuildContext context) => of(context, listen: false).router.pageObserver;
 
   /// Можно ли закрыть текущий роут
   /// [Navigator.canPop], [ModalRoute.canPop]
@@ -72,7 +86,7 @@ class PageRouter extends InheritedNotifier {
   /// Обновить конфигурацию роутера и перейти на новую страницу
   /// [Router.neglect], [Router.navigate]
   static void navigate(BuildContext context, NavigateCallback callback, {bool neglect = false}) {
-    final delegate = _of(context, listen: false).router;
+    final delegate = of(context, listen: false).router;
     if (neglect) {
       l.i('Перейдем на новую страницу без создания новой записи в истории браузера');
       Router.neglect(
@@ -94,7 +108,7 @@ class PageRouter extends InheritedNotifier {
 
   /// Обновить конфигурацию роутера и перейти на новую страницу
   /// [RouterDelegate.popRoute]
-  static Future<bool> pop(BuildContext context) => _of(context, listen: false).router.popRoute();
+  static Future<bool> pop(BuildContext context) => of(context, listen: false).router.popRoute();
 
   /// Перейти на начальную страницу
   static void goHome<T extends Object?>(BuildContext context, {bool neglect = false}) => navigate(
