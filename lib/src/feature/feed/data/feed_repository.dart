@@ -7,20 +7,26 @@ import 'package:l/l.dart';
 import '../../../common/model/proposal.dart';
 import '../../../common/utils/date_util.dart';
 import '../../../common/utils/iterable_to_stream_coverter.dart';
+import '../../../common/utils/list_unique.dart';
 
 // ignore: one_member_abstracts
 abstract class IFeedRepository {
+  /// Запросить новейшие
   Stream<Proposal> fetchRecent({
     required final DateTime updatedAfter,
   });
 
+  /// Запросить порцию старых
   Stream<Proposal> paginate({
     required final DateTime updatedBefore,
     required final int count,
   });
+
+  /// Обработать, очистить, избавиться от дубликатов, удаленных, упорядочить список
+  Stream<Proposal> sanitize(List<Proposal> proposal);
 }
 
-class FeedRepositoryFirebase implements IFeedRepository {
+class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedRepository {
   /// Коллекция
   final CollectionReference _collection;
 
@@ -105,7 +111,7 @@ extension on Iterable<Map<String, Object?>> {
       );
 }
 
-class FeedRepositoryFake implements IFeedRepository {
+class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository {
   static math.Random get _rnd => __rnd ??= math.Random();
   static math.Random? __rnd;
   FeedRepositoryFake();
@@ -149,5 +155,13 @@ class FeedRepositoryFake implements IFeedRepository {
         );
       },
     ).take(count);
+  }
+}
+
+mixin ProposalsSanitizerMixin implements IFeedRepository {
+  @override
+  Stream<Proposal<Attribute>> sanitize(List<Proposal<Attribute>> proposal) {
+    proposal.sort((a, b) => b.updated.compareTo(a.updated));
+    return Stream<Proposal<Attribute>>.fromIterable(proposal.unique((p) => p.id));
   }
 }

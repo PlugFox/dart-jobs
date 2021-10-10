@@ -31,7 +31,6 @@ class FeedCreationButtons extends StatelessWidget {
                         (user) {
                           FeedScope.createJobOf(
                             context,
-                            title: 'Best work ever',
                             user: user,
                           );
                         },

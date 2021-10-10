@@ -86,8 +86,9 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     FeedState initialState = const FeedState.idle(),
   })  : _repository = repository,
         super(initialState) {
+    // Каждые 5 минут запрашиваем обновление на наличие новых элементов
     _fetchRecentTimer = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(minutes: 5),
       (timer) {
         add(const FeedEvent.fetchRecent());
       },
@@ -131,10 +132,11 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
       final updatedAfter = state.list.firstOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
       final proposalsStream = _repository.fetchRecent(updatedAfter: updatedAfter);
-      final proposals = (await proposalsStream.toList())..sort((a, b) => a.updated.compareTo(b.updated));
+      final newProposals = await proposalsStream.toList();
+      final proposals = await _repository.sanitize(List<Proposal>.of(newProposals)..addAll(state.list)).toList();
 
       yield FeedState.idle(
-        list: List<Proposal>.of(proposals)..addAll(state.list),
+        list: proposals,
         endOfList: state.endOfList,
       );
     } on Object catch (err) {
@@ -177,11 +179,12 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
       final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now();
       final proposalsStream = _repository.paginate(count: loadingCount, updatedBefore: updatedBefore);
-      final proposals = (await proposalsStream.toList())..sort((a, b) => b.updated.compareTo(a.updated));
-      final endOfList = proposals.length < loadingCount;
+      final newProposals = await proposalsStream.toList();
+      final endOfList = newProposals.length < loadingCount;
+      final proposals = await _repository.sanitize(List<Proposal>.of(state.list)..addAll(newProposals)).toList();
 
       yield FeedState.idle(
-        list: List<Proposal>.of(state.list)..addAll(proposals),
+        list: proposals,
         endOfList: endOfList,
       );
     } on Object catch (err) {

@@ -59,7 +59,7 @@ class AuthenticationScope extends StatefulWidget {
     } else {
       _of(context, listen: false)
           ?.bloc
-          ?.stream
+          .stream
           .map<UserEntity>((state) => state.user)
           .timeout(
             const Duration(seconds: 5),
@@ -83,18 +83,17 @@ class AuthenticationScope extends StatefulWidget {
 
   /// Войти с помощью гугла
   static void signInWithGoogle(BuildContext context) =>
-      _of(context, listen: false)?.bloc?.add(const AuthenticationEvent.signInWithGoogle());
+      _of(context, listen: false)?.bloc.add(const AuthenticationEvent.signInWithGoogle());
 
   /// Разлогиниться
-  static void logOut(BuildContext context) =>
-      _of(context, listen: false)?.bloc?.add(const AuthenticationEvent.logOut());
+  static void logOut(BuildContext context) => _of(context, listen: false)?.bloc.add(const AuthenticationEvent.logOut());
 
   @override
   State<AuthenticationScope> createState() => _AuthenticationScopeState();
 }
 
 class _AuthenticationScopeState extends State<AuthenticationScope> {
-  AuthenticationBLoC? bloc;
+  late AuthenticationBLoC bloc;
 
   @override
   void initState() {
@@ -106,17 +105,20 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
 
   @override
   void dispose() {
-    bloc?.close();
+    bloc.close();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<AuthenticationBLoC, AuthenticationState>(
-        bloc: bloc,
-        builder: (context, state) => _InheritedAuthentication(
-          state: this,
-          userEntity: state.user,
-          child: widget.child,
+  Widget build(BuildContext context) => BlocScope<AuthenticationBLoC>.value(
+        value: bloc,
+        child: BlocBuilder<AuthenticationBLoC, AuthenticationState>(
+          bloc: bloc,
+          builder: (context, state) => _InheritedAuthentication(
+            state: this,
+            userEntity: state.user,
+            child: widget.child,
+          ),
         ),
       );
 }

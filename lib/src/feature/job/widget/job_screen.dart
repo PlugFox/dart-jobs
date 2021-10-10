@@ -25,30 +25,20 @@ class JobScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
+        buildWhen: (prev, next) => prev.job.title != next.job.title,
         builder: (context, state) => JobForm(
-          job: state.job,
-          edit: edit,
-          child: BlocListener<JobBLoC, JobState>(
-            listener: (context, state) {
-              // Если состояние загрузки - забираем возможность редактировать
-              state.maybeMap<void>(
-                orElse: () {},
-                fetching: (_) {}, // JobForm.switchToRead(context),
-              );
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(state.job.title),
-                actions: const <Widget>[
-                  _CancelEditAppBarButton(),
-                  SizedBox(width: 15),
-                ],
-              ),
-              body: const SafeArea(
-                child: JobFields(),
-              ),
-              floatingActionButton: const _JobScreenFloatingActionButton(),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(state.job.title),
+              actions: const <Widget>[
+                _CancelEditAppBarButton(),
+                SizedBox(width: 15),
+              ],
             ),
+            body: const SafeArea(
+              child: JobFields(),
+            ),
+            floatingActionButton: const _JobScreenFloatingActionButton(),
           ),
         ),
       );
@@ -80,12 +70,12 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
               scale: animation,
               child: child,
             ),
-            child: ValueListenableBuilder<bool>(
-              valueListenable: JobForm.readOnlyStatusOf(context),
-              builder: (context, readOnly, child) => readOnly
+            child: Builder(builder: (context) {
+              final readOnly = !JobScope.editingOf(context, listen: true);
+              return readOnly
                   ? FloatingActionButton(
                       key: ValueKey<bool>(readOnly),
-                      onPressed: fetching ? null : () => JobForm.switchToEdit(context),
+                      onPressed: fetching ? null : () => JobScope.edit(context),
                       backgroundColor:
                           fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
                       child: const Icon(
@@ -99,7 +89,7 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
                           ? null
                           : () {
                               // Сейчас статус - редактирование, следовательно мы хотим сохранить результат
-                              final currentData = JobForm.currentJobOf(context);
+                              final currentData = JobForm.getCurrentJob(context);
                               JobScope.saveJobOf(context, currentData);
                             },
                       backgroundColor:
@@ -108,8 +98,8 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
                         Icons.save,
                         size: 30,
                       ),
-                    ),
-            ),
+                    );
+            }),
           );
         },
       );
@@ -122,26 +112,27 @@ class _CancelEditAppBarButton extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<bool>(
-        valueListenable: JobForm.readOnlyStatusOf(context),
-        builder: (context, readOnly, child) => readOnly ? const SizedBox.shrink() : child!,
-        child: SizedBox.square(
-          dimension: kToolbarHeight,
-          child: IconButton(
-            icon: const CircleAvatar(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Icon(
-                  Icons.cancel_outlined,
-                  size: 30,
+  Widget build(BuildContext context) {
+    final readOnly = !JobScope.editingOf(context, listen: true);
+    return readOnly
+        ? const SizedBox.shrink()
+        : SizedBox.square(
+            dimension: kToolbarHeight,
+            child: IconButton(
+              icon: const CircleAvatar(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Icon(
+                    Icons.cancel_outlined,
+                    size: 30,
+                  ),
                 ),
               ),
+              onPressed: () {
+                BlocScope.of<JobBLoC>(context).add(const JobEvent.fetch());
+                JobScope.view(context);
+              },
             ),
-            onPressed: () {
-              BlocScope.of<JobBLoC>(context).add(const JobEvent.fetch());
-              JobForm.switchToRead(context);
-            },
-          ),
-        ),
-      );
+          );
+  }
 }

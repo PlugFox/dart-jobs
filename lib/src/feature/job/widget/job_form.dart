@@ -4,68 +4,48 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:meta/meta.dart';
 
 import '../../../common/constant/layout_constraints.dart';
-import '../../authentication/widget/authentication_scope.dart';
+import '../bloc/job_bloc.dart';
 import '../model/job.dart';
+import 'job_scope.dart';
 
 @immutable
 class JobForm extends StatefulWidget {
+  final Widget child;
   const JobForm({
-    required final this.job,
-    required final this.child,
-    this.edit = false,
+    required this.child,
     Key? key,
   }) : super(key: key);
 
-  final Job job;
+  /// Для поиска _JobFormState в контексте
+  @protected
+  @internal
+  static _JobFormState of(BuildContext context) => context.findAncestorStateOfType<_JobFormState>()!;
 
-  /// Изначальное состояние (если true - открыть форму в режиме редактирования)
-  final bool edit;
-
-  final Widget child;
-
-  static void switchToRead(BuildContext context) =>
-      context.findAncestorStateOfType<_JobFormState>()?.readOnlyController.value = true;
-
-  static void switchToEdit(BuildContext context) =>
-      context.findAncestorStateOfType<_JobFormState>()?.readOnlyController.value = false;
-
-  static ValueListenable<bool> readOnlyStatusOf(BuildContext context) =>
-      context.findAncestorStateOfType<_JobFormState>()!.readOnlyController;
-
-  static Job currentJobOf(BuildContext context) => context.findAncestorStateOfType<_JobFormState>()!.getCurrentJob();
+  /// Получить текущую работу исходя из контроллеров полей ввода
+  static Job getCurrentJob(BuildContext context) => of(context).getCurrentJob();
 
   @override
   State<JobForm> createState() => _JobFormState();
 }
 
 class _JobFormState extends State<JobForm> {
-  final ValueNotifier<bool> readOnlyController = ValueNotifier<bool>(true);
   final TextEditingController jobTitleController = TextEditingController(text: '');
   final TextEditingController companyTitleController = TextEditingController(text: '');
   final TextEditingController locationCountryController = TextEditingController(text: '');
   final TextEditingController locationAddressController = TextEditingController(text: '');
   final TextEditingController descriptionController = TextEditingController(text: '');
 
-  //region Lifecycle
   @override
   void initState() {
     super.initState();
-    _fillControllers();
+    _refillControllers(JobScope.jobOf(context));
   }
 
-  @override
-  void didUpdateWidget(covariant JobForm oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.job.id != oldWidget.job.id) {
-      _fillControllers();
-    }
-  }
-
-  void _fillControllers() {
-    final job = widget.job;
-    readOnlyController.value = !widget.edit || !AuthenticationScope.isSameUid(context, job.creatorId);
+  void _refillControllers(Job job) {
     jobTitleController.text = job.title;
     companyTitleController.text = job.getAttribute<CompanyJobAttribute>()?.title ?? '';
     locationCountryController.text = job.getAttribute<LocationJobAttribute>()?.country ?? '';
@@ -73,19 +53,7 @@ class _JobFormState extends State<JobForm> {
     descriptionController.text = job.getAttribute<DescriptionJobAttribute>()?.description ?? '';
   }
 
-  @override
-  void dispose() {
-    readOnlyController.dispose();
-    jobTitleController.dispose();
-    companyTitleController.dispose();
-    locationCountryController.dispose();
-    locationAddressController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-  //endregion
-
-  Job getCurrentJob() => widget.job.copyWith(
+  Job getCurrentJob() => JobScope.jobOf(context).copyWith(
         newTitle: jobTitleController.text,
         newAttributes: JobAttributes(
           <JobAttribute>[
@@ -104,7 +72,18 @@ class _JobFormState extends State<JobForm> {
       );
 
   @override
-  Widget build(BuildContext context) => FocusScope(
+  void dispose() {
+    jobTitleController.dispose();
+    companyTitleController.dispose();
+    locationCountryController.dispose();
+    locationAddressController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocListener<JobBLoC, JobState>(
+        listener: (context, state) => _refillControllers(state.job),
         child: widget.child,
       );
 }
@@ -140,16 +119,19 @@ class JobFields extends StatelessWidget {
         _JobTextField.singleLine(
           state.companyTitleController,
           label: 'Название компании',
+          key: const ValueKey<String>('companyTitle'),
         ),
 
         /// Местоположение
         _JobTextField.singleLine(
           state.locationCountryController,
           label: 'Страна',
+          key: const ValueKey<String>('locationCountry'),
         ),
         _JobTextField.singleLine(
           state.locationAddressController,
           label: 'Адрес',
+          key: const ValueKey<String>('locationAddress'),
         ),
 
         /// Описание
@@ -220,42 +202,41 @@ class _JobSingleLineText extends _JobTextField {
         );
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<bool>(
-        valueListenable: context.findAncestorStateOfType<_JobFormState>()!.readOnlyController,
-        builder: (context, value, child) {
-          final readOnly = !enabled || value;
-          if (readOnly && controller.text.isEmpty) {
-            return const SizedBox.shrink();
+  Widget build(BuildContext context) {
+    final editing = JobScope.editingOf(context, listen: true);
+    final readOnly = !enabled || !editing;
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, child) => readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
+      child: TextField(
+        controller: controller,
+        readOnly: readOnly,
+        enabled: !readOnly,
+        maxLines: 1,
+        minLines: 1,
+        maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          labelText: label,
+          border: readOnly ? InputBorder.none : null,
+          counterText: '',
+        ),
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.singleLineFormatter,
+          //LengthLimitingTextInputFormatter(maxLength),
+        ],
+        keyboardType: TextInputType.text,
+        textInputAction: finishEditing ? TextInputAction.done : TextInputAction.next,
+        onEditingComplete: () {
+          if (finishEditing) {
+            FocusScope.of(context).unfocus();
+          } else {
+            FocusScope.of(context).nextFocus();
           }
-          return TextField(
-            controller: controller,
-            readOnly: readOnly,
-            enabled: !readOnly,
-            maxLines: 1,
-            minLines: 1,
-            maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
-            maxLength: maxLength,
-            decoration: InputDecoration(
-              labelText: label,
-              border: readOnly ? InputBorder.none : null,
-              counterText: '',
-            ),
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.singleLineFormatter,
-              //LengthLimitingTextInputFormatter(maxLength),
-            ],
-            keyboardType: TextInputType.text,
-            textInputAction: finishEditing ? TextInputAction.done : TextInputAction.next,
-            onEditingComplete: () {
-              if (finishEditing) {
-                FocusScope.of(context).unfocus();
-              } else {
-                FocusScope.of(context).nextFocus();
-              }
-            },
-          );
         },
-      );
+      ),
+    );
+  }
 }
 
 class _JobMultiLineText extends _JobTextField {
@@ -278,40 +259,39 @@ class _JobMultiLineText extends _JobTextField {
         );
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<bool>(
-        valueListenable: context.findAncestorStateOfType<_JobFormState>()!.readOnlyController,
-        builder: (context, value, child) {
-          final readOnly = !enabled || value;
-          if (readOnly && controller.text.isEmpty) {
-            return const SizedBox.shrink();
+  Widget build(BuildContext context) {
+    final editing = JobScope.editingOf(context, listen: true);
+    final readOnly = !enabled || !editing;
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, child) => readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
+      child: TextField(
+        controller: controller,
+        readOnly: readOnly,
+        enabled: !readOnly,
+        minLines: 4,
+        maxLines: maxLines,
+        maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          labelText: label,
+          border: readOnly ? InputBorder.none : null,
+          counterText: readOnly ? '' : null,
+        ),
+        inputFormatters: const <TextInputFormatter>[
+          //FilteringTextInputFormatter.singleLineFormatter,
+          //LengthLimitingTextInputFormatter(maxLength),
+        ],
+        keyboardType: TextInputType.multiline,
+        textInputAction: finishEditing ? TextInputAction.done : TextInputAction.newline,
+        onEditingComplete: () {
+          if (finishEditing) {
+            FocusScope.of(context).unfocus();
+          } else {
+            FocusScope.of(context).nextFocus();
           }
-          return TextField(
-            controller: controller,
-            readOnly: readOnly,
-            enabled: !readOnly,
-            minLines: 4,
-            maxLines: maxLines,
-            maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
-            maxLength: maxLength,
-            decoration: InputDecoration(
-              labelText: label,
-              border: readOnly ? InputBorder.none : null,
-              counterText: readOnly ? '' : null,
-            ),
-            inputFormatters: const <TextInputFormatter>[
-              //FilteringTextInputFormatter.singleLineFormatter,
-              //LengthLimitingTextInputFormatter(maxLength),
-            ],
-            keyboardType: TextInputType.multiline,
-            textInputAction: finishEditing ? TextInputAction.done : TextInputAction.newline,
-            onEditingComplete: () {
-              if (finishEditing) {
-                FocusScope.of(context).unfocus();
-              } else {
-                FocusScope.of(context).nextFocus();
-              }
-            },
-          );
         },
-      );
+      ),
+    );
+  }
 }
