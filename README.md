@@ -65,21 +65,21 @@ Serve
 ```bash
 firebase login
 cd build/web
-firebase serve --project "f-o-x-y"
+firebase serve --project "dart-job"
 ```
 
 Develop preview
 ```bash
 firebase login
 cd build/web
-firebase hosting:channel:deploy CHANNEL_NAME --project "f-o-x-y"
+firebase hosting:channel:deploy CHANNEL_NAME --project "dart-job"
 ```
 
 Production
 ```bash
 firebase login
 cd build/web
-firebase deploy --only hosting --project "f-o-x-y" -m "<Описание ручного релиза>"
+firebase deploy --only hosting --project "dart-job" -m "<Описание ручного релиза>"
 ```
 
 
