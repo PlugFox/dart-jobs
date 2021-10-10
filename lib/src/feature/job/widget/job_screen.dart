@@ -13,12 +13,16 @@ import 'job_scope.dart';
 class JobScreen extends StatelessWidget {
   const JobScreen({
     required final this.id,
+    required final this.title,
     this.edit = false,
     Key? key,
   }) : super(key: key);
 
   /// Идентификатор работы
   final String id;
+
+  /// Идентификатор работы
+  final String title;
 
   /// Изначальное состояние (если true - открыть форму в режиме редактирования)
   final bool edit;

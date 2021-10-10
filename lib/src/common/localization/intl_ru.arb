@@ -1,7 +1,15 @@
 {
   "@@locale": "ru",
-  "title": "DART JOBS",
+  "title": "Dart Jobs",
   "@title": {
     "description": "Заголовок приложения"
+  },
+  "settings": "Настройки",
+  "@settings": {
+    "description": "Настройки"
+  },
+  "profile": "Профиль",
+  "@profile": {
+    "description": "Профиль"
   }
 }

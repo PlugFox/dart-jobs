@@ -2,6 +2,7 @@
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:platform_info/platform_info.dart';
 
 import '../../feature/initialization/widget/initialization_scope.dart';
@@ -29,6 +30,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
   Widget build(BuildContext context) {
     final configuration = currentConfiguration;
     final analytics = InitializationScope.storeOf(context).analytics;
+    _setBrowserTitle(context);
     return PageRouter(
       routerDelegate: this,
       child: Navigator(
@@ -72,8 +74,15 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
         settings: settings,
         builder: (context) => const NotFoundScreen(),
       );
+
+  void _setBrowserTitle(BuildContext context) {
+    if (kIsWeb) {
+      SystemChrome.setApplicationSwitcherDescription(
+        ApplicationSwitcherDescription(
+          label: currentConfiguration.pageTitle,
+          primaryColor: Theme.of(context).primaryColor.value,
+        ),
+      );
+    }
+  }
 }
-
-/*
-
-*/

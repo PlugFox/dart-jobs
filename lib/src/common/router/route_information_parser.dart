@@ -77,9 +77,17 @@ mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
   static PageConfiguration _uriToJob(Uri uri, Map<String, Object?> state) {
     final path = uri.pathSegments;
     final segment = path.skip(1).firstOrNull;
+    var jobState = state['job'];
+    if (jobState is! Map<String, Object?>) {
+      jobState = <String, Object?>{};
+    }
     if (segment != null && segment.length > 2 && segment.startsWith('id')) {
       final id = segment.substring(2);
-      return JobPageConfiguration(id: id);
+      return JobPageConfiguration(
+        jobId: id,
+        jobTitle: jobState['title']?.toString() ?? id,
+        edit: jobState['edit'] == true,
+      );
     }
     return const FeedPageConfiguration();
   }

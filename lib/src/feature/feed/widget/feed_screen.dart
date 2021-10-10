@@ -87,7 +87,8 @@ class _FeedScrollableState extends State<_FeedScrollable> {
             PageRouter.navigate(
               context,
               (_) => JobPageConfiguration(
-                id: state.job.id,
+                jobId: state.job.id,
+                jobTitle: state.job.id,
                 edit: true,
               ),
             );

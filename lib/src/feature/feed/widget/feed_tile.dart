@@ -169,7 +169,10 @@ class _JobFeedTile extends FeedTile {
           /// TODO: DateFormat
           onPressed: (context) => PageRouter.navigate(
             context,
-            (configuration) => JobPageConfiguration(id: job.id),
+            (configuration) => JobPageConfiguration(
+              jobId: job.id,
+              jobTitle: job.title,
+            ),
           ),
           key: key,
         );

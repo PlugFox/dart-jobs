@@ -6,6 +6,7 @@ import '../../feature/feed/widget/feed_page.dart';
 import '../../feature/job/widget/job_page.dart';
 import '../../feature/not_found/widget/not_found_page.dart';
 import '../../feature/settings/widget/settings_page.dart';
+import '../localization/localizations.dart';
 
 /// Конфигурация страниц приложения
 abstract class PageConfiguration {
@@ -13,6 +14,9 @@ abstract class PageConfiguration {
 
   /// Состояние
   final Map<String, Object?>? state;
+
+  /// Заголовок
+  String get pageTitle;
 
   /// Предидущая конфигурация
   /// Если null - значит это корневая конфигурация
@@ -46,6 +50,9 @@ abstract class RootPageConfiguration implements PageConfiguration {
   Map<String, Object?>? get state => const <String, Object?>{};
 
   @override
+  String get pageTitle => Localized.current.title;
+
+  @override
   Uri toUri() => Uri.parse('/');
 
   @override
@@ -63,6 +70,9 @@ class NotFoundPageConfiguration extends PageConfiguration {
 
   @override
   Uri toUri() => Uri.parse('/not_found');
+
+  @override
+  String get pageTitle => '${Localized.current.title} / 404';
 
   @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
@@ -85,6 +95,9 @@ class ProfilePageConfiguration extends PageConfiguration {
   Uri toUri() => Uri.parse('/profile');
 
   @override
+  String get pageTitle => '${Localized.current.title} / ${Localized.current.profile}';
+
+  @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
     yield* super.buildPages(context);
     yield const ProfilePage();
@@ -101,6 +114,9 @@ class SettingsPageConfiguration extends PageConfiguration {
   Uri toUri() => Uri.parse('/settings');
 
   @override
+  String get pageTitle => '${Localized.current.title} / ${Localized.current.settings}';
+
+  @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
     yield* super.buildPages(context);
     yield const SettingsPage();
@@ -109,34 +125,43 @@ class SettingsPageConfiguration extends PageConfiguration {
 
 class JobPageConfiguration extends PageConfiguration {
   JobPageConfiguration({
-    required final this.id,
+    required final this.jobId,
+    required final this.jobTitle,
     final this.edit = false,
   }) : super(
           <String, Object?>{
             'job': <String, Object?>{
-              'id': id,
+              'id': jobId,
+              'title': jobTitle,
               'edit': edit,
             },
           },
         );
 
   /// Идентификатор работы
-  final String id;
+  final String jobId;
+
+  /// Заголовок работы
+  final String jobTitle;
 
   /// Открыть в режиме редактирования, а не просмотра
   final bool edit;
 
   @override
+  String get pageTitle => '${Localized.current.title} / ${jobTitle.isEmpty ? jobId : jobTitle}';
+
+  @override
   PageConfiguration? get previous => const FeedPageConfiguration();
 
   @override
-  Uri toUri() => Uri.parse('/job/id$id');
+  Uri toUri() => Uri.parse('/job/id$jobId');
 
   @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
     yield* super.buildPages(context);
     yield JobPage(
-      id: id,
+      id: jobId,
+      title: jobTitle,
       edit: edit,
     );
   }

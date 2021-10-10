@@ -26,7 +26,9 @@ class Localized {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<Localized> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -48,12 +50,32 @@ class Localized {
     return Localizations.of<Localized>(context, Localized);
   }
 
-  /// `DART JOBS`
+  /// `Dart Jobs`
   String get title {
     return Intl.message(
-      'DART JOBS',
+      'Dart Jobs',
       name: 'title',
       desc: 'Заголовок приложения',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: 'Настройки',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get profile {
+    return Intl.message(
+      'Profile',
+      name: 'profile',
+      desc: 'Профиль',
       args: [],
     );
   }

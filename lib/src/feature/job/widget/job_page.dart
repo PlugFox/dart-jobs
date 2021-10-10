@@ -7,6 +7,7 @@ import 'job_screen.dart';
 class JobPage extends Page<void> {
   JobPage({
     required final this.id,
+    required final this.title,
     final this.edit = false,
   }) : super(
           key: ValueKey<String>('/job/id$id'),
@@ -20,6 +21,9 @@ class JobPage extends Page<void> {
   /// Идентификатор работы
   final String id;
 
+  /// Заголовок работы
+  final String title;
+
   /// Открыть в режиме редактирования, а не просмотра
   final bool edit;
 
@@ -31,6 +35,7 @@ class JobPage extends Page<void> {
           creatorId: edit ? AuthenticationScope.userOf(context).authenticatedOrNull?.uid : null,
           child: JobScreen(
             id: id,
+            title: title.isEmpty ? id : title,
             edit: edit,
           ),
         ),
