@@ -45,7 +45,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
         ],
         pages: configuration.buildPages(context).toList(growable: false),
         onPopPage: (Route<Object?> route, Object? result) {
-          l.d('PageRouter.onPopPage($route, $result)');
+          l.i('PageRouter.onPopPage($route, $result)');
 
           /// TODO: проверить возврат значения роута
           if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
@@ -60,7 +60,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
 
   @override
   Future<bool> popRoute() {
-    l.d('PageRouter.popRoute()');
+    l.i('PageRouter.popRoute()');
     if (currentConfiguration.isRoot) return SynchronousFuture<bool>(false);
     final navigator = pageObserver.navigator;
     if (navigator == null) return SynchronousFuture<bool>(false);
@@ -69,9 +69,10 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
 
   @override
   Future<void> setNewRoutePath(PageConfiguration configuration) {
+    l.i('PageRouter.setNewRoutePath(${configuration.toUri()})');
     _currentConfiguration = configuration;
     notifyListeners();
-    return SynchronousFuture(null);
+    return SynchronousFuture<void>(null);
   }
 
   Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(

@@ -85,24 +85,33 @@ class PageRouter extends InheritedNotifier {
 
   /// Обновить конфигурацию роутера и перейти на новую страницу
   /// [Router.neglect], [Router.navigate]
-  static void navigate(BuildContext context, NavigateCallback callback, {bool neglect = false}) {
+  static void navigate(BuildContext context, NavigateCallback callback, {NavigateMode mode = NavigateMode.neglect}) {
     final delegate = of(context, listen: false).router;
-    if (neglect) {
-      l.i('Перейдем на новую страницу без создания новой записи в истории браузера');
-      Router.neglect(
-        context,
-        () => delegate.setNewRoutePath(
+    switch (mode) {
+      case NavigateMode.force:
+        l.i('Перейдем на новую страницу и создадим запись в истории браузера');
+        Router.navigate(
+          context,
+          () => delegate.setNewRoutePath(
+            callback(delegate.currentConfiguration),
+          ),
+        );
+        break;
+      case NavigateMode.neglect:
+        l.i('Перейдем на новую страницу без создания новой записи в истории браузера');
+        Router.neglect(
+          context,
+          () => delegate.setNewRoutePath(
+            callback(delegate.currentConfiguration),
+          ),
+        );
+        break;
+      case NavigateMode.auto:
+      default:
+        delegate.setNewRoutePath(
           callback(delegate.currentConfiguration),
-        ),
-      );
-    } else {
-      l.i('Перейдем на новую страницу и создадим запись в истории браузера');
-      Router.navigate(
-        context,
-        () => delegate.setNewRoutePath(
-          callback(delegate.currentConfiguration),
-        ),
-      );
+        );
+        break;
     }
   }
 
@@ -111,10 +120,10 @@ class PageRouter extends InheritedNotifier {
   static Future<bool> pop(BuildContext context) => of(context, listen: false).router.popRoute();
 
   /// Перейти на начальную страницу
-  static void goHome<T extends Object?>(BuildContext context, {bool neglect = false}) => navigate(
+  static void goHome<T extends Object?>(BuildContext context, {NavigateMode mode = NavigateMode.auto}) => navigate(
         context,
         (_) => const FeedPageConfiguration(),
-        neglect: neglect,
+        mode: mode,
       );
 
   /// Получить текущие аргументы роута
@@ -189,4 +198,16 @@ class PageRouter extends InheritedNotifier {
         enableDrag: enableDrag,
         //routeSettings: routeSettings,
       );
+}
+
+/// Управляет режимом навигации [PageRouter.navigate]
+enum NavigateMode {
+  /// Создает новую запись если URL отличается
+  auto,
+
+  /// Принудительно создает новую запись в истории браузера
+  force,
+
+  /// Принудительно не создает новую запись в истории браузера
+  neglect,
 }
