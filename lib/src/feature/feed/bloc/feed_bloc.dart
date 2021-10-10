@@ -15,6 +15,12 @@ part 'feed_bloc.freezed.dart';
 class FeedEvent with _$FeedEvent {
   const FeedEvent._();
 
+  /// Обновить по идентификатору
+  /// Если элемент не будет найден - будет удален из списка
+  const factory FeedEvent.reloadById({
+    required final String id,
+  }) = _ReloadByIdFeedEvent;
+
   /// Запросить самые новые элементы
   const factory FeedEvent.fetchRecent() = _FetchRecentFeedEvent;
 
@@ -97,6 +103,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
   @override
   Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
+        reloadById: _reloadById,
         fetchRecent: _fetchRecent,
         paginate: _paginate,
         sanitize: _sanitize,
@@ -122,6 +129,41 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         ),
         transitionFn,
       );
+
+  Stream<FeedState> _reloadById(String id) async* {
+    try {
+      yield FeedState.fetchingLatest(
+        list: state.list,
+        endOfList: state.endOfList,
+      );
+
+      final proposal = await _repository.getById(id: id);
+      var proposals = List<Proposal>.of(state.list);
+      if (proposal == null) {
+        proposals.removeWhere((p) => p.id == id);
+      } else {
+        proposals = await _repository.sanitize(
+          <Proposal>[
+            proposal,
+            ...proposals,
+          ],
+        ).toList();
+      }
+
+      yield FeedState.idle(
+        list: proposals,
+        endOfList: state.endOfList,
+      );
+    } on Object catch (err) {
+      l.e('Произошла ошибка при запросе последних элементов ленты');
+      yield FeedState.error(
+        list: state.list,
+        message: 'An error occurred while updating the feed: $err',
+        endOfList: false,
+      );
+      rethrow;
+    }
+  }
 
   Stream<FeedState> _fetchRecent() async* {
     try {

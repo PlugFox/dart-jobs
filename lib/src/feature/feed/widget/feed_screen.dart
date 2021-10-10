@@ -3,6 +3,7 @@ import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';
 
 import '../../../common/router/page_router.dart';
+import '../../../common/router/router_delegate.dart';
 import '../../../common/widget/custom_scroll_view_smooth.dart';
 import '../../../common/widget/error_snackbar.dart';
 import '../../job/bloc/job_manager_bloc.dart';
@@ -32,9 +33,11 @@ class _FeedScrollable extends StatefulWidget {
   State<_FeedScrollable> createState() => _FeedScrollableState();
 }
 
-class _FeedScrollableState extends State<_FeedScrollable> {
+// ignore: prefer_mixin
+class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   final ScrollController controller = ScrollController();
   double _screenHeight = 0;
+  ModalObserver? _routeObserver;
 
   //region Lifecycle
   @override
@@ -52,10 +55,21 @@ class _FeedScrollableState extends State<_FeedScrollable> {
       _screenHeight = newScreenHeight;
       WidgetsBinding.instance?.addPostFrameCallback((_) => _checkPagination());
     }
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute != null) {
+      _routeObserver = PageRouter.modalObserverOf(context)..subscribe(this, modalRoute);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // При возвращении на страницу запрашиваем обновление списка
+    context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
   }
 
   @override
   void dispose() {
+    _routeObserver?.unsubscribe(this);
     controller.dispose();
     super.dispose();
   }
@@ -81,9 +95,12 @@ class _FeedScrollableState extends State<_FeedScrollable> {
   Widget build(BuildContext context) => BlocListener<JobManagerBLoC, JobManagerState>(
         listener: (context, state) => state.maybeMap<void>(
           orElse: () {},
+          deleted: (state) {
+            BlocScope.of<FeedBLoC>(context, listen: false).add(FeedEvent.reloadById(id: state.job.id));
+          },
           created: (state) {
             l.i('Была создана новая работа - запросим обновление списка и перейдем к редактированию элемента.');
-            BlocScope.of<FeedBLoC>(context).add(const FeedEvent.fetchRecent());
+            BlocScope.of<FeedBLoC>(context, listen: false).add(const FeedEvent.fetchRecent());
             PageRouter.navigate(
               context,
               (_) => JobPageConfiguration(

@@ -15,13 +15,17 @@ import 'transition_delegate.dart';
 
 class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
 
+class ModalObserver extends RouteObserver<ModalRoute<Object?>> implements NavigatorObserver {}
+
 class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNotifier {
   PageRouterDelegate({
     final PageConfiguration initialConfiguration = const FeedPageConfiguration(),
   })  : _currentConfiguration = initialConfiguration,
-        pageObserver = PageObserver();
+        pageObserver = PageObserver(),
+        modalObserver = ModalObserver();
 
   final PageObserver pageObserver;
+  final ModalObserver modalObserver;
 
   @override
   PageConfiguration get currentConfiguration => _currentConfiguration;
@@ -41,6 +45,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
         reportsRouteUpdateToEngine: true,
         observers: <NavigatorObserver>[
           pageObserver,
+          modalObserver,
           if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
         ],
         pages: configuration.buildPages(context).toList(growable: false),

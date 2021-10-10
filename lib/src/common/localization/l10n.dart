@@ -79,6 +79,26 @@ class Localized {
       args: [],
     );
   }
+
+  /// `Write "DELETE" to confirm deletion`
+  String get delete_confirmation {
+    return Intl.message(
+      'Write "DELETE" to confirm deletion',
+      name: 'delete_confirmation',
+      desc: 'Подтверждение удаления',
+      args: [],
+    );
+  }
+
+  /// `Attention, this action is irreversible`
+  String get irreversible_action {
+    return Intl.message(
+      'Attention, this action is irreversible',
+      name: 'irreversible_action',
+      desc: 'Предупреждение о необратимом действии',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Localized> {

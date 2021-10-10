@@ -21,6 +21,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "delete_confirmation": MessageLookupByLibrary.simpleMessage(
+            "Напишите \"DELETE\" для подтверждения удаления"),
+        "irreversible_action": MessageLookupByLibrary.simpleMessage(
+            "Внимание, это действие необратимо"),
         "profile": MessageLookupByLibrary.simpleMessage("Профиль"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
         "title": MessageLookupByLibrary.simpleMessage("Dart Jobs")

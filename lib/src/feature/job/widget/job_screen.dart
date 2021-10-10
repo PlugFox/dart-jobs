@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../common/localization/localizations.dart';
+import '../../../common/router/page_router.dart';
 import '../../authentication/model/user_entity.dart';
 import '../../authentication/widget/authentication_scope.dart';
+import '../../feed/widget/feed_scope.dart';
 import '../bloc/job_bloc.dart';
+import '../model/job.dart';
 import 'job_form.dart';
 import 'job_scope.dart';
 
@@ -35,6 +40,7 @@ class JobScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(state.job.title),
               actions: const <Widget>[
+                _DeleteAppBarButton(),
                 _CancelEditAppBarButton(),
                 SizedBox(width: 15),
               ],
@@ -78,7 +84,8 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
               final readOnly = !JobScope.editingOf(context, listen: true);
               return readOnly
                   ? FloatingActionButton(
-                      key: ValueKey<bool>(readOnly),
+                      tooltip: 'Edit job',
+                      key: const ValueKey<String>('edit_job_floating_action_button'),
                       onPressed: fetching ? null : () => JobScope.edit(context),
                       backgroundColor:
                           fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
@@ -88,7 +95,8 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
                       ),
                     )
                   : FloatingActionButton(
-                      key: ValueKey<bool>(readOnly),
+                      tooltip: 'Save job',
+                      key: const ValueKey<String>('save_job_floating_action_button'),
                       onPressed: fetching
                           ? null
                           : () {
@@ -123,6 +131,7 @@ class _CancelEditAppBarButton extends StatelessWidget {
         : SizedBox.square(
             dimension: kToolbarHeight,
             child: IconButton(
+              tooltip: 'Cancel without saving',
               icon: const CircleAvatar(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -138,5 +147,132 @@ class _CancelEditAppBarButton extends StatelessWidget {
               },
             ),
           );
+  }
+}
+
+@immutable
+class _DeleteAppBarButton extends StatelessWidget {
+  const _DeleteAppBarButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final readOnly = !JobScope.editingOf(context, listen: true);
+    return readOnly
+        ? const SizedBox.shrink()
+        : SizedBox.square(
+            dimension: kToolbarHeight,
+            child: IconButton(
+              tooltip: 'Delete job',
+              icon: const CircleAvatar(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 30,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              onPressed: () {
+                final job = context.read<JobBLoC>().state.job;
+                PageRouter.showModalDialog(
+                  context,
+                  (context) => _DeleteJobDialog(
+                    job: job,
+                  ),
+                );
+              },
+            ),
+          );
+  }
+}
+
+@immutable
+class _DeleteJobDialog extends StatefulWidget {
+  const _DeleteJobDialog({
+    required this.job,
+    Key? key,
+  }) : super(key: key);
+
+  final Job job;
+
+  @override
+  State<_DeleteJobDialog> createState() => _DeleteJobDialogState();
+}
+
+class _DeleteJobDialogState extends State<_DeleteJobDialog> {
+  final TextEditingController controller = TextEditingController(text: '');
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(AppLocalization.localize(context).delete_confirmation),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'DELETE',
+                prefixIcon: const Icon(
+                  Icons.delete,
+                ),
+                suffixIcon: const Icon(
+                  Icons.delete,
+                ),
+                helperText: AppLocalization.localize(context).irreversible_action,
+              ),
+              controller: controller,
+              maxLines: 1,
+              maxLength: 6,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => PageRouter.pop(context),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          ValueListenableBuilder<TextEditingValue>(
+            valueListenable: controller,
+            builder: (context, value, child) => OutlinedButton(
+              onPressed: value.text.toUpperCase() == 'DELETE' ? () => _delete(context, widget.job) : null,
+              style: OutlinedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              child: child!,
+            ),
+            child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
+          ),
+        ],
+      );
+
+  void _delete(BuildContext context, Job job) {
+    AuthenticationScope.authenticateOr(
+      context,
+      (user) {
+        PageRouter.maybePop(context);
+        PageRouter.goHome(context);
+        FeedScope.deleteJobOf(
+          context,
+          user: user,
+          job: job,
+        );
+      },
+    );
   }
 }

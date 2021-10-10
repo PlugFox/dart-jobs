@@ -77,6 +77,19 @@ class FeedScope extends StatelessWidget {
         ),
       );
 
+  /// Создать новую работу и открыть для редактирования
+  static void deleteJobOf(
+    BuildContext context, {
+    required AuthenticatedUser user,
+    required Job job,
+  }) =>
+      BlocScope.of<JobManagerBLoC>(
+        context,
+        listen: false,
+      ).add(
+        JobManagerEvent.delete(user: user, job: job),
+      );
+
   @override
   Widget build(BuildContext context) => BlocScope<FeedBLoC>.create(
         create: (context) => FeedBLoC(

@@ -70,6 +70,10 @@ class PageRouter extends InheritedNotifier {
   /// [RouteObserver], [NavigatorObserver]
   static PageObserver pageObserverOf(BuildContext context) => of(context, listen: false).router.pageObserver;
 
+  /// Получить обозреватель страниц из контекста
+  /// [RouteObserver], [NavigatorObserver], [RouteAware]
+  static ModalObserver modalObserverOf(BuildContext context) => of(context, listen: false).router.modalObserver;
+
   /// Можно ли закрыть текущий роут
   /// [Navigator.canPop], [ModalRoute.canPop]
   static bool canPop(BuildContext context, {bool listen = false}) =>

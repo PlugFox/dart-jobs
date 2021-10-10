@@ -11,5 +11,13 @@
   "profile": "Profile",
   "@profile": {
     "description": "Профиль"
+  },
+  "delete_confirmation": "Write \"DELETE\" to confirm deletion",
+  "@delete_confirmation": {
+    "description": "Подтверждение удаления"
+  },
+  "irreversible_action": "Attention, this action is irreversible",
+  "@irreversible_action": {
+    "description": "Предупреждение о необратимом действии"
   }
 }

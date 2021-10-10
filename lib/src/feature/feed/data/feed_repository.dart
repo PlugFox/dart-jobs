@@ -11,6 +11,12 @@ import '../../../common/utils/list_unique.dart';
 
 // ignore: one_member_abstracts
 abstract class IFeedRepository {
+  /// Получить по идентификатору
+  /// Если возвращает null - элемент не найден, вероятно удален
+  Future<Proposal?> getById({
+    required final String id,
+  });
+
   /// Запросить новейшие
   Stream<Proposal> fetchRecent({
     required final DateTime updatedAfter,
@@ -65,7 +71,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
       );
 
   @override
-  Stream<Proposal> paginate({
+  Stream<Proposal<Attribute>> paginate({
     required final DateTime updatedBefore,
     required final int count,
   }) =>
@@ -94,6 +100,19 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
             .whereType<Proposal>()
             .convert(),
       );
+
+  @override
+  Future<Proposal<Attribute>?> getById({required String id}) async {
+    final snapshot = await _collection.doc('id').get(
+          const GetOptions(
+            source: Source.serverAndCache,
+          ),
+        );
+    if (!snapshot.exists) return null;
+    final data = snapshot.data();
+    if (data is! Map<String, Object?>) return null;
+    return Proposal.fromJson(data);
+  }
 }
 
 extension on Iterable<Map<String, Object?>> {
@@ -115,6 +134,9 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
   static math.Random get _rnd => __rnd ??= math.Random();
   static math.Random? __rnd;
   FeedRepositoryFake();
+
+  @override
+  Future<Proposal<Attribute>?> getById({required String id}) => Future<Proposal<Attribute>?>.value(null);
 
   @override
   Stream<Proposal<Attribute>> fetchRecent({
