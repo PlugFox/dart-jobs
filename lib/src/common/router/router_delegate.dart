@@ -3,6 +3,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
 
 import '../../feature/initialization/widget/initialization_scope.dart';
@@ -44,6 +45,8 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
         ],
         pages: configuration.buildPages(context).toList(growable: false),
         onPopPage: (Route<Object?> route, Object? result) {
+          l.d('PageRouter.onPopPage($route, $result)');
+
           /// TODO: проверить возврат значения роута
           if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
             return false;
@@ -57,6 +60,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
 
   @override
   Future<bool> popRoute() {
+    l.d('PageRouter.popRoute()');
     if (currentConfiguration.isRoot) return SynchronousFuture<bool>(false);
     final navigator = pageObserver.navigator;
     if (navigator == null) return SynchronousFuture<bool>(false);
