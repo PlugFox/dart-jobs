@@ -10,8 +10,8 @@ class JobPage extends Page<void> {
     required final this.title,
     final this.edit = false,
   }) : super(
-          key: ValueKey<String>('/job/id$id'),
-          name: '/job/id$id',
+          key: ValueKey<String>('/job/$id'),
+          name: '/job/$id',
           arguments: <String, Object?>{
             'id': id,
             'edit': edit,

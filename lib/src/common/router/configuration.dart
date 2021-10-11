@@ -154,7 +154,7 @@ class JobPageConfiguration extends PageConfiguration {
   PageConfiguration? get previous => const FeedPageConfiguration();
 
   @override
-  Uri toUri() => Uri.parse('/job/id$jobId');
+  Uri toUri() => Uri.parse('/job/$jobId');
 
   @override
   Iterable<Page<Object?>> buildPages(BuildContext context) sync* {

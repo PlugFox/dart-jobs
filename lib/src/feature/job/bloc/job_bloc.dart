@@ -42,16 +42,26 @@ class JobState with _$JobState {
   @override
   bool get editing;
 
+  /// Обновляется
   const factory JobState.fetching({
     required final Job job,
     required final bool editing,
   }) = _FetchingJobState;
 
+  /// В ожидании событий
   const factory JobState.idle({
     required final Job job,
     required final bool editing,
   }) = _IdleJobState;
 
+  /// Работа не найдена
+  /// Вероятно была удалена или открыта по не существующему идентификатору
+  const factory JobState.notFound({
+    required final Job job,
+    @Default(false) final bool editing,
+  }) = _NotFoundJobState;
+
+  /// Произошла ошибка
   const factory JobState.error({
     required final Job job,
     required final bool editing,
@@ -106,8 +116,17 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       yield JobState.fetching(job: state.job, editing: state.editing);
       final job = await _repository.fetch(state.job);
       yield JobState.idle(job: job, editing: state.editing);
-    } on JobNotFoundException catch (err) {
-      yield JobState.error(job: state.job, editing: state.editing, message: err.toString());
+    } on JobNotFoundException {
+      yield JobState.notFound(
+        job: Job(
+          id: 'not_found',
+          creatorId: 'not_found',
+          title: 'Not found',
+          created: DateTime.now(),
+          updated: DateTime.now(),
+        ),
+        editing: false,
+      );
     } on Object {
       yield JobState.error(job: state.job, editing: state.editing, message: 'Unsupported error');
       rethrow;

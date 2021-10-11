@@ -81,8 +81,8 @@ mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
     if (jobState is! Map<String, Object?>) {
       jobState = <String, Object?>{};
     }
-    if (segment != null && segment.length > 2 && segment.startsWith('id')) {
-      final id = segment.substring(2);
+    if (segment != null && segment.isNotEmpty) {
+      final id = segment;
       return JobPageConfiguration(
         jobId: id,
         jobTitle: jobState['title']?.toString() ?? id,

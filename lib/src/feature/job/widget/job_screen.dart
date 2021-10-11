@@ -12,6 +12,7 @@ import '../../feed/widget/feed_scope.dart';
 import '../bloc/job_bloc.dart';
 import '../model/job.dart';
 import 'job_form.dart';
+import 'job_not_found.dart';
 import 'job_scope.dart';
 
 @immutable
@@ -35,20 +36,23 @@ class JobScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
         buildWhen: (prev, next) => prev.job.title != next.job.title,
-        builder: (context, state) => JobForm(
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(state.job.title),
-              actions: const <Widget>[
-                _DeleteAppBarButton(),
-                _CancelEditAppBarButton(),
-                SizedBox(width: 15),
-              ],
+        builder: (context, state) => state.maybeMap<Widget>(
+          notFound: (_) => const JobNotFound(),
+          orElse: () => JobForm(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(state.job.title),
+                actions: const <Widget>[
+                  _DeleteAppBarButton(),
+                  _CancelEditAppBarButton(),
+                  SizedBox(width: 15),
+                ],
+              ),
+              body: const SafeArea(
+                child: JobFields(),
+              ),
+              floatingActionButton: const _JobScreenFloatingActionButton(),
             ),
-            body: const SafeArea(
-              child: JobFields(),
-            ),
-            floatingActionButton: const _JobScreenFloatingActionButton(),
           ),
         ),
       );
