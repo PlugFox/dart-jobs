@@ -9,6 +9,7 @@ import '../../../common/constant/layout_constraints.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/router/configuration.dart';
 import '../../../common/router/page_router.dart';
+import '../../initialization/widget/initialization_scope.dart';
 import '../../job/model/job.dart';
 
 typedef FeedTileOnPressed = void Function(BuildContext context);
@@ -167,13 +168,20 @@ class _JobFeedTile extends FeedTile {
           ),
 
           /// TODO: DateFormat
-          onPressed: (context) => PageRouter.navigate(
-            context,
-            (configuration) => JobPageConfiguration(
-              jobId: job.id,
-              jobTitle: job.title,
-            ),
-          ),
+          onPressed: (context) {
+            PageRouter.navigate(
+              context,
+              (configuration) => JobPageConfiguration(
+                jobId: job.id,
+                jobTitle: job.title,
+              ),
+            );
+            InitializationScope.storeOf(context).analytics?.logViewItem(
+                  itemId: job.id,
+                  itemName: job.title,
+                  itemCategory: 'job',
+                );
+          },
           key: key,
         );
 }

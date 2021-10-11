@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
@@ -94,6 +97,8 @@ class AuthenticationScope extends StatefulWidget {
 
 class _AuthenticationScopeState extends State<AuthenticationScope> {
   late AuthenticationBLoC bloc;
+  FirebaseAnalytics? _analytics;
+  StreamSubscription<AuthenticationState>? _subscription;
 
   @override
   void initState() {
@@ -101,13 +106,24 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
     bloc = AuthenticationBLoC(
       authenticationRepository: InitializationScope.storeOf(context).authenticationRepository,
     );
+    _analytics = InitializationScope.storeOf(context).analytics;
+    _subscription = bloc.stream.listen(_onStateChanged);
+    _onStateChanged(bloc.state);
   }
 
   @override
   void dispose() {
+    _subscription?.cancel();
     bloc.close();
     super.dispose();
   }
+
+  void _onStateChanged(AuthenticationState state) => state.maybeMap<void>(
+        orElse: () {},
+        authenticated: (state) {
+          _analytics?.logLogin(loginMethod: state.loginMethod);
+        },
+      );
 
   @override
   Widget build(BuildContext context) => BlocScope<AuthenticationBLoC>.value(

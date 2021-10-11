@@ -1,3 +1,5 @@
+// ignore_for_file: long-method
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../common/constant/environment.dart';
 import '../../../common/constant/pubspec.yaml.g.dart' as pubspec;
+import '../../../common/constant/storage_namespace.dart';
 import '../../../common/utils/screen_util.dart';
 import '../../authentication/data/authentication_repository.dart';
 import '../../authentication/model/user_entity.dart';
@@ -50,16 +53,34 @@ class InitializationHelper {
     }
     final result = stopwatch.elapsedMilliseconds;
     _initializationProgress = initializationProgress;
+    final screenSize = ScreenUtil.screenSize();
     // ignore: unawaited_futures
     _initializationProgress.analytics?.logEvent(
       name: 'initialized',
       parameters: <String, Object>{
         'duration': result,
         'version': pubspec.version,
-        'version_major': pubspec.major,
-        'screen_size': ScreenUtil.screenSize().representation,
+        'version_major_minor': pubspec.major + (pubspec.minor / 100),
+        'screen_size': screenSize.representation,
+        'screen_size_min': screenSize.min,
+        'screen_size_max': screenSize.max,
         'orientation': ScreenUtil.orientation() == Orientation.landscape ? 'landscape' : 'portrait',
         'locale': platform.locale,
+        'platform': platform.isWeb ? 'web' : 'io',
+        'mobile_desktop': platform.when<String>(
+              desktop: () => 'desktop',
+              mobile: () => 'mobile',
+            ) ??
+            'unknown',
+        'operating_system': platform.operatingSystem.when<String>(
+          android: () => 'android',
+          fuchsia: () => 'fuchsia',
+          iOS: () => 'ios',
+          linux: () => 'linux',
+          macOS: () => 'macos',
+          windows: () => 'windows',
+          unknown: () => 'unknown',
+        ),
         'build_mode': platform.when<String>(
               release: () => 'release',
               debug: () => 'debug',
@@ -140,5 +161,35 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       }
     }
     return progress.copyWith(newSettingsRepository: repository);
+  },
+  'Checking the application version': (store) async {
+    try {
+      final build = int.tryParse(pubspec.build.first);
+      final sharedPrefs = store.sharedPreferences;
+      if (sharedPrefs == null) return store;
+      if (build != null) {
+        await Future.wait<void>(
+          <Future<void>>[
+            sharedPrefs.setInt(versionMajorKey, pubspec.major),
+            sharedPrefs.setInt(versionMinorKey, pubspec.minor),
+            sharedPrefs.setInt(versionPatchKey, pubspec.patch),
+            sharedPrefs.setInt(versionBuildKey, build),
+          ],
+        );
+      } else {
+        await Future.wait<void>(
+          <Future<void>>[
+            sharedPrefs.remove(versionMajorKey),
+            sharedPrefs.remove(versionMinorKey),
+            sharedPrefs.remove(versionPatchKey),
+            sharedPrefs.remove(versionBuildKey),
+          ],
+        );
+      }
+    } on Object {
+      l.e('Ошибка миграции приложения');
+      rethrow;
+    }
+    return store;
   },
 };

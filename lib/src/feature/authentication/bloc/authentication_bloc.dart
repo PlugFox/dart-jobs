@@ -45,7 +45,10 @@ class AuthenticationState with _$AuthenticationState {
   const factory AuthenticationState.progress({required final UserEntity user}) = _AuthenticationInProgressState;
 
   /// Аутентифицирован
-  factory AuthenticationState.authenticated({required final AuthenticatedUser user}) = _AuthenticatedState;
+  factory AuthenticationState.authenticated({
+    required final AuthenticatedUser user,
+    final String? loginMethod,
+  }) = _AuthenticatedState;
 
   @factory
   // ignore: prefer_constructors_over_static_methods, invalid_factory_method_impl
