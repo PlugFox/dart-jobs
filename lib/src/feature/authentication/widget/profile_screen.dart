@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/localization/localizations.dart';
 import 'profile_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: Text(context.localization.profile),
         ),
         body: const SafeArea(
           child: _ProfileBody(),

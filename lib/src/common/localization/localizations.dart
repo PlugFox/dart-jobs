@@ -1,5 +1,6 @@
 library localizations;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' show BuildContext, Localizations, Locale, LocalizationsDelegate;
 import 'package:intl/intl.dart';
 
@@ -11,6 +12,7 @@ export 'l10n.dart';
 extension AppLocalizationsX on BuildContext {
   Localized get localization => AppLocalization.localize(this);
   Locale get locale => AppLocalization.localeOf(this);
+  MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
   List<Locale> get supportedLocales => AppLocalization.supportedLocales;
   String formatDate(DateTime date, String pattern) =>
       AppLocalization.dateFormat(pattern, AppLocalization.localeOf(this)).format(date);

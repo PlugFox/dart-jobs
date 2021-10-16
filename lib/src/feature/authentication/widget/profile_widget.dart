@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_info/platform_info.dart';
 
+import '../../../common/localization/localizations.dart';
 import '../../../common/router/page_router.dart';
 import '../model/user_entity.dart';
 import 'authentication_scope.dart';
@@ -92,7 +93,7 @@ class ProfileWidget extends StatelessWidget {
                   PageRouter.pop(context);
                   AuthenticationScope.logOut(context);
                 },
-                child: const Text('Log out'),
+                child: Text(context.localization.log_out),
               ),
             ),
           ),

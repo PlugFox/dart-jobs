@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/localization/localizations.dart';
 import 'settings_widget.dart';
 
 @immutable
@@ -12,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: Text(context.localization.settings),
         ),
         body: const SafeArea(
           child: SettingsWidget(),

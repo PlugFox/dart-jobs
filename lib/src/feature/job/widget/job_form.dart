@@ -3,11 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../common/constant/layout_constraints.dart';
+import '../../../common/localization/localizations.dart';
 import '../bloc/job_bloc.dart';
 import '../model/job.dart';
 import 'job_scope.dart';
@@ -108,7 +108,7 @@ class JobFields extends StatelessWidget {
         /// Заголовок
         _JobTextField.singleLine(
           state.jobTitleController,
-          label: 'Название',
+          label: context.localization.job_field_title,
           maxLength: 64,
           finishEditing: false,
           enabled: true,
@@ -118,26 +118,26 @@ class JobFields extends StatelessWidget {
         /// Название компании
         _JobTextField.singleLine(
           state.companyTitleController,
-          label: 'Название компании',
+          label: context.localization.job_field_company_title,
           key: const ValueKey<String>('companyTitle'),
         ),
 
         /// Местоположение
         _JobTextField.singleLine(
           state.locationCountryController,
-          label: 'Страна',
+          label: context.localization.job_field_location_country,
           key: const ValueKey<String>('locationCountry'),
         ),
         _JobTextField.singleLine(
           state.locationAddressController,
-          label: 'Адрес',
+          label: context.localization.job_field_location_address,
           key: const ValueKey<String>('locationAddress'),
         ),
 
         /// Описание
         _JobTextField.multiLine(
           state.descriptionController,
-          label: 'Описание',
+          label: context.localization.job_field_description,
           maxLength: 64,
           maxLines: 12,
           finishEditing: false,

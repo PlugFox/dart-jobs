@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/localization/localizations.dart';
 import '../../../common/router/page_router.dart';
 
 @immutable
@@ -12,7 +13,10 @@ class JobNotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('NOT FOUND'),
+          title: Text(
+            context.localization.job_not_found,
+            maxLines: 1,
+          ),
         ),
         body: SafeArea(
           child: Center(
@@ -22,7 +26,7 @@ class JobNotFound extends StatelessWidget {
               children: <Widget>[
                 Center(
                   child: Text(
-                    'JOB NOT FOUND',
+                    context.localization.job_not_found,
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),

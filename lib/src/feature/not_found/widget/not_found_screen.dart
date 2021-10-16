@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/localization/localizations.dart';
 import '../../../common/router/page_router.dart';
 
 @immutable
@@ -12,7 +13,7 @@ class NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('404: Not found'),
+          title: Text(context.localization.not_found),
         ),
         body: SafeArea(
           child: Center(
@@ -24,7 +25,9 @@ class NotFoundScreen extends StatelessWidget {
                   }
                 },
               ),
-              child: Text('Go ${PageRouter.canPop(context) ? 'back' : 'home'}'),
+              child: Text(
+                context.materialLocalizations.backButtonTooltip,
+              ),
             ),
           ),
         ),

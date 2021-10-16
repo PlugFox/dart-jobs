@@ -12,6 +12,14 @@
   "@profile": {
     "description": "Профиль"
   },
+  "not_found": "Not found",
+  "@not_found": {
+    "description": "Не найдено"
+  },
+  "job_not_found": "Job not found",
+  "@job_not_found": {
+    "description": "Работа не найдена"
+  },
   "delete_confirmation": "Write \"DELETE\" to confirm deletion",
   "@delete_confirmation": {
     "description": "Подтверждение удаления"
@@ -19,5 +27,33 @@
   "irreversible_action": "Attention, this action is irreversible",
   "@irreversible_action": {
     "description": "Предупреждение о необратимом действии"
+  },
+  "create_new_job": "Create new job",
+  "@create_new_job": {
+    "description": "Создать новую работу"
+  },
+  "log_out": "Log out",
+  "@log_out": {
+    "description": "Разлогиниться"
+  },
+  "job_field_title": "Title",
+  "@job_field_title": {
+    "description": "Заголовок"
+  },
+  "job_field_company_title": "Company",
+  "@job_field_company_title": {
+    "description": "Название компании"
+  },
+  "job_field_location_country": "Country",
+  "@job_field_location_country": {
+    "description": "Страна"
+  },
+  "job_field_location_address": "Address",
+  "@job_field_location_address": {
+    "description": "Адрес"
+  },
+  "job_field_description": "Description",
+  "@job_field_description": {
+    "description": "Описание"
   }
 }
