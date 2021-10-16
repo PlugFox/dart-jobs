@@ -28,33 +28,41 @@ class _InitializationScreenState extends State<InitializationScreen> {
   //endregion
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Center(
-          child: StreamBuilder<InitializationState>(
-            initialData: const InitializationState.notInitialized(),
-            stream: _stream,
-            builder: (context, snapshot) =>
-                snapshot.data?.map<Widget>(
-                  initialized: (_) => const InitializationProgressWidget(
-                    progress: 0,
-                    message: 'Initialized',
+  Widget build(BuildContext context) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Center(
+            child: StreamBuilder<InitializationState>(
+              initialData: const InitializationState.initializationInProgress(
+                progress: 0,
+                message: 'Preparing for initialization',
+              ),
+              stream: _stream,
+              builder: (context, snapshot) =>
+                  snapshot.data?.map<Widget>(
+                    initialized: (_) => const InitializationProgressWidget(
+                      progress: 0,
+                      message: 'Initialized',
+                    ),
+                    initializationInProgress: (state) => InitializationProgressWidget(
+                      message: state.message,
+                      progress: state.progress,
+                    ),
+                    error: (state) => InitializationErrorWidget(
+                      message: state.message,
+                      error: state.error,
+                      stackTrace: state.stackTrace,
+                    ),
+                  ) ??
+                  InitializationErrorWidget(
+                    message: 'Initialization error',
+                    error: 'Unknown initialization state',
+                    stackTrace: StackTrace.current,
                   ),
-                  notInitialized: (_) => const InitializationProgressWidget(
-                    progress: 0,
-                    message: 'Not initialized',
-                  ),
-                  initializationInProgress: (state) => InitializationProgressWidget(
-                    message: state.message,
-                    progress: state.progress,
-                  ),
-                ) ??
-                const InitializationProgressWidget(
-                  progress: 0,
-                  message: 'Initialization error',
-                ),
+            ),
           ),
         ),
       );
@@ -86,5 +94,36 @@ class InitializationProgressWidget extends StatelessWidget {
             ],
           ),
         ),
+      );
+}
+
+@immutable
+class InitializationErrorWidget extends StatelessWidget {
+  final String message;
+  final Object error;
+  final StackTrace stackTrace;
+  const InitializationErrorWidget({
+    required final this.message,
+    required final this.error,
+    required final this.stackTrace,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 48,
+          ),
+          Text(message),
+          const Divider(),
+          Text(error.toString()),
+          Text(stackTrace.toString()),
+        ],
       );
 }

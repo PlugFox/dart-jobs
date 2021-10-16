@@ -16,18 +16,107 @@
   -->
   <base href="$FLUTTER_BASE_HREF">
 
+  <!--TITLE-->
+  <title>Dart Jobs</title>
+
+  <!--META-->
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="keywords" content="dart, flutter, jobs, дарт, флаттер, fox, plague, plugfox, pwa, progressive, web, app, cross-platform">
   <meta name="description" content="Dart Jobs">
-
-  <!-- iOS meta tags & icons -->
+  <meta name="author" content="@plugfox">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="dart_jobs">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
 
-  <title>dart_jobs</title>
-  <link rel="manifest" href="manifest.json">
+  <!-- Favicons -->
+  <!-- Favicon Generator. For real. https://realfavicongenerator.net -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="194x194" href="/favicon-194x194.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- STYLE -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFF;
+      overflow: hidden;
+    }
+    .noscript-center {
+      position: absolute;
+      text-align: center;
+      margin: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3vw;
+    }
+  </style>
+
+  <!-- SCRIPTS -->
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-performance.js"></script>
+  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-remote-config.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-functions.js"></script>-->
+
+
+  <!-- https://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBst2CWEUfNuaHh9OA3XW3JdZ3vpLGPMcg",
+      authDomain: "dart-job.firebaseapp.com",
+      projectId: "dart-job",
+      storageBucket: "dart-job.appspot.com",
+      messagingSenderId: "174403318860",
+      appId: "1:174403318860:web:d8f54a5b305667d08230e9",
+      measurementId: "G-BYS0GKHDNS"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Analytics
+    firebase.analytics.isSupported().then((isSupported) => {
+        if (isSupported) {
+          firebase.analytics();
+        } else {
+          console.warn("Analytics is not supported");
+        }
+      });
+
+    // Performance
+    firebase.performance();
+
+    //console.log(firebase.app().name);
+    //var defaultStorage = firebase.storage();
+    //var defaultFirestore = firebase.firestore();
+  </script>
 </head>
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to

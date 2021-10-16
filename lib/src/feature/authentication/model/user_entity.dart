@@ -18,7 +18,7 @@ abstract class UserEntity {
         );
 
   @literal
-  const factory UserEntity.notAuthenticated() = _UserEntityNotAuthenticated;
+  const factory UserEntity.notAuthenticated() = NotAuthenticatedUser;
 
   factory UserEntity.authenticated({
     required final String uid,
@@ -34,7 +34,7 @@ abstract class UserEntity {
   });
 }
 
-class _UserEntityNotAuthenticated implements UserEntity {
+class NotAuthenticatedUser implements UserEntity {
   @override
   bool get isAuthenticated => false;
 
@@ -45,7 +45,7 @@ class _UserEntityNotAuthenticated implements UserEntity {
   AuthenticatedUser? get authenticatedOrNull => null;
 
   @literal
-  const _UserEntityNotAuthenticated();
+  const NotAuthenticatedUser();
 
   @override
   T when<T extends Object?>({
@@ -58,7 +58,7 @@ class _UserEntityNotAuthenticated implements UserEntity {
   String toString() => 'User is not authenticated';
 
   @override
-  bool operator ==(Object other) => other is _UserEntityNotAuthenticated;
+  bool operator ==(Object other) => other is NotAuthenticatedUser;
 
   @override
   int get hashCode => 0;

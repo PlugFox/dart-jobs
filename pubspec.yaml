@@ -1,7 +1,7 @@
 name: dart_jobs
 description: Dart Jobs
 publish_to: 'none'
-version: 0.0.1+1630251984
+version: 0.1.0+1634410881
 
 environment:
   sdk: ">=2.14.0-377.7.beta <3.0.0"
@@ -38,6 +38,7 @@ dependencies:
   geolocator: ^7.0.3
   permission_handler: ^8.0.0+2
   async: ^2.6.1
+  collection: ^1.15.0
 
   # Transformers
   rxdart: ^0.27.0
@@ -49,10 +50,15 @@ dependencies:
   cloud_firestore: ^2.1.0
   firebase_crashlytics: ^2.0.3
   firebase_performance: ^0.7.0+9
+  #firebase_messaging: ^10.0.8
 
   # Authentication
   sign_button: ^2.0.0 # Кнопки аутентификации
   google_sign_in: ^5.0.3
+
+  # UI & Widgets
+  shimmer: ^2.0.0
+  #google_fonts: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +86,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/image/dart_logo/
 
 # Flutter assets codegen
 flutter_gen:
@@ -89,11 +97,11 @@ flutter_gen:
 # Generate app icon
 # flutter pub run flutter_launcher_icons:main
 flutter_icons:
-  image_path: "assets/images/iconxxxhdpi.png"
-  image_path_android: "assets/images/iconxxxhdpi.png"
-  image_path_ios: "assets/images/iconxxxhdpi.png"
+  image_path: "assets/icon/1x/icon.png"
+  image_path_android: "assets/icon/1x/icon.png"
+  image_path_ios: "assets/icon/1x/icon.png"
   android: true # can specify file name here e.g. "ic_launcher"
-  ios: false # can specify file name here e.g. "My-Launcher-Icon"
+  ios: true # can specify file name here e.g. "My-Launcher-Icon"
   # adaptive_icon_background: "assets/icons/background.png" # only available for Android 8.0 devices and above
   # adaptive_icon_foreground: "assets/icons/foreground.png" # only available for Android 8.0 devices and above
 

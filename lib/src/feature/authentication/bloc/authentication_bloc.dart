@@ -14,9 +14,11 @@ class AuthenticationEvent with _$AuthenticationEvent {
   const AuthenticationEvent._();
 
   /// Войти с помощью гугла
+  @literal
   const factory AuthenticationEvent.signInWithGoogle() = _SignInWithGoogleEvent;
 
   /// Разлогиниться
+  @literal
   const factory AuthenticationEvent.logOut() = _LogOutEvent;
 }
 
@@ -24,15 +26,18 @@ class AuthenticationEvent with _$AuthenticationEvent {
 class AuthenticationState with _$AuthenticationState {
   const AuthenticationState._();
 
-  bool get isAuthenticated => when<bool>(
-        notAuthenticated: (_) => false,
-        progress: (_) => false,
-        authenticated: (_) => true,
+  UserEntity get user => super.map<UserEntity>(
+        notAuthenticated: (state) => state.user,
+        progress: (state) => state.user,
+        authenticated: (state) => state.user,
       );
+
+  bool get isAuthenticated => user.isAuthenticated;
 
   bool get isNotAuthenticated => !isAuthenticated;
 
   /// Разлогинен / Не аутентифицирован
+  @literal
   const factory AuthenticationState.notAuthenticated({@Default(UserEntity.notAuthenticated()) final UserEntity user}) =
       _NotAuthenticatedState;
 
@@ -40,26 +45,31 @@ class AuthenticationState with _$AuthenticationState {
   const factory AuthenticationState.progress({required final UserEntity user}) = _AuthenticationInProgressState;
 
   /// Аутентифицирован
-  const factory AuthenticationState.authenticated({required final UserEntity user}) = _AuthenticatedState;
+  factory AuthenticationState.authenticated({
+    required final AuthenticatedUser user,
+    final String? loginMethod,
+  }) = _AuthenticatedState;
+
+  @factory
+  // ignore: prefer_constructors_over_static_methods, invalid_factory_method_impl
+  static AuthenticationState fromUser(UserEntity user) => user.when<AuthenticationState>(
+        authenticated: (user) => AuthenticationState.authenticated(user: user),
+        notAuthenticated: () => const AuthenticationState.notAuthenticated(),
+      );
 }
 
 class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> {
   final IAuthenticationRepository _authenticationRepository;
-  StreamSubscription<UserEntity>? _authStateChangesSubscription;
+  StreamSubscription<void>? _authStateChangesSubscription;
 
   AuthenticationBLoC({
     required final IAuthenticationRepository authenticationRepository,
-    final AuthenticationState initialState = const AuthenticationState.notAuthenticated(),
+    final AuthenticationState? initialState,
   })  : _authenticationRepository = authenticationRepository,
-        super(initialState) {
-    _authStateChangesSubscription = authenticationRepository.authStateChanges.listen(
-      (user) => setState(
-        user.when(
-          authenticated: (user) => AuthenticationState.authenticated(user: user),
-          notAuthenticated: () => const AuthenticationState.notAuthenticated(),
-        ),
-      ),
-    );
+        super(initialState ?? AuthenticationState.fromUser(authenticationRepository.currentUser)) {
+    _authStateChangesSubscription = authenticationRepository.authStateChanges
+        .map<AuthenticationState>(AuthenticationState.fromUser)
+        .listen(setState, cancelOnError: false);
   }
 
   @override
@@ -75,11 +85,7 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       l.vvvvvv('Запросим у репозитория аутентификации аутентификацию в гугле');
       final user = await _authenticationRepository.signInWithGoogle();
-      if (user.isNotAuthenticated) {
-        yield const AuthenticationState.notAuthenticated();
-        return;
-      }
-      yield AuthenticationState.authenticated(user: user);
+      yield AuthenticationState.fromUser(user);
     } on Object {
       l.w('Во время аутентификации в гугле произошла ошибка');
       yield const AuthenticationState.notAuthenticated();
@@ -88,14 +94,15 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _logOut() async* {
+    if (state.isNotAuthenticated) return;
     try {
       l.vvvvvv('Начат процесс разлогинивания');
       yield AuthenticationState.progress(user: state.user);
       await _authenticationRepository.logOut();
       yield const AuthenticationState.notAuthenticated();
     } on Object {
-      l.w('Во время разлогинивания произошла ошибка');
-      yield AuthenticationState.authenticated(user: state.user);
+      l.w('Во время разлогина произошла ошибка');
+      yield AuthenticationState.fromUser(state.user);
       rethrow;
     }
   }

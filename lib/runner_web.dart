@@ -9,7 +9,7 @@ import 'src/app.dart';
 void run() =>
     // Зона перехвата всех ошибок верхнего уровня
     runZonedGuarded<void>(
-      () {
+      () async {
         // Запустить приложение
         App.run();
       },

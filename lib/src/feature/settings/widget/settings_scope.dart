@@ -16,7 +16,7 @@ class SettingsScope extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static SettingsBLoC _blocOf(BuildContext context) => _InheritedSettings.stateOf(context).settingsBLoC;
+  static SettingsBLoC _blocOf(BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
 
   /// Обновить настройки приложения
   static void updateOf(BuildContext context, {required UserSettings settings}) {
@@ -31,8 +31,8 @@ class SettingsScope extends StatefulWidget {
   }
 
   /// Получить текущие настройки приложения
-  static UserSettings settingsOf(BuildContext context, {bool listen = false}) =>
-      _InheritedSettings.of(context, listen: listen).settings;
+  static UserSettings settingsOf(BuildContext context, {bool listen = true}) =>
+      _InheritedSettings.settingsOf(context, listen: listen)!;
 
   /// Получить и подписаться на текущую локаль приложения
   static Locale localeOf(BuildContext context) => Locale(_InheritedSettings.aspectOf(context, 'locale').locale);
@@ -118,12 +118,15 @@ class _InheritedSettings extends InheritedModel<String> {
       ((dependencies.contains('locale') && oldWidget.settings.locale != settings.locale) ||
           (dependencies.contains('theme') && oldWidget.settings.theme != settings.theme));
 
-  static _InheritedSettings of(BuildContext context, {bool listen = false}) => listen
-      ? context.dependOnInheritedWidgetOfExactType<_InheritedSettings>()!
-      : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()!.widget as _InheritedSettings);
-
   static UserSettings aspectOf(BuildContext context, String aspect) =>
-      InheritedModel.inheritFrom<_InheritedSettings>(context, aspect: aspect)!.settings;
+      InheritedModel.inheritFrom<_InheritedSettings>(context, aspect: aspect)?.settings ?? UserSettings.initial;
 
-  static _SettingsScopeState stateOf(BuildContext context) => of(context, listen: false).state;
+  static _SettingsScopeState? stateOf(BuildContext context, {bool listen = false}) => listen
+      ? context.dependOnInheritedWidgetOfExactType<_InheritedSettings>()?.state
+      : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()?.widget as _InheritedSettings?)?.state;
+
+  static UserSettings? settingsOf(BuildContext context, {bool listen = false}) => listen
+      ? context.dependOnInheritedWidgetOfExactType<_InheritedSettings>()?.settings
+      : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()?.widget as _InheritedSettings?)
+          ?.settings;
 }

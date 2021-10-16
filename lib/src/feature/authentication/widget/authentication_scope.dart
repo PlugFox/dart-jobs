@@ -1,6 +1,12 @@
+import 'dart:async';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fox_flutter_bloc/bloc.dart';
 
+import '../../initialization/widget/initialization_scope.dart';
+import '../bloc/authentication_bloc.dart';
 import '../model/user_entity.dart';
 
 @immutable
@@ -34,16 +40,102 @@ class AuthenticationScope extends StatefulWidget {
     }
   }
 
+  /// Проверить, совпадает ли идентификатор с текущим пользователем
+  static bool isSameUid(BuildContext context, String uid, {bool listen = false}) => userOf(
+        context,
+        listen: listen,
+      ).when<bool>(
+        authenticated: (user) => user.uid == uid,
+        notAuthenticated: () => false,
+      );
+
+  /// Выполнить коллбэк если аутентифицированы
+  /// Войти с помощью гугла если не вошли
+  /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
+  static void authenticateOr(
+    BuildContext context,
+    void Function(AuthenticatedUser user) callback,
+  ) {
+    final user = userOf(context, listen: false);
+    if (user is AuthenticatedUser) {
+      callback(user);
+    } else {
+      _of(context, listen: false)
+          ?.bloc
+          .stream
+          .map<UserEntity>((state) => state.user)
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: (sink) {},
+          )
+          .firstWhere(
+        (user) {
+          if (user is! AuthenticatedUser) {
+            return false;
+          }
+          callback(user);
+          return true;
+        },
+      );
+      signIn(context);
+    }
+  }
+
+  /// Отобразить диалог входа
+  static void signIn(BuildContext context) => signInWithGoogle(context);
+
+  /// Войти с помощью гугла
+  static void signInWithGoogle(BuildContext context) =>
+      _of(context, listen: false)?.bloc.add(const AuthenticationEvent.signInWithGoogle());
+
+  /// Разлогиниться
+  static void logOut(BuildContext context) => _of(context, listen: false)?.bloc.add(const AuthenticationEvent.logOut());
+
   @override
   State<AuthenticationScope> createState() => _AuthenticationScopeState();
 }
 
 class _AuthenticationScopeState extends State<AuthenticationScope> {
+  late AuthenticationBLoC bloc;
+  FirebaseAnalytics? _analytics;
+  StreamSubscription<AuthenticationState>? _subscription;
+
   @override
-  Widget build(BuildContext context) => _InheritedAuthentication(
-        state: this,
-        userEntity: const UserEntity.notAuthenticated(),
-        child: widget.child,
+  void initState() {
+    super.initState();
+    bloc = AuthenticationBLoC(
+      authenticationRepository: InitializationScope.storeOf(context).authenticationRepository,
+    );
+    _analytics = InitializationScope.storeOf(context).analytics;
+    _subscription = bloc.stream.listen(_onStateChanged);
+    _onStateChanged(bloc.state);
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    bloc.close();
+    super.dispose();
+  }
+
+  void _onStateChanged(AuthenticationState state) => state.maybeMap<void>(
+        orElse: () {},
+        authenticated: (state) {
+          _analytics?.logLogin(loginMethod: state.loginMethod);
+        },
+      );
+
+  @override
+  Widget build(BuildContext context) => BlocScope<AuthenticationBLoC>.value(
+        value: bloc,
+        child: BlocBuilder<AuthenticationBLoC, AuthenticationState>(
+          bloc: bloc,
+          builder: (context, state) => _InheritedAuthentication(
+            state: this,
+            userEntity: state.user,
+            child: widget.child,
+          ),
+        ),
       );
 }
 
@@ -57,7 +149,10 @@ class _InheritedAuthentication extends InheritedWidget {
     required final this.userEntity,
     required final Widget child,
     Key? key,
-  }) : super(key: key, child: child);
+  }) : super(
+          key: key,
+          child: child,
+        );
 
   @override
   bool updateShouldNotify(_InheritedAuthentication oldWidget) => userEntity != oldWidget.userEntity;

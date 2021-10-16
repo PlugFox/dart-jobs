@@ -241,16 +241,16 @@ linter:
 dart_code_metrics:
   anti-patterns:
     - long-method
-    - long-parameter-list
   metrics:
     cyclomatic-complexity: 20
-    number-of-arguments: 4
+    number-of-arguments: 12
     maximum-nesting-level: 5
   metrics-exclude:
     - test/**
   rules:
     - no-boolean-literal-compare
-    - no-empty-block
+    #- no-empty-block
     - prefer-trailing-comma
     - prefer-conditional-expressions
     - no-equal-then-else
+    - avoid-returning-widgets

@@ -50,6 +50,9 @@ app.*.map.json
 *.moor.dart
 *.mocks.dart
 *.hive.dart
+/lib/src/common/localization/l10n.dart
+/lib/src/common/localization/intl/messages_??.dart
+/lib/src/common/localization/intl/messages_???.dart
 
 # Database
 *.db

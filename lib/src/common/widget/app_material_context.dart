@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../feature/initialization/widget/initialization_scope.dart';
 import '../../feature/settings/widget/settings_scope.dart';
 import '../localization/localizations.dart';
 import '../router/configuration.dart';
 import '../router/route_information_parser.dart';
+import '../router/route_information_provider.dart';
 import '../router/router_delegate.dart';
 
 @immutable
@@ -24,18 +24,25 @@ class AppMaterialContext extends StatefulWidget {
 }
 
 class _AppMaterialContextState extends State<AppMaterialContext> {
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(initialConfiguration: AppConfiguration());
-  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
+  final PageInformationParser _routeInformationParser = const PageInformationParser();
+  final PageInformationProvider _routeInformationProvider = PageInformationProvider(
+    initialRouteInformation: const RouteInformation(
+      location: '/',
+    ),
+  );
+  final PageRouterDelegate _routerDelegate = PageRouterDelegate(
+    initialConfiguration: const FeedPageConfiguration(),
+  );
 
   @override
   void initState() {
     super.initState();
-
-    final repoStore = InitializationScope.storeOf(context);
+    //final repoStore = InitializationScope.storeOf(context);
   }
 
   @override
   void dispose() {
+    _routeInformationProvider.dispose();
     _routerDelegate.dispose();
     super.dispose();
   }
@@ -50,6 +57,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
       onGenerateTitle: (context) => context.localization.title,
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
+      routeInformationProvider: _routeInformationProvider,
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         for (final locale in supportedLocales) {
           if (locale.languageCode == currentLocale.languageCode) {

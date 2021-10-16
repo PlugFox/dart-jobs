@@ -120,7 +120,7 @@ dependencies {
     //implementation 'com.android.support:multidex:1.0.3'
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:28.3.1')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
 
     // Add the dependency for the Firebase SDK
     // When using the BoM, don't specify versions in Firebase dependencies

@@ -7,7 +7,9 @@ part 'user_settings.g.dart';
 @freezed
 class UserSettings with _$UserSettings {
   const factory UserSettings({
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'locale', required: true, disallowNullValue: true) required String locale,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'theme', required: true, disallowNullValue: true) required String theme,
     //@JsonKey(name: 'tip_of_the_day', required: true, disallowNullValue: true) required String tipOfTheDay,
   }) = _UserSettings;

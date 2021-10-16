@@ -1,104 +1,98 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:l/l.dart';
+import 'package:platform_info/platform_info.dart';
 
-import '../../feature/home/widget/home_page.dart';
+import '../../feature/initialization/widget/initialization_scope.dart';
+import '../../feature/not_found/widget/not_found_screen.dart';
 import 'configuration.dart';
+import 'page_router.dart';
+import 'root_route.dart';
+import 'transition_delegate.dart';
 
-class AppRouterDelegate extends RouterDelegate<AppConfiguration> with ChangeNotifier {
-  AppRouterDelegate({required final AppConfiguration initialConfiguration})
-      : _currentConfiguration = initialConfiguration,
-        _navigatorKey = GlobalKey<NavigatorState>();
+class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
 
-  final GlobalKey<NavigatorState> _navigatorKey;
+class ModalObserver extends RouteObserver<ModalRoute<Object?>> implements NavigatorObserver {}
+
+class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNotifier {
+  PageRouterDelegate({
+    final PageConfiguration initialConfiguration = const FeedPageConfiguration(),
+  })  : _currentConfiguration = initialConfiguration,
+        pageObserver = PageObserver(),
+        modalObserver = ModalObserver();
+
+  final PageObserver pageObserver;
+  final ModalObserver modalObserver;
 
   @override
-  Widget build(BuildContext context) => Navigator(
-        key: _navigatorKey,
-        //transitionDelegate: NoAnimationTransitionDelegate(),
-        pages: const <Page<Object?>>[
-          HomePage(),
-          /*
-          MaterialPage(
-            key: ValueKey('BooksListPage'),
-            child: BooksListScreen(
-              books: books,
-              onTapped: _handleBookTapped,
-            ),
-          ),
-          if (_selectedBook != null) BookDetailsPage(book: _selectedBook)
-          */
+  PageConfiguration get currentConfiguration => _currentConfiguration;
+  PageConfiguration _currentConfiguration;
+
+  @override
+  Widget build(BuildContext context) {
+    final configuration = currentConfiguration;
+    final analytics = InitializationScope.storeOf(context).analytics;
+    _setBrowserTitle(context);
+    return PageRouter(
+      routerDelegate: this,
+      child: Navigator(
+        transitionDelegate:
+            platform.isWeb ? const NoAnimationTransitionDelegate() : const DefaultTransitionDelegate<void>(),
+        onUnknownRoute: _onUnknownRoute,
+        reportsRouteUpdateToEngine: true,
+        observers: <NavigatorObserver>[
+          pageObserver,
+          modalObserver,
+          if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
         ],
+        pages: configuration.buildPages(context).toList(growable: false),
         onPopPage: (Route<Object?> route, Object? result) {
-          if (route is RootRoute) return false;
-          if (!route.didPop(result)) {
+          l.i('PageRouter.onPopPage($route, $result)');
+
+          /// TODO: проверить возврат значения роута
+          if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
             return false;
           }
-
-          // Update the list of pages by setting _selectedBook to null
-          //_selectedBook = null;
-          notifyListeners();
-
+          setNewRoutePath(configuration.previous ?? const NotFoundPageConfiguration());
           return true;
         },
-      );
-
-  @override
-  Future<void> setNewRoutePath(AppConfiguration configuration) async {
-    /*
-    if (configuration.isDetailsPage) {
-      _selectedBook = books[configuration.id!];
-    }
-    */
-    _currentConfiguration = configuration;
+      ),
+    );
   }
 
   @override
-  AppConfiguration get currentConfiguration => _currentConfiguration;
-  AppConfiguration _currentConfiguration;
-
-  @override
-  Future<void> setInitialRoutePath(AppConfiguration configuration) => setNewRoutePath(configuration);
-
-  @override
-  Future<void> setRestoredRoutePath(AppConfiguration configuration) => setNewRoutePath(configuration);
-
-  @override
-  Future<bool> popRoute() async {
-    final navigator = _navigatorKey.currentState;
+  Future<bool> popRoute() {
+    l.i('PageRouter.popRoute()');
+    if (currentConfiguration.isRoot) return SynchronousFuture<bool>(false);
+    final navigator = pageObserver.navigator;
     if (navigator == null) return SynchronousFuture<bool>(false);
     return navigator.maybePop();
   }
-}
 
-/*
-class NoAnimationTransitionDelegate extends TransitionDelegate<void> {
   @override
-  Iterable<RouteTransitionRecord> resolve({
-    required List<RouteTransitionRecord> newPageRouteHistory,
-    required Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
-    required Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
-  }) sync* {
-    for (final pageRoute in newPageRouteHistory) {
-      if (pageRoute.isWaitingForEnteringDecision) {
-        pageRoute.markForAdd();
-      }
-      yield pageRoute;
-    }
+  Future<void> setNewRoutePath(PageConfiguration configuration) {
+    l.i('PageRouter.setNewRoutePath(${configuration.toUri()})');
+    _currentConfiguration = configuration;
+    notifyListeners();
+    return SynchronousFuture<void>(null);
+  }
 
-    for (final exitingPageRoute in locationToExitingPageRoute.values) {
-      if (exitingPageRoute.isWaitingForExitingDecision) {
-        exitingPageRoute.markForRemove();
-        final pagelessRoutes = pageRouteToPagelessRoutes[exitingPageRoute];
-        if (pagelessRoutes != null) {
-          for (final pagelessRoute in pagelessRoutes) {
-            pagelessRoute.markForRemove();
-          }
-        }
-      }
+  Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(
+        settings: settings,
+        builder: (context) => const NotFoundScreen(),
+      );
 
-      yield exitingPageRoute;
+  void _setBrowserTitle(BuildContext context) {
+    if (kIsWeb) {
+      SystemChrome.setApplicationSwitcherDescription(
+        ApplicationSwitcherDescription(
+          label: currentConfiguration.pageTitle,
+          primaryColor: Theme.of(context).primaryColor.value,
+        ),
+      );
     }
   }
 }
-*/
