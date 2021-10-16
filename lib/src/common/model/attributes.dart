@@ -93,3 +93,50 @@ abstract class Attribute {
 
   Map<String, Object?> toJson();
 }
+
+/// Квалификация, уровень разработчика
+enum DeveloperLevel {
+  /// Неизвестный / Не указан
+  unknown,
+
+  /// Стажёр
+  intern,
+
+  /// Младший
+  junior,
+
+  /// Средний
+  middle,
+
+  /// Старший
+  senior,
+
+  /// Ведущий
+  lead,
+}
+
+/// Навык (Skill)
+/// Язык, фреймвок, пакет
+@immutable
+abstract class Skill {
+  /// Наименование
+  String get title;
+
+  // ignore: avoid_unused_constructor_parameters
+  factory Skill.fromJson(Map<String, Object?> json) => throw UnimplementedError();
+
+  Map<String, Object?> toJson();
+}
+
+/// Контакт для обратной связи (Contact)
+/// Емейл, Сайт, Телефон, Различные мессенджеры
+@immutable
+abstract class Contact {
+  /// Наименование
+  String get title;
+
+  // ignore: avoid_unused_constructor_parameters
+  factory Contact.fromJson(Map<String, Object?> json) => throw UnimplementedError();
+
+  Map<String, Object?> toJson();
+}

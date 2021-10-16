@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:money2/money2.dart';
 
 import '../../../common/model/proposal.dart';
-import '../../../common/utils/date_util.dart';
 
 part 'job.g.dart';
 
@@ -142,6 +142,20 @@ abstract class JobAttribute extends Attribute {
         return LocationJobAttribute.fromJson(json);
       case CoordinatesJobAttribute.signature:
         return CoordinatesJobAttribute.fromJson(json);
+      case SalaryJobAttribute.signature:
+        return SalaryJobAttribute.fromJson(json);
+      case DeveloperLevelJobAttribute.signature:
+        return DeveloperLevelJobAttribute.fromJson(json);
+      case RelocationJobAttribute.signature:
+        return RelocationJobAttribute.fromJson(json);
+      case TagsJobAttribute.signature:
+        return TagsJobAttribute.fromJson(json);
+      case SkillsJobAttribute.signature:
+        return SkillsJobAttribute.fromJson(json);
+      case RequirementsJobAttribute.signature:
+        return RequirementsJobAttribute.fromJson(json);
+      case ContactsJobAttribute.signature:
+        return ContactsJobAttribute.fromJson(json);
       case '':
       case null:
       default:
@@ -172,6 +186,12 @@ class CompanyJobAttribute implements JobAttribute {
 
   @override
   Map<String, Object?> toJson() => _$CompanyJobAttributeToJson(this);
+
+  @override
+  int get hashCode => title.hashCode;
+
+  @override
+  bool operator ==(Object other) => identical(other, this) || (other is CompanyJobAttribute && other.title == title);
 }
 
 /// Аттрибут работы - Описание (Description)
@@ -191,6 +211,8 @@ class DescriptionJobAttribute implements JobAttribute {
     required this.description,
   });
 
+  static const DescriptionJobAttribute empty = DescriptionJobAttribute(description: '');
+
   DescriptionJobAttribute changeDescription(String newDescription) => DescriptionJobAttribute(
         description: newDescription,
       );
@@ -199,6 +221,13 @@ class DescriptionJobAttribute implements JobAttribute {
 
   @override
   Map<String, Object?> toJson() => _$DescriptionJobAttributeToJson(this);
+
+  @override
+  int get hashCode => description.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is DescriptionJobAttribute && other.description == description);
 }
 
 /// Аттрибут работы - Местоположение (Location)
@@ -226,6 +255,13 @@ class LocationJobAttribute implements JobAttribute {
 
   @override
   Map<String, Object?> toJson() => _$LocationJobAttributeToJson(this);
+
+  @override
+  int get hashCode => country.hashCode ^ address.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is LocationJobAttribute && other.country == country && other.address == address);
 }
 
 /// Аттрибут работы - Координаты
@@ -253,13 +289,333 @@ class CoordinatesJobAttribute implements JobAttribute {
 
   @override
   Map<String, Object?> toJson() => _$CoordinatesJobAttributeToJson(this);
+
+  @override
+  int get hashCode => latitude.hashCode ^ longitude.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) ||
+      (other is CoordinatesJobAttribute && other.latitude == latitude && other.longitude == longitude);
 }
 
-/// TODO:
-/// + Зарплатная вилка (Salary)
-/// + Уровень разработчика (Developer level)
-/// + Теги популярных языков, фреймвоков, пакетов
-/// + Требования к разработчику
-/// + Бенефиты предоставляемые компанией
-/// + Контакты для обратной связи (емейл, сайт, различные мессенджеры)
-/// + Возможность релокации
+/// Аттрибут работы - Зарплатная вилка (Salary)
+/// Указывается в долларах * 100 (центы), в дальнейшем исходя из даты вакансии
+/// и курса обмена можно будет указывать в произвольной валюте
+@immutable
+@JsonSerializable()
+class SalaryJobAttribute implements JobAttribute {
+  static const String signature = 'salary';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(
+    name: 'from',
+    required: true,
+    fromJson: _moneyFromJson,
+    toJson: _moneyToJson,
+  )
+  final Money from;
+
+  @JsonKey(
+    name: 'to',
+    required: true,
+    fromJson: _moneyFromJson,
+    toJson: _moneyToJson,
+  )
+  final Money to;
+
+  const SalaryJobAttribute({
+    required final this.from,
+    required final this.to,
+  });
+
+  static final SalaryJobAttribute unknown = SalaryJobAttribute(
+    from: zeroMoney,
+    to: zeroMoney,
+  );
+
+  factory SalaryJobAttribute.fromJson(Map<String, Object?> json) => _$SalaryJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$SalaryJobAttributeToJson(this);
+
+  static int _moneyToJson(final Money? money) => money is Money ? money.minorUnits.toInt() : 0;
+
+  static Money _moneyFromJson(final Object? money) =>
+      money is num ? Money.fromWithCurrency(money / 100, _usd) : zeroMoney;
+
+  static final Money zeroMoney = Money.fromBigIntWitCurrency(BigInt.zero, _usd);
+  static final Currency _usd = CommonCurrencies().usd;
+
+  @override
+  int get hashCode => from.minorUnits.hashCode ^ to.minorUnits.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is SalaryJobAttribute && other.from == from && other.to == to);
+}
+
+/// Аттрибут работы - Уровень разработчика (Developer level)
+@immutable
+@JsonSerializable()
+class DeveloperLevelJobAttribute implements JobAttribute {
+  static const String signature = 'developer_level';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(
+    name: 'from',
+    required: true,
+    fromJson: _levelFromJson,
+    toJson: _levelToJson,
+  )
+  final DeveloperLevel from;
+
+  @JsonKey(
+    name: 'to',
+    required: true,
+    fromJson: _levelFromJson,
+    toJson: _levelToJson,
+  )
+  final DeveloperLevel to;
+
+  const DeveloperLevelJobAttribute({
+    required final this.from,
+    required final this.to,
+  });
+
+  static const DeveloperLevelJobAttribute unknown = DeveloperLevelJobAttribute(
+    from: DeveloperLevel.unknown,
+    to: DeveloperLevel.unknown,
+  );
+
+  factory DeveloperLevelJobAttribute.fromJson(Map<String, Object?> json) => _$DeveloperLevelJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$DeveloperLevelJobAttributeToJson(this);
+
+  static DeveloperLevel _levelFromJson(final Object? level) {
+    switch (level) {
+      case 'intern':
+        return DeveloperLevel.intern;
+      case 'junior':
+        return DeveloperLevel.junior;
+      case 'middle':
+        return DeveloperLevel.middle;
+      case 'senior':
+        return DeveloperLevel.senior;
+      case 'lead':
+        return DeveloperLevel.lead;
+      default:
+        return DeveloperLevel.unknown;
+    }
+  }
+
+  static String _levelToJson(final DeveloperLevel? level) {
+    switch (level) {
+      case DeveloperLevel.intern:
+        return 'intern';
+      case DeveloperLevel.junior:
+        return 'junior';
+      case DeveloperLevel.middle:
+        return 'middle';
+      case DeveloperLevel.senior:
+        return 'senior';
+      case DeveloperLevel.lead:
+        return 'lead';
+      case DeveloperLevel.unknown:
+      default:
+        return 'unknown';
+    }
+  }
+
+  @override
+  int get hashCode => from.index ^ to.index;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is DeveloperLevelJobAttribute && other.from == from && other.to == to);
+}
+
+/// Аттрибут работы - Возможность релокации (Relocation)
+@immutable
+@JsonSerializable()
+class RelocationJobAttribute implements JobAttribute {
+  static const String signature = 'relocation';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'relocation')
+  final bool relocation;
+
+  const RelocationJobAttribute({
+    required final this.relocation,
+  });
+
+  static const RelocationJobAttribute yes = RelocationJobAttribute(
+    relocation: true,
+  );
+
+  static const RelocationJobAttribute no = RelocationJobAttribute(
+    relocation: false,
+  );
+
+  factory RelocationJobAttribute.fromJson(Map<String, Object?> json) => _$RelocationJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$RelocationJobAttributeToJson(this);
+
+  @override
+  int get hashCode => relocation ? 1 : 0;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is RelocationJobAttribute && other.relocation == relocation);
+}
+
+/// Аттрибут работы - Тэги (Tags)
+@immutable
+@JsonSerializable()
+class TagsJobAttribute implements JobAttribute {
+  static const String signature = 'tags';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'tags')
+  final List<String> tags;
+
+  const TagsJobAttribute({
+    required final this.tags,
+  });
+
+  static const TagsJobAttribute empty = TagsJobAttribute(
+    tags: <String>[],
+  );
+
+  factory TagsJobAttribute.fromJson(Map<String, Object?> json) => _$TagsJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$TagsJobAttributeToJson(this);
+
+  @override
+  int get hashCode => tags.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is TagsJobAttribute && const ListEquality<String>().equals(other.tags, tags));
+}
+
+/// Аттрибут работы - Навыки (Skills)
+/// Языки, фреймвоки, пакеты
+@immutable
+@JsonSerializable()
+class SkillsJobAttribute implements JobAttribute {
+  static const String signature = 'skills';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'skills')
+  final List<Skill> skills;
+
+  const SkillsJobAttribute({
+    required final this.skills,
+  });
+
+  static const SkillsJobAttribute empty = SkillsJobAttribute(
+    skills: <Skill>[],
+  );
+
+  factory SkillsJobAttribute.fromJson(Map<String, Object?> json) => _$SkillsJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$SkillsJobAttributeToJson(this);
+
+  @override
+  int get hashCode => skills.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) ||
+      (other is SkillsJobAttribute && const ListEquality<Skill>().equals(other.skills, skills));
+}
+
+/// Аттрибут работы - Требования к разработчику (Requirements)
+@immutable
+@JsonSerializable()
+class RequirementsJobAttribute implements JobAttribute {
+  static const String signature = 'requirements';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'requirements', required: true)
+  final String requirements;
+
+  const RequirementsJobAttribute({
+    required this.requirements,
+  });
+
+  static const RequirementsJobAttribute empty = RequirementsJobAttribute(requirements: '');
+
+  RequirementsJobAttribute changeRequirements(String newRequirements) => RequirementsJobAttribute(
+        requirements: newRequirements,
+      );
+
+  factory RequirementsJobAttribute.fromJson(Map<String, Object?> json) => _$RequirementsJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$RequirementsJobAttributeToJson(this);
+
+  @override
+  int get hashCode => requirements.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is RequirementsJobAttribute && other.requirements == requirements);
+}
+
+/// Аттрибут работы - Контакты для обратной связи (Contacts)
+/// Емейл, Сайт, Телефон, Различные мессенджеры
+@immutable
+@JsonSerializable()
+class ContactsJobAttribute implements JobAttribute {
+  static const String signature = 'contacts';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'requirements', required: true)
+  final List<Contact> contacts;
+
+  const ContactsJobAttribute({
+    required this.contacts,
+  });
+
+  static const ContactsJobAttribute empty = ContactsJobAttribute(contacts: <Contact>[]);
+
+  factory ContactsJobAttribute.fromJson(Map<String, Object?> json) => _$ContactsJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$ContactsJobAttributeToJson(this);
+
+  @override
+  int get hashCode => contacts.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) ||
+      (other is ContactsJobAttribute && const ListEquality<Contact>().equals(other.contacts, contacts));
+}

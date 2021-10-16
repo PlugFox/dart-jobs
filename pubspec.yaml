@@ -1,7 +1,7 @@
 name: dart_jobs
 description: Dart Jobs
 publish_to: 'none'
-version: 0.1.0+1634410881
+version: 0.1.0+1634411913
 
 environment:
   sdk: ">=2.14.0-377.7.beta <3.0.0"
@@ -39,6 +39,7 @@ dependencies:
   permission_handler: ^8.0.0+2
   async: ^2.6.1
   collection: ^1.15.0
+  money2: ^3.0.0-beta.6
 
   # Transformers
   rxdart: ^0.27.0
