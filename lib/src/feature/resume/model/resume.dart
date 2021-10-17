@@ -147,12 +147,6 @@ abstract class ResumeAttribute extends Attribute {
 @immutable
 @JsonSerializable()
 class DescriptionResumeAttribute implements ResumeAttribute {
-  static const String signature = 'description';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
   @JsonKey(
     name: 'description',
     required: false,
@@ -165,6 +159,18 @@ class DescriptionResumeAttribute implements ResumeAttribute {
   const DescriptionResumeAttribute({
     required this.description,
   });
+
+  static const String signature = 'description';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @override
+  bool get isEmpty => description.isEmpty;
+
+  @override
+  bool get isNotEmpty => !isEmpty;
 
   DescriptionResumeAttribute changeDescription(String newDescription) => DescriptionResumeAttribute(
         description: newDescription,

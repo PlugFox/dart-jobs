@@ -69,7 +69,7 @@ class JobRepositoryFirebase implements IJobRepository {
   Future<Job> fetch(Job job) => fetchById(job.id);
 
   @override
-  Future<void> update(Job job) => _collection.doc(job.id).set(job.toJson());
+  Future<void> update(Job job) => _collection.doc(job.id).set(job.toJson(), SetOptions(merge: false));
 
   @override
   Future<void> deleteById(String id) => _collection.doc(id).delete();

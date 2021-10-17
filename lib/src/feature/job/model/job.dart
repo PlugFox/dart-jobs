@@ -169,6 +169,10 @@ abstract class JobAttribute extends Attribute {
 @immutable
 @JsonSerializable()
 class CompanyJobAttribute implements JobAttribute {
+  const CompanyJobAttribute({
+    required this.title,
+  });
+
   static const String signature = 'company';
 
   @override
@@ -178,9 +182,13 @@ class CompanyJobAttribute implements JobAttribute {
   @JsonKey(name: 'title', required: true)
   final String title;
 
-  const CompanyJobAttribute({
-    required this.title,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => title.isEmpty;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory CompanyJobAttribute.fromJson(Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
 
@@ -198,6 +206,12 @@ class CompanyJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class DescriptionJobAttribute implements JobAttribute {
+  const DescriptionJobAttribute({
+    required this.description,
+  });
+
+  static const DescriptionJobAttribute empty = DescriptionJobAttribute(description: '');
+
   static const String signature = 'description';
 
   @override
@@ -207,11 +221,13 @@ class DescriptionJobAttribute implements JobAttribute {
   @JsonKey(name: 'description', required: true)
   final String description;
 
-  const DescriptionJobAttribute({
-    required this.description,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => description.isEmpty;
 
-  static const DescriptionJobAttribute empty = DescriptionJobAttribute(description: '');
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   DescriptionJobAttribute changeDescription(String newDescription) => DescriptionJobAttribute(
         description: newDescription,
@@ -234,6 +250,11 @@ class DescriptionJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class LocationJobAttribute implements JobAttribute {
+  const LocationJobAttribute({
+    required this.country,
+    required this.address,
+  });
+
   static const String signature = 'location';
 
   @override
@@ -246,10 +267,13 @@ class LocationJobAttribute implements JobAttribute {
   @JsonKey(name: 'address', required: true)
   final String address;
 
-  const LocationJobAttribute({
-    required this.country,
-    required this.address,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => country.isEmpty && address.isEmpty;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory LocationJobAttribute.fromJson(Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
 
@@ -268,6 +292,16 @@ class LocationJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class CoordinatesJobAttribute implements JobAttribute {
+  const CoordinatesJobAttribute({
+    required final this.latitude,
+    required final this.longitude,
+  });
+
+  static const CoordinatesJobAttribute empty = CoordinatesJobAttribute(
+    latitude: 0,
+    longitude: 0,
+  );
+
   static const String signature = 'coordinates';
 
   @override
@@ -280,10 +314,13 @@ class CoordinatesJobAttribute implements JobAttribute {
   @JsonKey(name: 'longitude', required: true)
   final double longitude;
 
-  const CoordinatesJobAttribute({
-    required final this.latitude,
-    required final this.longitude,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => latitude == 0 && longitude == 0;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory CoordinatesJobAttribute.fromJson(Map<String, Object?> json) => _$CoordinatesJobAttributeFromJson(json);
 
@@ -305,6 +342,16 @@ class CoordinatesJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class SalaryJobAttribute implements JobAttribute {
+  const SalaryJobAttribute({
+    required final this.from,
+    required final this.to,
+  });
+
+  static final SalaryJobAttribute unknown = SalaryJobAttribute(
+    from: zeroMoney,
+    to: zeroMoney,
+  );
+
   static const String signature = 'salary';
 
   @override
@@ -327,15 +374,13 @@ class SalaryJobAttribute implements JobAttribute {
   )
   final Money to;
 
-  const SalaryJobAttribute({
-    required final this.from,
-    required final this.to,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => from == zeroMoney && to == zeroMoney;
 
-  static final SalaryJobAttribute unknown = SalaryJobAttribute(
-    from: zeroMoney,
-    to: zeroMoney,
-  );
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory SalaryJobAttribute.fromJson(Map<String, Object?> json) => _$SalaryJobAttributeFromJson(json);
 
@@ -362,6 +407,16 @@ class SalaryJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class DeveloperLevelJobAttribute implements JobAttribute {
+  const DeveloperLevelJobAttribute({
+    required final this.from,
+    required final this.to,
+  });
+
+  static const DeveloperLevelJobAttribute unknown = DeveloperLevelJobAttribute(
+    from: DeveloperLevel.unknown,
+    to: DeveloperLevel.unknown,
+  );
+
   static const String signature = 'developer_level';
 
   @override
@@ -384,15 +439,13 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   )
   final DeveloperLevel to;
 
-  const DeveloperLevelJobAttribute({
-    required final this.from,
-    required final this.to,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => from == DeveloperLevel.unknown && to == DeveloperLevel.unknown;
 
-  static const DeveloperLevelJobAttribute unknown = DeveloperLevelJobAttribute(
-    from: DeveloperLevel.unknown,
-    to: DeveloperLevel.unknown,
-  );
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory DeveloperLevelJobAttribute.fromJson(Map<String, Object?> json) => _$DeveloperLevelJobAttributeFromJson(json);
 
@@ -446,15 +499,6 @@ class DeveloperLevelJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class RelocationJobAttribute implements JobAttribute {
-  static const String signature = 'relocation';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
-  @JsonKey(name: 'relocation')
-  final bool relocation;
-
   const RelocationJobAttribute({
     required final this.relocation,
   });
@@ -466,6 +510,22 @@ class RelocationJobAttribute implements JobAttribute {
   static const RelocationJobAttribute no = RelocationJobAttribute(
     relocation: false,
   );
+  static const String signature = 'relocation';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'relocation')
+  final bool relocation;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => !relocation;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory RelocationJobAttribute.fromJson(Map<String, Object?> json) => _$RelocationJobAttributeFromJson(json);
 
@@ -484,6 +544,13 @@ class RelocationJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class TagsJobAttribute implements JobAttribute {
+  const TagsJobAttribute({
+    required final this.tags,
+  });
+
+  static const TagsJobAttribute empty = TagsJobAttribute(
+    tags: <String>[],
+  );
   static const String signature = 'tags';
 
   @override
@@ -493,13 +560,13 @@ class TagsJobAttribute implements JobAttribute {
   @JsonKey(name: 'tags')
   final List<String> tags;
 
-  const TagsJobAttribute({
-    required final this.tags,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => tags.isEmpty;
 
-  static const TagsJobAttribute empty = TagsJobAttribute(
-    tags: <String>[],
-  );
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory TagsJobAttribute.fromJson(Map<String, Object?> json) => _$TagsJobAttributeFromJson(json);
 
@@ -519,6 +586,13 @@ class TagsJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class SkillsJobAttribute implements JobAttribute {
+  const SkillsJobAttribute({
+    required final this.skills,
+  });
+
+  static const SkillsJobAttribute empty = SkillsJobAttribute(
+    skills: <Skill>[],
+  );
   static const String signature = 'skills';
 
   @override
@@ -528,13 +602,13 @@ class SkillsJobAttribute implements JobAttribute {
   @JsonKey(name: 'skills')
   final List<Skill> skills;
 
-  const SkillsJobAttribute({
-    required final this.skills,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => skills.isEmpty;
 
-  static const SkillsJobAttribute empty = SkillsJobAttribute(
-    skills: <Skill>[],
-  );
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory SkillsJobAttribute.fromJson(Map<String, Object?> json) => _$SkillsJobAttributeFromJson(json);
 
@@ -554,6 +628,12 @@ class SkillsJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class RequirementsJobAttribute implements JobAttribute {
+  const RequirementsJobAttribute({
+    required this.requirements,
+  });
+
+  static const RequirementsJobAttribute empty = RequirementsJobAttribute(requirements: '');
+
   static const String signature = 'requirements';
 
   @override
@@ -563,11 +643,13 @@ class RequirementsJobAttribute implements JobAttribute {
   @JsonKey(name: 'requirements', required: true)
   final String requirements;
 
-  const RequirementsJobAttribute({
-    required this.requirements,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => requirements.isEmpty;
 
-  static const RequirementsJobAttribute empty = RequirementsJobAttribute(requirements: '');
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   RequirementsJobAttribute changeRequirements(String newRequirements) => RequirementsJobAttribute(
         requirements: newRequirements,
@@ -591,6 +673,12 @@ class RequirementsJobAttribute implements JobAttribute {
 @immutable
 @JsonSerializable()
 class ContactsJobAttribute implements JobAttribute {
+  const ContactsJobAttribute({
+    required this.contacts,
+  });
+
+  static const ContactsJobAttribute empty = ContactsJobAttribute(contacts: <Contact>[]);
+
   static const String signature = 'contacts';
 
   @override
@@ -600,11 +688,13 @@ class ContactsJobAttribute implements JobAttribute {
   @JsonKey(name: 'requirements', required: true)
   final List<Contact> contacts;
 
-  const ContactsJobAttribute({
-    required this.contacts,
-  });
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => contacts.isEmpty;
 
-  static const ContactsJobAttribute empty = ContactsJobAttribute(contacts: <Contact>[]);
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
 
   factory ContactsJobAttribute.fromJson(Map<String, Object?> json) => _$ContactsJobAttributeFromJson(json);
 

@@ -79,6 +79,7 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
 
   /// Преобразовать в JSON список
   List<Map<String, Object?>?> toJson() => _internal.values
+      .where((v) => v.isNotEmpty)
       .map<Map<String, Object?>>((e) => e.toJson()
         ..putIfAbsent(
           'type',
@@ -90,6 +91,9 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
 @immutable
 abstract class Attribute {
   String get type;
+
+  bool get isEmpty;
+  bool get isNotEmpty => !isEmpty;
 
   Map<String, Object?> toJson();
 }
