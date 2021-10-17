@@ -156,6 +156,8 @@ abstract class JobAttribute extends Attribute {
         return RequirementsJobAttribute.fromJson(json);
       case ContactsJobAttribute.signature:
         return ContactsJobAttribute.fromJson(json);
+      case ContractTypeJobAttribute.signature:
+        return ContractTypeJobAttribute.fromJson(json);
       case '':
       case null:
       default:
@@ -685,7 +687,7 @@ class ContactsJobAttribute implements JobAttribute {
   @JsonKey(name: 'type', required: true)
   String get type => signature;
 
-  @JsonKey(name: 'requirements', required: true)
+  @JsonKey(name: 'contacts', required: true)
   final List<Contact> contacts;
 
   @override
@@ -708,4 +710,47 @@ class ContactsJobAttribute implements JobAttribute {
   bool operator ==(Object other) =>
       identical(other, this) ||
       (other is ContactsJobAttribute && const ListEquality<Contact>().equals(other.contacts, contacts));
+}
+
+/// Виды работы
+/// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
+/// Участие в опенсорс проекте, Поиск команды или сотрудничество
+@immutable
+@JsonSerializable()
+class ContractTypeJobAttribute implements JobAttribute {
+  const ContractTypeJobAttribute({
+    required this.typesOfWork,
+  });
+
+  static const ContractTypeJobAttribute empty = ContractTypeJobAttribute(typesOfWork: <JobType>[]);
+
+  static const String signature = 'contract_type';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'types_of_work', required: true)
+  final List<JobType> typesOfWork;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => typesOfWork.isEmpty || (typesOfWork.length == 1 && typesOfWork[0] == JobType.unknown);
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
+
+  factory ContractTypeJobAttribute.fromJson(Map<String, Object?> json) => _$ContractTypeJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$ContractTypeJobAttributeToJson(this);
+
+  @override
+  int get hashCode => typesOfWork.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) ||
+      (other is ContractTypeJobAttribute && const ListEquality<JobType>().equals(other.typesOfWork, typesOfWork));
 }

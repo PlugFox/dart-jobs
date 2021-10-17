@@ -25,6 +25,8 @@ abstract class AttributesOwner<T extends Attribute> {
       );
 }
 
+// Возможно стоит заменить с реализации хэштаблицы на Expando
+// https://gist.github.com/PlugFox/21de83918e2228f3ea5d288c136fc716
 @immutable
 abstract class Attributes<T extends Attribute> extends Iterable<T> {
   final Map<Type, T> _internal;
@@ -143,4 +145,28 @@ abstract class Contact {
   factory Contact.fromJson(Map<String, Object?> json) => throw UnimplementedError();
 
   Map<String, Object?> toJson();
+}
+
+/// Тип работы (Type of work)
+enum JobType {
+  /// Неизвестный / Не указан (Unknown)
+  unknown,
+
+  /// Полный рабочий день (Full-time employment)
+  fullTime,
+
+  /// Частичная занятость (Part-time employment)
+  partTime,
+
+  /// Одноразовая работа (one-time job)
+  oneTime,
+
+  /// Работа по контракту (Contract job)
+  contract,
+
+  /// Участие в опенсорс проекте (Open source project)
+  openSource,
+
+  /// Поиск команды или сотрудничество (Team search or collaboration)
+  collaboration,
 }

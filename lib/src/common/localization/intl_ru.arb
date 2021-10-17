@@ -135,5 +135,41 @@
   "job_field_contacts": "Контакты",
   "@job_field_contacts": {
     "description": "Контакты для обратной связи"
+  },
+  "job_field_contract_type": "Вид работы",
+  "@job_field_contract_type": {
+    "description": "Вид работы"
+  },
+  "job_type": "Вид работы",
+  "@job_type": {
+    "description": "Вид работы"
+  },
+  "job_type_unknown": "Не указан",
+  "@job_type_unknown": {
+    "description": "Вид работы - Неизвестный / Не указан (Unknown)"
+  },
+  "job_type_full_time": "Полный рабочий день",
+  "@job_type_full_time": {
+    "description": "Вид работы - Полный рабочий день (Full-time employment)"
+  },
+  "job_type_part_time": "Частичная занятость",
+  "@job_type_part_time": {
+    "description": "Вид работы - Частичная занятость (Part-time employment)"
+  },
+  "job_type_one_time": "Одноразовая работа",
+  "@job_type_one_time": {
+    "description": "Вид работы - Одноразовая работа (one-time job)"
+  },
+  "job_type_contract": "Работа по контракту",
+  "@job_type_contract": {
+    "description": "Вид работы - Работа по контракту (Contract job)"
+  },
+  "job_type_open_source": "Участие в опенсорс проекте",
+  "@job_type_open_source": {
+    "description": "Вид работы - Участие в опенсорс проекте (Open source project)"
+  },
+  "job_type_collaboration": "Поиск команды или сотрудничество",
+  "@job_type_collaboration": {
+    "description": "Вид работы - Поиск команды или сотрудничество (Team search or collaboration)"
   }
 }
