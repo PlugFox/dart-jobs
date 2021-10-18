@@ -25,6 +25,14 @@ class Job extends Proposal<JobAttribute> {
   @JsonKey(name: 'attributes', required: true)
   final JobAttributes attributes;
 
+  /// Есть описание на английском
+  @JsonKey(ignore: true)
+  bool get hasEnglishDescription => attributes.get(DescriptionJobAttribute)?.isNotEmpty ?? false;
+
+  /// Есть описание на русском
+  @JsonKey(ignore: true)
+  bool get hasRussianDescription => attributes.get(DescriptionRuJobAttribute)?.isNotEmpty ?? false;
+
   const Job({
     required final String id,
     required final String creatorId,
@@ -61,11 +69,12 @@ class Job extends Proposal<JobAttribute> {
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 
   @override
-  Map<String, Object?> toJson() => _$JobToJson(this)
-    ..putIfAbsent(
-      'type',
-      () => type,
-    );
+  Map<String, Object?> toJson() => <String, Object?>{
+        ..._$JobToJson(this),
+        'type': type,
+        'has_english_description': hasEnglishDescription,
+        'has_russian_description': hasRussianDescription,
+      };
 
   @override
   String toString() => 'Job(${super.toString()})';
@@ -138,6 +147,8 @@ abstract class JobAttribute extends Attribute {
         return CompanyJobAttribute.fromJson(json);
       case DescriptionJobAttribute.signature:
         return DescriptionJobAttribute.fromJson(json);
+      case DescriptionRuJobAttribute.signature:
+        return DescriptionRuJobAttribute.fromJson(json);
       case LocationJobAttribute.signature:
         return LocationJobAttribute.fromJson(json);
       case CoordinatesJobAttribute.signature:
@@ -204,7 +215,7 @@ class CompanyJobAttribute implements JobAttribute {
   bool operator ==(Object other) => identical(other, this) || (other is CompanyJobAttribute && other.title == title);
 }
 
-/// Аттрибут работы - Описание (Description)
+/// Аттрибут работы - Описание на латинице (Description)
 @immutable
 @JsonSerializable()
 class DescriptionJobAttribute implements JobAttribute {
@@ -231,7 +242,7 @@ class DescriptionJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  DescriptionJobAttribute changeDescription(String newDescription) => DescriptionJobAttribute(
+  DescriptionRuJobAttribute changeDescription(String newDescription) => DescriptionRuJobAttribute(
         description: newDescription,
       );
 
@@ -245,7 +256,51 @@ class DescriptionJobAttribute implements JobAttribute {
 
   @override
   bool operator ==(Object other) =>
-      identical(other, this) || (other is DescriptionJobAttribute && other.description == description);
+      identical(other, this) || (other is DescriptionRuJobAttribute && other.description == description);
+}
+
+/// Аттрибут работы - Локализованное описание на русском (Description)
+@immutable
+@JsonSerializable()
+class DescriptionRuJobAttribute implements JobAttribute {
+  const DescriptionRuJobAttribute({
+    required this.description,
+  });
+
+  static const DescriptionRuJobAttribute empty = DescriptionRuJobAttribute(description: '');
+
+  static const String signature = 'description_ru';
+
+  @override
+  @JsonKey(name: 'type', required: true)
+  String get type => signature;
+
+  @JsonKey(name: 'description', required: true)
+  final String description;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isEmpty => description.isEmpty;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isNotEmpty => !isEmpty;
+
+  DescriptionRuJobAttribute changeDescription(String newDescription) => DescriptionRuJobAttribute(
+        description: newDescription,
+      );
+
+  factory DescriptionRuJobAttribute.fromJson(Map<String, Object?> json) => _$DescriptionRuJobAttributeFromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => _$DescriptionRuJobAttributeToJson(this);
+
+  @override
+  int get hashCode => description.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(other, this) || (other is DescriptionRuJobAttribute && other.description == description);
 }
 
 /// Аттрибут работы - Местоположение (Location)

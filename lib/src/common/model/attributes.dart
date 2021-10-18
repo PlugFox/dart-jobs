@@ -57,8 +57,13 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
 
   Iterable<T> get values => _internal.values;
 
+  /// Содержит ли аттрибут указаного типа
+  bool containsAttribute(Type type) => _internal.containsKey(type);
+
+  /// Получить аттрибут по типу
   T? operator [](Type type) => get(type);
 
+  /// Получить аттрибут по типу
   T? get(Type type) => _internal[type];
 
   Attributes<T> set(T attribute);

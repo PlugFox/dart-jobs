@@ -38,6 +38,7 @@ class _JobFormState extends State<JobForm> {
   final TextEditingController locationCountryController = TextEditingController(text: '');
   final TextEditingController locationAddressController = TextEditingController(text: '');
   final TextEditingController descriptionController = TextEditingController(text: '');
+  final TextEditingController descriptionRuController = TextEditingController(text: '');
 
   @override
   void initState() {
@@ -51,21 +52,25 @@ class _JobFormState extends State<JobForm> {
     locationCountryController.text = job.getAttribute<LocationJobAttribute>()?.country ?? '';
     locationAddressController.text = job.getAttribute<LocationJobAttribute>()?.address ?? '';
     descriptionController.text = job.getAttribute<DescriptionJobAttribute>()?.description ?? '';
+    descriptionRuController.text = job.getAttribute<DescriptionRuJobAttribute>()?.description ?? '';
   }
 
   Job getCurrentJob() => JobScope.jobOf(context).copyWith(
-        newTitle: jobTitleController.text,
+        newTitle: jobTitleController.text.trim(),
         newAttributes: JobAttributes(
           <JobAttribute>[
             CompanyJobAttribute(
-              title: companyTitleController.text,
+              title: companyTitleController.text.trim(),
             ),
             LocationJobAttribute(
-              country: locationCountryController.text,
-              address: locationAddressController.text,
+              country: locationCountryController.text.trim(),
+              address: locationAddressController.text.trim(),
             ),
             DescriptionJobAttribute(
-              description: descriptionController.text,
+              description: descriptionController.text.trim(),
+            ),
+            DescriptionRuJobAttribute(
+              description: descriptionRuController.text.trim(),
             ),
           ],
         ),
@@ -78,6 +83,7 @@ class _JobFormState extends State<JobForm> {
     locationCountryController.dispose();
     locationAddressController.dispose();
     descriptionController.dispose();
+    descriptionRuController.dispose();
     super.dispose();
   }
 
@@ -111,6 +117,7 @@ class JobFields extends StatelessWidget {
           label: context.localization.job_field_title,
           maxLength: 64,
           finishEditing: false,
+          inputFormatters: <TextInputFormatter>[_denyCyrillic],
           enabled: true,
           key: const ValueKey<String>('jobTitle'),
         ),
@@ -126,28 +133,45 @@ class JobFields extends StatelessWidget {
         _JobTextField.singleLine(
           state.locationCountryController,
           label: context.localization.job_field_location_country,
+          inputFormatters: <TextInputFormatter>[_denyCyrillic],
           key: const ValueKey<String>('locationCountry'),
         ),
+
         _JobTextField.singleLine(
           state.locationAddressController,
           label: context.localization.job_field_location_address,
+          inputFormatters: <TextInputFormatter>[_denyCyrillic],
           key: const ValueKey<String>('locationAddress'),
         ),
 
-        /// Описание
+        /// Описание на английском
         _JobTextField.multiLine(
           state.descriptionController,
           label: context.localization.job_field_description,
-          maxLength: 64,
+          maxLength: 2600,
           maxLines: 12,
           finishEditing: false,
           enabled: true,
+          inputFormatters: <TextInputFormatter>[_denyCyrillic],
           key: const ValueKey<String>('description'),
+        ),
+
+        /// Описание на русском
+        _JobTextField.multiLine(
+          state.descriptionRuController,
+          label: context.localization.job_field_description,
+          maxLength: 2600,
+          maxLines: 12,
+          finishEditing: false,
+          enabled: true,
+          key: const ValueKey<String>('description_ru'),
         ),
       ],
     );
   }
 }
+
+final _denyCyrillic = FilteringTextInputFormatter.deny(RegExp('[а-яА-Я]'));
 
 @immutable
 abstract class _JobTextField extends StatelessWidget {
@@ -155,12 +179,14 @@ abstract class _JobTextField extends StatelessWidget {
   final String? label;
   final bool enabled;
   final bool finishEditing;
+  final List<TextInputFormatter> inputFormatters;
 
   const _JobTextField._({
     required final this.controller,
     this.label,
     this.finishEditing = false,
     this.enabled = true,
+    this.inputFormatters = const <TextInputFormatter>[],
     Key? key,
   }) : super(key: key);
 
@@ -170,6 +196,7 @@ abstract class _JobTextField extends StatelessWidget {
     int? maxLength,
     bool finishEditing,
     bool enabled,
+    List<TextInputFormatter> inputFormatters,
     Key? key,
   }) = _JobSingleLineText;
 
@@ -180,6 +207,7 @@ abstract class _JobTextField extends StatelessWidget {
     int? maxLines,
     bool finishEditing,
     bool enabled,
+    List<TextInputFormatter> inputFormatters,
     Key? key,
   }) = _JobMultiLineText;
 }
@@ -192,12 +220,14 @@ class _JobSingleLineText extends _JobTextField {
     this.maxLength = 64,
     bool finishEditing = false,
     bool enabled = true,
+    List<TextInputFormatter> inputFormatters = const <TextInputFormatter>[],
     Key? key,
   }) : super._(
           controller: controller,
           label: label,
           finishEditing: finishEditing,
           enabled: enabled,
+          inputFormatters: inputFormatters,
           key: key,
         );
 
@@ -224,6 +254,7 @@ class _JobSingleLineText extends _JobTextField {
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.singleLineFormatter,
           //LengthLimitingTextInputFormatter(maxLength),
+          ...inputFormatters,
         ],
         keyboardType: TextInputType.text,
         textInputAction: finishEditing ? TextInputAction.done : TextInputAction.next,
@@ -249,12 +280,14 @@ class _JobMultiLineText extends _JobTextField {
     this.maxLines,
     bool finishEditing = false,
     bool enabled = true,
+    List<TextInputFormatter> inputFormatters = const <TextInputFormatter>[],
     Key? key,
   }) : super._(
           controller: controller,
           label: label,
           finishEditing: finishEditing,
           enabled: enabled,
+          inputFormatters: inputFormatters,
           key: key,
         );
 
@@ -278,10 +311,7 @@ class _JobMultiLineText extends _JobTextField {
           border: readOnly ? InputBorder.none : null,
           counterText: readOnly ? '' : null,
         ),
-        inputFormatters: const <TextInputFormatter>[
-          //FilteringTextInputFormatter.singleLineFormatter,
-          //LengthLimitingTextInputFormatter(maxLength),
-        ],
+        inputFormatters: inputFormatters,
         keyboardType: TextInputType.multiline,
         textInputAction: finishEditing ? TextInputAction.done : TextInputAction.newline,
         onEditingComplete: () {
