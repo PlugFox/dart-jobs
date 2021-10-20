@@ -124,6 +124,9 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
           title: 'Not found',
           created: DateTime.now(),
           updated: DateTime.now(),
+          location: 'not_found',
+          salary: 'not_found',
+          company: 'not_found',
         ),
         editing: false,
       );

@@ -147,12 +147,16 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
       const Duration(milliseconds: 150),
       (i) {
         lastDate = lastDate.add(Duration(seconds: _rnd.nextInt(60 * 60)));
+        final id = (lastDate.millisecondsSinceEpoch * 1000 + i).toRadixString(36);
         return Job(
           id: lastDate.millisecondsSinceEpoch.toRadixString(36),
           creatorId: '<creatorId>',
-          title: 'Job #${lastDate.millisecondsSinceEpoch * 1000 + i}',
           created: lastDate,
           updated: lastDate,
+          title: '<title #$id>',
+          company: '<company #$id>',
+          location: '<location #$id>',
+          salary: '<salary #$id>',
         );
       },
     ).take(_rnd.nextInt(5));
@@ -168,12 +172,16 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
       const Duration(milliseconds: 150),
       (i) {
         lastDate = lastDate.subtract(Duration(seconds: _rnd.nextInt(60 * 60 * 24)));
+        final id = (lastDate.millisecondsSinceEpoch * 1000 + i).toRadixString(36);
         return Job(
           id: lastDate.millisecondsSinceEpoch.toRadixString(36),
           creatorId: '<creatorId>',
-          title: 'Job #${lastDate.millisecondsSinceEpoch * 1000 + i}',
           created: lastDate,
           updated: lastDate,
+          title: '<title #$id>',
+          company: '<company #$id>',
+          location: '<location #$id>',
+          salary: '<salary #$id>',
         );
       },
     ).take(count);

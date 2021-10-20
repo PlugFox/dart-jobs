@@ -13,6 +13,7 @@ part 'job.g.dart';
   explicitToJson: true,
 )
 class Job extends Proposal<JobAttribute> {
+  /// Сигнатура работы
   static const String signature = 'job';
 
   /// Тип
@@ -22,46 +23,66 @@ class Job extends Proposal<JobAttribute> {
 
   /// Данные элемента
   @override
-  @JsonKey(name: 'attributes', required: true)
+  @JsonKey(name: 'attributes', ignore: true)
   final JobAttributes attributes;
 
-  /// Есть описание на английском
-  @JsonKey(ignore: true)
-  bool get hasEnglishDescription => attributes.get(DescriptionJobAttribute)?.isNotEmpty ?? false;
+  @JsonKey(name: 'company', required: true)
+  final String company;
 
-  /// Есть описание на русском
-  @JsonKey(ignore: true)
-  bool get hasRussianDescription => attributes.get(DescriptionRuJobAttribute)?.isNotEmpty ?? false;
+  @JsonKey(name: 'location', required: true)
+  final String location;
+
+  @JsonKey(name: 'salary', required: true)
+  final String salary;
 
   const Job({
     required final String id,
     required final String creatorId,
-    required final String title,
     required final DateTime created,
     required final DateTime updated,
+    required final String title,
+    final this.company = '',
+    final this.location = '',
+    final this.salary = '',
+    final bool hasEnglishLocalization = false,
+    final bool hasRussianLocalization = false,
     final this.attributes = const JobAttributes.empty(),
   }) : super(
           id: id,
           creatorId: creatorId,
-          title: title,
           created: created,
           updated: updated,
+          title: title,
+          hasEnglishLocalization: hasEnglishLocalization,
+          hasRussianLocalization: hasRussianLocalization,
         );
 
   factory Job.create({
     required final String id,
     required final String creatorId,
     required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
+    final bool? hasEnglishLocalization,
+    final bool? hasRussianLocalization,
     final JobAttributes attributes = const JobAttributes.empty(),
   }) {
     final now = DateTime.now().toUtc();
     return Job(
       id: id,
       creatorId: creatorId,
-      title: title,
       created: now,
       updated: now,
+      title: title,
+      company: company,
+      location: location,
+      salary: salary,
       attributes: attributes,
+      hasEnglishLocalization:
+          hasEnglishLocalization ?? attributes.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
+      hasRussianLocalization:
+          hasRussianLocalization ?? attributes.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
     );
   }
 
@@ -70,10 +91,8 @@ class Job extends Proposal<JobAttribute> {
 
   @override
   Map<String, Object?> toJson() => <String, Object?>{
+        ...super.toJson(),
         ..._$JobToJson(this),
-        'type': type,
-        'has_english_description': hasEnglishDescription,
-        'has_russian_description': hasRussianDescription,
       };
 
   @override
@@ -81,7 +100,7 @@ class Job extends Proposal<JobAttribute> {
 
   @override
   Result map<Result extends Object>({
-    required final Result Function(Resume resume) resume,
+    //required final Result Function(Resume resume) resume,
     required final Result Function(Job job) job,
   }) =>
       job(this);
@@ -89,7 +108,7 @@ class Job extends Proposal<JobAttribute> {
   @override
   Result maybeMap<Result extends Object>({
     required Result Function() orElse,
-    final Result Function(Resume resume)? resume,
+    //final Result Function(Resume resume)? resume,
     final Result Function(Job job)? job,
   }) =>
       job == null ? orElse() : job(this);
@@ -97,15 +116,29 @@ class Job extends Proposal<JobAttribute> {
   @override
   Job copyWith({
     String? newTitle,
+    String? newCompany,
+    String? newLocation,
+    String? newSalary,
     covariant JobAttributes? newAttributes,
+    bool? newHasEnglishLocalization,
+    bool? newHasRussianLocalization,
   }) =>
       Job(
         id: id,
         creatorId: creatorId,
-        title: newTitle ?? title,
         created: created,
         updated: DateTime.now().toUtc(),
+        title: newTitle ?? title,
+        company: newCompany ?? company,
+        location: newLocation ?? location,
+        salary: newSalary ?? salary,
         attributes: newAttributes ?? attributes,
+        hasEnglishLocalization: newHasEnglishLocalization ??
+            (newAttributes ?? attributes).get(DescriptionJobAttribute.signature)?.isNotEmpty ??
+            false,
+        hasRussianLocalization: newHasRussianLocalization ??
+            (newAttributes ?? attributes).get(DescriptionRuJobAttribute.signature)?.isNotEmpty ??
+            false,
       );
 
   @override
@@ -123,17 +156,21 @@ class JobAttributes extends Attributes<JobAttribute> {
 
   JobAttributes._set(Attributes<JobAttribute> attributes, JobAttribute attribute) : super.set(attributes, attribute);
 
-  JobAttributes._remove(Attributes<JobAttribute> attributes, Type type) : super.remove(attributes, type);
+  JobAttributes._remove(Attributes<JobAttribute> attributes, String type) : super.remove(attributes, type);
 
   @override
   JobAttributes set(JobAttribute attribute) => JobAttributes._set(this, attribute);
 
   @override
-  JobAttributes removeByType(Type type) => JobAttributes._remove(this, type);
+  JobAttributes removeByType(String type) => JobAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
-  factory JobAttributes.fromJson(List<Object?> json) => JobAttributes(
-        json.whereType<Map<String, Object?>>().map<JobAttribute?>(JobAttribute.fromJson).whereNotNull(),
+  factory JobAttributes.fromJson(Map<String, Object?> json) => JobAttributes(
+        (json['attributes'] as List<Object?>?)
+                ?.whereType<Map<String, Object?>>()
+                .map<JobAttribute?>(JobAttribute.fromJson)
+                .whereNotNull() ??
+            const Iterable<JobAttribute>.empty(),
       );
 }
 

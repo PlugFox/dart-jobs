@@ -26,22 +26,28 @@ void main() => l.capture<Future<void>>(
 
         // Отложенная инициализация
         WidgetsFlutterBinding.ensureInitialized();
+        final ensureInitializedMs = stopwatchBeforeRunApp.elapsedMilliseconds;
 
         // Инициализировать Firebase
         l.vvvvvv('Инициализируем Firebase');
-        await firebase_core.Firebase.initializeApp().then(
-          (firebaseApp) => Future.wait<void>(<Future<void>>[
-            firebaseApp.setAutomaticDataCollectionEnabled(kReleaseMode),
-            firebaseApp.setAutomaticResourceManagementEnabled(kReleaseMode),
-          ]),
+        await firebase_core.Firebase.initializeApp().then<void>(
+          (firebaseApp) => Future.wait<void>(
+            <Future<void>>[
+              firebaseApp.setAutomaticDataCollectionEnabled(kReleaseMode),
+              firebaseApp.setAutomaticResourceManagementEnabled(kReleaseMode),
+            ],
+          ),
         );
+        final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
 
         // Запуск приложения в зависимости от платформы
         runner.run();
 
-        if ((stopwatchBeforeRunApp..stop()).elapsedMilliseconds > 150) {
+        if ((stopwatchBeforeRunApp..stop()).elapsedMilliseconds > 250) {
           l.w('Инициализация приложения до вывода интерфейса продлилась дольше предполагаемого: '
-              '${stopwatchBeforeRunApp.elapsedMilliseconds} мс');
+              '${stopwatchBeforeRunApp.elapsedMilliseconds} мс\n'
+              'Отложенная инициализация заняла: $ensureInitializedMs мс\n'
+              'Инициализация фаербейза заняла: $firebaseMs мс');
         }
       },
     );

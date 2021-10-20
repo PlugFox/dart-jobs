@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../common/localization/localizations.dart';
 import '../../authentication/widget/authentication_scope.dart';
-import 'feed_scope.dart';
 
 @immutable
 class FeedCreationButtons extends StatelessWidget {
@@ -36,10 +35,13 @@ class FeedCreationButtons extends StatelessWidget {
                         AuthenticationScope.authenticateOr(
                           context,
                           (user) {
+                            throw UnimplementedError('Не реализовано');
+                            /*
                             FeedScope.createJobOf(
                               context,
                               user: user,
                             );
+                            */
                           },
                         );
                       },

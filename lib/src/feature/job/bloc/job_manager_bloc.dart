@@ -13,8 +13,11 @@ class JobManagerEvent with _$JobManagerEvent {
 
   /// Создать новую работу
   const factory JobManagerEvent.create({
-    required String title,
-    required AuthenticatedUser user,
+    required final AuthenticatedUser user,
+    required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
     @Default(JobAttributes.empty()) JobAttributes attributes,
   }) = _CreateJobManagerEvent;
 
@@ -63,12 +66,22 @@ class JobManagerBLoC extends Bloc<JobManagerEvent, JobManagerState> {
         delete: _delete,
       );
 
-  Stream<JobManagerState> _create(String title, AuthenticatedUser user, JobAttributes attributes) async* {
+  Stream<JobManagerState> _create(
+    final AuthenticatedUser user,
+    final String title,
+    final String company,
+    final String location,
+    final String salary,
+    final JobAttributes attributes,
+  ) async* {
     try {
       yield const JobManagerState.processed();
       final job = await _repository.create(
-        title: title,
         user: user,
+        title: title,
+        company: company,
+        location: location,
+        salary: salary,
         attributes: attributes,
       );
       yield JobManagerState.created(job: job);

@@ -108,6 +108,9 @@ class _JobScopeState extends ComponentElement {
           title: 'Job #$id',
           updated: DateTime.utc(1970),
           created: DateTime.utc(1970),
+          location: '',
+          salary: '',
+          company: '',
         );
     bloc = JobBLoC(
       initialState: JobState.idle(

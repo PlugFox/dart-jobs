@@ -62,8 +62,11 @@ class FeedScope extends StatelessWidget {
   /// Создать новую работу и открыть для редактирования
   static void createJobOf(
     BuildContext context, {
-    required AuthenticatedUser user,
-    String? title,
+    required final AuthenticatedUser user,
+    required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
     JobAttributes attributes = const JobAttributes.empty(),
   }) =>
       BlocScope.of<JobManagerBLoC>(
@@ -71,8 +74,11 @@ class FeedScope extends StatelessWidget {
         listen: false,
       ).add(
         JobManagerEvent.create(
-          title: title ?? _WorkTitleRandomizer.instance().next(),
           user: user,
+          title: title, // ?? _WorkTitleRandomizer.instance().next(),
+          company: company,
+          location: location,
+          salary: salary,
           attributes: attributes,
         ),
       );
@@ -104,9 +110,11 @@ class FeedScope extends StatelessWidget {
       );
 }
 
+// ignore: unused_element
 class _WorkTitleRandomizer {
   _WorkTitleRandomizer._();
   static _WorkTitleRandomizer? _instance;
+  // ignore: unused_element
   factory _WorkTitleRandomizer.instance() => _instance ??= _WorkTitleRandomizer._();
   static const List<String> _variants = <String>[
     'Best work ever',

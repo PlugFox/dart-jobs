@@ -8,71 +8,146 @@ import '../../authentication/model/user_entity.dart';
 import '../model/job.dart';
 
 abstract class IJobRepository {
+  /// Создать новую работу
   Future<Job> create({
-    required String title,
-    required AuthenticatedUser user,
+    required final AuthenticatedUser user,
+    required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
     JobAttributes attributes = const JobAttributes.empty(),
   });
 
+  /// Запросить данные работы по идентификатору
   Future<Job> fetchById(String id);
 
+  /// Запросить данные работы
   Future<Job> fetch(Job job);
 
+  /// Обновить работу
   Future<void> update(Job job);
 
+  /// Удалить работу по идентификатору
   Future<void> deleteById(String id);
 
+  /// Удалить работу
   Future<void> delete(Job job);
 }
 
 class JobRepositoryFirebase implements IJobRepository {
-  /// Коллекция
-  final CollectionReference _collection;
+  final FirebaseFirestore _firestore;
+
+  /// Коллекция работы
+  final CollectionReference _feedCollection;
+
+  /// Коллекция аттрибутов работы
+  final CollectionReference _attributesCollection;
 
   JobRepositoryFirebase({
     required final FirebaseFirestore firestore,
-  }) : _collection = firestore.collection('feed');
+  })  : _firestore = firestore,
+        _feedCollection = firestore.collection('feed'),
+        _attributesCollection = firestore.collection('job_attributes');
 
   @override
   Future<Job> create({
-    required String title,
-    required AuthenticatedUser user,
+    required final AuthenticatedUser user,
+    required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
     JobAttributes attributes = const JobAttributes.empty(),
   }) async {
-    final doc = _collection.doc();
+    final batch = _firestore.batch();
+    // Сохраняем работу
+    final doc = _feedCollection.doc();
     final newJob = Job.create(
       id: doc.id,
       creatorId: user.uid,
       title: title,
+      company: company,
+      location: location,
+      salary: salary,
       attributes: attributes,
+      hasEnglishLocalization: attributes.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
+      hasRussianLocalization: attributes.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
     );
     final json = newJob.toJson();
-    await doc.set(
+    batch.set(
+      doc,
       json,
       SetOptions(merge: false),
     );
+
+    // Сохраняем аттрибуты работы
+    if (attributes.isNotEmpty) {
+      final doc = _attributesCollection.doc();
+      final json = attributes.toJson(
+        parentId: doc.id,
+        creatorId: user.uid,
+      )..putIfAbsent('parent', () => doc);
+      batch.set(
+        doc,
+        json,
+        SetOptions(merge: false),
+      );
+    }
+    await batch.commit();
     return newJob;
   }
 
   @override
   Future<Job> fetchById(String id) async {
-    final snapshot = await _collection.doc(id).get(const GetOptions(source: Source.serverAndCache));
-    final data = snapshot.data() as Map<String, Object?>?;
-    if (!snapshot.exists || data == null) {
+    // Получим работу по идентификатору
+    final jobSnapshot = await _feedCollection.doc(id).get(const GetOptions(source: Source.serverAndCache));
+    final jobData = jobSnapshot.data() as Map<String, Object?>?;
+    if (!jobSnapshot.exists || jobData == null) {
       l.w('Работа по идентификатору "$id" не найдена');
       _throwNotFound(id);
     }
-    return Job.fromJson(data);
+    final job = Job.fromJson(jobData);
+
+    // Проверим наличие аттрибутов для работы
+    final attributesSnapshot = await _attributesCollection.doc(id).get(const GetOptions(source: Source.serverAndCache));
+    final attributesData = attributesSnapshot.data() as Map<String, Object?>?;
+    if (attributesSnapshot.exists && attributesData != null) {
+      final attributes = JobAttributes.fromJson(attributesData);
+      if (attributes.isNotEmpty) {
+        return job.copyWith(
+          newAttributes: attributes,
+        );
+      }
+    }
+    return job;
   }
 
   @override
   Future<Job> fetch(Job job) => fetchById(job.id);
 
   @override
-  Future<void> update(Job job) => _collection.doc(job.id).set(job.toJson(), SetOptions(merge: false));
+  Future<void> update(Job job) {
+    final doc = _feedCollection.doc(job.id);
+    final batch = _firestore.batch()..set(doc, job.toJson(), SetOptions(merge: false));
+    if (job.attributes.isEmpty) {
+      batch.delete(_attributesCollection.doc(job.id));
+    } else {
+      batch.set(
+        _attributesCollection.doc(job.id),
+        job.attributes.toJson(
+          parentId: job.id,
+          creatorId: job.creatorId,
+        )..putIfAbsent('parent', () => doc),
+        SetOptions(merge: false),
+      );
+    }
+    return batch.commit();
+  }
 
   @override
-  Future<void> deleteById(String id) => _collection.doc(id).delete();
+  Future<void> deleteById(String id) => (_firestore.batch()
+        ..delete(_feedCollection.doc(id))
+        ..delete(_attributesCollection.doc(id)))
+      .commit();
 
   @override
   Future<void> delete(Job job) => deleteById(job.id);
@@ -88,15 +163,23 @@ class JobRepositoryFake implements IJobRepository {
 
   @override
   Future<Job> create({
-    required String title,
-    required AuthenticatedUser user,
+    required final AuthenticatedUser user,
+    required final String title,
+    required final String company,
+    required final String location,
+    required final String salary,
     JobAttributes attributes = const JobAttributes.empty(),
   }) async {
     final newJob = Job.create(
       id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
       creatorId: user.uid,
       title: title,
+      company: company,
+      location: location,
+      salary: salary,
       attributes: attributes,
+      hasEnglishLocalization: true,
+      hasRussianLocalization: true,
     );
     await Future<void>.delayed(const Duration(seconds: 1));
     _jobs[newJob.id] = newJob;
@@ -110,6 +193,9 @@ class JobRepositoryFake implements IJobRepository {
       id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
       creatorId: _rnd.nextInt(2).toRadixString(36),
       title: 'Some job',
+      company: 'company',
+      location: 'location',
+      salary: 'salary',
     );
   }
 

@@ -3,12 +3,12 @@ import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
 import '../../feature/job/model/job.dart';
-import '../../feature/resume/model/resume.dart';
+//import '../../feature/resume/model/resume.dart';
 import '../utils/date_util.dart';
 import 'attributes.dart';
 
 export '../../feature/job/model/job.dart';
-export '../../feature/resume/model/resume.dart';
+//export '../../feature/resume/model/resume.dart';
 export '../utils/date_util.dart';
 export 'attributes.dart';
 
@@ -21,24 +21,27 @@ part 'proposal.g.dart';
   explicitToJson: true,
 )
 abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implements Comparable<Proposal> {
+  /// Не заполнена (нету id)
   @JsonKey(ignore: true)
   bool get isEmpty => id.isEmpty;
 
+  /// Заполнена (есть id)
   @JsonKey(ignore: true)
   bool get isNotEmpty => id.isNotEmpty;
 
+  /// Тип
   @JsonKey(name: 'type', required: true)
   String get type;
 
+  /// Идентификатор
   @JsonKey(name: 'id', required: true)
   final String id;
 
+  /// Идентификатор создателя
   @JsonKey(name: 'creator_id', required: true)
   final String creatorId;
 
-  @JsonKey(name: 'title', required: true)
-  final String title;
-
+  /// Создано
   @JsonKey(
     name: 'created',
     required: true,
@@ -47,6 +50,7 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   )
   final DateTime created;
 
+  /// Обновлено
   @JsonKey(
     name: 'updated',
     required: true,
@@ -55,12 +59,25 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   )
   final DateTime updated;
 
+  @JsonKey(name: 'title', required: true)
+  final String title;
+
+  /// Есть описание на английском
+  @JsonKey(name: 'has_english_localization', required: true)
+  final bool hasEnglishLocalization;
+
+  /// Есть описание на русском
+  @JsonKey(name: 'has_russian_localization', required: true)
+  final bool hasRussianLocalization;
+
   const Proposal({
     required final this.id,
     required final this.creatorId,
-    required final this.title,
     required final this.created,
     required final this.updated,
+    required final this.title,
+    required final this.hasEnglishLocalization,
+    required final this.hasRussianLocalization,
   }) : super();
 
   /// Generate Class from Map<String, dynamic>
@@ -69,8 +86,8 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
     switch (type) {
       case Job.signature:
         return Job.fromJson(json);
-      case Resume.signature:
-        return Resume.fromJson(json);
+      //case Resume.signature:
+      //  return Resume.fromJson(json);
       case '':
       case null:
       default:
@@ -81,16 +98,16 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   }
 
   /// Преобразовать в JSON хэш таблицу
-  Map<String, Object?> toJson() => _$ProposalToJson(this);
+  Map<String, Object?> toJson() => _$ProposalToJson(this)..['type'] = type;
 
   Result map<Result extends Object>({
-    required final Result Function(Resume resume) resume,
+    //required final Result Function(Resume resume) resume,
     required final Result Function(Job job) job,
   });
 
   Result maybeMap<Result extends Object>({
     required final Result Function() orElse,
-    final Result Function(Resume resume)? resume,
+    //final Result Function(Resume resume)? resume,
     final Result Function(Job job)? job,
   });
 

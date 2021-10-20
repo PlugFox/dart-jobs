@@ -155,10 +155,10 @@ class _JobFeedTile extends FeedTile {
             text: job.title,
           ), // 'Title (Job name, Developer name)'
           subtitle: _ShimmerText(
-            text: job.getAttribute<CompanyJobAttribute>()?.title ?? 'Unknown company',
+            text: job.getAttribute<CompanyJobAttribute>(CompanyJobAttribute.signature)?.title ?? 'Unknown company',
           ), // 'Subtitle (Company, Developer occupation)'
           location: _ShimmerText(
-            text: job.getAttribute<LocationJobAttribute>()?.country ?? 'Remote',
+            text: job.getAttribute<LocationJobAttribute>(LocationJobAttribute.signature)?.country ?? 'Remote',
           ), // 'Location'
           salary: const _ShimmerText(
             text: 'Unknown salary',

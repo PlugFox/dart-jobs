@@ -48,11 +48,15 @@ class _JobFormState extends State<JobForm> {
 
   void _refillControllers(Job job) {
     jobTitleController.text = job.title;
-    companyTitleController.text = job.getAttribute<CompanyJobAttribute>()?.title ?? '';
-    locationCountryController.text = job.getAttribute<LocationJobAttribute>()?.country ?? '';
-    locationAddressController.text = job.getAttribute<LocationJobAttribute>()?.address ?? '';
-    descriptionController.text = job.getAttribute<DescriptionJobAttribute>()?.description ?? '';
-    descriptionRuController.text = job.getAttribute<DescriptionRuJobAttribute>()?.description ?? '';
+    companyTitleController.text = job.getAttribute<CompanyJobAttribute>(CompanyJobAttribute.signature)?.title ?? '';
+    locationCountryController.text =
+        job.getAttribute<LocationJobAttribute>(LocationJobAttribute.signature)?.country ?? '';
+    locationAddressController.text =
+        job.getAttribute<LocationJobAttribute>(LocationJobAttribute.signature)?.address ?? '';
+    descriptionController.text =
+        job.getAttribute<DescriptionJobAttribute>(DescriptionJobAttribute.signature)?.description ?? '';
+    descriptionRuController.text =
+        job.getAttribute<DescriptionRuJobAttribute>(DescriptionRuJobAttribute.signature)?.description ?? '';
   }
 
   Job getCurrentJob() => JobScope.jobOf(context).copyWith(
