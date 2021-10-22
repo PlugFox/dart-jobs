@@ -24,13 +24,13 @@ targets:
           ignore_unannotated: false
           include_if_null: true
           #nullable: true
-      built_value_generator|built_value:
-        enabled: true
-        generate_for:
-          exclude:
-            - test
-          include:
-            - lib/**
+      #built_value_generator|built_value:
+      #  enabled: true
+      #  generate_for:
+      #    exclude:
+      #      - test
+      #    include:
+      #      - lib/**
       build_web_compilers:entrypoint:
         # These are globs for the entrypoints you want to compile.
         generate_for:
