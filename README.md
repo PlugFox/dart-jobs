@@ -82,6 +82,12 @@ cd build/web
 firebase deploy --only hosting --project "dart-job" -m "<Описание ручного релиза>"
 ```
 
+### Использование firebase
+
+### Firestore
+https://firebase.flutter.dev/docs/firestore/usage/
+https://firebase.google.com/docs/firestore/manage-data/structure-data
+
 
 ### Сбор аналитики с помощью adb и top
 
