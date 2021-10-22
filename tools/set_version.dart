@@ -19,7 +19,7 @@ void main() => runZonedGuarded<void>(
               .openRead()
               .transform<String>(const Utf8Decoder())
               .transform<String>(const LineSplitter())
-              .asyncMap<String>((line) async {
+              .asyncMap<String>((final line) async {
                 if (notFound & line.startsWith('version:')) {
                   final buildName = line.substring(8).split('+').first.trim(); // 1.2.3
                   final buildNumber = DateTime.now().millisecondsSinceEpoch ~/ 1000; // 4
@@ -35,7 +35,7 @@ void main() => runZonedGuarded<void>(
 
                 return line;
               })
-              .map<String>((line) => '$line\r\n')
+              .map<String>((final line) => '$line\r\n')
               .transform<List<int>>(const Utf8Encoder())
               .forEach(sink.add);
         } on Object {
@@ -48,7 +48,7 @@ void main() => runZonedGuarded<void>(
         await pubspecNew.rename(pubspecSource.path);
         io.exit(0);
       },
-      (error, stackTrace) {
+      (final error, final stackTrace) {
         io.stdout.writeln('\x1B[31m$error\x1B[0m');
         io.exit(2);
       },
@@ -68,23 +68,23 @@ Future<void> prepare() async {
   await versionEnv.create();
 }
 
-Future<void> run(String executable) {
-  final commands = executable.split(' ').where((element) => element.isNotEmpty).toList(growable: false);
+Future<void> run(final String executable) {
+  final commands = executable.split(' ').where((final element) => element.isNotEmpty).toList(growable: false);
 
   return io.Process.start(
     commands.first,
     commands.sublist(1),
     runInShell: true,
   ).then<void>(
-    (process) => Future.wait<void>(
+    (final process) => Future.wait<void>(
       <Future<void>>[
         process.stdout.forEach(
-          (message) {
+          (final message) {
             io.stdout.writeln(utf8.decode(message));
           },
         ),
         process.stderr.forEach(
-          (message) {
+          (final message) {
             final error = utf8.decode(message);
             io.stdout.writeln('\x1B[31m$error\x1B[0m');
             throw UnsupportedError(error);

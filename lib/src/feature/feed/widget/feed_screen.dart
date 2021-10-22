@@ -1,24 +1,23 @@
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/common/router/router_delegate.dart';
+import 'package:dart_jobs/src/common/widget/custom_scroll_view_smooth.dart';
+import 'package:dart_jobs/src/common/widget/error_snackbar.dart';
+import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_bar.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_creation_buttons.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_list.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_manager_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';
 
-import '../../../common/router/page_router.dart';
-import '../../../common/router/router_delegate.dart';
-import '../../../common/widget/custom_scroll_view_smooth.dart';
-import '../../../common/widget/error_snackbar.dart';
-import '../../job/bloc/job_manager_bloc.dart';
-import '../bloc/feed_bloc.dart';
-import 'feed_bar.dart';
-import 'feed_creation_buttons.dart';
-import 'feed_list.dart';
-import 'feed_scope.dart';
-import 'feed_tile.dart';
-
 class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key? key}) : super(key: key);
+  const FeedScreen({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
+  Widget build(final BuildContext context) => const Scaffold(
         body: _FeedScrollable(),
       );
 }
@@ -26,7 +25,7 @@ class FeedScreen extends StatelessWidget {
 @immutable
 class _FeedScrollable extends StatefulWidget {
   const _FeedScrollable({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
@@ -53,7 +52,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     if (newScreenHeight != _screenHeight) {
       // Изменилась высота экрана
       _screenHeight = newScreenHeight;
-      WidgetsBinding.instance?.addPostFrameCallback((_) => _checkPagination());
+      WidgetsBinding.instance?.addPostFrameCallback((final _) => _checkPagination());
     }
     final modalRoute = ModalRoute.of(context);
     if (modalRoute != null) {
@@ -92,32 +91,32 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   }
 
   @override
-  Widget build(BuildContext context) => BlocListener<JobManagerBLoC, JobManagerState>(
-        listener: (context, state) => state.maybeMap<void>(
+  Widget build(final BuildContext context) => BlocListener<JobManagerBLoC, JobManagerState>(
+        listener: (final context, final state) => state.maybeMap<void>(
           orElse: () {},
-          deleted: (state) {
+          deleted: (final state) {
             BlocScope.of<FeedBLoC>(context, listen: false).add(FeedEvent.reloadById(id: state.job.id));
           },
-          created: (state) {
+          created: (final state) {
             l.i('Была создана новая работа - запросим обновление списка и перейдем к редактированию элемента.');
             BlocScope.of<FeedBLoC>(context, listen: false).add(const FeedEvent.fetchRecent());
             PageRouter.navigate(
               context,
-              (_) => JobPageConfiguration(
+              (final _) => JobPageConfiguration(
                 jobId: state.job.id,
                 jobTitle: state.job.id,
                 edit: true,
               ),
             );
           },
-          error: (error) => ErrorSnackBar.show(context),
+          error: (final error) => ErrorSnackBar.show(context),
         ),
         child: BlocListener<FeedBLoC, FeedState>(
-          listenWhen: (prev, next) => next.maybeMap<bool>(
+          listenWhen: (final prev, final next) => next.maybeMap<bool>(
             orElse: () => true,
-            pagination: (_) => false,
+            pagination: (final _) => false,
           ),
-          listener: (context, state) => _checkPagination(),
+          listener: (final context, final state) => _checkPagination(),
           child: CustomScrollViewSmooth(
             physics: const ClampingScrollPhysics(),
             scrollBehavior: const ScrollBehavior(),

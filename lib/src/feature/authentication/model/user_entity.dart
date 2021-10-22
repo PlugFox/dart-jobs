@@ -7,7 +7,7 @@ abstract class UserEntity {
   bool get isNotAuthenticated;
   AuthenticatedUser? get authenticatedOrNull;
 
-  factory UserEntity.fromFirebase(firebase_auth.User? user) => user == null || user.isAnonymous || user.uid.isEmpty
+  factory UserEntity.fromFirebase(final firebase_auth.User? user) => user == null || user.isAnonymous || user.uid.isEmpty
       ? const UserEntity.notAuthenticated()
       : UserEntity.authenticated(
           uid: user.uid,
@@ -29,8 +29,8 @@ abstract class UserEntity {
   }) = AuthenticatedUser;
 
   T when<T extends Object?>({
-    required T Function(AuthenticatedUser user) authenticated,
-    required T Function() notAuthenticated,
+    required final T Function(AuthenticatedUser user) authenticated,
+    required final T Function() notAuthenticated,
   });
 }
 
@@ -49,8 +49,8 @@ class NotAuthenticatedUser implements UserEntity {
 
   @override
   T when<T extends Object?>({
-    required T Function(AuthenticatedUser user) authenticated,
-    required T Function() notAuthenticated,
+    required final T Function(AuthenticatedUser user) authenticated,
+    required final T Function() notAuthenticated,
   }) =>
       notAuthenticated();
 
@@ -58,7 +58,7 @@ class NotAuthenticatedUser implements UserEntity {
   String toString() => 'User is not authenticated';
 
   @override
-  bool operator ==(Object other) => other is NotAuthenticatedUser;
+  bool operator ==(final Object other) => other is NotAuthenticatedUser;
 
   @override
   int get hashCode => 0;
@@ -90,8 +90,8 @@ class AuthenticatedUser implements UserEntity {
 
   @override
   T when<T extends Object?>({
-    required T Function(AuthenticatedUser user) authenticated,
-    required T Function() notAuthenticated,
+    required final T Function(AuthenticatedUser user) authenticated,
+    required final T Function() notAuthenticated,
   }) =>
       authenticated(this);
 
@@ -104,7 +104,7 @@ class AuthenticatedUser implements UserEntity {
       'photoURL: $photoURL)';
 
   @override
-  bool operator ==(Object other) => other is AuthenticatedUser && uid == other.uid;
+  bool operator ==(final Object other) => other is AuthenticatedUser && uid == other.uid;
 
   @override
   int get hashCode => uid.hashCode;

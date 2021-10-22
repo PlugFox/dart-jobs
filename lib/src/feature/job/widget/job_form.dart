@@ -1,32 +1,29 @@
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../../common/constant/layout_constraints.dart';
-import '../../../common/localization/localizations.dart';
-import '../bloc/job_bloc.dart';
-import '../model/job.dart';
-import 'job_scope.dart';
 
 @immutable
 class JobForm extends StatefulWidget {
   final Widget child;
   const JobForm({
     required this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   /// Для поиска _JobFormState в контексте
   @protected
   @internal
-  static _JobFormState of(BuildContext context) => context.findAncestorStateOfType<_JobFormState>()!;
+  static _JobFormState of(final BuildContext context) => context.findAncestorStateOfType<_JobFormState>()!;
 
   /// Получить текущую работу исходя из контроллеров полей ввода
-  static Job getCurrentJob(BuildContext context) => of(context).getCurrentJob();
+  static Job getCurrentJob(final BuildContext context) => of(context).getCurrentJob();
 
   @override
   State<JobForm> createState() => _JobFormState();
@@ -46,7 +43,7 @@ class _JobFormState extends State<JobForm> {
     _refillControllers(JobScope.jobOf(context));
   }
 
-  void _refillControllers(Job job) {
+  void _refillControllers(final Job job) {
     jobTitleController.text = job.title;
     companyTitleController.text = job.getAttribute<CompanyJobAttribute>(CompanyJobAttribute.signature)?.title ?? '';
     locationCountryController.text =
@@ -92,8 +89,8 @@ class _JobFormState extends State<JobForm> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocListener<JobBLoC, JobState>(
-        listener: (context, state) => _refillControllers(state.job),
+  Widget build(final BuildContext context) => BlocListener<JobBLoC, JobState>(
+        listener: (final context, final state) => _refillControllers(state.job),
         child: widget.child,
       );
 }
@@ -101,11 +98,11 @@ class _JobFormState extends State<JobForm> {
 @immutable
 class JobFields extends StatelessWidget {
   const JobFields({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final state = context.findAncestorStateOfType<_JobFormState>()!;
     return ListView(
       physics: const ClampingScrollPhysics(),
@@ -191,28 +188,28 @@ abstract class _JobTextField extends StatelessWidget {
     this.finishEditing = false,
     this.enabled = true,
     this.inputFormatters = const <TextInputFormatter>[],
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   const factory _JobTextField.singleLine(
     final TextEditingController controller, {
-    String? label,
-    int? maxLength,
-    bool finishEditing,
-    bool enabled,
-    List<TextInputFormatter> inputFormatters,
-    Key? key,
+    final String? label,
+    final int? maxLength,
+    final bool finishEditing,
+    final bool enabled,
+    final List<TextInputFormatter> inputFormatters,
+    final Key? key,
   }) = _JobSingleLineText;
 
   const factory _JobTextField.multiLine(
     final TextEditingController controller, {
-    String? label,
-    int? maxLength,
-    int? maxLines,
-    bool finishEditing,
-    bool enabled,
-    List<TextInputFormatter> inputFormatters,
-    Key? key,
+    final String? label,
+    final int? maxLength,
+    final int? maxLines,
+    final bool finishEditing,
+    final bool enabled,
+    final List<TextInputFormatter> inputFormatters,
+    final Key? key,
   }) = _JobMultiLineText;
 }
 
@@ -220,12 +217,12 @@ class _JobSingleLineText extends _JobTextField {
   final int? maxLength;
   const _JobSingleLineText(
     final TextEditingController controller, {
-    String? label,
+    final String? label,
     this.maxLength = 64,
     bool finishEditing = false,
     bool enabled = true,
     List<TextInputFormatter> inputFormatters = const <TextInputFormatter>[],
-    Key? key,
+    final Key? key,
   }) : super._(
           controller: controller,
           label: label,
@@ -236,12 +233,13 @@ class _JobSingleLineText extends _JobTextField {
         );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final editing = JobScope.editingOf(context, listen: true);
     final readOnly = !enabled || !editing;
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
-      builder: (context, value, child) => readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
+      builder: (final context, final value, final child) =>
+          readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
       child: TextField(
         controller: controller,
         readOnly: readOnly,
@@ -279,13 +277,13 @@ class _JobMultiLineText extends _JobTextField {
   final int? maxLines;
   const _JobMultiLineText(
     final TextEditingController controller, {
-    String? label,
+    final String? label,
     this.maxLength = 1024,
     this.maxLines,
     bool finishEditing = false,
     bool enabled = true,
     List<TextInputFormatter> inputFormatters = const <TextInputFormatter>[],
-    Key? key,
+    final Key? key,
   }) : super._(
           controller: controller,
           label: label,
@@ -296,12 +294,13 @@ class _JobMultiLineText extends _JobTextField {
         );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final editing = JobScope.editingOf(context, listen: true);
     final readOnly = !enabled || !editing;
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
-      builder: (context, value, child) => readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
+      builder: (final context, final value, final child) =>
+          readOnly && value.text.isEmpty ? const SizedBox.shrink() : child!,
       child: TextField(
         controller: controller,
         readOnly: readOnly,

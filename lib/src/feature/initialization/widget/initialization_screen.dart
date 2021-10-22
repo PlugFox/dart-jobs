@@ -1,15 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import '../bloc/initialization_bloc.dart' show InitializationState;
-import '../widget/initialization_scope.dart';
-import 'initialization_scope.dart';
 
 @immutable
 class InitializationScreen extends StatefulWidget {
   const InitializationScreen({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
@@ -28,7 +23,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
   //endregion
 
   @override
-  Widget build(BuildContext context) => Directionality(
+  Widget build(final BuildContext context) => Directionality(
         textDirection: TextDirection.ltr,
         child: DecoratedBox(
           decoration: const BoxDecoration(
@@ -41,17 +36,17 @@ class _InitializationScreenState extends State<InitializationScreen> {
                 message: 'Preparing for initialization',
               ),
               stream: _stream,
-              builder: (context, snapshot) =>
+              builder: (final context, final snapshot) =>
                   snapshot.data?.map<Widget>(
-                    initialized: (_) => const InitializationProgressWidget(
+                    initialized: (final _) => const InitializationProgressWidget(
                       progress: 0,
                       message: 'Initialized',
                     ),
-                    initializationInProgress: (state) => InitializationProgressWidget(
+                    initializationInProgress: (final state) => InitializationProgressWidget(
                       message: state.message,
                       progress: state.progress,
                     ),
-                    error: (state) => InitializationErrorWidget(
+                    error: (final state) => InitializationErrorWidget(
                       message: state.message,
                       error: state.error,
                       stackTrace: state.stackTrace,
@@ -75,11 +70,11 @@ class InitializationProgressWidget extends StatelessWidget {
   const InitializationProgressWidget({
     required this.progress,
     required this.message,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(24),
         child: FittedBox(
           child: Column(
@@ -106,11 +101,11 @@ class InitializationErrorWidget extends StatelessWidget {
     required final this.message,
     required final this.error,
     required final this.stackTrace,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

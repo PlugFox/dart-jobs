@@ -1,17 +1,15 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/common/router/root_route.dart';
+import 'package:dart_jobs/src/common/router/transition_delegate.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
-
-import '../../feature/initialization/widget/initialization_scope.dart';
-import '../../feature/not_found/widget/not_found_screen.dart';
-import 'configuration.dart';
-import 'page_router.dart';
-import 'root_route.dart';
-import 'transition_delegate.dart';
 
 class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
 
@@ -32,7 +30,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
   PageConfiguration _currentConfiguration;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final configuration = currentConfiguration;
     final analytics = InitializationScope.storeOf(context).analytics;
     _setBrowserTitle(context);
@@ -49,7 +47,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
           if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
         ],
         pages: configuration.buildPages(context).toList(growable: false),
-        onPopPage: (Route<Object?> route, Object? result) {
+        onPopPage: (final Route<Object?> route, final Object? result) {
           l.i('PageRouter.onPopPage($route, $result)');
 
           /// TODO: проверить возврат значения роута
@@ -73,19 +71,19 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
   }
 
   @override
-  Future<void> setNewRoutePath(PageConfiguration configuration) {
+  Future<void> setNewRoutePath(final PageConfiguration configuration) {
     l.i('PageRouter.setNewRoutePath(${configuration.toUri()})');
     _currentConfiguration = configuration;
     notifyListeners();
     return SynchronousFuture<void>(null);
   }
 
-  Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(
+  Route<void> _onUnknownRoute(final RouteSettings settings) => MaterialPageRoute<void>(
         settings: settings,
-        builder: (context) => const NotFoundScreen(),
+        builder: (final context) => const NotFoundScreen(),
       );
 
-  void _setBrowserTitle(BuildContext context) {
+  void _setBrowserTitle(final BuildContext context) {
     if (kIsWeb) {
       SystemChrome.setApplicationSwitcherDescription(
         ApplicationSwitcherDescription(

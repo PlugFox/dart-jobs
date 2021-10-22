@@ -3,6 +3,16 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/common/constant/environment.dart';
+import 'package:dart_jobs/src/common/constant/pubspec.yaml.g.dart' as pubspec;
+import 'package:dart_jobs/src/common/constant/storage_namespace.dart';
+import 'package:dart_jobs/src/common/utils/screen_util.dart';
+import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode;
@@ -11,17 +21,6 @@ import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../common/constant/environment.dart';
-import '../../../common/constant/pubspec.yaml.g.dart' as pubspec;
-import '../../../common/constant/storage_namespace.dart';
-import '../../../common/utils/screen_util.dart';
-import '../../authentication/data/authentication_repository.dart';
-import '../../authentication/model/user_entity.dart';
-import '../../feed/data/feed_repository.dart';
-import '../../job/data/job_repository.dart';
-import '../../settings/data/settings_repository.dart';
-import '../model/initialization_progress.dart';
 
 class InitializationHelper {
   bool _isInitialized = false;
@@ -108,7 +107,7 @@ class InitializationProgressStatus {
 }
 
 final Map<String, FutureOr<InitializationProgress> Function(InitializationProgress progress)> _initializationSteps = {
-  'Initializing analytics': (progress) async {
+  'Initializing analytics': (final progress) async {
     InitializationProgress newProgress;
     try {
       final analytics = FirebaseAnalytics();
@@ -120,30 +119,30 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     }
     return newProgress;
   },
-  'Preparing for authentication': (progress) => progress.copyWith(
+  'Preparing for authentication': (final progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),
       ),
-  'Preparing main remote storage': (progress) => progress.copyWith(
+  'Preparing main remote storage': (final progress) => progress.copyWith(
         newFirebaseFirestore: FirebaseFirestore.instance,
       ),
-  'Initializing local keystore': (progress) => SharedPreferences.getInstance().then<InitializationProgress>(
-        (sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
+  'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
+        (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
-  'Create a feed repository': (progress) => progress.copyWith(
+  'Create a feed repository': (final progress) => progress.copyWith(
         newFeedRepository: kFake
             ? FeedRepositoryFake()
             : FeedRepositoryFirebase(
                 firestore: progress.firebaseFirestore!,
               ),
       ),
-  'Create a job repository': (progress) => progress.copyWith(
+  'Create a job repository': (final progress) => progress.copyWith(
         newJobRepository: kFake
             ? JobRepositoryFake()
             : JobRepositoryFirebase(
                 firestore: progress.firebaseFirestore!,
               ),
       ),
-  'Get current settings': (progress) async {
+  'Get current settings': (final progress) async {
     final repository = SettingsRepository(
       sharedPreferences: progress.sharedPreferences!,
       firestore: progress.firebaseFirestore!,
@@ -162,7 +161,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     }
     return progress.copyWith(newSettingsRepository: repository);
   },
-  'Checking the application version': (store) async {
+  'Checking the application version': (final store) async {
     try {
       final build = int.tryParse(pubspec.build.first);
       final sharedPrefs = store.sharedPreferences;

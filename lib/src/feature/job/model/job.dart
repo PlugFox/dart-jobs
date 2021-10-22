@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:money2/money2.dart';
-
-import '../../../common/model/proposal.dart';
 
 part 'job.g.dart';
 
@@ -87,7 +86,7 @@ class Job extends Proposal<JobAttribute> {
   }
 
   /// Generate Class from Map<String, dynamic>
-  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
+  factory Job.fromJson(final Map<String, Object?> json) => _$JobFromJson(json);
 
   @override
   Map<String, Object?> toJson() => <String, Object?>{
@@ -107,7 +106,7 @@ class Job extends Proposal<JobAttribute> {
 
   @override
   Result maybeMap<Result extends Object>({
-    required Result Function() orElse,
+    required final Result Function() orElse,
     //final Result Function(Resume resume)? resume,
     final Result Function(Job job)? job,
   }) =>
@@ -115,13 +114,13 @@ class Job extends Proposal<JobAttribute> {
 
   @override
   Job copyWith({
-    String? newTitle,
-    String? newCompany,
-    String? newLocation,
-    String? newSalary,
-    covariant JobAttributes? newAttributes,
-    bool? newHasEnglishLocalization,
-    bool? newHasRussianLocalization,
+    final String? newTitle,
+    final String? newCompany,
+    final String? newLocation,
+    final String? newSalary,
+    covariant final JobAttributes? newAttributes,
+    final bool? newHasEnglishLocalization,
+    final bool? newHasRussianLocalization,
   }) =>
       Job(
         id: id,
@@ -142,7 +141,7 @@ class Job extends Proposal<JobAttribute> {
       );
 
   @override
-  Job setAttribute(covariant JobAttribute attribute) => copyWith(
+  Job setAttribute(covariant final JobAttribute attribute) => copyWith(
         newAttributes: attributes.set(attribute),
       );
 }
@@ -152,20 +151,21 @@ class Job extends Proposal<JobAttribute> {
 class JobAttributes extends Attributes<JobAttribute> {
   const JobAttributes.empty() : super.empty();
 
-  JobAttributes(Iterable<JobAttribute> source) : super(source);
+  JobAttributes(final Iterable<JobAttribute> source) : super(source);
 
-  JobAttributes._set(Attributes<JobAttribute> attributes, JobAttribute attribute) : super.set(attributes, attribute);
+  JobAttributes._set(final Attributes<JobAttribute> attributes, final JobAttribute attribute)
+      : super.set(attributes, attribute);
 
-  JobAttributes._remove(Attributes<JobAttribute> attributes, String type) : super.remove(attributes, type);
-
-  @override
-  JobAttributes set(JobAttribute attribute) => JobAttributes._set(this, attribute);
+  JobAttributes._remove(final Attributes<JobAttribute> attributes, final String type) : super.remove(attributes, type);
 
   @override
-  JobAttributes removeByType(String type) => JobAttributes._remove(this, type);
+  JobAttributes set(final JobAttribute attribute) => JobAttributes._set(this, attribute);
+
+  @override
+  JobAttributes removeByType(final String type) => JobAttributes._remove(this, type);
 
   /// Generate Class from List<Object?>
-  factory JobAttributes.fromJson(Map<String, Object?> json) => JobAttributes(
+  factory JobAttributes.fromJson(final Map<String, Object?> json) => JobAttributes(
         (json['attributes'] as List<Object?>?)
                 ?.whereType<Map<String, Object?>>()
                 .map<JobAttribute?>(JobAttribute.fromJson)
@@ -178,7 +178,7 @@ class JobAttributes extends Attributes<JobAttribute> {
 @immutable
 abstract class JobAttribute extends Attribute {
   @factory
-  static JobAttribute? fromJson(Map<String, Object?> json) {
+  static JobAttribute? fromJson(final Map<String, Object?> json) {
     switch (json['type']) {
       case CompanyJobAttribute.signature:
         return CompanyJobAttribute.fromJson(json);
@@ -240,7 +240,7 @@ class CompanyJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory CompanyJobAttribute.fromJson(Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
+  factory CompanyJobAttribute.fromJson(final Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$CompanyJobAttributeToJson(this);
@@ -249,7 +249,8 @@ class CompanyJobAttribute implements JobAttribute {
   int get hashCode => title.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(other, this) || (other is CompanyJobAttribute && other.title == title);
+  bool operator ==(final Object other) =>
+      identical(other, this) || (other is CompanyJobAttribute && other.title == title);
 }
 
 /// Аттрибут работы - Описание на латинице (Description)
@@ -279,11 +280,11 @@ class DescriptionJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  DescriptionRuJobAttribute changeDescription(String newDescription) => DescriptionRuJobAttribute(
+  DescriptionRuJobAttribute changeDescription(final String newDescription) => DescriptionRuJobAttribute(
         description: newDescription,
       );
 
-  factory DescriptionJobAttribute.fromJson(Map<String, Object?> json) => _$DescriptionJobAttributeFromJson(json);
+  factory DescriptionJobAttribute.fromJson(final Map<String, Object?> json) => _$DescriptionJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$DescriptionJobAttributeToJson(this);
@@ -292,7 +293,7 @@ class DescriptionJobAttribute implements JobAttribute {
   int get hashCode => description.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is DescriptionRuJobAttribute && other.description == description);
 }
 
@@ -323,11 +324,12 @@ class DescriptionRuJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  DescriptionRuJobAttribute changeDescription(String newDescription) => DescriptionRuJobAttribute(
+  DescriptionRuJobAttribute changeDescription(final String newDescription) => DescriptionRuJobAttribute(
         description: newDescription,
       );
 
-  factory DescriptionRuJobAttribute.fromJson(Map<String, Object?> json) => _$DescriptionRuJobAttributeFromJson(json);
+  factory DescriptionRuJobAttribute.fromJson(final Map<String, Object?> json) =>
+      _$DescriptionRuJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$DescriptionRuJobAttributeToJson(this);
@@ -336,7 +338,7 @@ class DescriptionRuJobAttribute implements JobAttribute {
   int get hashCode => description.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is DescriptionRuJobAttribute && other.description == description);
 }
 
@@ -369,7 +371,7 @@ class LocationJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory LocationJobAttribute.fromJson(Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
+  factory LocationJobAttribute.fromJson(final Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$LocationJobAttributeToJson(this);
@@ -378,7 +380,7 @@ class LocationJobAttribute implements JobAttribute {
   int get hashCode => country.hashCode ^ address.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is LocationJobAttribute && other.country == country && other.address == address);
 }
 
@@ -416,7 +418,7 @@ class CoordinatesJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory CoordinatesJobAttribute.fromJson(Map<String, Object?> json) => _$CoordinatesJobAttributeFromJson(json);
+  factory CoordinatesJobAttribute.fromJson(final Map<String, Object?> json) => _$CoordinatesJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$CoordinatesJobAttributeToJson(this);
@@ -425,7 +427,7 @@ class CoordinatesJobAttribute implements JobAttribute {
   int get hashCode => latitude.hashCode ^ longitude.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) ||
       (other is CoordinatesJobAttribute && other.latitude == latitude && other.longitude == longitude);
 }
@@ -476,7 +478,7 @@ class SalaryJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory SalaryJobAttribute.fromJson(Map<String, Object?> json) => _$SalaryJobAttributeFromJson(json);
+  factory SalaryJobAttribute.fromJson(final Map<String, Object?> json) => _$SalaryJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$SalaryJobAttributeToJson(this);
@@ -493,7 +495,7 @@ class SalaryJobAttribute implements JobAttribute {
   int get hashCode => from.minorUnits.hashCode ^ to.minorUnits.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is SalaryJobAttribute && other.from == from && other.to == to);
 }
 
@@ -541,7 +543,8 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory DeveloperLevelJobAttribute.fromJson(Map<String, Object?> json) => _$DeveloperLevelJobAttributeFromJson(json);
+  factory DeveloperLevelJobAttribute.fromJson(final Map<String, Object?> json) =>
+      _$DeveloperLevelJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$DeveloperLevelJobAttributeToJson(this);
@@ -585,7 +588,7 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   int get hashCode => from.index ^ to.index;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is DeveloperLevelJobAttribute && other.from == from && other.to == to);
 }
 
@@ -621,7 +624,7 @@ class RelocationJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory RelocationJobAttribute.fromJson(Map<String, Object?> json) => _$RelocationJobAttributeFromJson(json);
+  factory RelocationJobAttribute.fromJson(final Map<String, Object?> json) => _$RelocationJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$RelocationJobAttributeToJson(this);
@@ -630,7 +633,7 @@ class RelocationJobAttribute implements JobAttribute {
   int get hashCode => relocation ? 1 : 0;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is RelocationJobAttribute && other.relocation == relocation);
 }
 
@@ -662,7 +665,7 @@ class TagsJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory TagsJobAttribute.fromJson(Map<String, Object?> json) => _$TagsJobAttributeFromJson(json);
+  factory TagsJobAttribute.fromJson(final Map<String, Object?> json) => _$TagsJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$TagsJobAttributeToJson(this);
@@ -671,7 +674,7 @@ class TagsJobAttribute implements JobAttribute {
   int get hashCode => tags.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is TagsJobAttribute && const ListEquality<String>().equals(other.tags, tags));
 }
 
@@ -704,7 +707,7 @@ class SkillsJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory SkillsJobAttribute.fromJson(Map<String, Object?> json) => _$SkillsJobAttributeFromJson(json);
+  factory SkillsJobAttribute.fromJson(final Map<String, Object?> json) => _$SkillsJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$SkillsJobAttributeToJson(this);
@@ -713,7 +716,7 @@ class SkillsJobAttribute implements JobAttribute {
   int get hashCode => skills.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) ||
       (other is SkillsJobAttribute && const ListEquality<Skill>().equals(other.skills, skills));
 }
@@ -745,11 +748,12 @@ class RequirementsJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  RequirementsJobAttribute changeRequirements(String newRequirements) => RequirementsJobAttribute(
+  RequirementsJobAttribute changeRequirements(final String newRequirements) => RequirementsJobAttribute(
         requirements: newRequirements,
       );
 
-  factory RequirementsJobAttribute.fromJson(Map<String, Object?> json) => _$RequirementsJobAttributeFromJson(json);
+  factory RequirementsJobAttribute.fromJson(final Map<String, Object?> json) =>
+      _$RequirementsJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$RequirementsJobAttributeToJson(this);
@@ -758,7 +762,7 @@ class RequirementsJobAttribute implements JobAttribute {
   int get hashCode => requirements.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is RequirementsJobAttribute && other.requirements == requirements);
 }
 
@@ -790,7 +794,7 @@ class ContactsJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory ContactsJobAttribute.fromJson(Map<String, Object?> json) => _$ContactsJobAttributeFromJson(json);
+  factory ContactsJobAttribute.fromJson(final Map<String, Object?> json) => _$ContactsJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$ContactsJobAttributeToJson(this);
@@ -799,7 +803,7 @@ class ContactsJobAttribute implements JobAttribute {
   int get hashCode => contacts.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) ||
       (other is ContactsJobAttribute && const ListEquality<Contact>().equals(other.contacts, contacts));
 }
@@ -833,7 +837,8 @@ class ContractTypeJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
-  factory ContractTypeJobAttribute.fromJson(Map<String, Object?> json) => _$ContractTypeJobAttributeFromJson(json);
+  factory ContractTypeJobAttribute.fromJson(final Map<String, Object?> json) =>
+      _$ContractTypeJobAttributeFromJson(json);
 
   @override
   Map<String, Object?> toJson() => _$ContractTypeJobAttributeToJson(this);
@@ -842,7 +847,7 @@ class ContractTypeJobAttribute implements JobAttribute {
   int get hashCode => typesOfWork.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) ||
       (other is ContractTypeJobAttribute && const ListEquality<JobType>().equals(other.typesOfWork, typesOfWork));
 }

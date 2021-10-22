@@ -1,7 +1,6 @@
+import 'package:dart_jobs/src/common/router/root_route.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/router/root_route.dart';
-import 'feed_screen.dart';
 
 class FeedPage extends Page<void> {
   const FeedPage()
@@ -12,8 +11,8 @@ class FeedPage extends Page<void> {
         );
 
   @override
-  Route<void> createRoute(BuildContext context) => RootRoute(
-        builder: (context) => const FeedScreen(),
+  Route<void> createRoute(final BuildContext context) => RootRoute(
+        builder: (final context) => const FeedScreen(),
         settings: this,
       );
 }

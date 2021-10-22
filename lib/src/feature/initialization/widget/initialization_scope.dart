@@ -1,10 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/feature/initialization/bloc/initialization_bloc.dart';
+import 'package:dart_jobs/src/feature/initialization/data/initialization_helper.dart';
+import 'package:dart_jobs/src/feature/initialization/model/initialization_progress.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
-import '../bloc/initialization_bloc.dart';
-import '../data/initialization_helper.dart';
-import '../model/initialization_progress.dart';
+export 'package:dart_jobs/src/feature/initialization/bloc/initialization_bloc.dart';
+export 'package:dart_jobs/src/feature/initialization/model/initialization_progress.dart';
 
 @immutable
 class InitializationScope extends StatefulWidget {
@@ -14,25 +15,25 @@ class InitializationScope extends StatefulWidget {
   const InitializationScope({
     required final this.initializationScreen,
     required final this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   /// Find InitializationBLoC in BuildContext
-  static InitializationBLoC? _blocOf(BuildContext context) {
+  static InitializationBLoC? _blocOf(final BuildContext context) {
     final inheritedWidget = context.getElementForInheritedWidgetOfExactType<_InheritedInitialization>()?.widget;
     return inheritedWidget is _InheritedInitialization ? inheritedWidget.bloc : null;
   }
 
   /// Find Stream<InitializationState> in BuildContext
-  static Stream<InitializationState> of(BuildContext context) =>
+  static Stream<InitializationState> of(final BuildContext context) =>
       _blocOf(context)?.stream ?? const Stream<InitializationState>.empty();
 
   /// Получить результат инициализации из контекста
   /// Работает только в контексте проинициализированного приложения
-  static RepositoryStore storeOf(BuildContext context) =>
+  static RepositoryStore storeOf(final BuildContext context) =>
       _blocOf(context)?.state.maybeWhen<RepositoryStore>(
             orElse: _throwNotInitializedYet,
-            initialized: (store) => store,
+            initialized: (final store) => store,
           ) ??
       _throwNotInitializedYet();
 
@@ -62,18 +63,18 @@ class _InitializationScopeState extends State<InitializationScope> {
   //endregion
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bloc = _bloc;
     if (bloc == null) return const SizedBox.shrink();
     return BlocBuilder<InitializationBLoC, InitializationState>(
       bloc: bloc,
-      buildWhen: (prev, next) => prev != next,
-      builder: (context, state) => _InheritedInitialization(
+      buildWhen: (final prev, final next) => prev != next,
+      builder: (final context, final state) => _InheritedInitialization(
         state: this,
         bloc: bloc,
         child: state.maybeWhen<Widget>(
           orElse: () => widget.initializationScreen,
-          initialized: (_) => widget.child,
+          initialized: (final _) => widget.child,
         ),
       ),
     );
@@ -89,9 +90,9 @@ class _InheritedInitialization extends InheritedWidget {
     required final this.state,
     required final this.bloc,
     required final Widget child,
-    Key? key,
+    final Key? key,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedInitialization oldWidget) => false;
+  bool updateShouldNotify(final _InheritedInitialization oldWidget) => false;
 }

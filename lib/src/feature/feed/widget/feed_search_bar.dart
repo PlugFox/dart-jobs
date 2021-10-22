@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -9,11 +8,11 @@ class FeedSearchBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => searchBarSize;
 
   const FeedSearchBar({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SizedBox.fromSize(
+  Widget build(final BuildContext context) => SizedBox.fromSize(
         size: searchBarSize,
         child: Padding(
           padding: const EdgeInsets.all(8),

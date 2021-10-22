@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
-
-import '../data/authentication_repository.dart';
-import '../model/user_entity.dart';
 
 part 'authentication_bloc.freezed.dart';
 
@@ -27,9 +26,9 @@ class AuthenticationState with _$AuthenticationState {
   const AuthenticationState._();
 
   UserEntity get user => super.map<UserEntity>(
-        notAuthenticated: (state) => state.user,
-        progress: (state) => state.user,
-        authenticated: (state) => state.user,
+        notAuthenticated: (final state) => state.user,
+        progress: (final state) => state.user,
+        authenticated: (final state) => state.user,
       );
 
   bool get isAuthenticated => user.isAuthenticated;
@@ -52,8 +51,8 @@ class AuthenticationState with _$AuthenticationState {
 
   @factory
   // ignore: prefer_constructors_over_static_methods, invalid_factory_method_impl
-  static AuthenticationState fromUser(UserEntity user) => user.when<AuthenticationState>(
-        authenticated: (user) => AuthenticationState.authenticated(user: user),
+  static AuthenticationState fromUser(final UserEntity user) => user.when<AuthenticationState>(
+        authenticated: (final user) => AuthenticationState.authenticated(user: user),
         notAuthenticated: () => const AuthenticationState.notAuthenticated(),
       );
 }
@@ -73,7 +72,8 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) => event.when<Stream<AuthenticationState>>(
+  Stream<AuthenticationState> mapEventToState(final AuthenticationEvent event) =>
+      event.when<Stream<AuthenticationState>>(
         signInWithGoogle: _signInWithGoogle,
         logOut: _logOut,
       );

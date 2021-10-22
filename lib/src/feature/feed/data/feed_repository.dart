@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:math' as math show Random;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/common/utils/iterable_to_stream_coverter.dart';
+import 'package:dart_jobs/src/common/utils/list_unique.dart';
 import 'package:l/l.dart';
-
-import '../../../common/model/proposal.dart';
-import '../../../common/utils/date_util.dart';
-import '../../../common/utils/iterable_to_stream_coverter.dart';
-import '../../../common/utils/list_unique.dart';
 
 // ignore: one_member_abstracts
 abstract class IFeedRepository {
@@ -29,7 +27,7 @@ abstract class IFeedRepository {
   });
 
   /// Обработать, очистить, избавиться от дубликатов, удаленных, упорядочить список
-  Stream<Proposal> sanitize(List<Proposal> proposal);
+  Stream<Proposal> sanitize(final List<Proposal> proposal);
 }
 
 class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedRepository {
@@ -42,7 +40,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
 
   @override
   Stream<Proposal<Attribute>> fetchRecent({
-    required DateTime updatedAfter,
+    required final DateTime updatedAfter,
   }) =>
       Stream<QuerySnapshot<Object?>>.fromFuture(
         _collection
@@ -61,9 +59,9 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
               ),
             ),
       ).asyncExpand<Proposal>(
-        (snapshot) => snapshot.docs
-            .where((doc) => doc.exists)
-            .map<Object?>((doc) => doc.data())
+        (final snapshot) => snapshot.docs
+            .where((final doc) => doc.exists)
+            .map<Object?>((final doc) => doc.data())
             .whereType<Map<String, Object?>>()
             .mapJsonLogException(Proposal.fromJson)
             .whereType<Proposal>()
@@ -92,9 +90,9 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
               ),
             ),
       ).asyncExpand<Proposal>(
-        (snapshot) => snapshot.docs
-            .where((doc) => doc.exists)
-            .map<Object?>((doc) => doc.data())
+        (final snapshot) => snapshot.docs
+            .where((final doc) => doc.exists)
+            .map<Object?>((final doc) => doc.data())
             .whereType<Map<String, Object?>>()
             .mapJsonLogException(Proposal.fromJson)
             .whereType<Proposal>()
@@ -102,7 +100,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
       );
 
   @override
-  Future<Proposal<Attribute>?> getById({required String id}) async {
+  Future<Proposal<Attribute>?> getById({required final String id}) async {
     final snapshot = await _collection.doc('id').get(
           const GetOptions(
             source: Source.serverAndCache,
@@ -116,8 +114,8 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
 }
 
 extension on Iterable<Map<String, Object?>> {
-  Iterable<R?> mapJsonLogException<R extends Object?>(R Function(Map<String, Object?>) covert) => map<R?>(
-        (json) {
+  Iterable<R?> mapJsonLogException<R extends Object?>(final R Function(Map<String, Object?>) covert) => map<R?>(
+        (final json) {
           try {
             return covert(json);
           } on Object catch (exception, stackTrace) {
@@ -136,16 +134,16 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
   FeedRepositoryFake();
 
   @override
-  Future<Proposal<Attribute>?> getById({required String id}) => Future<Proposal<Attribute>?>.value(null);
+  Future<Proposal<Attribute>?> getById({required final String id}) => Future<Proposal<Attribute>?>.value(null);
 
   @override
   Stream<Proposal<Attribute>> fetchRecent({
-    required DateTime updatedAfter,
+    required final DateTime updatedAfter,
   }) {
     var lastDate = updatedAfter;
     return Stream<Proposal>.periodic(
       const Duration(milliseconds: 150),
-      (i) {
+      (final i) {
         lastDate = lastDate.add(Duration(seconds: _rnd.nextInt(60 * 60)));
         final id = (lastDate.millisecondsSinceEpoch * 1000 + i).toRadixString(36);
         return Job(
@@ -170,7 +168,7 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
     var lastDate = updatedBefore;
     return Stream<Proposal>.periodic(
       const Duration(milliseconds: 150),
-      (i) {
+      (final i) {
         lastDate = lastDate.subtract(Duration(seconds: _rnd.nextInt(60 * 60 * 24)));
         final id = (lastDate.millisecondsSinceEpoch * 1000 + i).toRadixString(36);
         return Job(
@@ -190,8 +188,8 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
 
 mixin ProposalsSanitizerMixin implements IFeedRepository {
   @override
-  Stream<Proposal<Attribute>> sanitize(List<Proposal<Attribute>> proposal) {
-    proposal.sort((a, b) => b.updated.compareTo(a.updated));
-    return Stream<Proposal<Attribute>>.fromIterable(proposal.unique((p) => p.id));
+  Stream<Proposal<Attribute>> sanitize(final List<Proposal<Attribute>> proposal) {
+    proposal.sort((final a, final b) => b.updated.compareTo(a.updated));
+    return Stream<Proposal<Attribute>>.fromIterable(proposal.unique((final p) => p.id));
   }
 }

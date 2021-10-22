@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../data/job_repository.dart';
-import '../model/job.dart';
 
 part 'job_bloc.freezed.dart';
 
@@ -14,7 +13,7 @@ class JobEvent with _$JobEvent {
 
   /// Запросить редактирование текущей работы
   /// Передаем идентификатор пользователя, чтоб убедится, что работа принадлежит ему
-  const factory JobEvent.edit(String uid) = _EditJobEvent;
+  const factory JobEvent.edit(final String uid) = _EditJobEvent;
 
   /// Запросить просмотр
   const factory JobEvent.view() = _ViewJobEvent;
@@ -24,7 +23,7 @@ class JobEvent with _$JobEvent {
 
   /// Обновить (перезаписать) работу
   /// Передаем идентификатор пользователя, чтоб убедится, что работа принадлежит ему
-  const factory JobEvent.update(Job job, String uid) = _UpdateJobEvent;
+  const factory JobEvent.update(final Job job, final String uid) = _UpdateJobEvent;
 }
 
 @freezed
@@ -79,7 +78,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         super(initialState);
 
   @override
-  Stream<JobState> mapEventToState(JobEvent event) => event.when<Stream<JobState>>(
+  Stream<JobState> mapEventToState(final JobEvent event) => event.when<Stream<JobState>>(
         edit: _edit,
         view: _view,
         fetch: _fetch,
@@ -88,22 +87,22 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
 
   @override
   Stream<Transition<JobEvent, JobState>> transformEvents(
-    Stream<JobEvent> events,
-    TransitionFunction<JobEvent, JobState> transitionFn,
+    final Stream<JobEvent> events,
+    final TransitionFunction<JobEvent, JobState> transitionFn,
   ) =>
       super.transformEvents(
         events.transform<JobEvent>(
           StreamTransformer.fromHandlers(
-            handleData: (event, sink) => state.maybeMap(
+            handleData: (final event, final sink) => state.maybeMap(
               orElse: () => sink.add(event),
-              fetching: (_) => null,
+              fetching: (final _) => null,
             ),
           ),
         ),
         transitionFn,
       );
 
-  Stream<JobState> _edit(String uid) => state.job.creatorId != uid || state.editing
+  Stream<JobState> _edit(final String uid) => state.job.creatorId != uid || state.editing
       ? const Stream<JobState>.empty()
       : Stream<JobState>.value(state.copyWith(editing: true));
 
@@ -136,7 +135,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     }
   }
 
-  Stream<JobState> _update(Job job, String uid) async* {
+  Stream<JobState> _update(final Job job, final String uid) async* {
     if (job.isEmpty || state.job.creatorId != uid || job.creatorId != uid) return;
     try {
       yield JobState.fetching(job: job, editing: state.editing);

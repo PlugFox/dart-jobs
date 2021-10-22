@@ -1,9 +1,8 @@
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
-
-import '../model/user_entity.dart';
 
 abstract class IAuthenticationRepository {
   Stream<UserEntity> get authStateChanges;
@@ -88,7 +87,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
   @override
   Future<void> logOut() => _firebaseAuth.signOut();
 
-  UserEntity _mapUserToUserEntity(User? user) => UserEntity.fromFirebase(user);
+  UserEntity _mapUserToUserEntity(final User? user) => UserEntity.fromFirebase(user);
 }
 
 const List<String> _kGoogleSignInScopes = [

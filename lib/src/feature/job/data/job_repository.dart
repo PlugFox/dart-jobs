@@ -1,11 +1,10 @@
 import 'dart:math' as math show Random;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
-
-import '../../authentication/model/user_entity.dart';
-import '../model/job.dart';
 
 abstract class IJobRepository {
   /// Создать новую работу
@@ -19,19 +18,19 @@ abstract class IJobRepository {
   });
 
   /// Запросить данные работы по идентификатору
-  Future<Job> fetchById(String id);
+  Future<Job> fetchById(final String id);
 
   /// Запросить данные работы
-  Future<Job> fetch(Job job);
+  Future<Job> fetch(final Job job);
 
   /// Обновить работу
-  Future<void> update(Job job);
+  Future<void> update(final Job job);
 
   /// Удалить работу по идентификатору
-  Future<void> deleteById(String id);
+  Future<void> deleteById(final String id);
 
   /// Удалить работу
-  Future<void> delete(Job job);
+  Future<void> delete(final Job job);
 }
 
 class JobRepositoryFirebase implements IJobRepository {
@@ -97,7 +96,7 @@ class JobRepositoryFirebase implements IJobRepository {
   }
 
   @override
-  Future<Job> fetchById(String id) async {
+  Future<Job> fetchById(final String id) async {
     // Получим работу по идентификатору
     final jobSnapshot = await _feedCollection.doc(id).get(const GetOptions(source: Source.serverAndCache));
     final jobData = jobSnapshot.data() as Map<String, Object?>?;
@@ -122,10 +121,10 @@ class JobRepositoryFirebase implements IJobRepository {
   }
 
   @override
-  Future<Job> fetch(Job job) => fetchById(job.id);
+  Future<Job> fetch(final Job job) => fetchById(job.id);
 
   @override
-  Future<void> update(Job job) {
+  Future<void> update(final Job job) {
     final doc = _feedCollection.doc(job.id);
     final batch = _firestore.batch()..set(doc, job.toJson(), SetOptions(merge: false));
     if (job.attributes.isEmpty) {
@@ -144,16 +143,16 @@ class JobRepositoryFirebase implements IJobRepository {
   }
 
   @override
-  Future<void> deleteById(String id) => (_firestore.batch()
+  Future<void> deleteById(final String id) => (_firestore.batch()
         ..delete(_feedCollection.doc(id))
         ..delete(_attributesCollection.doc(id)))
       .commit();
 
   @override
-  Future<void> delete(Job job) => deleteById(job.id);
+  Future<void> delete(final Job job) => deleteById(job.id);
 
   @alwaysThrows
-  Never _throwNotFound(String id) => throw JobNotFoundException('no such job with identifier $id');
+  Never _throwNotFound(final String id) => throw JobNotFoundException('no such job with identifier $id');
 }
 
 class JobRepositoryFake implements IJobRepository {
@@ -187,7 +186,7 @@ class JobRepositoryFake implements IJobRepository {
   }
 
   @override
-  Future<Job> fetchById(String id) async {
+  Future<Job> fetchById(final String id) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     return _jobs[id] ??= Job.create(
       id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
@@ -200,22 +199,22 @@ class JobRepositoryFake implements IJobRepository {
   }
 
   @override
-  Future<Job> fetch(Job job) => fetchById(job.id);
+  Future<Job> fetch(final Job job) => fetchById(job.id);
 
   @override
-  Future<void> update(Job job) async {
+  Future<void> update(final Job job) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     _jobs[job.id] = job;
   }
 
   @override
-  Future<void> deleteById(String id) async {
+  Future<void> deleteById(final String id) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     _jobs.remove(id);
   }
 
   @override
-  Future<void> delete(Job job) => deleteById(job.id);
+  Future<void> delete(final Job job) => deleteById(job.id);
 }
 
 class JobNotFoundException implements Exception {

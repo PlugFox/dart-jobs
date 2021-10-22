@@ -1,16 +1,15 @@
 import 'package:collection/collection.dart';
+import 'package:dart_jobs/src/common/router/configuration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:l/l.dart';
-
-import 'configuration.dart';
 
 class PageInformationParser = RouteInformationParser<PageConfiguration>
     with _RestoreRouteInformationMixin, _ParseRouteInformationMixin;
 
 mixin _RestoreRouteInformationMixin on RouteInformationParser<PageConfiguration> {
   @override
-  RouteInformation? restoreRouteInformation(PageConfiguration configuration) {
+  RouteInformation? restoreRouteInformation(final PageConfiguration configuration) {
     try {
       final uri = configuration.toUri();
       final location = uri.toString();
@@ -24,7 +23,7 @@ mixin _RestoreRouteInformationMixin on RouteInformationParser<PageConfiguration>
 
 mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
   @override
-  Future<PageConfiguration> parseRouteInformation(RouteInformation routeInformation) {
+  Future<PageConfiguration> parseRouteInformation(final RouteInformation routeInformation) {
     try {
       final location = routeInformation.location ?? '/';
       final uri = Uri.parse(location);
@@ -38,7 +37,7 @@ mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
     }
   }
 
-  static PageConfiguration _uriToConfiguration(Uri uri, Map<String, Object?> state) {
+  static PageConfiguration _uriToConfiguration(final Uri uri, final Map<String, Object?> state) {
     final path = uri.pathSegments;
     switch (path.firstOrNull) {
       case 'auth':
@@ -74,7 +73,7 @@ mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
     return const NotFoundPageConfiguration();
   }
 
-  static PageConfiguration _uriToJob(Uri uri, Map<String, Object?> state) {
+  static PageConfiguration _uriToJob(final Uri uri, final Map<String, Object?> state) {
     final path = uri.pathSegments;
     final segment = path.skip(1).firstOrNull;
     var jobState = state['job'];

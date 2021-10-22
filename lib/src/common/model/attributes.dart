@@ -1,8 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:dart_jobs/src/common/utils/date_util.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
-
-import '../utils/date_util.dart';
 
 @immutable
 abstract class AttributesOwner<T extends Attribute> {
@@ -12,7 +11,7 @@ abstract class AttributesOwner<T extends Attribute> {
   Attributes<T> get attributes;
 
   /// Получить аттрибут по типу
-  R? getAttribute<R extends T>(String type) {
+  R? getAttribute<R extends T>(final String type) {
     final attribute = attributes[type];
     if (attribute is R) return attribute;
     return null;
@@ -20,16 +19,16 @@ abstract class AttributesOwner<T extends Attribute> {
 
   /// Заменить аттрибуты новыми
   AttributesOwner<T> copyWith({
-    covariant Attributes<T>? newAttributes,
+    covariant final Attributes<T>? newAttributes,
   });
 
   /// Установить аттрибут
-  AttributesOwner<T> setAttribute(covariant T attribute) => copyWith(
+  AttributesOwner<T> setAttribute(covariant final T attribute) => copyWith(
         newAttributes: attributes.set(attribute),
       );
 
   /// Удалить аттрибут
-  AttributesOwner<T> removeAttribute(covariant T attribute) => copyWith(
+  AttributesOwner<T> removeAttribute(covariant final T attribute) => copyWith(
         newAttributes: attributes.remove(attribute),
       );
 }
@@ -44,7 +43,7 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
   const Attributes.empty() : _internal = const {};
 
   /// Создать коллекцию аттрибутов на основании другой коллекции аттрибутов
-  Attributes(Iterable<T> source)
+  Attributes(final Iterable<T> source)
       : assert(
           () {
             final set = <String>{};
@@ -63,19 +62,19 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
         };
 
   /// Создать коллекцию аттрибутов на основании других аттрибутов
-  Attributes.of(Attributes<T> attributes) : _internal = Map<String, T>.of(attributes._internal);
+  Attributes.of(final Attributes<T> attributes) : _internal = Map<String, T>.of(attributes._internal);
 
   /// Добавить/Обновить аттрибут
-  Attributes.set(Attributes<T> attributes, T attribute)
+  Attributes.set(final Attributes<T> attributes, final T attribute)
       : _internal = Map<String, T>.of(attributes._internal)
           ..update(
             attribute.type,
-            (_) => attribute,
+            (final _) => attribute,
             ifAbsent: () => attribute,
           );
 
   /// Исключить аттрибут из списка
-  Attributes.remove(Attributes<T> attributes, String type)
+  Attributes.remove(final Attributes<T> attributes, final String type)
       : _internal = Map<String, T>.of(attributes._internal)..remove(type);
 
   @override
@@ -85,31 +84,34 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
   Iterable<T> get values => _internal.values;
 
   @override
-  bool get isEmpty => _internal.values.where((e) => e.isNotEmpty).isEmpty;
+  bool get isEmpty => _internal.values.where((final e) => e.isNotEmpty).isEmpty;
 
   @override
-  bool get isNotEmpty => _internal.values.any((e) => e.isNotEmpty);
+  bool get isNotEmpty => _internal.values.any((final e) => e.isNotEmpty);
+
+  @override
+  int get length => _internal.length;
 
   /// Содержит ли аттрибут указаного типа
-  bool containsAttribute(String type) => _internal.containsKey(type);
+  bool containsAttribute(final String type) => _internal.containsKey(type);
 
   /// Получить аттрибут по типу
-  T? operator [](String type) => get(type);
+  T? operator [](final String type) => get(type);
 
   /// Получить аттрибут по типу
-  T? get(String type) => _internal[type];
+  T? get(final String type) => _internal[type];
 
   /// Добавить/Обновить аттрибут
-  Attributes<T> set(T attribute);
+  Attributes<T> set(final T attribute);
 
   /// Удалить аттрибут
-  Attributes<T> remove(T attribute) => removeByType(attribute.type);
+  Attributes<T> remove(final T attribute) => removeByType(attribute.type);
 
   /// Удалить аттрибут по типу
-  Attributes<T> removeByType(String type);
+  Attributes<T> removeByType(final String type);
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) ||
       (other is Attributes &&
           const MapEquality<String, Object>().equals(
@@ -123,13 +125,13 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
   /// Преобразовать в JSON объект с вложенным списком аттрибутов
   /// [ownerId]   - идентификатор владельца коллекции, для ограничения доступа в Firebase
   /// [creatorId] - идентификатор владельца, для ограничения доступа в Firebase
-  Map<String, Object?> toJson({required String parentId, required String creatorId}) => <String, Object?>{
+  Map<String, Object?> toJson({required final String parentId, required final String creatorId}) => <String, Object?>{
         'parent_id': parentId,
         'creator_id': creatorId,
         'updated': DateUtil.dateToUnixTime(DateTime.now()),
         'attributes': _internal.values
-            .where((v) => v.isNotEmpty)
-            .map<Map<String, Object?>>((e) => e.toJson()..['type'] = e.type)
+            .where((final v) => v.isNotEmpty)
+            .map<Map<String, Object?>>((final e) => e.toJson()..['type'] = e.type)
             .toList(growable: false),
       };
 }
@@ -177,7 +179,7 @@ abstract class Skill {
   String get title;
 
   // ignore: avoid_unused_constructor_parameters
-  factory Skill.fromJson(Map<String, Object?> json) => throw UnimplementedError();
+  factory Skill.fromJson(final Map<String, Object?> json) => throw UnimplementedError();
 
   Map<String, Object?> toJson();
 }
@@ -190,7 +192,7 @@ abstract class Contact {
   String get title;
 
   // ignore: avoid_unused_constructor_parameters
-  factory Contact.fromJson(Map<String, Object?> json) => throw UnimplementedError();
+  factory Contact.fromJson(final Map<String, Object?> json) => throw UnimplementedError();
 
   Map<String, Object?> toJson();
 }

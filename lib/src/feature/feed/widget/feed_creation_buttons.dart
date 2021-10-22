@@ -1,18 +1,15 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import '../../../common/localization/localizations.dart';
-import '../../authentication/widget/authentication_scope.dart';
 
 @immutable
 class FeedCreationButtons extends StatelessWidget {
   const FeedCreationButtons({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SliverToBoxAdapter(
+  Widget build(final BuildContext context) => SliverToBoxAdapter(
         child: SizedBox(
           height: 75,
           child: Row(
@@ -34,7 +31,7 @@ class FeedCreationButtons extends StatelessWidget {
                       onPressed: () {
                         AuthenticationScope.authenticateOr(
                           context,
-                          (user) {
+                          (final user) {
                             throw UnimplementedError('Не реализовано');
                             /*
                             FeedScope.createJobOf(

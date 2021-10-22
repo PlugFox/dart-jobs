@@ -42,7 +42,7 @@ analyzer:
     empty_catches: warning
 
     # Error
-    prefer_relative_imports: error
+    always_use_package_imports: error
     avoid_relative_lib_imports: error
     avoid_slow_async_io: error
     avoid_types_as_parameter_names: error
@@ -77,10 +77,13 @@ linter:
     sort_pub_dependencies: false
     do_not_use_environment: false # передаем flavors таким образом
     diagnostic_describe_all_properties: false
-    always_use_package_imports: false
+    prefer_relative_imports: false
+    depend_on_referenced_packages: false
+    library_private_types_in_public_api: false
+    prefer_final_parameters: false
 
     # Enabled
-    prefer_relative_imports: true
+    always_use_package_imports: true
     avoid_types_on_closure_parameters: true
     use_named_constants: true
     use_is_even_rather_than_modulo: true
@@ -109,7 +112,6 @@ linter:
     close_sinks: true
     control_flow_in_finally: true
     empty_statements: true
-    invariant_booleans: true
     iterable_contains_unrelated_type: true
     join_return_with_assignment: true
     leading_newlines_in_multiline_strings: true
@@ -237,6 +239,32 @@ linter:
     avoid_positional_boolean_parameters: true
     hash_and_equals: true
     avoid_equals_and_hash_code_on_mutable_classes: true
+    avoid_dynamic_calls: true
+    avoid_multiple_declarations_per_line: true
+    avoid_type_to_string: true
+    deprecated_consistency: true
+    eol_at_end_of_file: true
+    noop_primitive_operations: true
+    prefer_null_aware_method_calls: true
+    unnecessary_constructor_name: true
+    use_if_null_to_convert_nulls_to_bools: true
+    use_test_throws_matchers: true
+
+    # Experimental
+    use_late_for_private_fields_and_variables: true
+    use_build_context_synchronously: true
+    unnecessary_nullable_for_final_variable_declarations: true
+    unnecessary_null_checks: true
+    require_trailing_commas: true
+    null_check_on_nullable_type_parameter: true
+    cast_nullable_to_non_nullable: true
+    invariant_booleans: true
+    no_default_cases: false
+
+    # Deprecated
+    #avoid_as (deprecated)
+    #prefer_bool_in_asserts (deprecated)
+    #super_goes_last (deprecated)
 
 dart_code_metrics:
   anti-patterns:

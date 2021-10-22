@@ -1,14 +1,14 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/authentication/bloc/authentication_bloc.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
-import '../../../common/model/proposal.dart';
-import '../../authentication/bloc/authentication_bloc.dart';
-import '../../authentication/model/user_entity.dart';
-import '../../authentication/widget/authentication_scope.dart';
-import '../../feed/widget/feed_scope.dart';
-import '../../initialization/widget/initialization_scope.dart';
-import '../bloc/job_bloc.dart';
+export 'package:dart_jobs/src/common/model/proposal.dart';
 
 @immutable
 class JobScope extends ProxyWidget {
@@ -16,7 +16,7 @@ class JobScope extends ProxyWidget {
     required final this.id,
     required final Widget child,
     final this.creatorId,
-    Key? key,
+    final Key? key,
   })  : assert(id.isNotEmpty, 'ID работы должно быть заполненно'),
         super(
           key: key,
@@ -32,7 +32,7 @@ class JobScope extends ProxyWidget {
   final String? creatorId;
 
   /// Find _JobScopeState in BuildContext
-  static _JobScopeState? _of(BuildContext context, {bool listen = false}) {
+  static _JobScopeState? _of(final BuildContext context, {bool listen = false}) {
     if (listen) {
       return context.dependOnInheritedWidgetOfExactType<_InheritedJobScope>()?.state;
     } else {
@@ -42,44 +42,44 @@ class JobScope extends ProxyWidget {
   }
 
   /// Обновить работу (без подписки)
-  static void saveJobOf(BuildContext context, Job job) {
+  static void saveJobOf(final BuildContext context, final Job job) {
     final user = AuthenticationScope.userOf(context, listen: false);
     if (user is! AuthenticatedUser) return;
     if (user.uid != job.creatorId) return;
     AuthenticationScope.authenticateOr(
       context,
-      (user) => _of(context, listen: false)?.bloc.add(JobEvent.update(job, user.uid)),
+      (final user) => _of(context, listen: false)?.bloc.add(JobEvent.update(job, user.uid)),
     );
   }
 
   /// Получить текущую работу (без подписки)
-  static Job jobOf(BuildContext context) => BlocScope.of<JobBLoC>(context, listen: false).state.job;
+  static Job jobOf(final BuildContext context) => BlocScope.of<JobBLoC>(context, listen: false).state.job;
 
   /// Состояние формы просмотр/редактирование
   /// true - редактирование
   /// false - просмотр
   /// По умолчанию оформляет подписку на [JobScope] и [AuthenticationScope]
-  static bool editingOf(BuildContext context, {bool listen = true}) {
+  static bool editingOf(final BuildContext context, {bool listen = true}) {
     final state = _of(context, listen: listen)?.bloc.state;
     if (state == null || state.viewing) return false;
     return AuthenticationScope.isSameUid(context, state.job.creatorId, listen: listen);
   }
 
   /// Переключиться в режим редактирования
-  static void edit(BuildContext context) => AuthenticationScope.authenticateOr(
+  static void edit(final BuildContext context) => AuthenticationScope.authenticateOr(
         context,
-        (user) => _of(context, listen: false)?.bloc.add(JobEvent.edit(user.uid)),
+        (final user) => _of(context, listen: false)?.bloc.add(JobEvent.edit(user.uid)),
       );
 
   /// Переключиться в режим просмотра
-  static void view(BuildContext context) => _of(context, listen: false)?.bloc.add(const JobEvent.view());
+  static void view(final BuildContext context) => _of(context, listen: false)?.bloc.add(const JobEvent.view());
 
   @override
   Element createElement() => _JobScopeState(this);
 }
 
 class _JobScopeState extends ComponentElement {
-  _JobScopeState(Widget widget) : super(widget);
+  _JobScopeState(final Widget widget) : super(widget);
 
   late JobBLoC bloc;
 
@@ -90,14 +90,14 @@ class _JobScopeState extends ComponentElement {
 
   //region Lifecycle
   @override
-  void mount(Element? parent, Object? newSlot) {
+  void mount(final Element? parent, final Object? newSlot) {
     super.mount(parent, newSlot);
     _mounted = true;
   }
 
   void initState() {
     final id = widget.id;
-    final jobOrNull = FeedScope.proposalOf<Job>(this, (p) => p.id == id);
+    final jobOrNull = FeedScope.proposalOf<Job>(this, (final p) => p.id == id);
     final store = InitializationScope.storeOf(this);
     // Если единственное что известно о текущей работе это идентификатор
     // создадим изначальное заполненние пустой работой
@@ -136,12 +136,12 @@ class _JobScopeState extends ComponentElement {
     }
     return BlocBuilder<JobBLoC, JobState>(
       bloc: bloc,
-      buildWhen: (prev, next) => prev.editing != next.editing,
-      builder: (context, jobState) => _InheritedJobScope(
+      buildWhen: (final prev, final next) => prev.editing != next.editing,
+      builder: (final context, final jobState) => _InheritedJobScope(
         state: this,
         editing: jobState.editing,
         child: BlocListener<AuthenticationBLoC, AuthenticationState>(
-          listener: (context, authState) {
+          listener: (final context, final authState) {
             if (jobState.viewing) return;
             if (jobState.job.creatorId != authState.user.authenticatedOrNull?.uid) {
               bloc.add(const JobEvent.view());
@@ -166,9 +166,9 @@ class _InheritedJobScope extends InheritedWidget {
     required final this.state,
     required final this.editing,
     required final Widget child,
-    Key? key,
+    final Key? key,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedJobScope oldWidget) => editing != oldWidget.editing;
+  bool updateShouldNotify(final _InheritedJobScope oldWidget) => editing != oldWidget.editing;
 }

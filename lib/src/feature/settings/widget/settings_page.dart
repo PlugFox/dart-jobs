@@ -1,6 +1,5 @@
+import 'package:dart_jobs/src/feature/settings/widget/settings_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'settings_screen.dart';
 
 class SettingsPage extends Page<void> {
   const SettingsPage()
@@ -11,8 +10,8 @@ class SettingsPage extends Page<void> {
         );
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
-        builder: (context) => const SettingsScreen(),
+  Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
+        builder: (final context) => const SettingsScreen(),
         settings: this,
       );
 }

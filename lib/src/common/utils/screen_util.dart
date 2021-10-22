@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart' show Orientation;
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 /// Namespace
@@ -34,12 +33,12 @@ abstract class ScreenUtil {
   ///
   /// [Breakpoints](https://material.io/design/layout/responsive-layout-grid.html#breakpoints)
   ///
-  static ScreenSize screenSizeOf(BuildContext context) {
+  static ScreenSize screenSizeOf(final BuildContext context) {
     final size = MediaQuery.of(context).size;
     return _screenSizeFromSize(size);
   }
 
-  static ScreenSize _screenSizeFromSize(Size size) {
+  static ScreenSize _screenSizeFromSize(final Size size) {
     if (size.width <= ScreenSize.extraSmall.max) {
       return ScreenSize.extraSmall;
     } else if (size.width <= ScreenSize.small.max) {
@@ -136,6 +135,6 @@ class ScreenSize {
   int get hashCode => representation.hashCode;
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(other, this) || (other is ScreenSize && representation == other.representation);
 }

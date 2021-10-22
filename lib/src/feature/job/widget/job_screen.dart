@@ -1,19 +1,14 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_form.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_not_found.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
-import '../../../common/localization/localizations.dart';
-import '../../../common/router/page_router.dart';
-import '../../authentication/model/user_entity.dart';
-import '../../authentication/widget/authentication_scope.dart';
-import '../../feed/widget/feed_scope.dart';
-import '../bloc/job_bloc.dart';
-import '../model/job.dart';
-import 'job_form.dart';
-import 'job_not_found.dart';
-import 'job_scope.dart';
 
 @immutable
 class JobScreen extends StatelessWidget {
@@ -21,7 +16,7 @@ class JobScreen extends StatelessWidget {
     required final this.id,
     required final this.title,
     this.edit = false,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   /// Идентификатор работы
@@ -34,10 +29,10 @@ class JobScreen extends StatelessWidget {
   final bool edit;
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
-        buildWhen: (prev, next) => prev.job.title != next.job.title,
-        builder: (context, state) => state.maybeMap<Widget>(
-          notFound: (_) => const JobNotFound(),
+  Widget build(final BuildContext context) => BlocBuilder<JobBLoC, JobState>(
+        buildWhen: (final prev, final next) => prev.job.title != next.job.title,
+        builder: (final context, final state) => state.maybeMap<Widget>(
+          notFound: (final _) => const JobNotFound(),
           orElse: () => JobForm(
             child: Scaffold(
               appBar: AppBar(
@@ -61,12 +56,12 @@ class JobScreen extends StatelessWidget {
 @immutable
 class _JobScreenFloatingActionButton extends StatelessWidget {
   const _JobScreenFloatingActionButton({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
-        builder: (context, state) {
+  Widget build(final BuildContext context) => BlocBuilder<JobBLoC, JobState>(
+        builder: (final context, final state) {
           final user = AuthenticationScope.userOf(context, listen: true);
           if (user is! AuthenticatedUser) {
             // Пользователь не аутентифицирован - не позволяем редактировать
@@ -77,45 +72,47 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
             return const SizedBox.shrink();
           }
           final themeData = Theme.of(context);
-          final fetching = state.maybeMap<bool>(orElse: () => false, fetching: (_) => true);
+          final fetching = state.maybeMap<bool>(orElse: () => false, fetching: (final _) => true);
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
-            transitionBuilder: (child, animation) => ScaleTransition(
+            transitionBuilder: (final child, final animation) => ScaleTransition(
               scale: animation,
               child: child,
             ),
-            child: Builder(builder: (context) {
-              final readOnly = !JobScope.editingOf(context, listen: true);
-              return readOnly
-                  ? FloatingActionButton(
-                      tooltip: 'Edit job',
-                      key: const ValueKey<String>('edit_job_floating_action_button'),
-                      onPressed: fetching ? null : () => JobScope.edit(context),
-                      backgroundColor:
-                          fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
-                      child: const Icon(
-                        Icons.edit,
-                        size: 30,
-                      ),
-                    )
-                  : FloatingActionButton(
-                      tooltip: 'Save job',
-                      key: const ValueKey<String>('save_job_floating_action_button'),
-                      onPressed: fetching
-                          ? null
-                          : () {
-                              // Сейчас статус - редактирование, следовательно мы хотим сохранить результат
-                              final currentData = JobForm.getCurrentJob(context);
-                              JobScope.saveJobOf(context, currentData);
-                            },
-                      backgroundColor:
-                          fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
-                      child: const Icon(
-                        Icons.save,
-                        size: 30,
-                      ),
-                    );
-            }),
+            child: Builder(
+              builder: (final context) {
+                final readOnly = !JobScope.editingOf(context, listen: true);
+                return readOnly
+                    ? FloatingActionButton(
+                        tooltip: 'Edit job',
+                        key: const ValueKey<String>('edit_job_floating_action_button'),
+                        onPressed: fetching ? null : () => JobScope.edit(context),
+                        backgroundColor:
+                            fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
+                        child: const Icon(
+                          Icons.edit,
+                          size: 30,
+                        ),
+                      )
+                    : FloatingActionButton(
+                        tooltip: 'Save job',
+                        key: const ValueKey<String>('save_job_floating_action_button'),
+                        onPressed: fetching
+                            ? null
+                            : () {
+                                // Сейчас статус - редактирование, следовательно мы хотим сохранить результат
+                                final currentData = JobForm.getCurrentJob(context);
+                                JobScope.saveJobOf(context, currentData);
+                              },
+                        backgroundColor:
+                            fetching ? themeData.disabledColor : themeData.floatingActionButtonTheme.backgroundColor,
+                        child: const Icon(
+                          Icons.save,
+                          size: 30,
+                        ),
+                      );
+              },
+            ),
           );
         },
       );
@@ -124,11 +121,11 @@ class _JobScreenFloatingActionButton extends StatelessWidget {
 @immutable
 class _CancelEditAppBarButton extends StatelessWidget {
   const _CancelEditAppBarButton({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final readOnly = !JobScope.editingOf(context, listen: true);
     return readOnly
         ? const SizedBox.shrink()
@@ -157,11 +154,11 @@ class _CancelEditAppBarButton extends StatelessWidget {
 @immutable
 class _DeleteAppBarButton extends StatelessWidget {
   const _DeleteAppBarButton({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final readOnly = !JobScope.editingOf(context, listen: true);
     return readOnly
         ? const SizedBox.shrink()
@@ -183,7 +180,7 @@ class _DeleteAppBarButton extends StatelessWidget {
                 final job = context.read<JobBLoC>().state.job;
                 PageRouter.showModalDialog(
                   context,
-                  (context) => _DeleteJobDialog(
+                  (final context) => _DeleteJobDialog(
                     job: job,
                   ),
                 );
@@ -197,7 +194,7 @@ class _DeleteAppBarButton extends StatelessWidget {
 class _DeleteJobDialog extends StatefulWidget {
   const _DeleteJobDialog({
     required this.job,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   final Job job;
@@ -216,7 +213,7 @@ class _DeleteJobDialogState extends State<_DeleteJobDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(final BuildContext context) => AlertDialog(
         title: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -253,7 +250,7 @@ class _DeleteJobDialogState extends State<_DeleteJobDialog> {
           ),
           ValueListenableBuilder<TextEditingValue>(
             valueListenable: controller,
-            builder: (context, value, child) => OutlinedButton(
+            builder: (final context, final value, final child) => OutlinedButton(
               onPressed: value.text.toUpperCase() == 'DELETE' ? () => _delete(context, widget.job) : null,
               style: OutlinedButton.styleFrom(
                 primary: Colors.red,
@@ -265,10 +262,10 @@ class _DeleteJobDialogState extends State<_DeleteJobDialog> {
         ],
       );
 
-  void _delete(BuildContext context, Job job) {
+  void _delete(final BuildContext context, final Job job) {
     AuthenticationScope.authenticateOr(
       context,
-      (user) {
+      (final user) {
         PageRouter.maybePop(context);
         PageRouter.goHome(context);
         FeedScope.deleteJobOf(

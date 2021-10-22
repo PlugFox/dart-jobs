@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_info/platform_info.dart';
@@ -16,10 +15,10 @@ class CustomScrollViewSmooth extends StatelessWidget {
   CustomScrollViewSmooth({
     required final ScrollController controller,
     required final List<Widget> slivers,
-    ScrollPhysics? physics,
-    ScrollBehavior? scrollBehavior,
-    double? cacheExtent,
-    Key? key,
+    final ScrollPhysics? physics,
+    final ScrollBehavior? scrollBehavior,
+    final double? cacheExtent,
+    final Key? key,
   })  : _controller = controller,
         _slivers = slivers,
         _physics = platform.isWeb ? const NeverScrollableScrollPhysics() : physics,
@@ -30,7 +29,7 @@ class CustomScrollViewSmooth extends StatelessWidget {
         );
 
   @override
-  Widget build(BuildContext context) => _CustomScrollViewSmoothWrap(
+  Widget build(final BuildContext context) => _CustomScrollViewSmoothWrap(
         controller: _controller,
         child: CustomScrollView(
           controller: _controller,
@@ -58,11 +57,11 @@ class _CustomScrollViewSmoothWrap extends StatelessWidget {
   const _CustomScrollViewSmoothWrap({
     required final this.controller,
     required final this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => platform.isWeb
+  Widget build(final BuildContext context) => platform.isWeb
       ? _SmoothScrollWeb(
           controller: controller,
           child: child,
@@ -99,7 +98,7 @@ class _SmoothScrollWeb extends StatefulWidget {
     this.scrollSpeed = _DEFAULT_SCROLL_SPEED,
     this.scrollAnimationLength = _DEFAULT_NORMAL_SCROLL_ANIMATION_LENGTH_MS,
     this.curve = Curves.linear,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
@@ -127,7 +126,7 @@ class _SmoothScrollWebState extends State<_SmoothScrollWeb> {
     }
   }
 
-  void onPointerSignal(PointerSignalEvent pointerSignal) {
+  void onPointerSignal(final PointerSignalEvent pointerSignal) {
     var millis = widget.scrollAnimationLength;
     if (pointerSignal is PointerScrollEvent) {
       // ignore: prefer-conditional-expressions
@@ -154,7 +153,7 @@ class _SmoothScrollWebState extends State<_SmoothScrollWeb> {
   }
 
   @override
-  Widget build(BuildContext context) => Listener(
+  Widget build(final BuildContext context) => Listener(
         onPointerSignal: onPointerSignal,
         child: widget.child,
       );

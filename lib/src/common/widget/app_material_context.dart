@@ -1,22 +1,20 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/configuration.dart';
+import 'package:dart_jobs/src/common/router/route_information_parser.dart';
+import 'package:dart_jobs/src/common/router/route_information_provider.dart';
+import 'package:dart_jobs/src/common/router/router_delegate.dart';
+import 'package:dart_jobs/src/feature/settings/widget/settings_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import '../../feature/settings/widget/settings_scope.dart';
-import '../localization/localizations.dart';
-import '../router/configuration.dart';
-import '../router/route_information_parser.dart';
-import '../router/route_information_provider.dart';
-import '../router/router_delegate.dart';
 
 @immutable
 class AppMaterialContext extends StatefulWidget {
   const AppMaterialContext({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   /// Для поиска _GlobalMaterialContextState в контексте
-  static _AppMaterialContextState? of(BuildContext context) =>
+  static _AppMaterialContextState? of(final BuildContext context) =>
       context.findAncestorStateOfType<_AppMaterialContextState>();
 
   @override
@@ -48,17 +46,17 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final currentLocale = SettingsScope.localeOf(context);
     final themeData = SettingsScope.themeOf(context);
     return MaterialApp.router(
       color: Colors.blue,
       theme: themeData,
-      onGenerateTitle: (context) => context.localization.title,
+      onGenerateTitle: (final context) => context.localization.title,
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
       routeInformationProvider: _routeInformationProvider,
-      localeResolutionCallback: (deviceLocale, supportedLocales) {
+      localeResolutionCallback: (final deviceLocale, final supportedLocales) {
         for (final locale in supportedLocales) {
           if (locale.languageCode == currentLocale.languageCode) {
             return currentLocale;

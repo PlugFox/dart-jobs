@@ -1,12 +1,10 @@
 library localizations;
 
+import 'package:dart_jobs/src/common/localization/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' show BuildContext, Localizations, Locale, LocalizationsDelegate;
 import 'package:intl/intl.dart';
 
-import 'l10n.dart';
-
-export 'l10n.dart';
+export 'package:dart_jobs/src/common/localization/l10n.dart';
 
 /// Шоткаты для контекста для управления локализацией
 extension AppLocalizationsX on BuildContext {
@@ -14,7 +12,7 @@ extension AppLocalizationsX on BuildContext {
   Locale get locale => AppLocalization.localeOf(this);
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
   List<Locale> get supportedLocales => AppLocalization.supportedLocales;
-  String formatDate(DateTime date, String pattern) =>
+  String formatDate(final DateTime date, final String pattern) =>
       AppLocalization.dateFormat(pattern, AppLocalization.localeOf(this)).format(date);
 }
 
@@ -23,7 +21,7 @@ abstract class AppLocalization {
   const AppLocalization._();
 
   static final Map<String, Map<Locale, DateFormat>> _dateFormatters = <String, Map<Locale, DateFormat>>{};
-  static DateFormat dateFormat(String pattern, [Locale locale = fallbackLocale]) {
+  static DateFormat dateFormat(final String pattern, [Locale locale = fallbackLocale]) {
     final patternMap = _dateFormatters[pattern];
     if (patternMap == null) {
       final result = DateFormat(pattern);
@@ -40,21 +38,21 @@ abstract class AppLocalization {
   static const LocalizationsDelegate<Localized> delegate = AppLocalizationDelegate();
 
   /// Получить и подписаться на локализированную строку для текущей локали
-  static Localized localize(BuildContext context) => Localized.of(context);
+  static Localized localize(final BuildContext context) => Localized.of(context);
 
   /// The locale of the Localizations widget for the widget tree that
   /// corresponds to [BuildContext] `context`.
   ///
   /// If no [Localizations] widget is in scope then the [Localizations.localeOf]
   /// method will throw an exception.
-  static Locale localeOf(BuildContext context) => Localizations.localeOf(context);
+  static Locale localeOf(final BuildContext context) => Localizations.localeOf(context);
 
   /// The locale of the Localizations widget for the widget tree that
   /// corresponds to [BuildContext] `context`.
   ///
   /// If no [Localizations] widget is in scope then this function will return
   /// null.
-  static Locale? maybeLocaleOf(BuildContext context) => Localizations.maybeLocaleOf(context);
+  static Locale? maybeLocaleOf(final BuildContext context) => Localizations.maybeLocaleOf(context);
 
   /// Returns the localized resources object of the given `type` for the widget
   /// tree that corresponds to the given `context`.
@@ -71,7 +69,7 @@ abstract class AppLocalization {
   ///    return Localizations.of<MaterialLocalizations>(context, MaterialLocalizations);
   /// }
   /// ```
-  static T? of<T>(BuildContext context, Type type) => Localizations.of(context, type);
+  static T? of<T>(final BuildContext context, final Type type) => Localizations.of(context, type);
 
   /// Поддердживаемые локали
   static List<Locale> get supportedLocales => (delegate as AppLocalizationDelegate).supportedLocales;
@@ -80,7 +78,7 @@ abstract class AppLocalization {
   ///
   /// Return true if the instance of `T` loaded by this delegate's [load]
   /// method supports the given `locale`'s language.
-  static bool isSupported(Locale locale) => delegate.isSupported(locale);
+  static bool isSupported(final Locale locale) => delegate.isSupported(locale);
 
   /// Start loading the resources for `locale`. The returned future completes
   /// when the resources have finished loading.
@@ -88,7 +86,7 @@ abstract class AppLocalization {
   /// It's assumed that the this method will return an object that contains
   /// a collection of related resources (typically defined with one method per
   /// resource). The object will be retrieved with [Localizations.of].
-  static Future<Localized> load(Locale locale) => delegate.load(locale);
+  static Future<Localized> load(final Locale locale) => delegate.load(locale);
 
   /// Returns true if the resources for this delegate should be loaded
   /// again by calling the [load] method.
@@ -96,5 +94,5 @@ abstract class AppLocalization {
   /// This method is called whenever its [Localizations] widget is
   /// rebuilt. If it returns true then dependent widgets will be rebuilt
   /// after [load] has completed.
-  static bool shouldReload(AppLocalizationDelegate old) => delegate.shouldReload(old);
+  static bool shouldReload(final AppLocalizationDelegate old) => delegate.shouldReload(old);
 }

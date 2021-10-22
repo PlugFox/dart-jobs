@@ -1,25 +1,23 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/settings/bloc/settings_bloc.dart';
+import 'package:dart_jobs/src/feature/settings/model/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
-
-import '../../authentication/model/user_entity.dart';
-import '../../authentication/widget/authentication_scope.dart';
-import '../../initialization/widget/initialization_scope.dart';
-import '../bloc/settings_bloc.dart';
-import '../model/user_settings.dart';
 
 @immutable
 class SettingsScope extends StatefulWidget {
   final Widget child;
   const SettingsScope({
     required this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
-  static SettingsBLoC _blocOf(BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
+  static SettingsBLoC _blocOf(final BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
 
   /// Обновить настройки приложения
-  static void updateOf(BuildContext context, {required UserSettings settings}) {
+  static void updateOf(final BuildContext context, {required final UserSettings settings}) {
     final user = AuthenticationScope.userOf(context, listen: false).authenticatedOrNull;
     if (user == null) return;
     _blocOf(context).add(
@@ -31,14 +29,14 @@ class SettingsScope extends StatefulWidget {
   }
 
   /// Получить текущие настройки приложения
-  static UserSettings settingsOf(BuildContext context, {bool listen = true}) =>
+  static UserSettings settingsOf(final BuildContext context, {bool listen = true}) =>
       _InheritedSettings.settingsOf(context, listen: listen)!;
 
   /// Получить и подписаться на текущую локаль приложения
-  static Locale localeOf(BuildContext context) => Locale(_InheritedSettings.aspectOf(context, 'locale').locale);
+  static Locale localeOf(final BuildContext context) => Locale(_InheritedSettings.aspectOf(context, 'locale').locale);
 
   /// Получить и подписаться на текущую тему приложения
-  static ThemeData themeOf(BuildContext context) {
+  static ThemeData themeOf(final BuildContext context) {
     switch (_InheritedSettings.aspectOf(context, 'theme').theme) {
       case 'dark':
         return ThemeData.dark();
@@ -74,7 +72,7 @@ class _SettingsScopeState extends State<SettingsScope> {
     }
   }
 
-  void getSettingsFromServer(AuthenticatedUser? user) {
+  void getSettingsFromServer(final AuthenticatedUser? user) {
     if (user == null || user.isNotAuthenticated) return;
     settingsBLoC.add(
       SettingsEvent.getFromServer(user),
@@ -88,10 +86,10 @@ class _SettingsScopeState extends State<SettingsScope> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<SettingsBLoC, SettingsState>(
+  Widget build(final BuildContext context) => BlocBuilder<SettingsBLoC, SettingsState>(
         bloc: settingsBLoC,
-        buildWhen: (prev, next) => prev != next,
-        builder: (context, state) => _InheritedSettings(
+        buildWhen: (final prev, final next) => prev != next,
+        builder: (final context, final state) => _InheritedSettings(
           state: this,
           settings: state.settings,
           child: widget.child,
@@ -105,27 +103,27 @@ class _InheritedSettings extends InheritedModel<String> {
   const _InheritedSettings({
     required this.state,
     required this.settings,
-    required Widget child,
-    Key? key,
+    required final Widget child,
+    final Key? key,
   }) : super(child: child, key: key);
 
   @override
-  bool updateShouldNotify(covariant _InheritedSettings oldWidget) => oldWidget.settings != settings;
+  bool updateShouldNotify(covariant final _InheritedSettings oldWidget) => oldWidget.settings != settings;
 
   @override
-  bool updateShouldNotifyDependent(covariant _InheritedSettings oldWidget, Set<String> dependencies) =>
+  bool updateShouldNotifyDependent(covariant final _InheritedSettings oldWidget, final Set<String> dependencies) =>
       oldWidget.settings != settings &&
       ((dependencies.contains('locale') && oldWidget.settings.locale != settings.locale) ||
           (dependencies.contains('theme') && oldWidget.settings.theme != settings.theme));
 
-  static UserSettings aspectOf(BuildContext context, String aspect) =>
+  static UserSettings aspectOf(final BuildContext context, final String aspect) =>
       InheritedModel.inheritFrom<_InheritedSettings>(context, aspect: aspect)?.settings ?? UserSettings.initial;
 
-  static _SettingsScopeState? stateOf(BuildContext context, {bool listen = false}) => listen
+  static _SettingsScopeState? stateOf(final BuildContext context, {bool listen = false}) => listen
       ? context.dependOnInheritedWidgetOfExactType<_InheritedSettings>()?.state
       : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()?.widget as _InheritedSettings?)?.state;
 
-  static UserSettings? settingsOf(BuildContext context, {bool listen = false}) => listen
+  static UserSettings? settingsOf(final BuildContext context, {bool listen = false}) => listen
       ? context.dependOnInheritedWidgetOfExactType<_InheritedSettings>()?.settings
       : (context.getElementForInheritedWidgetOfExactType<_InheritedSettings>()?.widget as _InheritedSettings?)
           ?.settings;

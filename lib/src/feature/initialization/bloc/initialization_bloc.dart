@@ -1,8 +1,7 @@
+import 'package:dart_jobs/src/feature/initialization/data/initialization_helper.dart';
+import 'package:dart_jobs/src/feature/initialization/model/initialization_progress.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../data/initialization_helper.dart';
-import '../model/initialization_progress.dart';
 
 part 'initialization_bloc.freezed.dart';
 
@@ -19,7 +18,7 @@ class InitializationState with _$InitializationState {
 
   bool get isInitialized => maybeMap<bool>(
         orElse: () => false,
-        initialized: (_) => true,
+        initialized: (final _) => true,
       );
 
   bool get isNotInitialized => !isInitialized;
@@ -39,9 +38,9 @@ class InitializationState with _$InitializationState {
 
   /// Произошла ошибка инициализации
   const factory InitializationState.error({
-    required String message,
-    required Object error,
-    required StackTrace stackTrace,
+    required final String message,
+    required final Object error,
+    required final StackTrace stackTrace,
   }) = _AppInitializationError;
 }
 
@@ -58,14 +57,14 @@ class InitializationBLoC extends Bloc<InitializationEvent, InitializationState> 
         super(initialState);
 
   @override
-  Stream<InitializationState> mapEventToState(InitializationEvent event) async* {
+  Stream<InitializationState> mapEventToState(final InitializationEvent event) async* {
     try {
       if (_initializationHelper.isInitialized) {
         yield InitializationState.initialized(result: _initializationHelper.getResult());
       }
       _initializationHelper.reset();
       yield* _initializationHelper.initialize().map<InitializationState>(
-            (value) => InitializationState.initializationInProgress(
+            (final value) => InitializationState.initializationInProgress(
               progress: value.progress,
               message: value.message,
             ),

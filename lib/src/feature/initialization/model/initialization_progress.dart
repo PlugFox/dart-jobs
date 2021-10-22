@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
+import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../authentication/data/authentication_repository.dart';
-import '../../feed/data/feed_repository.dart';
-import '../../job/data/job_repository.dart';
-import '../../settings/data/settings_repository.dart';
 
 class InitializationProgress {
   final FirebaseAnalytics? analytics;
@@ -30,13 +29,13 @@ class InitializationProgress {
   @factory
   // ignore: long-parameter-list
   InitializationProgress copyWith({
-    FirebaseAnalytics? newAnalytics,
-    IAuthenticationRepository? newAuthenticationRepository,
-    FirebaseFirestore? newFirebaseFirestore,
-    SharedPreferences? newSharedPreferences,
-    ISettingsRepository? newSettingsRepository,
-    IFeedRepository? newFeedRepository,
-    IJobRepository? newJobRepository,
+    final FirebaseAnalytics? newAnalytics,
+    final IAuthenticationRepository? newAuthenticationRepository,
+    final FirebaseFirestore? newFirebaseFirestore,
+    final SharedPreferences? newSharedPreferences,
+    final ISettingsRepository? newSettingsRepository,
+    final IFeedRepository? newFeedRepository,
+    final IJobRepository? newJobRepository,
   }) =>
       InitializationProgress(
         analytics: newAnalytics ?? analytics,

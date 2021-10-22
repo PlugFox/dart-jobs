@@ -1,16 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../common/constant/layout_constraints.dart';
-import '../../../common/localization/localizations.dart';
-import '../../../common/router/configuration.dart';
-import '../../../common/router/page_router.dart';
-import '../../initialization/widget/initialization_scope.dart';
-import '../../job/model/job.dart';
 
 typedef FeedTileOnPressed = void Function(BuildContext context);
 
@@ -40,20 +36,20 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
     required final this.salary,
     required final this.onPressed,
     required final this.date,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   factory FeedTile.job({
     required final Job job,
-    Key? key,
+    final Key? key,
   }) = _JobFeedTile;
 
   const factory FeedTile.loading({
-    Key? key,
+    final Key? key,
   }) = _LoadingFeedTile;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final themeData = Theme.of(context);
     final callback = onPressed;
     final enabled = callback != null;
@@ -149,7 +145,7 @@ class _JobFeedTile extends FeedTile {
 
   _JobFeedTile({
     required final this.job,
-    Key? key,
+    final Key? key,
   }) : super._(
           title: _ShimmerTitle(
             text: job.title,
@@ -168,10 +164,10 @@ class _JobFeedTile extends FeedTile {
           ),
 
           /// TODO: DateFormat
-          onPressed: (context) {
+          onPressed: (final context) {
             PageRouter.navigate(
               context,
-              (configuration) => JobPageConfiguration(
+              (final configuration) => JobPageConfiguration(
                 jobId: job.id,
                 jobTitle: job.title,
               ),
@@ -189,7 +185,7 @@ class _JobFeedTile extends FeedTile {
 @immutable
 class _LoadingFeedTile extends FeedTile {
   const _LoadingFeedTile({
-    Key? key,
+    final Key? key,
   }) : super._(
           key: key,
           title: const _ShimmerTitle.enabled(),
@@ -207,16 +203,16 @@ class _ShimmerTitle extends StatelessWidget {
 
   const _ShimmerTitle({
     final this.text = '',
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   const _ShimmerTitle.enabled({
-    Key? key,
+    final Key? key,
   })  : text = null,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 24,
         child: text == null
             ? const _ShimmerPlaceholderPlatform()
@@ -242,16 +238,16 @@ class _ShimmerText extends StatelessWidget {
 
   const _ShimmerText({
     final this.text = '',
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   const _ShimmerText.enabled({
-    Key? key,
+    final Key? key,
   })  : text = null,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 22,
         child: text == null
             ? const _ShimmerPlaceholderPlatform()
@@ -276,16 +272,16 @@ class _ShimmerUnderline extends StatelessWidget {
 
   const _ShimmerUnderline({
     final this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   const _ShimmerUnderline.enabled({
-    Key? key,
+    final Key? key,
   })  : child = null,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 12,
         child: child == null
             ? const _ShimmerPlaceholderPlatform()
@@ -300,11 +296,11 @@ class _ShimmerUnderline extends StatelessWidget {
 @immutable
 class _ShimmerPlaceholderPlatform extends StatelessWidget {
   const _ShimmerPlaceholderPlatform({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => platform.isWeb
+  Widget build(final BuildContext context) => platform.isWeb
       ? _ShimmerPlaceholder(color: Theme.of(context).hoverColor)
       : Shimmer.fromColors(
           enabled: true,
@@ -320,11 +316,11 @@ class _ShimmerPlaceholder extends StatelessWidget {
   final Color color;
   const _ShimmerPlaceholder({
     required final this.color,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(2),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -342,17 +338,17 @@ class _FeedUnderlineDateTime extends StatelessWidget {
   final DateTime? _date;
   const _FeedUnderlineDateTime({
     required final DateTime date,
-    Key? key,
+    final Key? key,
   })  : _date = date,
         super(key: key);
 
   const _FeedUnderlineDateTime.shimmer({
-    Key? key,
+    final Key? key,
   })  : _date = null,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final date = _date;
     if (date == null) return const _ShimmerUnderline.enabled();
     final now = DateTime.now();
@@ -383,11 +379,11 @@ class _FeedUnderlineDateTimeText extends StatelessWidget {
   final String text;
   const _FeedUnderlineDateTimeText(
     final this.text, {
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final themeData = Theme.of(context);
     return Align(
       alignment: Alignment.centerRight,

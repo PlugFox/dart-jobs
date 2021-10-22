@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class ErrorSnackBar extends SnackBar {
   /// Отобразить снекбар с ошибкой
   static void show(
-    BuildContext context, {
-    String? message,
+    final BuildContext context, {
+    final String? message,
   }) =>
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         ErrorSnackBar(
@@ -13,7 +13,7 @@ class ErrorSnackBar extends SnackBar {
         ),
       );
 
-  ErrorSnackBar({String? message})
+  ErrorSnackBar({final String? message})
       : super(
           content: Text(
             message ?? 'An error has occurred',

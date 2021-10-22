@@ -8,9 +8,9 @@ part 'user_settings.g.dart';
 class UserSettings with _$UserSettings {
   const factory UserSettings({
     // ignore: invalid_annotation_target
-    @JsonKey(name: 'locale', required: true, disallowNullValue: true) required String locale,
+    @JsonKey(name: 'locale', required: true, disallowNullValue: true) required final String locale,
     // ignore: invalid_annotation_target
-    @JsonKey(name: 'theme', required: true, disallowNullValue: true) required String theme,
+    @JsonKey(name: 'theme', required: true, disallowNullValue: true) required final String theme,
     //@JsonKey(name: 'tip_of_the_day', required: true, disallowNullValue: true) required String tipOfTheDay,
   }) = _UserSettings;
 
@@ -23,5 +23,5 @@ class UserSettings with _$UserSettings {
       );
 
   /// Generate Class from Map<String, dynamic>
-  factory UserSettings.fromJson(Map<String, dynamic> json) => _$UserSettingsFromJson(json);
+  factory UserSettings.fromJson(final Map<String, dynamic> json) => _$UserSettingsFromJson(json);
 }

@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
-
-import '../../../common/model/proposal.dart';
-import '../data/feed_repository.dart';
 
 part 'feed_bloc.freezed.dart';
 
@@ -46,8 +44,8 @@ class FeedState with _$FeedState {
   /// Выполняется запрос
   bool get isProcessed => maybeMap<bool>(
         orElse: () => false,
-        pagination: (_) => true,
-        fetchingLatest: (_) => true,
+        pagination: (final _) => true,
+        fetchingLatest: (final _) => true,
       );
 
   /// Выполняется обработка/загрузка ленты старых записей
@@ -89,20 +87,20 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   Timer? _fetchRecentTimer;
   FeedBLoC({
     required final IFeedRepository repository,
-    FeedState initialState = const FeedState.idle(),
+    final FeedState initialState = const FeedState.idle(),
   })  : _repository = repository,
         super(initialState) {
     // Каждые 5 минут запрашиваем обновление на наличие новых элементов
     _fetchRecentTimer = Timer.periodic(
       const Duration(minutes: 5),
-      (timer) {
+      (final timer) {
         add(const FeedEvent.fetchRecent());
       },
     );
   }
 
   @override
-  Stream<FeedState> mapEventToState(FeedEvent event) => event.when<Stream<FeedState>>(
+  Stream<FeedState> mapEventToState(final FeedEvent event) => event.when<Stream<FeedState>>(
         reloadById: _reloadById,
         fetchRecent: _fetchRecent,
         paginate: _paginate,
@@ -111,18 +109,18 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
   @override
   Stream<Transition<FeedEvent, FeedState>> transformEvents(
-    Stream<FeedEvent> events,
-    TransitionFunction<FeedEvent, FeedState> transitionFn,
+    final Stream<FeedEvent> events,
+    final TransitionFunction<FeedEvent, FeedState> transitionFn,
   ) =>
       super.transformEvents(
         events.transform<FeedEvent>(
           StreamTransformer<FeedEvent, FeedEvent>.fromHandlers(
-            handleData: (event, sink) => event.maybeMap<void>(
+            handleData: (final event, final sink) => event.maybeMap<void>(
               orElse: () => sink.add(event),
-              paginate: (_) => state.maybeMap<void>(
+              paginate: (final _) => state.maybeMap<void>(
                 orElse: () => sink.add(event),
                 // ignore: no-empty-block
-                pagination: (_) {},
+                pagination: (final _) {},
               ),
             ),
           ),
@@ -130,7 +128,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         transitionFn,
       );
 
-  Stream<FeedState> _reloadById(String id) async* {
+  Stream<FeedState> _reloadById(final String id) async* {
     try {
       yield FeedState.fetchingLatest(
         list: state.list,
@@ -140,7 +138,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       final proposal = await _repository.getById(id: id);
       var proposals = List<Proposal>.of(state.list);
       if (proposal == null) {
-        proposals.removeWhere((p) => p.id == id);
+        proposals.removeWhere((final p) => p.id == id);
       } else {
         proposals = await _repository.sanitize(
           <Proposal>[

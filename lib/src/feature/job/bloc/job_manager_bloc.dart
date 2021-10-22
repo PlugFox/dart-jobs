@@ -1,9 +1,8 @@
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../common/model/proposal.dart';
-import '../../authentication/model/user_entity.dart';
-import '../data/job_repository.dart';
 
 part 'job_manager_bloc.freezed.dart';
 
@@ -18,13 +17,13 @@ class JobManagerEvent with _$JobManagerEvent {
     required final String company,
     required final String location,
     required final String salary,
-    @Default(JobAttributes.empty()) JobAttributes attributes,
+    @Default(JobAttributes.empty()) final JobAttributes attributes,
   }) = _CreateJobManagerEvent;
 
   /// Удалить работу
   const factory JobManagerEvent.delete({
-    required AuthenticatedUser user,
-    required Job job,
+    required final AuthenticatedUser user,
+    required final Job job,
   }) = _DeleteJobManagerEvent;
 }
 
@@ -56,12 +55,12 @@ class JobManagerState with _$JobManagerState {
 
 class JobManagerBLoC extends Bloc<JobManagerEvent, JobManagerState> {
   final IJobRepository _repository;
-  JobManagerBLoC({required IJobRepository repository})
+  JobManagerBLoC({required final IJobRepository repository})
       : _repository = repository,
         super(const JobManagerState.idle());
 
   @override
-  Stream<JobManagerState> mapEventToState(JobManagerEvent event) => event.when<Stream<JobManagerState>>(
+  Stream<JobManagerState> mapEventToState(final JobManagerEvent event) => event.when<Stream<JobManagerState>>(
         create: _create,
         delete: _delete,
       );
@@ -93,8 +92,8 @@ class JobManagerBLoC extends Bloc<JobManagerEvent, JobManagerState> {
   }
 
   Stream<JobManagerState> _delete(
-    AuthenticatedUser user,
-    Job job,
+    final AuthenticatedUser user,
+    final Job job,
   ) async* {
     try {
       yield const JobManagerState.processed();

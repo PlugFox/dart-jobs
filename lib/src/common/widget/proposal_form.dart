@@ -2,12 +2,10 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-
-import '../../feature/authentication/widget/authentication_scope.dart';
-import '../model/proposal.dart';
 
 @experimental
 @Deprecated('Пересмотреть реализацию')
@@ -17,14 +15,15 @@ class ProposalForm<T extends Proposal> extends StatefulWidget {
   final ProposalFormStatus initialStatus;
   final T initialData;
 
+  @Deprecated('Пересмотреть реализацию')
   const ProposalForm({
     required final this.child,
     required final this.initialData,
     final this.initialStatus = ProposalFormStatus.read,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
-  static T getDataOf<T extends Proposal>(BuildContext context, {bool listen = true}) {
+  static T getDataOf<T extends Proposal>(final BuildContext context, {bool listen = true}) {
     if (listen) {
       return context.dependOnInheritedWidgetOfExactType<_InheritedProposalFormData<T>>()!.data;
     } else {
@@ -33,19 +32,19 @@ class ProposalForm<T extends Proposal> extends StatefulWidget {
     }
   }
 
-  static void setDataOf<T extends Proposal>(BuildContext context, T data) => sinkOf<T>(context).add(data);
+  static void setDataOf<T extends Proposal>(final BuildContext context, final T data) => sinkOf<T>(context).add(data);
 
-  static Sink<T> sinkOf<T extends Proposal>(BuildContext context) {
+  static Sink<T> sinkOf<T extends Proposal>(final BuildContext context) {
     final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedProposalFormData<T>>()!.widget;
     return (inhW as _InheritedProposalFormData<T>).sink;
   }
 
-  static Stream<T> streamOf<T extends Proposal>(BuildContext context) {
+  static Stream<T> streamOf<T extends Proposal>(final BuildContext context) {
     final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedProposalFormData<T>>()!.widget;
     return (inhW as _InheritedProposalFormData<T>).stream;
   }
 
-  static ProposalFormStatus statusOf(BuildContext context, {bool listen = true}) {
+  static ProposalFormStatus statusOf(final BuildContext context, {bool listen = true}) {
     if (listen) {
       return context.dependOnInheritedWidgetOfExactType<_InheritedProposalFormStatus>()?.status ??
           ProposalFormStatus.read;
@@ -55,19 +54,19 @@ class ProposalForm<T extends Proposal> extends StatefulWidget {
     }
   }
 
-  static void switchToEdit(BuildContext context) {
+  static void switchToEdit(final BuildContext context) {
     final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedProposalFormStatus>()?.widget;
     if (inhW is! _InheritedProposalFormStatus) return;
     inhW.state.switchToEdit();
   }
 
-  static void switchToRead(BuildContext context) {
+  static void switchToRead(final BuildContext context) {
     final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedProposalFormStatus>()?.widget;
     if (inhW is! _InheritedProposalFormStatus) return;
     inhW.state.switchToRead();
   }
 
-  static void toggle(BuildContext context) {
+  static void toggle(final BuildContext context) {
     final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedProposalFormStatus>()?.widget;
     if (inhW is! _InheritedProposalFormStatus) return;
     switch (inhW.status) {
@@ -95,13 +94,14 @@ class _ProposalFormState<T extends Proposal> extends State<ProposalForm<T>> {
   @override
   void initState() {
     super.initState();
+
     _status = widget.initialStatus;
     _data = widget.initialData;
-    _subscription = _controller.stream.listen((data) => _data = data);
+    _subscription = _controller.stream.listen((final data) => _data = data);
   }
 
   @override
-  void didUpdateWidget(covariant ProposalForm<T> oldWidget) {
+  void didUpdateWidget(covariant final ProposalForm<T> oldWidget) {
     if (widget.initialData != oldWidget.initialData) {
       _data = widget.initialData;
       _controller.add(_data);
@@ -147,13 +147,13 @@ class _ProposalFormState<T extends Proposal> extends State<ProposalForm<T>> {
   }
 
   @override
-  Widget build(BuildContext context) => _InheritedProposalFormStatus(
+  Widget build(final BuildContext context) => _InheritedProposalFormStatus(
         status: _status,
         state: this,
         child: StreamBuilder<T>(
           initialData: data,
           stream: _controller.stream,
-          builder: (context, snapshot) => _InheritedProposalFormData<T>(
+          builder: (final context, final snapshot) => _InheritedProposalFormData<T>(
             data: snapshot.data ?? data,
             sink: _controller.sink,
             stream: _controller.stream,
@@ -173,12 +173,12 @@ class _InheritedProposalFormData<T extends Proposal> extends InheritedWidget {
     required this.data,
     required this.sink,
     required this.stream,
-    required Widget child,
-    Key? key,
+    required final Widget child,
+    final Key? key,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedProposalFormData<T> oldWidget) => data != oldWidget.data;
+  bool updateShouldNotify(final _InheritedProposalFormData<T> oldWidget) => data != oldWidget.data;
 }
 
 @immutable
@@ -189,12 +189,12 @@ class _InheritedProposalFormStatus extends InheritedWidget {
   const _InheritedProposalFormStatus({
     required this.status,
     required this.state,
-    required Widget child,
-    Key? key,
+    required final Widget child,
+    final Key? key,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedProposalFormStatus oldWidget) => status != oldWidget.status;
+  bool updateShouldNotify(final _InheritedProposalFormStatus oldWidget) => status != oldWidget.status;
 }
 
 enum ProposalFormStatus {

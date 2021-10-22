@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/settings/model/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../authentication/model/user_entity.dart';
-import '../model/user_settings.dart';
 
 abstract class ISettingsRepository {
   /// Получить настройки из локального кэша
   UserSettings getFromCache();
 
   /// Получить настройки с сервера
-  Future<UserSettings> getFromServer(AuthenticatedUser user);
+  Future<UserSettings> getFromServer(final AuthenticatedUser user);
 
   /// Обновить настройки в кэше и на сервере
-  Future<void> update(AuthenticatedUser user, UserSettings settings);
+  Future<void> update(final AuthenticatedUser user, final UserSettings settings);
 }
 
 class SettingsRepository implements ISettingsRepository {
@@ -34,7 +33,7 @@ class SettingsRepository implements ISettingsRepository {
       );
 
   @override
-  Future<UserSettings> getFromServer(UserEntity user) async {
+  Future<UserSettings> getFromServer(final UserEntity user) async {
     if (user is! AuthenticatedUser || user.uid.isEmpty) {
       return Future<UserSettings>.value(UserSettings.initial);
     }
@@ -46,7 +45,7 @@ class SettingsRepository implements ISettingsRepository {
     } else {
       final data = snapshot.data() as Map<String, Object?>? ?? <String, Object?>{};
       final remoteSettings = Map<String, String?>.from(
-        data..removeWhere((key, value) => value is! String?),
+        data..removeWhere((final key, final value) => value is! String?),
       );
       result = UserSettings(
         locale: remoteSettings['locale'] ?? UserSettings.initial.locale,
@@ -58,17 +57,17 @@ class SettingsRepository implements ISettingsRepository {
   }
 
   @override
-  Future<void> update(AuthenticatedUser user, UserSettings settings) => Future.wait<void>(
+  Future<void> update(final AuthenticatedUser user, final UserSettings settings) => Future.wait<void>(
         <Future<void>>[
           _updateLocal(settings),
           _updateRemote(user, settings),
         ],
       );
 
-  DocumentReference _getSettingsDocumentRef(AuthenticatedUser user) =>
+  DocumentReference _getSettingsDocumentRef(final AuthenticatedUser user) =>
       _firestore.collection('users').doc(user.uid).collection('settings').doc('default');
 
-  Future<void> _updateLocal(UserSettings settings) async {
+  Future<void> _updateLocal(final UserSettings settings) async {
     _settingsCache = settings;
     final map = settings.toJson();
     for (final entry in map.entries) {
@@ -77,6 +76,6 @@ class SettingsRepository implements ISettingsRepository {
     }
   }
 
-  Future<void> _updateRemote(AuthenticatedUser user, UserSettings settings) =>
+  Future<void> _updateRemote(final AuthenticatedUser user, final UserSettings settings) =>
       _getSettingsDocumentRef(user).set(settings.toJson());
 }

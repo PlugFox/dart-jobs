@@ -2,29 +2,26 @@
 
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_manager_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../common/model/proposal.dart';
-import '../../authentication/model/user_entity.dart';
-import '../../initialization/widget/initialization_scope.dart';
-import '../../job/bloc/job_manager_bloc.dart';
-import '../bloc/feed_bloc.dart';
 
 @immutable
 class FeedScope extends StatelessWidget {
   final Widget child;
   const FeedScope({
     required final this.child,
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   /// Запросить следующую порцию данных
   static void paginateOf(
-    BuildContext context, {
+    final BuildContext context, {
     required final int count,
   }) {
     // ignore: close_sinks
@@ -37,7 +34,7 @@ class FeedScope extends StatelessWidget {
     // Не имеет если уже выполняется запрос
     if (bloc.state.maybeWhen<bool>(
       orElse: () => true,
-      idle: (_, endOfList) => endOfList,
+      idle: (final _, final endOfList) => endOfList,
     )) return;
     bloc.add(
       FeedEvent.paginate(
@@ -48,8 +45,8 @@ class FeedScope extends StatelessWidget {
 
   /// Получить предложение удовлетворяющее условию
   static R? proposalOf<R extends Proposal>(
-    BuildContext context,
-    bool Function(R proposal) test,
+    final BuildContext context,
+    final bool Function(R proposal) test,
   ) {
     // ignore: close_sinks
     final bloc = BlocScope.of<FeedBLoC>(
@@ -61,7 +58,7 @@ class FeedScope extends StatelessWidget {
 
   /// Создать новую работу и открыть для редактирования
   static void createJobOf(
-    BuildContext context, {
+    final BuildContext context, {
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
@@ -85,9 +82,9 @@ class FeedScope extends StatelessWidget {
 
   /// Создать новую работу и открыть для редактирования
   static void deleteJobOf(
-    BuildContext context, {
-    required AuthenticatedUser user,
-    required Job job,
+    final BuildContext context, {
+    required final AuthenticatedUser user,
+    required final Job job,
   }) =>
       BlocScope.of<JobManagerBLoC>(
         context,
@@ -97,12 +94,12 @@ class FeedScope extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => BlocScope<FeedBLoC>.create(
-        create: (context) => FeedBLoC(
+  Widget build(final BuildContext context) => BlocScope<FeedBLoC>.create(
+        create: (final context) => FeedBLoC(
           repository: InitializationScope.storeOf(context).feedRepository,
         ),
         child: BlocScope<JobManagerBLoC>.create(
-          create: (context) => JobManagerBLoC(
+          create: (final context) => JobManagerBLoC(
             repository: InitializationScope.storeOf(context).jobRepository,
           ),
           child: child,

@@ -1,17 +1,15 @@
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/feature/settings/widget/settings_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/localization/localizations.dart';
-import 'settings_widget.dart';
 
 @immutable
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(context.localization.settings),
         ),

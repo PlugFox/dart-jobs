@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:dart_jobs/src/app.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:l/l.dart';
-
-import 'src/app.dart';
 
 /// Запуск приложения как io
 void run() =>
@@ -17,7 +16,7 @@ void run() =>
         if (kReleaseMode) {
           // Перехватывать ошибки флатера в релизе
           final sourceFlutterError = FlutterError.onError;
-          FlutterError.onError = (details) {
+          FlutterError.onError = (final details) {
             FirebaseCrashlytics.instance.recordFlutterError(details);
             sourceFlutterError?.call(details);
           };
@@ -25,20 +24,20 @@ void run() =>
           // Все ошибки и предупреждения из логов в крашлитикс
           l
               .where(
-                (msg) => msg.level.maybeWhen(
+                (final msg) => msg.level.maybeWhen(
                   error: () => true,
                   warning: () => true,
                   orElse: () => false,
                 ),
               )
-              .map<String>((msg) => msg.message.toString())
+              .map<String>((final msg) => msg.message.toString())
               .listen(FirebaseCrashlytics.instance.log);
         }
 
         // Запустить приложение
         App.run();
       },
-      (error, stackTrace) {
+      (final error, final stackTrace) {
         l.e(
           'io_top_level_error: ${error.toString()}',
           stackTrace,

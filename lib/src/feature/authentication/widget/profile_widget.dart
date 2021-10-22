@@ -1,25 +1,22 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_info/platform_info.dart';
-
-import '../../../common/localization/localizations.dart';
-import '../../../common/router/page_router.dart';
-import '../model/user_entity.dart';
-import 'authentication_scope.dart';
 
 @immutable
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final user = AuthenticationScope.userOf(context);
     if (user is! AuthenticatedUser) {
       WidgetsBinding.instance?.addPostFrameCallback(
-        (_) => PageRouter.pop(context),
+        (final _) => PageRouter.pop(context),
       );
       return const SizedBox.shrink();
     }

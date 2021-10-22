@@ -5,9 +5,9 @@ class NoAnimationTransitionDelegate extends TransitionDelegate<void> {
 
   @override
   Iterable<RouteTransitionRecord> resolve({
-    required List<RouteTransitionRecord> newPageRouteHistory,
-    required Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
-    required Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
+    required final List<RouteTransitionRecord> newPageRouteHistory,
+    required final Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
+    required final Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
   }) {
     final results = <RouteTransitionRecord>[];
 
@@ -38,13 +38,13 @@ class ReverseTransitionDelegate extends TransitionDelegate<void> {
 
   @override
   Iterable<RouteTransitionRecord> resolve({
-    required List<RouteTransitionRecord> newPageRouteHistory,
-    required Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
-    required Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
+    required final List<RouteTransitionRecord> newPageRouteHistory,
+    required final Map<RouteTransitionRecord?, RouteTransitionRecord> locationToExitingPageRoute,
+    required final Map<RouteTransitionRecord?, List<RouteTransitionRecord>> pageRouteToPagelessRoutes,
   }) {
     final results = <RouteTransitionRecord>[];
 
-    void handleExitingRoute(RouteTransitionRecord? location) {
+    void handleExitingRoute(final RouteTransitionRecord? location) {
       final exitingPageRoute = locationToExitingPageRoute[location];
       if (exitingPageRoute == null) return;
       if (exitingPageRoute.isWaitingForExitingDecision) {

@@ -1,21 +1,19 @@
+import 'package:dart_jobs/src/common/constant/assets.gen.dart' as assets;
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/page_router.dart';
+import 'package:dart_jobs/src/common/utils/screen_util.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_search_bar.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/constant/assets.gen.dart' as assets;
-import '../../../common/localization/localizations.dart';
-import '../../../common/router/configuration.dart';
-import '../../../common/router/page_router.dart';
-import '../../../common/utils/screen_util.dart';
-import '../../authentication/widget/authentication_scope.dart';
-import 'feed_search_bar.dart';
 
 /// Шапка
 class FeedBar extends StatelessWidget {
   const FeedBar({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => SliverAppBar(
+  Widget build(final BuildContext context) => SliverAppBar(
         pinned: true,
         floating: true,
         snap: false,
@@ -69,15 +67,15 @@ class FeedBar extends StatelessWidget {
 
 class FeedBarSettings extends StatelessWidget {
   const FeedBarSettings({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => IconButton(
+  Widget build(final BuildContext context) => IconButton(
         onPressed: () {
           PageRouter.navigate(
             context,
-            (configuration) => const SettingsPageConfiguration(),
+            (final configuration) => const SettingsPageConfiguration(),
           );
         },
         icon: const CircleAvatar(
@@ -100,17 +98,17 @@ class FeedBarSettings extends StatelessWidget {
 @immutable
 class FeedBarAvatar extends StatelessWidget {
   const FeedBarAvatar({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => IconButton(
+  Widget build(final BuildContext context) => IconButton(
         onPressed: () {
           AuthenticationScope.authenticateOr(
             context,
-            (user) => PageRouter.navigate(
+            (final user) => PageRouter.navigate(
               context,
-              (configuration) => const ProfilePageConfiguration(),
+              (final configuration) => const ProfilePageConfiguration(),
             ),
           );
         },
@@ -134,13 +132,13 @@ class _UserAvatarImage extends StatelessWidget {
   static const double radius = 26;
 
   const _UserAvatarImage({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final photoURL = AuthenticationScope.userOf(context, listen: true).when<String?>(
-      authenticated: (user) => user.photoURL,
+      authenticated: (final user) => user.photoURL,
       notAuthenticated: () => null,
     );
     return photoURL == null || photoURL.isEmpty

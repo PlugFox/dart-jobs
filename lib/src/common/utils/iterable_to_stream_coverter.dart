@@ -3,7 +3,7 @@ import 'dart:async';
 class IterableToStreamConverter {
   const IterableToStreamConverter();
 
-  Stream<T> convert<T extends Object?>(Iterable<T> iterable) async* {
+  Stream<T> convert<T extends Object?>(final Iterable<T> iterable) async* {
     final stopwatch = Stopwatch()..start();
     final iterator = iterable.iterator;
     while (iterator.moveNext()) {

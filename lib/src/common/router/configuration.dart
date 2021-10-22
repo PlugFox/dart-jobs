@@ -1,12 +1,11 @@
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/profile_page.dart';
+import 'package:dart_jobs/src/feature/feed/widget/feed_page.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_page.dart';
+import 'package:dart_jobs/src/feature/not_found/widget/not_found_page.dart';
+import 'package:dart_jobs/src/feature/settings/widget/settings_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-
-import '../../feature/authentication/widget/profile_page.dart';
-import '../../feature/feed/widget/feed_page.dart';
-import '../../feature/job/widget/job_page.dart';
-import '../../feature/not_found/widget/not_found_page.dart';
-import '../../feature/settings/widget/settings_page.dart';
-import '../localization/localizations.dart';
 
 /// Конфигурация страниц приложения
 abstract class PageConfiguration {
@@ -30,7 +29,7 @@ abstract class PageConfiguration {
 
   /// Построить страницы исходя из контекста и текущей конфигурации
   @mustCallSuper
-  Iterable<Page<Object?>> buildPages(BuildContext context) =>
+  Iterable<Page<Object?>> buildPages(final BuildContext context) =>
       previous?.buildPages(context) ?? const Iterable<Page<Object?>>.empty();
 }
 
@@ -56,14 +55,14 @@ abstract class RootPageConfiguration implements PageConfiguration {
   Uri toUri() => Uri.parse('/');
 
   @override
-  Iterable<Page<Object?>> buildPages(BuildContext context) => const <Page<Object?>>[
+  Iterable<Page<Object?>> buildPages(final BuildContext context) => const <Page<Object?>>[
         FeedPage(),
       ];
 }
 
 /// Конфигурация страницы с не найденным контентом
 class NotFoundPageConfiguration extends PageConfiguration {
-  const NotFoundPageConfiguration([PageConfiguration? previousConfiguration]) : previous = previousConfiguration;
+  const NotFoundPageConfiguration([final PageConfiguration? previousConfiguration]) : previous = previousConfiguration;
 
   @override
   final PageConfiguration? previous;
@@ -75,7 +74,7 @@ class NotFoundPageConfiguration extends PageConfiguration {
   String get pageTitle => '${Localized.current.title} / 404';
 
   @override
-  Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
+  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
     yield* super.buildPages(context);
     yield const NotFoundPage();
   }
@@ -98,7 +97,7 @@ class ProfilePageConfiguration extends PageConfiguration {
   String get pageTitle => '${Localized.current.title} / ${Localized.current.profile}';
 
   @override
-  Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
+  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
     yield* super.buildPages(context);
     yield const ProfilePage();
   }
@@ -117,7 +116,7 @@ class SettingsPageConfiguration extends PageConfiguration {
   String get pageTitle => '${Localized.current.title} / ${Localized.current.settings}';
 
   @override
-  Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
+  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
     yield* super.buildPages(context);
     yield const SettingsPage();
   }
@@ -157,7 +156,7 @@ class JobPageConfiguration extends PageConfiguration {
   Uri toUri() => Uri.parse('/job/$jobId');
 
   @override
-  Iterable<Page<Object?>> buildPages(BuildContext context) sync* {
+  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
     yield* super.buildPages(context);
     yield JobPage(
       id: jobId,

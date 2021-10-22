@@ -1,13 +1,12 @@
+import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/feature/authentication/widget/profile_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/localization/localizations.dart';
-import 'profile_widget.dart';
-
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(context.localization.profile),
         ),
@@ -20,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
 @immutable
 class _ProfileBody extends StatefulWidget {
   const _ProfileBody({
-    Key? key,
+    final Key? key,
   }) : super(key: key);
 
   @override
@@ -29,5 +28,5 @@ class _ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<_ProfileBody> {
   @override
-  Widget build(BuildContext context) => const ProfileWidget();
+  Widget build(final BuildContext context) => const ProfileWidget();
 }

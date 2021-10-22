@@ -1,16 +1,14 @@
+import 'package:dart_jobs/src/common/model/attributes.dart';
+import 'package:dart_jobs/src/common/utils/date_util.dart';
+import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
-import '../../feature/job/model/job.dart';
-//import '../../feature/resume/model/resume.dart';
-import '../utils/date_util.dart';
-import 'attributes.dart';
-
-export '../../feature/job/model/job.dart';
+export 'package:dart_jobs/src/common/model/attributes.dart';
 //export '../../feature/resume/model/resume.dart';
-export '../utils/date_util.dart';
-export 'attributes.dart';
+export 'package:dart_jobs/src/common/utils/date_util.dart';
+export 'package:dart_jobs/src/feature/job/model/job.dart';
 
 part 'proposal.g.dart';
 
@@ -81,7 +79,7 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   }) : super();
 
   /// Generate Class from Map<String, dynamic>
-  static Proposal<Attribute> fromJson(Map<String, Object?> json) {
+  static Proposal<Attribute> fromJson(final Map<String, Object?> json) {
     final type = json['type'];
     switch (type) {
       case Job.signature:
@@ -113,15 +111,15 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
 
   @override
   Proposal<T> copyWith({
-    String? newTitle,
-    covariant Attributes<T>? newAttributes,
+    final String? newTitle,
+    covariant final Attributes<T>? newAttributes,
   });
 
   @override
-  int compareTo(Proposal other) => created.compareTo(other.created);
+  int compareTo(final Proposal other) => created.compareTo(other.created);
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(final Object other) =>
       identical(this, other) || (other is Job && id == other.id && updated == other.updated);
 
   @override

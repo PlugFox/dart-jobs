@@ -1,6 +1,5 @@
+import 'package:dart_jobs/src/feature/authentication/widget/profile_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'profile_screen.dart';
 
 class ProfilePage extends Page<void> {
   const ProfilePage()
@@ -11,8 +10,8 @@ class ProfilePage extends Page<void> {
         );
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
-        builder: (context) => const ProfileScreen(),
+  Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
+        builder: (final context) => const ProfileScreen(),
         settings: this,
       );
 }

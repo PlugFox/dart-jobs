@@ -1,7 +1,5 @@
+import 'package:dart_jobs/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import 'not_found_screen.dart';
 
 class NotFoundPage extends Page<void> {
   const NotFoundPage()
@@ -12,8 +10,8 @@ class NotFoundPage extends Page<void> {
         );
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
-        builder: (context) => const NotFoundScreen(),
+  Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
+        builder: (final context) => const NotFoundScreen(),
         settings: this,
       );
 }

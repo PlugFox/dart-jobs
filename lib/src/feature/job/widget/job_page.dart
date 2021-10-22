@@ -1,8 +1,7 @@
+import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_scope.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../../authentication/widget/authentication_scope.dart';
-import 'job_scope.dart';
-import 'job_screen.dart';
 
 class JobPage extends Page<void> {
   JobPage({
@@ -28,8 +27,8 @@ class JobPage extends Page<void> {
   final bool edit;
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
-        builder: (context) => JobScope(
+  Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
+        builder: (final context) => JobScope(
           key: ValueKey<String>('job_scope_$id'),
           id: id,
           creatorId: edit ? AuthenticationScope.userOf(context).authenticatedOrNull?.uid : null,
