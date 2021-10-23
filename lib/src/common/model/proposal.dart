@@ -1,12 +1,12 @@
 import 'package:dart_jobs/src/common/model/attributes.dart';
 import 'package:dart_jobs/src/common/utils/date_util.dart';
+import 'package:dart_jobs/src/feature/feed/model/feed_entity.dart';
 import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
 export 'package:dart_jobs/src/common/model/attributes.dart';
-//export '../../feature/resume/model/resume.dart';
 export 'package:dart_jobs/src/common/utils/date_util.dart';
 export 'package:dart_jobs/src/feature/job/model/job.dart';
 
@@ -18,45 +18,54 @@ part 'proposal.g.dart';
   createToJson: true,
   explicitToJson: true,
 )
-abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implements Comparable<Proposal> {
+abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implements FeedEntity {
   /// Не заполнена (нету id)
+  @override
   @JsonKey(ignore: true)
   bool get isEmpty => id.isEmpty;
 
   /// Заполнена (есть id)
+  @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => id.isNotEmpty;
 
   /// Тип
+  @override
   @JsonKey(name: 'type', required: true)
   String get type;
 
   /// Идентификатор
+  @override
   @JsonKey(name: 'id', required: true)
   final String id;
 
   /// Идентификатор создателя
+  @override
   @JsonKey(name: 'creator_id', required: true)
   final String creatorId;
 
   /// Создано
+  @override
   @JsonKey(
     name: 'created',
     required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
+    toJson: DateUtil.toUnixTime,
+    fromJson: DateUtil.fromUnixTime,
   )
   final DateTime created;
 
   /// Обновлено
+  @override
   @JsonKey(
     name: 'updated',
     required: true,
-    toJson: DateUtil.dateToUnixTime,
-    fromJson: DateUtil.dateFromUnixTime,
+    toJson: DateUtil.toUnixTime,
+    fromJson: DateUtil.fromUnixTime,
   )
   final DateTime updated;
 
+  /// Заголовок
+  @override
   @JsonKey(name: 'title', required: true)
   final String title;
 
@@ -116,7 +125,7 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   });
 
   @override
-  int compareTo(final Proposal other) => created.compareTo(other.created);
+  int compareTo(final FeedEntity other) => updated.compareTo(other.updated);
 
   @override
   bool operator ==(final Object other) =>
@@ -127,8 +136,9 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'id: $id, '
+  String toString() => 'Proposal( '
+      'id: $id, '
       'title: $title, '
       'created: $created, '
-      'updated: $updated';
+      'updated: $updated)';
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_jobs/src/common/model/exceptions.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:fox_core_bloc/bloc.dart';
@@ -115,7 +116,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       yield JobState.fetching(job: state.job, editing: state.editing);
       final job = await _repository.fetch(state.job);
       yield JobState.idle(job: job, editing: state.editing);
-    } on JobNotFoundException {
+    } on NotFoundException {
       yield JobState.notFound(
         job: Job(
           id: 'not_found',
@@ -123,14 +124,19 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
           title: 'Not found',
           created: DateTime.now(),
           updated: DateTime.now(),
-          location: 'not_found',
-          salary: 'not_found',
           company: 'not_found',
+          country: 'not_found',
+          location: 'not_found',
+          remote: true,
         ),
         editing: false,
       );
     } on Object {
-      yield JobState.error(job: state.job, editing: state.editing, message: 'Unsupported error');
+      yield JobState.error(
+        job: state.job,
+        editing: state.editing,
+        message: 'Unsupported error',
+      );
       rethrow;
     }
   }

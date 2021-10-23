@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs/src/common/model/proposal.dart';
 import 'package:dart_jobs/src/common/utils/iterable_to_stream_coverter.dart';
 import 'package:dart_jobs/src/common/utils/list_unique.dart';
+import 'package:dart_jobs/src/common/utils/money_util.dart';
 import 'package:l/l.dart';
 
 // ignore: one_member_abstracts
@@ -46,7 +47,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
         _collection
             .where(
               'updated',
-              isGreaterThan: DateUtil.dateToUnixTime(updatedAfter),
+              isGreaterThan: DateUtil.toUnixTime(updatedAfter),
             )
             .orderBy(
               'updated',
@@ -77,7 +78,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
         _collection
             .where(
               'updated',
-              isLessThan: DateUtil.dateToUnixTime(updatedBefore),
+              isLessThan: DateUtil.toUnixTime(updatedBefore),
             )
             .orderBy(
               'updated',
@@ -154,7 +155,9 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
           title: '<title #$id>',
           company: '<company #$id>',
           location: '<location #$id>',
-          salary: '<salary #$id>',
+          remote: _rnd.nextBool(),
+          salaryFrom: MoneyUtil.zeroMoney,
+          salaryTo: MoneyUtil.zeroMoney,
         );
       },
     ).take(_rnd.nextInt(5));
@@ -178,8 +181,11 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
           updated: lastDate,
           title: '<title #$id>',
           company: '<company #$id>',
+          country: '<country #$id>',
           location: '<location #$id>',
-          salary: '<salary #$id>',
+          remote: _rnd.nextBool(),
+          salaryFrom: MoneyUtil.zeroMoney,
+          salaryTo: MoneyUtil.zeroMoney,
         );
       },
     ).take(count);

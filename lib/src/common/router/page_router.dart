@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
-export 'configuration.dart';
+export 'package:dart_jobs/src/common/router/configuration.dart';
 
 typedef NavigateCallback = PageConfiguration Function(PageConfiguration configuration);
 

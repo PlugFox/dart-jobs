@@ -3,9 +3,11 @@ import 'package:dart_jobs/runner_stub.dart'
     if (dart.library.io) 'package:dart_jobs/runner_io.dart'
     // ignore: uri_does_not_exist
     if (dart.library.html) 'package:dart_jobs/runner_web.dart' as runner;
+import 'package:dart_jobs/src/common/bloc/bloc_observer.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
+import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';
 
 /// Universal router for platform specific entry point
@@ -40,7 +42,10 @@ void main() => l.capture<Future<void>>(
         final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
 
         // Запуск приложения в зависимости от платформы
-        runner.run();
+        Bloc.observe(
+          runner.run,
+          observer: BlocObserver.instance,
+        );
 
         if ((stopwatchBeforeRunApp..stop()).elapsedMilliseconds > 250) {
           l.w(

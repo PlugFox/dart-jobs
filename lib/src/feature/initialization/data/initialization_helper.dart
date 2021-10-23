@@ -11,6 +11,7 @@ import 'package:dart_jobs/src/feature/authentication/data/authentication_reposit
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -138,8 +139,10 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Create a job repository': (final progress) => progress.copyWith(
         newJobRepository: kFake
             ? JobRepositoryFake()
-            : JobRepositoryFirebase(
-                firestore: progress.firebaseFirestore!,
+            : JobRepositoryImpl(
+                networkDataProvider: JobFirestoreDataProvider(
+                  firestore: progress.firebaseFirestore!,
+                ),
               ),
       ),
   'Get current settings': (final progress) async {

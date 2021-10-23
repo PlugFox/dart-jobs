@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 /// Namespace
+@sealed
 abstract class ScreenUtil {
   ScreenUtil._();
 

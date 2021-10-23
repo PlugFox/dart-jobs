@@ -10,6 +10,7 @@ import 'package:dart_jobs/src/feature/job/bloc/job_manager_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:money2/money2.dart';
 
 @immutable
 class FeedScope extends StatelessWidget {
@@ -62,8 +63,11 @@ class FeedScope extends StatelessWidget {
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
+    required final String country,
     required final String location,
-    required final String salary,
+    required final bool remote,
+    required final Money salaryFrom,
+    required final Money salaryTo,
     JobAttributes attributes = const JobAttributes.empty(),
   }) =>
       BlocScope.of<JobManagerBLoC>(
@@ -73,10 +77,12 @@ class FeedScope extends StatelessWidget {
         JobManagerEvent.create(
           user: user,
           title: title, // ?? _WorkTitleRandomizer.instance().next(),
-          company: company,
+          company: company, country: country,
           location: location,
-          salary: salary,
           attributes: attributes,
+          remote: remote,
+          salaryFrom: salaryFrom,
+          salaryTo: salaryTo,
         ),
       );
 

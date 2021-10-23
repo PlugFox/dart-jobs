@@ -11,27 +11,18 @@ void main() {
       test(
         'Зарплатная вилка - сериализация и десериализация',
         () {
-          final sourceSalary = SalaryJobAttribute(
-            from: Money.fromIntWithCurrency(100000, CommonCurrencies().usd),
-            to: Money.fromIntWithCurrency(200000, CommonCurrencies().usd),
+          final sourceSalary = Job.create(
+            id: 'id',
+            creatorId: 'creatorId',
+            title: 'title',
+            company: 'company',
+            salaryFrom: Money.fromIntWithCurrency(100000, CommonCurrencies().usd),
+            salaryTo: Money.fromIntWithCurrency(200000, CommonCurrencies().usd),
           );
           final json = sourceSalary.toJson();
-          final salary = SalaryJobAttribute.fromJson(json);
-          expect(salary.from, sourceSalary.from);
-          expect(salary.to, sourceSalary.to);
-        },
-      );
-      test(
-        'Зарплатная вилка - проверка соответсвия',
-        () {
-          final a = SalaryJobAttribute(
-            from: Money.fromIntWithCurrency(0, CommonCurrencies().usd),
-            to: Money.fromIntWithCurrency(0, CommonCurrencies().usd),
-          );
-          final b = SalaryJobAttribute.unknown;
-          expect(a.from, b.from);
-          expect(a.to, b.to);
-          expect(a, b);
+          final salary = Job.fromJson(json);
+          expect(salary.salaryFrom, sourceSalary.salaryFrom);
+          expect(salary.salaryTo, sourceSalary.salaryTo);
         },
       );
       test(

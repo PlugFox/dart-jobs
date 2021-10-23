@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_jobs/src/common/model/proposal.dart';
+import 'package:dart_jobs/src/common/utils/money_util.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:money2/money2.dart';
@@ -20,32 +21,64 @@ class Job extends Proposal<JobAttribute> {
   @JsonKey(name: 'type', required: true)
   String get type => signature;
 
+  /// Компания, например: Horns and hooves
+  @JsonKey(name: 'company', required: true)
+  final String company;
+
+  /// Местоположение, например: Russia
+  @JsonKey(name: 'country', required: true)
+  final String country;
+
+  /// Местоположение, например: Moscow
+  @JsonKey(name: 'location', required: true)
+  final String location;
+
+  /// Удаленная работа?
+  @JsonKey(name: 'remote', required: true)
+  final bool remote;
+
+  /// Зарплатная вилка - оклад начиная с
+  /// Указывается в долларах * 100 (центы), в дальнейшем исходя из даты вакансии
+  /// и курса обмена можно будет указывать в произвольной валюте
+  @JsonKey(
+    name: 'salary_from',
+    required: true,
+    fromJson: MoneyUtil.usdFromInt,
+    toJson: MoneyUtil.usdToInt,
+  )
+  final Money salaryFrom;
+
+  /// Зарплатная вилка - оклад по
+  /// Указывается в долларах * 100 (центы), в дальнейшем исходя из даты вакансии
+  /// и курса обмена можно будет указывать в произвольной валюте
+  @JsonKey(
+    name: 'salary_to',
+    required: true,
+    fromJson: MoneyUtil.usdFromInt,
+    toJson: MoneyUtil.usdToInt,
+  )
+  final Money salaryTo;
+
   /// Данные элемента
   @override
   @JsonKey(name: 'attributes', ignore: true)
   final JobAttributes attributes;
 
-  @JsonKey(name: 'company', required: true)
-  final String company;
-
-  @JsonKey(name: 'location', required: true)
-  final String location;
-
-  @JsonKey(name: 'salary', required: true)
-  final String salary;
-
-  const Job({
+  const Job._({
     required final String id,
     required final String creatorId,
     required final DateTime created,
     required final DateTime updated,
     required final String title,
-    final this.company = '',
-    final this.location = '',
-    final this.salary = '',
-    final bool hasEnglishLocalization = false,
-    final bool hasRussianLocalization = false,
-    final this.attributes = const JobAttributes.empty(),
+    required final this.country,
+    required final this.company,
+    required final this.location,
+    required final this.remote,
+    required final this.salaryFrom,
+    required final this.salaryTo,
+    required final bool hasEnglishLocalization,
+    required final bool hasRussianLocalization,
+    required final this.attributes,
   }) : super(
           id: id,
           creatorId: creatorId,
@@ -56,16 +89,48 @@ class Job extends Proposal<JobAttribute> {
           hasRussianLocalization: hasRussianLocalization,
         );
 
+  factory Job({
+    required final String id,
+    required final String creatorId,
+    required final DateTime created,
+    required final DateTime updated,
+    required final String title,
+    required final String company,
+    final String? country,
+    final String? location,
+    final bool? remote,
+    final Money? salaryFrom,
+    final Money? salaryTo,
+    final JobAttributes? attributes,
+  }) =>
+      Job._(
+        id: id,
+        creatorId: creatorId,
+        created: created,
+        updated: updated,
+        title: title,
+        company: company,
+        country: country ?? '',
+        location: location ?? '',
+        remote: remote ?? true,
+        salaryFrom: salaryFrom ?? MoneyUtil.zeroMoney,
+        salaryTo: salaryTo ?? MoneyUtil.zeroMoney,
+        hasEnglishLocalization: attributes?.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
+        hasRussianLocalization: attributes?.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
+        attributes: attributes ?? const JobAttributes.empty(),
+      );
+
   factory Job.create({
     required final String id,
     required final String creatorId,
     required final String title,
     required final String company,
-    required final String location,
-    required final String salary,
-    final bool? hasEnglishLocalization,
-    final bool? hasRussianLocalization,
-    final JobAttributes attributes = const JobAttributes.empty(),
+    final String? country,
+    final String? location,
+    final bool? remote,
+    final Money? salaryFrom,
+    final Money? salaryTo,
+    final JobAttributes? attributes,
   }) {
     final now = DateTime.now().toUtc();
     return Job(
@@ -75,13 +140,12 @@ class Job extends Proposal<JobAttribute> {
       updated: now,
       title: title,
       company: company,
+      country: country,
       location: location,
-      salary: salary,
+      remote: remote,
+      salaryFrom: salaryFrom,
+      salaryTo: salaryTo,
       attributes: attributes,
-      hasEnglishLocalization:
-          hasEnglishLocalization ?? attributes.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
-      hasRussianLocalization:
-          hasRussianLocalization ?? attributes.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
     );
   }
 
@@ -116,11 +180,12 @@ class Job extends Proposal<JobAttribute> {
   Job copyWith({
     final String? newTitle,
     final String? newCompany,
+    final String? newCountry,
     final String? newLocation,
-    final String? newSalary,
+    final bool? newRemote,
+    final Money? newSalaryFrom,
+    final Money? newSalaryTo,
     covariant final JobAttributes? newAttributes,
-    final bool? newHasEnglishLocalization,
-    final bool? newHasRussianLocalization,
   }) =>
       Job(
         id: id,
@@ -129,15 +194,12 @@ class Job extends Proposal<JobAttribute> {
         updated: DateTime.now().toUtc(),
         title: newTitle ?? title,
         company: newCompany ?? company,
+        country: newCountry ?? country,
         location: newLocation ?? location,
-        salary: newSalary ?? salary,
+        remote: newRemote ?? remote,
+        salaryFrom: newSalaryFrom ?? salaryFrom,
+        salaryTo: newSalaryTo ?? salaryTo,
         attributes: newAttributes ?? attributes,
-        hasEnglishLocalization: newHasEnglishLocalization ??
-            (newAttributes ?? attributes).get(DescriptionJobAttribute.signature)?.isNotEmpty ??
-            false,
-        hasRussianLocalization: newHasRussianLocalization ??
-            (newAttributes ?? attributes).get(DescriptionRuJobAttribute.signature)?.isNotEmpty ??
-            false,
       );
 
   @override
@@ -180,22 +242,14 @@ abstract class JobAttribute extends Attribute {
   @factory
   static JobAttribute? fromJson(final Map<String, Object?> json) {
     switch (json['type']) {
-      case CompanyJobAttribute.signature:
-        return CompanyJobAttribute.fromJson(json);
       case DescriptionJobAttribute.signature:
         return DescriptionJobAttribute.fromJson(json);
       case DescriptionRuJobAttribute.signature:
         return DescriptionRuJobAttribute.fromJson(json);
-      case LocationJobAttribute.signature:
-        return LocationJobAttribute.fromJson(json);
       case CoordinatesJobAttribute.signature:
         return CoordinatesJobAttribute.fromJson(json);
-      case SalaryJobAttribute.signature:
-        return SalaryJobAttribute.fromJson(json);
       case DeveloperLevelJobAttribute.signature:
         return DeveloperLevelJobAttribute.fromJson(json);
-      case RelocationJobAttribute.signature:
-        return RelocationJobAttribute.fromJson(json);
       case TagsJobAttribute.signature:
         return TagsJobAttribute.fromJson(json);
       case SkillsJobAttribute.signature:
@@ -213,44 +267,6 @@ abstract class JobAttribute extends Attribute {
     }
     return null;
   }
-}
-
-/// Аттрибут работы - Компания (Company)
-@immutable
-@JsonSerializable()
-class CompanyJobAttribute implements JobAttribute {
-  const CompanyJobAttribute({
-    required this.title,
-  });
-
-  static const String signature = 'company';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
-  @JsonKey(name: 'title', required: true)
-  final String title;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isEmpty => title.isEmpty;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isNotEmpty => !isEmpty;
-
-  factory CompanyJobAttribute.fromJson(final Map<String, Object?> json) => _$CompanyJobAttributeFromJson(json);
-
-  @override
-  Map<String, Object?> toJson() => _$CompanyJobAttributeToJson(this);
-
-  @override
-  int get hashCode => title.hashCode;
-
-  @override
-  bool operator ==(final Object other) =>
-      identical(other, this) || (other is CompanyJobAttribute && other.title == title);
 }
 
 /// Аттрибут работы - Описание на латинице (Description)
@@ -342,48 +358,6 @@ class DescriptionRuJobAttribute implements JobAttribute {
       identical(other, this) || (other is DescriptionRuJobAttribute && other.description == description);
 }
 
-/// Аттрибут работы - Местоположение (Location)
-@immutable
-@JsonSerializable()
-class LocationJobAttribute implements JobAttribute {
-  const LocationJobAttribute({
-    required this.country,
-    required this.address,
-  });
-
-  static const String signature = 'location';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
-  @JsonKey(name: 'country', required: true)
-  final String country;
-
-  @JsonKey(name: 'address', required: true)
-  final String address;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isEmpty => country.isEmpty && address.isEmpty;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isNotEmpty => !isEmpty;
-
-  factory LocationJobAttribute.fromJson(final Map<String, Object?> json) => _$LocationJobAttributeFromJson(json);
-
-  @override
-  Map<String, Object?> toJson() => _$LocationJobAttributeToJson(this);
-
-  @override
-  int get hashCode => country.hashCode ^ address.hashCode;
-
-  @override
-  bool operator ==(final Object other) =>
-      identical(other, this) || (other is LocationJobAttribute && other.country == country && other.address == address);
-}
-
 /// Аттрибут работы - Координаты
 @immutable
 @JsonSerializable()
@@ -432,73 +406,6 @@ class CoordinatesJobAttribute implements JobAttribute {
       (other is CoordinatesJobAttribute && other.latitude == latitude && other.longitude == longitude);
 }
 
-/// Аттрибут работы - Зарплатная вилка (Salary)
-/// Указывается в долларах * 100 (центы), в дальнейшем исходя из даты вакансии
-/// и курса обмена можно будет указывать в произвольной валюте
-@immutable
-@JsonSerializable()
-class SalaryJobAttribute implements JobAttribute {
-  const SalaryJobAttribute({
-    required final this.from,
-    required final this.to,
-  });
-
-  static final SalaryJobAttribute unknown = SalaryJobAttribute(
-    from: zeroMoney,
-    to: zeroMoney,
-  );
-
-  static const String signature = 'salary';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
-  @JsonKey(
-    name: 'from',
-    required: true,
-    fromJson: _moneyFromJson,
-    toJson: _moneyToJson,
-  )
-  final Money from;
-
-  @JsonKey(
-    name: 'to',
-    required: true,
-    fromJson: _moneyFromJson,
-    toJson: _moneyToJson,
-  )
-  final Money to;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isEmpty => from == zeroMoney && to == zeroMoney;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isNotEmpty => !isEmpty;
-
-  factory SalaryJobAttribute.fromJson(final Map<String, Object?> json) => _$SalaryJobAttributeFromJson(json);
-
-  @override
-  Map<String, Object?> toJson() => _$SalaryJobAttributeToJson(this);
-
-  static int _moneyToJson(final Money? money) => money is Money ? money.minorUnits.toInt() : 0;
-
-  static Money _moneyFromJson(final Object? money) =>
-      money is num ? Money.fromWithCurrency(money / 100, _usd) : zeroMoney;
-
-  static final Money zeroMoney = Money.fromBigIntWitCurrency(BigInt.zero, _usd);
-  static final Currency _usd = CommonCurrencies().usd;
-
-  @override
-  int get hashCode => from.minorUnits.hashCode ^ to.minorUnits.hashCode;
-
-  @override
-  bool operator ==(final Object other) =>
-      identical(other, this) || (other is SalaryJobAttribute && other.from == from && other.to == to);
-}
-
 /// Аттрибут работы - Уровень разработчика (Developer level)
 @immutable
 @JsonSerializable()
@@ -522,16 +429,12 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   @JsonKey(
     name: 'from',
     required: true,
-    fromJson: _levelFromJson,
-    toJson: _levelToJson,
   )
   final DeveloperLevel from;
 
   @JsonKey(
     name: 'to',
     required: true,
-    fromJson: _levelFromJson,
-    toJson: _levelToJson,
   )
   final DeveloperLevel to;
 
@@ -549,92 +452,12 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   @override
   Map<String, Object?> toJson() => _$DeveloperLevelJobAttributeToJson(this);
 
-  static DeveloperLevel _levelFromJson(final Object? level) {
-    switch (level) {
-      case 'intern':
-        return DeveloperLevel.intern;
-      case 'junior':
-        return DeveloperLevel.junior;
-      case 'middle':
-        return DeveloperLevel.middle;
-      case 'senior':
-        return DeveloperLevel.senior;
-      case 'lead':
-        return DeveloperLevel.lead;
-      default:
-        return DeveloperLevel.unknown;
-    }
-  }
-
-  static String _levelToJson(final DeveloperLevel? level) {
-    switch (level) {
-      case DeveloperLevel.intern:
-        return 'intern';
-      case DeveloperLevel.junior:
-        return 'junior';
-      case DeveloperLevel.middle:
-        return 'middle';
-      case DeveloperLevel.senior:
-        return 'senior';
-      case DeveloperLevel.lead:
-        return 'lead';
-      case DeveloperLevel.unknown:
-      default:
-        return 'unknown';
-    }
-  }
-
   @override
   int get hashCode => from.index ^ to.index;
 
   @override
   bool operator ==(final Object other) =>
       identical(other, this) || (other is DeveloperLevelJobAttribute && other.from == from && other.to == to);
-}
-
-/// Аттрибут работы - Возможность релокации (Relocation)
-@immutable
-@JsonSerializable()
-class RelocationJobAttribute implements JobAttribute {
-  const RelocationJobAttribute({
-    required final this.relocation,
-  });
-
-  static const RelocationJobAttribute yes = RelocationJobAttribute(
-    relocation: true,
-  );
-
-  static const RelocationJobAttribute no = RelocationJobAttribute(
-    relocation: false,
-  );
-  static const String signature = 'relocation';
-
-  @override
-  @JsonKey(name: 'type', required: true)
-  String get type => signature;
-
-  @JsonKey(name: 'relocation')
-  final bool relocation;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isEmpty => !relocation;
-
-  @override
-  @JsonKey(ignore: true)
-  bool get isNotEmpty => !isEmpty;
-
-  factory RelocationJobAttribute.fromJson(final Map<String, Object?> json) => _$RelocationJobAttributeFromJson(json);
-
-  @override
-  Map<String, Object?> toJson() => _$RelocationJobAttributeToJson(this);
-
-  @override
-  int get hashCode => relocation ? 1 : 0;
-
-  @override
-  bool operator ==(final Object other) =>
-      identical(other, this) || (other is RelocationJobAttribute && other.relocation == relocation);
 }
 
 /// Аттрибут работы - Тэги (Tags)
@@ -675,7 +498,12 @@ class TagsJobAttribute implements JobAttribute {
 
   @override
   bool operator ==(final Object other) =>
-      identical(other, this) || (other is TagsJobAttribute && const ListEquality<String>().equals(other.tags, tags));
+      identical(other, this) ||
+      (other is TagsJobAttribute &&
+          const ListEquality<String>().equals(
+            other.tags,
+            tags,
+          ));
 }
 
 /// Аттрибут работы - Навыки (Skills)
@@ -718,7 +546,11 @@ class SkillsJobAttribute implements JobAttribute {
   @override
   bool operator ==(final Object other) =>
       identical(other, this) ||
-      (other is SkillsJobAttribute && const ListEquality<Skill>().equals(other.skills, skills));
+      (other is SkillsJobAttribute &&
+          const ListEquality<Skill>().equals(
+            other.skills,
+            skills,
+          ));
 }
 
 /// Аттрибут работы - Требования к разработчику (Requirements)
@@ -805,7 +637,11 @@ class ContactsJobAttribute implements JobAttribute {
   @override
   bool operator ==(final Object other) =>
       identical(other, this) ||
-      (other is ContactsJobAttribute && const ListEquality<Contact>().equals(other.contacts, contacts));
+      (other is ContactsJobAttribute &&
+          const ListEquality<Contact>().equals(
+            other.contacts,
+            contacts,
+          ));
 }
 
 /// Виды работы
@@ -849,5 +685,9 @@ class ContractTypeJobAttribute implements JobAttribute {
   @override
   bool operator ==(final Object other) =>
       identical(other, this) ||
-      (other is ContractTypeJobAttribute && const ListEquality<JobType>().equals(other.typesOfWork, typesOfWork));
+      (other is ContractTypeJobAttribute &&
+          const ListEquality<JobType>().equals(
+            other.typesOfWork,
+            typesOfWork,
+          ));
 }

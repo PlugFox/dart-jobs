@@ -30,10 +30,11 @@ class JobForm extends StatefulWidget {
 }
 
 class _JobFormState extends State<JobForm> {
+  // TODO: инкапсулировать все контроллеры в отдельный класс
   final TextEditingController jobTitleController = TextEditingController(text: '');
   final TextEditingController companyTitleController = TextEditingController(text: '');
-  final TextEditingController locationCountryController = TextEditingController(text: '');
-  final TextEditingController locationAddressController = TextEditingController(text: '');
+  final TextEditingController countryController = TextEditingController(text: '');
+  final TextEditingController locationController = TextEditingController(text: '');
   final TextEditingController descriptionController = TextEditingController(text: '');
   final TextEditingController descriptionRuController = TextEditingController(text: '');
 
@@ -45,11 +46,9 @@ class _JobFormState extends State<JobForm> {
 
   void _refillControllers(final Job job) {
     jobTitleController.text = job.title;
-    companyTitleController.text = job.getAttribute<CompanyJobAttribute>(CompanyJobAttribute.signature)?.title ?? '';
-    locationCountryController.text =
-        job.getAttribute<LocationJobAttribute>(LocationJobAttribute.signature)?.country ?? '';
-    locationAddressController.text =
-        job.getAttribute<LocationJobAttribute>(LocationJobAttribute.signature)?.address ?? '';
+    companyTitleController.text = job.company;
+    countryController.text = job.country;
+    locationController.text = job.location;
     descriptionController.text =
         job.getAttribute<DescriptionJobAttribute>(DescriptionJobAttribute.signature)?.description ?? '';
     descriptionRuController.text =
@@ -58,15 +57,14 @@ class _JobFormState extends State<JobForm> {
 
   Job getCurrentJob() => JobScope.jobOf(context).copyWith(
         newTitle: jobTitleController.text.trim(),
+        newCompany: companyTitleController.text.trim(),
+        newCountry: countryController.text.trim(),
+        newLocation: locationController.text.trim(),
+        //newRemote: true, // TODO: контроллер удаленной работы
+        //newSalaryFrom: , // TODO: контроллер управления зарплатой
+        //newSalaryTo: , // TODO: контроллер управления зарплатой
         newAttributes: JobAttributes(
           <JobAttribute>[
-            CompanyJobAttribute(
-              title: companyTitleController.text.trim(),
-            ),
-            LocationJobAttribute(
-              country: locationCountryController.text.trim(),
-              address: locationAddressController.text.trim(),
-            ),
             DescriptionJobAttribute(
               description: descriptionController.text.trim(),
             ),
@@ -81,8 +79,8 @@ class _JobFormState extends State<JobForm> {
   void dispose() {
     jobTitleController.dispose();
     companyTitleController.dispose();
-    locationCountryController.dispose();
-    locationAddressController.dispose();
+    countryController.dispose();
+    locationController.dispose();
     descriptionController.dispose();
     descriptionRuController.dispose();
     super.dispose();
@@ -132,14 +130,14 @@ class JobFields extends StatelessWidget {
 
         /// Местоположение
         _JobTextField.singleLine(
-          state.locationCountryController,
+          state.countryController,
           label: context.localization.job_field_location_country,
           inputFormatters: <TextInputFormatter>[_denyCyrillic],
           key: const ValueKey<String>('locationCountry'),
         ),
 
         _JobTextField.singleLine(
-          state.locationAddressController,
+          state.locationController,
           label: context.localization.job_field_location_address,
           inputFormatters: <TextInputFormatter>[_denyCyrillic],
           key: const ValueKey<String>('locationAddress'),

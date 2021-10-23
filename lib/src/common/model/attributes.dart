@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_jobs/src/common/utils/date_util.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
@@ -128,7 +129,7 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
   Map<String, Object?> toJson({required final String parentId, required final String creatorId}) => <String, Object?>{
         'parent_id': parentId,
         'creator_id': creatorId,
-        'updated': DateUtil.dateToUnixTime(DateTime.now()),
+        'updated': DateUtil.toUnixTime(DateTime.now()),
         'attributes': _internal.values
             .where((final v) => v.isNotEmpty)
             .map<Map<String, Object?>>((final e) => e.toJson()..['type'] = e.type)
@@ -148,27 +149,6 @@ abstract class Attribute {
 
   @protected
   Map<String, Object?> toJson();
-}
-
-/// Квалификация, уровень разработчика
-enum DeveloperLevel {
-  /// Неизвестный / Не указан
-  unknown,
-
-  /// Стажёр
-  intern,
-
-  /// Младший
-  junior,
-
-  /// Средний
-  middle,
-
-  /// Старший
-  senior,
-
-  /// Ведущий
-  lead,
 }
 
 /// Навык (Skill)
@@ -197,26 +177,62 @@ abstract class Contact {
   Map<String, Object?> toJson();
 }
 
+/// Квалификация, уровень разработчика
+@JsonEnum()
+enum DeveloperLevel {
+  /// Неизвестный / Не указан
+  @JsonValue(-1)
+  unknown,
+
+  /// Стажёр
+  @JsonValue(0)
+  intern,
+
+  /// Младший
+  @JsonValue(1)
+  junior,
+
+  /// Средний
+  @JsonValue(2)
+  middle,
+
+  /// Старший
+  @JsonValue(3)
+  senior,
+
+  /// Ведущий
+  @JsonValue(4)
+  lead,
+}
+
 /// Тип работы (Type of work)
+@JsonEnum()
 enum JobType {
   /// Неизвестный / Не указан (Unknown)
+  @JsonValue('unknown')
   unknown,
 
   /// Полный рабочий день (Full-time employment)
+  @JsonValue('fullTime')
   fullTime,
 
   /// Частичная занятость (Part-time employment)
+  @JsonValue('partTime')
   partTime,
 
   /// Одноразовая работа (one-time job)
+  @JsonValue('oneTime')
   oneTime,
 
   /// Работа по контракту (Contract job)
+  @JsonValue('contract')
   contract,
 
   /// Участие в опенсорс проекте (Open source project)
+  @JsonValue('openSource')
   openSource,
 
   /// Поиск команды или сотрудничество (Team search or collaboration)
+  @JsonValue('collaboration')
   collaboration,
 }

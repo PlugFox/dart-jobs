@@ -1,10 +1,9 @@
 import 'dart:math' as math show Random;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs/src/common/model/proposal.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:l/l.dart';
-import 'package:meta/meta.dart';
+import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
+import 'package:money2/money2.dart';
 
 abstract class IJobRepository {
   /// Создать новую работу
@@ -12,8 +11,11 @@ abstract class IJobRepository {
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
+    required final String country,
     required final String location,
-    required final String salary,
+    required final bool remote,
+    required final Money salaryFrom,
+    required final Money salaryTo,
     JobAttributes attributes = const JobAttributes.empty(),
   });
 
@@ -33,126 +35,50 @@ abstract class IJobRepository {
   Future<void> delete(final Job job);
 }
 
-class JobRepositoryFirebase implements IJobRepository {
-  final FirebaseFirestore _firestore;
-
-  /// Коллекция работы
-  final CollectionReference _feedCollection;
-
-  /// Коллекция аттрибутов работы
-  final CollectionReference _attributesCollection;
-
-  JobRepositoryFirebase({
-    required final FirebaseFirestore firestore,
-  })  : _firestore = firestore,
-        _feedCollection = firestore.collection('feed'),
-        _attributesCollection = firestore.collection('job_attributes');
+class JobRepositoryImpl implements IJobRepository {
+  final JobNetworkDataProvider _networkDataProvider;
+  JobRepositoryImpl({
+    required final JobNetworkDataProvider networkDataProvider,
+  }) : _networkDataProvider = networkDataProvider;
 
   @override
   Future<Job> create({
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
+    required final String country,
     required final String location,
-    required final String salary,
+    required final bool remote,
+    required final Money salaryFrom,
+    required final Money salaryTo,
     JobAttributes attributes = const JobAttributes.empty(),
-  }) async {
-    final batch = _firestore.batch();
-    // Сохраняем работу
-    final doc = _feedCollection.doc();
-    final newJob = Job.create(
-      id: doc.id,
-      creatorId: user.uid,
-      title: title,
-      company: company,
-      location: location,
-      salary: salary,
-      attributes: attributes,
-      hasEnglishLocalization: attributes.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
-      hasRussianLocalization: attributes.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
-    );
-    final json = newJob.toJson();
-    batch.set(
-      doc,
-      json,
-      SetOptions(merge: false),
-    );
-
-    // Сохраняем аттрибуты работы
-    if (attributes.isNotEmpty) {
-      final doc = _attributesCollection.doc();
-      final json = attributes.toJson(
-        parentId: doc.id,
-        creatorId: user.uid,
-      )..putIfAbsent('parent', () => doc);
-      batch.set(
-        doc,
-        json,
-        SetOptions(merge: false),
+  }) =>
+      _networkDataProvider.create(
+        user: user,
+        title: title,
+        company: company,
+        country: country,
+        location: location,
+        remote: remote,
+        salaryFrom: salaryFrom,
+        salaryTo: salaryTo,
+        attributes: attributes,
       );
-    }
-    await batch.commit();
-    return newJob;
-  }
 
   @override
-  Future<Job> fetchById(final String id) async {
-    // Получим работу по идентификатору
-    final jobSnapshot = await _feedCollection.doc(id).get(const GetOptions(source: Source.serverAndCache));
-    final jobData = jobSnapshot.data() as Map<String, Object?>?;
-    if (!jobSnapshot.exists || jobData == null) {
-      l.w('Работа по идентификатору "$id" не найдена');
-      _throwNotFound(id);
-    }
-    final job = Job.fromJson(jobData);
-
-    // Проверим наличие аттрибутов для работы
-    final attributesSnapshot = await _attributesCollection.doc(id).get(const GetOptions(source: Source.serverAndCache));
-    final attributesData = attributesSnapshot.data() as Map<String, Object?>?;
-    if (attributesSnapshot.exists && attributesData != null) {
-      final attributes = JobAttributes.fromJson(attributesData);
-      if (attributes.isNotEmpty) {
-        return job.copyWith(
-          newAttributes: attributes,
-        );
-      }
-    }
-    return job;
-  }
+  Future<Job> fetchById(String id) => _networkDataProvider.fetchById(id);
 
   @override
-  Future<Job> fetch(final Job job) => fetchById(job.id);
+  Future<Job> fetch(Job job) => fetchById(job.id);
 
   @override
-  Future<void> update(final Job job) {
-    final doc = _feedCollection.doc(job.id);
-    final batch = _firestore.batch()..set(doc, job.toJson(), SetOptions(merge: false));
-    if (job.attributes.isEmpty) {
-      batch.delete(_attributesCollection.doc(job.id));
-    } else {
-      batch.set(
-        _attributesCollection.doc(job.id),
-        job.attributes.toJson(
-          parentId: job.id,
-          creatorId: job.creatorId,
-        )..putIfAbsent('parent', () => doc),
-        SetOptions(merge: false),
-      );
-    }
-    return batch.commit();
-  }
+  Future<void> update(Job job) => _networkDataProvider.update(job);
 
   @override
-  Future<void> deleteById(final String id) => (_firestore.batch()
-        ..delete(_feedCollection.doc(id))
-        ..delete(_attributesCollection.doc(id)))
-      .commit();
+  Future<void> deleteById(String id) => _networkDataProvider.deleteById(id);
 
   @override
-  Future<void> delete(final Job job) => deleteById(job.id);
-
-  @alwaysThrows
-  Never _throwNotFound(final String id) => throw JobNotFoundException('no such job with identifier $id');
+  Future<void> delete(Job job) => deleteById(job.id);
 }
 
 class JobRepositoryFake implements IJobRepository {
@@ -165,8 +91,11 @@ class JobRepositoryFake implements IJobRepository {
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
+    required final String country,
     required final String location,
-    required final String salary,
+    required final bool remote,
+    required final Money salaryFrom,
+    required final Money salaryTo,
     JobAttributes attributes = const JobAttributes.empty(),
   }) async {
     final newJob = Job.create(
@@ -174,11 +103,12 @@ class JobRepositoryFake implements IJobRepository {
       creatorId: user.uid,
       title: title,
       company: company,
+      country: country,
       location: location,
-      salary: salary,
+      remote: remote,
+      salaryFrom: salaryFrom,
+      salaryTo: salaryTo,
       attributes: attributes,
-      hasEnglishLocalization: true,
-      hasRussianLocalization: true,
     );
     await Future<void>.delayed(const Duration(seconds: 1));
     _jobs[newJob.id] = newJob;
@@ -189,12 +119,13 @@ class JobRepositoryFake implements IJobRepository {
   Future<Job> fetchById(final String id) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     return _jobs[id] ??= Job.create(
-      id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
+      id: id,
       creatorId: _rnd.nextInt(2).toRadixString(36),
       title: 'Some job',
       company: 'company',
+      country: 'country',
       location: 'location',
-      salary: 'salary',
+      remote: true,
     );
   }
 
@@ -215,16 +146,4 @@ class JobRepositoryFake implements IJobRepository {
 
   @override
   Future<void> delete(final Job job) => deleteById(job.id);
-}
-
-class JobNotFoundException implements Exception {
-  final String? message;
-
-  const JobNotFoundException([this.message]);
-
-  @override
-  String toString() {
-    if (message == null) return 'JobNotFoundException';
-    return 'JobNotFoundException: $message';
-  }
 }

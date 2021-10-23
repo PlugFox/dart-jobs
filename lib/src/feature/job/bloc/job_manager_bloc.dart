@@ -3,6 +3,7 @@ import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:money2/money2.dart';
 
 part 'job_manager_bloc.freezed.dart';
 
@@ -15,8 +16,11 @@ class JobManagerEvent with _$JobManagerEvent {
     required final AuthenticatedUser user,
     required final String title,
     required final String company,
+    required final String country,
     required final String location,
-    required final String salary,
+    required final bool remote,
+    required final Money salaryFrom,
+    required final Money salaryTo,
     @Default(JobAttributes.empty()) final JobAttributes attributes,
   }) = _CreateJobManagerEvent;
 
@@ -69,8 +73,11 @@ class JobManagerBLoC extends Bloc<JobManagerEvent, JobManagerState> {
     final AuthenticatedUser user,
     final String title,
     final String company,
+    final String country,
     final String location,
-    final String salary,
+    final bool remote,
+    final Money salaryFrom,
+    final Money salaryTo,
     final JobAttributes attributes,
   ) async* {
     try {
@@ -79,8 +86,11 @@ class JobManagerBLoC extends Bloc<JobManagerEvent, JobManagerState> {
         user: user,
         title: title,
         company: company,
+        country: country,
         location: location,
-        salary: salary,
+        remote: remote,
+        salaryFrom: salaryFrom,
+        salaryTo: salaryTo,
         attributes: attributes,
       );
       yield JobManagerState.created(job: job);
