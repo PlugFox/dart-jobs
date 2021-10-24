@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dart_jobs/src/common/model/exceptions.dart';
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:fox_core_bloc/bloc.dart';
@@ -12,19 +13,33 @@ part 'job_bloc.freezed.dart';
 class JobEvent with _$JobEvent {
   const JobEvent._();
 
-  /// Запросить редактирование текущей работы
-  /// Передаем идентификатор пользователя, чтоб убедится, что работа принадлежит ему
-  const factory JobEvent.edit(final String uid) = _EditJobEvent;
+  /// Создать новую работу
+  /// Передаем пользователя, которому должна принадлежать работа
+  const factory JobEvent.create({
+    required final AuthenticatedUser user,
+    required final Job job,
+  }) = _CreateJobEvent;
 
-  /// Запросить просмотр
-  const factory JobEvent.view() = _ViewJobEvent;
-
-  /// Запросить обновление по работе
-  const factory JobEvent.fetch() = _FetchJobEvent;
+  /// Запросить обновление по текущей работе
+  /// Можно передать идентификатор,
+  /// если обновление надо запросить по конкретному идентификатору
+  const factory JobEvent.fetch([
+    final String? id,
+  ]) = _FetchJobEvent;
 
   /// Обновить (перезаписать) работу
-  /// Передаем идентификатор пользователя, чтоб убедится, что работа принадлежит ему
-  const factory JobEvent.update(final Job job, final String uid) = _UpdateJobEvent;
+  /// Передаем пользователя, которому должна принадлежать работа
+  const factory JobEvent.update({
+    required final AuthenticatedUser user,
+    required final Job job,
+  }) = _UpdateJobEvent;
+
+  /// Удалить работу
+  /// Передаем пользователя, которому должна принадлежать работа
+  const factory JobEvent.delete({
+    required final AuthenticatedUser user,
+    required final Job job,
+  }) = _DeleteJobEvent;
 }
 
 @freezed
@@ -35,36 +50,41 @@ class JobState with _$JobState {
   @override
   Job get job;
 
-  /// Просмотр работы
-  bool get viewing => !editing;
+  /// Это новая, еще не записаная работа?
+  bool get isNew => job.id.isEmpty;
 
-  /// Редактирование работы
-  @override
-  bool get editing;
-
-  /// Обновляется
-  const factory JobState.fetching({
-    required final Job job,
-    required final bool editing,
-  }) = _FetchingJobState;
+  /// Есть ли идентификатор у работы?
+  bool get isNotNew => job.id.isNotEmpty;
 
   /// В ожидании событий
   const factory JobState.idle({
     required final Job job,
-    required final bool editing,
   }) = _IdleJobState;
+
+  /// Выполняется обработка
+  const factory JobState.processed({
+    required final Job job,
+  }) = _ProcessedJobState;
+
+  /// Работа сохранена или создана
+  const factory JobState.saved({
+    required final Job job,
+  }) = _SavedJobState;
+
+  /// Работа удалена
+  const factory JobState.deleted({
+    required final Job job,
+  }) = _DeletedJobState;
 
   /// Работа не найдена
   /// Вероятно была удалена или открыта по не существующему идентификатору
   const factory JobState.notFound({
     required final Job job,
-    @Default(false) final bool editing,
   }) = _NotFoundJobState;
 
   /// Произошла ошибка
   const factory JobState.error({
     required final Job job,
-    required final bool editing,
     required final String message,
   }) = _ErrorJobState;
 }
@@ -80,76 +100,128 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
 
   @override
   Stream<JobState> mapEventToState(final JobEvent event) => event.when<Stream<JobState>>(
-        edit: _edit,
-        view: _view,
+        create: _create,
         fetch: _fetch,
         update: _update,
+        delete: _delete,
       );
 
-  @override
-  Stream<Transition<JobEvent, JobState>> transformEvents(
-    final Stream<JobEvent> events,
-    final TransitionFunction<JobEvent, JobState> transitionFn,
-  ) =>
-      super.transformEvents(
-        events.transform<JobEvent>(
-          StreamTransformer.fromHandlers(
-            handleData: (final event, final sink) => state.maybeMap(
-              orElse: () => sink.add(event),
-              fetching: (final _) => null,
-            ),
-          ),
-        ),
-        transitionFn,
-      );
-
-  Stream<JobState> _edit(final String uid) => state.job.creatorId != uid || state.editing
-      ? const Stream<JobState>.empty()
-      : Stream<JobState>.value(state.copyWith(editing: true));
-
-  Stream<JobState> _view() =>
-      state.viewing ? const Stream<JobState>.empty() : Stream<JobState>.value(state.copyWith(editing: false));
-
-  Stream<JobState> _fetch() async* {
-    if (state.job.isEmpty) return;
+  Stream<JobState> _fetch([
+    final String? id,
+  ]) async* {
+    var currentJob = state.job;
+    if (id != null && id.isEmpty && currentJob.isEmpty) return;
     try {
-      yield JobState.fetching(job: state.job, editing: state.editing);
-      final job = await _repository.fetch(state.job);
-      yield JobState.idle(job: job, editing: state.editing);
+      yield JobState.processed(job: currentJob);
+      currentJob = await _repository.fetchById(id ?? currentJob.id);
     } on NotFoundException {
       yield JobState.notFound(
-        job: Job(
-          id: 'not_found',
-          creatorId: 'not_found',
-          title: 'Not found',
-          created: DateTime.now(),
-          updated: DateTime.now(),
-          company: 'not_found',
-          country: 'not_found',
-          location: 'not_found',
-          remote: true,
-        ),
-        editing: false,
+        job: currentJob,
+      );
+    } on Object {
+      yield JobState.error(
+        job: currentJob,
+        message: 'Unsupported error',
+      );
+      rethrow;
+    } finally {
+      yield JobState.idle(job: currentJob);
+    }
+  }
+
+  Stream<JobState> _create(
+    final AuthenticatedUser user,
+    final Job job,
+  ) async* {
+    try {
+      yield JobState.processed(job: state.job);
+      final savedJob = await _repository.create(
+        user: user,
+        title: job.title,
+        company: job.company,
+        country: job.country,
+        location: job.location,
+        remote: job.remote,
+        salaryFrom: job.salaryFrom,
+        salaryTo: job.salaryTo,
+        attributes: job.attributes,
+      );
+      yield JobState.saved(job: savedJob);
+    } on NotFoundException {
+      yield JobState.notFound(
+        job: state.job,
       );
     } on Object {
       yield JobState.error(
         job: state.job,
-        editing: state.editing,
-        message: 'Unsupported error',
+        message: 'Unsupported exception',
       );
       rethrow;
+    } finally {
+      yield JobState.idle(job: state.job);
     }
   }
 
-  Stream<JobState> _update(final Job job, final String uid) async* {
-    if (job.isEmpty || state.job.creatorId != uid || job.creatorId != uid) return;
+  Stream<JobState> _update(
+    final AuthenticatedUser user,
+    final Job job,
+  ) async* {
+    if (job.isEmpty || state.job.creatorId != user.uid || job.creatorId != user.uid) {
+      yield JobState.error(
+        job: state.job,
+        message: 'Authorization exception',
+      );
+      yield JobState.idle(job: state.job);
+      return;
+    }
     try {
-      yield JobState.fetching(job: job, editing: state.editing);
+      yield JobState.processed(job: state.job);
       await _repository.update(job);
-      yield JobState.idle(job: job, editing: false);
+      final savedJob = job;
+      yield JobState.saved(job: savedJob);
+    } on NotFoundException {
+      yield JobState.notFound(
+        job: state.job,
+      );
     } on Object {
-      yield JobState.error(job: job, editing: state.editing, message: 'Unsupported error');
+      yield JobState.error(
+        job: state.job,
+        message: 'Unsupported exception',
+      );
       rethrow;
+    } finally {
+      yield JobState.idle(job: state.job);
+    }
+  }
+
+  Stream<JobState> _delete(
+    final AuthenticatedUser user,
+    final Job job,
+  ) async* {
+    if (job.isEmpty || state.job.creatorId != user.uid || job.creatorId != user.uid) {
+      yield JobState.error(
+        job: state.job,
+        message: 'Authorization exception',
+      );
+      yield JobState.idle(job: state.job);
+      return;
+    }
+    try {
+      yield JobState.processed(job: state.job);
+      await _repository.delete(job);
+      yield JobState.deleted(job: job);
+    } on NotFoundException {
+      yield JobState.notFound(
+        job: state.job,
+      );
+    } on Object {
+      yield JobState.error(
+        job: state.job,
+        message: 'Unsupported exception',
+      );
+      rethrow;
+    } finally {
+      yield JobState.idle(job: state.job);
     }
   }
 }

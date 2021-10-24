@@ -1,4 +1,5 @@
 import 'package:dart_jobs/src/common/localization/localizations.dart';
+import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
 
@@ -31,15 +32,7 @@ class FeedCreationButtons extends StatelessWidget {
                       onPressed: () {
                         AuthenticationScope.authenticateOr(
                           context,
-                          (final user) {
-                            throw UnimplementedError('Не реализовано');
-                            /*
-                            FeedScope.createJobOf(
-                              context,
-                              user: user,
-                            );
-                            */
-                          },
+                          (final user) => PageRouter.navigate(context, (configuration) => JobCreatePageConfiguration()),
                         );
                       },
                     ),

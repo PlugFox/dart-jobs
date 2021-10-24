@@ -1,14 +1,12 @@
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/common/router/router_delegate.dart';
 import 'package:dart_jobs/src/common/widget/custom_scroll_view_smooth.dart';
-import 'package:dart_jobs/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_bar.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_creation_buttons.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_list.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
-import 'package:dart_jobs/src/feature/job/bloc/job_manager_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';
@@ -91,47 +89,26 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocListener<JobManagerBLoC, JobManagerState>(
-        listener: (final context, final state) => state.maybeMap<void>(
-          orElse: () {},
-          deleted: (final state) {
-            BlocScope.of<FeedBLoC>(context, listen: false).add(FeedEvent.reloadById(id: state.job.id));
-          },
-          created: (final state) {
-            l.i('Была создана новая работа - запросим обновление списка и перейдем к редактированию элемента.');
-            BlocScope.of<FeedBLoC>(context, listen: false).add(const FeedEvent.fetchRecent());
-            PageRouter.navigate(
-              context,
-              (final _) => JobPageConfiguration(
-                jobId: state.job.id,
-                jobTitle: state.job.id,
-                edit: true,
-              ),
-            );
-          },
-          error: (final error) => ErrorSnackBar.show(context),
+  Widget build(final BuildContext context) => BlocListener<FeedBLoC, FeedState>(
+        listenWhen: (final prev, final next) => next.maybeMap<bool>(
+          orElse: () => true,
+          pagination: (final _) => false,
         ),
-        child: BlocListener<FeedBLoC, FeedState>(
-          listenWhen: (final prev, final next) => next.maybeMap<bool>(
-            orElse: () => true,
-            pagination: (final _) => false,
-          ),
-          listener: (final context, final state) => _checkPagination(),
-          child: CustomScrollViewSmooth(
-            physics: const ClampingScrollPhysics(),
-            scrollBehavior: const ScrollBehavior(),
-            controller: controller,
-            slivers: const <Widget>[
-              /// Шапка с поиском
-              FeedBar(),
+        listener: (final context, final state) => _checkPagination(),
+        child: CustomScrollViewSmooth(
+          physics: const ClampingScrollPhysics(),
+          scrollBehavior: const ScrollBehavior(),
+          controller: controller,
+          slivers: const <Widget>[
+            /// Шапка с поиском
+            FeedBar(),
 
-              /// Создание новой работы
-              FeedCreationButtons(),
+            /// Создание новой работы
+            FeedCreationButtons(),
 
-              /// Лента
-              FeedList(),
-            ],
-          ),
+            /// Лента
+            FeedList(),
+          ],
         ),
       );
 }

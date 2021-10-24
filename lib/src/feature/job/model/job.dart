@@ -95,7 +95,7 @@ class Job extends Proposal<JobAttribute> {
     required final DateTime created,
     required final DateTime updated,
     required final String title,
-    required final String company,
+    final String? company,
     final String? country,
     final String? location,
     final bool? remote,
@@ -109,7 +109,7 @@ class Job extends Proposal<JobAttribute> {
         created: created,
         updated: updated,
         title: title,
-        company: company,
+        company: company ?? '',
         country: country ?? '',
         location: location ?? '',
         remote: remote ?? true,
@@ -121,10 +121,9 @@ class Job extends Proposal<JobAttribute> {
       );
 
   factory Job.create({
-    required final String id,
     required final String creatorId,
     required final String title,
-    required final String company,
+    final String? company,
     final String? country,
     final String? location,
     final bool? remote,
@@ -134,7 +133,7 @@ class Job extends Proposal<JobAttribute> {
   }) {
     final now = DateTime.now().toUtc();
     return Job(
-      id: id,
+      id: '',
       creatorId: creatorId,
       created: now,
       updated: now,
@@ -329,6 +328,8 @@ class DescriptionRuJobAttribute implements JobAttribute {
   @JsonKey(name: 'type', required: true)
   String get type => signature;
 
+  /// Описание на русском.
+  /// Максимальная длинна - 2600
   @JsonKey(name: 'description', required: true)
   final String description;
 

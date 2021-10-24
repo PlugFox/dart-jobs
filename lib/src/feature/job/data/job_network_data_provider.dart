@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/common/model/proposal.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:dart_jobs/src/feature/job/model/job_not_found_exception.dart';
@@ -60,7 +61,8 @@ class JobFirestoreDataProvider implements JobNetworkDataProvider {
   }) async {
     // Сохраняем работу
     final doc = _feedCollection.doc();
-    final newJob = Job.create(
+    final now = DateTime.now();
+    final newJob = Job(
       id: doc.id,
       creatorId: user.uid,
       title: title,
@@ -71,8 +73,10 @@ class JobFirestoreDataProvider implements JobNetworkDataProvider {
       salaryFrom: salaryFrom,
       salaryTo: salaryTo,
       attributes: attributes,
+      created: now,
+      updated: now,
     );
-    await update(newJob);
+    await _set(newJob, true);
     return newJob;
   }
 
@@ -102,18 +106,41 @@ class JobFirestoreDataProvider implements JobNetworkDataProvider {
   }
 
   @override
-  Future<void> update(final Job job) {
+  Future<void> update(final Job job) => _set(job);
+
+  /// Записать в Firestore
+  /// Если [newEntry] истина - поле [created] устанавливается
+  /// в значение равное серверному
+  /// И мета поле "version" устанавливается в 0, в противном случае увеличивается на 1
+  Future<void> _set(final Job job, [bool newEntry = false]) {
     final doc = _feedCollection.doc(job.id);
-    final batch = _firestore.batch()..set(doc, job.toJson(), SetOptions(merge: false));
+    final batch = _firestore.batch()
+      ..set<Object?>(
+        doc,
+        <String, Object?>{
+          ...job.toJson(),
+          if (newEntry) 'created': FieldValue.serverTimestamp(),
+          'updated': FieldValue.serverTimestamp(),
+          'version': newEntry ? 0 : FieldValue.increment(1),
+        },
+        SetOptions(merge: false),
+      );
     if (job.attributes.isEmpty) {
       batch.delete(_attributesCollection.doc(job.id));
     } else {
       batch.set(
         _attributesCollection.doc(job.id),
-        job.attributes.toJson(
-          parentId: job.id,
-          creatorId: job.creatorId,
-        )..putIfAbsent('parent', () => doc),
+        <String, Object?>{
+          ...job.attributes.toJson(
+            parentId: job.id,
+            creatorId: job.creatorId,
+          ),
+          'parent': doc,
+          'parent_id': job.id,
+          'creator_id': job.creatorId,
+          'updated': FieldValue.serverTimestamp(),
+          'version': newEntry ? 0 : FieldValue.increment(1),
+        },
         SetOptions(merge: false),
       );
     }

@@ -98,7 +98,8 @@ class JobRepositoryFake implements IJobRepository {
     required final Money salaryTo,
     JobAttributes attributes = const JobAttributes.empty(),
   }) async {
-    final newJob = Job.create(
+    final now = DateTime.now();
+    final newJob = Job(
       id: DateTime.now().millisecondsSinceEpoch.toRadixString(36),
       creatorId: user.uid,
       title: title,
@@ -109,6 +110,8 @@ class JobRepositoryFake implements IJobRepository {
       salaryFrom: salaryFrom,
       salaryTo: salaryTo,
       attributes: attributes,
+      created: now,
+      updated: now,
     );
     await Future<void>.delayed(const Duration(seconds: 1));
     _jobs[newJob.id] = newJob;
@@ -118,7 +121,8 @@ class JobRepositoryFake implements IJobRepository {
   @override
   Future<Job> fetchById(final String id) async {
     await Future<void>.delayed(const Duration(seconds: 1));
-    return _jobs[id] ??= Job.create(
+    final now = DateTime.now();
+    return _jobs[id] ??= Job(
       id: id,
       creatorId: _rnd.nextInt(2).toRadixString(36),
       title: 'Some job',
@@ -126,6 +130,8 @@ class JobRepositoryFake implements IJobRepository {
       country: 'country',
       location: 'location',
       remote: true,
+      created: now,
+      updated: now,
     );
   }
 

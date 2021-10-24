@@ -24,8 +24,8 @@ abstract class AppException implements Throwable {
 
   @override
   String toString() {
-    if (message == null) return 'NotFoundException';
-    return 'NotFoundException: $message';
+    if (message == null) return 'AppException';
+    return 'AppException: $message';
   }
 }
 

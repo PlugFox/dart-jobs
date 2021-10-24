@@ -11,13 +11,16 @@ void main() {
       test(
         'Зарплатная вилка - сериализация и десериализация',
         () {
-          final sourceSalary = Job.create(
+          final now = DateTime.now();
+          final sourceSalary = Job(
             id: 'id',
             creatorId: 'creatorId',
             title: 'title',
             company: 'company',
             salaryFrom: Money.fromIntWithCurrency(100000, CommonCurrencies().usd),
             salaryTo: Money.fromIntWithCurrency(200000, CommonCurrencies().usd),
+            created: now,
+            updated: now,
           );
           final json = sourceSalary.toJson();
           final salary = Job.fromJson(json);
