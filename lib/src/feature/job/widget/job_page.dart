@@ -1,6 +1,3 @@
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_scope.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_screen.dart';
 import 'package:flutter/material.dart';
 
 class JobPage extends Page<void> {
@@ -28,16 +25,7 @@ class JobPage extends Page<void> {
 
   @override
   Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
-        builder: (final context) => JobScope(
-          key: ValueKey<String>('job_scope_$id'),
-          id: id,
-          creatorId: edit ? AuthenticationScope.userOf(context).authenticatedOrNull?.uid : null,
-          child: JobScreen(
-            id: id,
-            title: title.isEmpty ? id : title,
-            edit: edit,
-          ),
-        ),
+        builder: (final context) => const Placeholder(),
         settings: this,
       );
 }

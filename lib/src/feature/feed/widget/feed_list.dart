@@ -1,6 +1,6 @@
 import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_scope.dart';
+import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 

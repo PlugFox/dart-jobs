@@ -1,6 +1,7 @@
 import 'package:dart_jobs/src/common/localization/localizations.dart';
 import 'package:dart_jobs/src/feature/authentication/widget/profile_page.dart';
 import 'package:dart_jobs/src/feature/feed/widget/feed_page.dart';
+import 'package:dart_jobs/src/feature/job/widget/create_job_page.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_page.dart';
 import 'package:dart_jobs/src/feature/not_found/widget/not_found_page.dart';
 import 'package:dart_jobs/src/feature/settings/widget/settings_page.dart';
@@ -163,5 +164,31 @@ class JobPageConfiguration extends PageConfiguration {
       title: jobTitle,
       edit: edit,
     );
+  }
+}
+
+class JobCreatePageConfiguration extends PageConfiguration {
+  JobCreatePageConfiguration()
+      : super(
+          <String, Object?>{
+            'job': <String, Object?>{
+              'edit': true,
+            },
+          },
+        );
+
+  @override
+  String get pageTitle => '${Localized.current.title} / New Job';
+
+  @override
+  PageConfiguration? get previous => const FeedPageConfiguration();
+
+  @override
+  Uri toUri() => Uri.parse('/job/');
+
+  @override
+  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
+    yield* super.buildPages(context);
+    yield JobCreatePage();
   }
 }
