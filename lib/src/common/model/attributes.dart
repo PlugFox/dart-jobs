@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:dart_jobs/src/common/utils/date_util.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
@@ -127,9 +126,6 @@ abstract class Attributes<T extends Attribute> extends Iterable<T> {
   /// [ownerId]   - идентификатор владельца коллекции, для ограничения доступа в Firebase
   /// [creatorId] - идентификатор владельца, для ограничения доступа в Firebase
   Map<String, Object?> toJson({required final String parentId, required final String creatorId}) => <String, Object?>{
-        'parent_id': parentId,
-        'creator_id': creatorId,
-        'updated': DateUtil.toUnixTime(DateTime.now()),
         'attributes': _internal.values
             .where((final v) => v.isNotEmpty)
             .map<Map<String, Object?>>((final e) => e.toJson()..['type'] = e.type)

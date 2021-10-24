@@ -1,4 +1,10 @@
+import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
+import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs/src/feature/job/model/job.dart';
+import 'package:dart_jobs/src/feature/job/widget/job_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fox_flutter_bloc/bloc.dart';
 
 class JobPage extends Page<void> {
   JobPage({
@@ -25,7 +31,25 @@ class JobPage extends Page<void> {
 
   @override
   Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
-        builder: (final context) => const Placeholder(),
+        builder: (final context) => BlocScope<JobBLoC>.create(
+          create: (context) => JobBLoC(
+            repository: InitializationScope.storeOf(context).jobRepository,
+            initialState: JobState.idle(
+              job: FeedScope.proposalOf<Job>(
+                    context,
+                    (job) => job.id == id,
+                  ) ??
+                  Job(
+                    id: id,
+                    title: title,
+                    creatorId: '',
+                    created: DateTime.now(),
+                    updated: DateTime.now(),
+                  ),
+            ),
+          )..add(JobEvent.fetch(id)),
+          child: const JobScreen(),
+        ),
         settings: this,
       );
 }

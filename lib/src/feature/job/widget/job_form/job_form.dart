@@ -19,10 +19,52 @@ class JobForm extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static JobFormData? formDataOf(BuildContext context) {
-    final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedJobForm>()?.widget;
-    return inhW is _InheritedJobForm ? inhW.formData : null;
+  /// Получить контроллер/данные формы из контекста
+  static JobFormData formDataOf(BuildContext context) {
+    final inhW = context.getElementForInheritedWidgetOfExactType<_InheritedJobForm>()!.widget;
+    return (inhW as _InheritedJobForm).formData;
   }
+
+  /// Переключиться на чтение текущей работы
+  /// Также обновить поля из переданого [Job]
+  static void switchToRead(BuildContext context, Job job) => Actions.invoke<ReadJobIntent>(context, ReadJobIntent(job));
+
+  /// Переключиться на редактирование текущей работы
+  /// Также обновить поля из переданого [Job]
+  static void switchToEdit(BuildContext context, Job job) => AuthenticationScope.authenticateOr(
+        context,
+        (user) => Actions.invoke<EditJobIntent>(
+          context,
+          EditJobIntent(job, user),
+        ),
+      );
+
+  /// Заблокировать форму ввода
+  static void switchToDisable(BuildContext context, Job job) => Actions.invoke<DisableJobIntent>(
+        context,
+        const DisableJobIntent(),
+      );
+
+  /// Проверить текущую работу
+  /// Возвращает истину, если работа успешно заполненна
+  static bool validate(BuildContext context) =>
+      Actions.invoke<ValidateJobIntent>(context, const ValidateJobIntent()) == true;
+
+  /// Обновить работу из контроллеров
+  static Job? getUpdatedJob(BuildContext context, Job job) {
+    final result = Actions.invoke<GetUpdatedJobIntent>(context, GetUpdatedJobIntent(job));
+    if (result is Job) {
+      return result;
+    }
+    return null;
+  }
+
+  /// Сохранить текущую работу
+  /// Внимание, перед вызовом этого метода - проверьте валидность заполнения работы с помощью [ValidateJobIntent]
+  static void save(BuildContext context, Job job) => Actions.invoke<SaveJobIntent>(context, SaveJobIntent(job)) == true;
+
+  /// Удалить текущую работу
+  static void delete(BuildContext context, Job job) => Actions.invoke<DeleteJobIntent>(context, DeleteJobIntent(job));
 
   @override
   State<JobForm> createState() => _JobFormState();
@@ -97,6 +139,7 @@ class _JobFormState extends State<JobForm> {
     if (_formData.status.value == FormStatus.processed) {
       _formData.setState(newStatus: job.isEmpty ? FormStatus.editing : FormStatus.readOnly);
     }
+    _formData.updateFormData(job);
   }
 
   /// Сохранить/Создать работу
@@ -134,7 +177,9 @@ class _JobFormState extends State<JobForm> {
           actions: <Type, Action<Intent>>{
             ReadJobIntent: ReadJobAction(_formData),
             EditJobIntent: EditJobAction(_formData),
+            DisableJobIntent: DisableJobAction(_formData),
             ValidateJobIntent: ValidateJobAction(_formData),
+            GetUpdatedJobIntent: GetUpdatedJobAction(_formData),
             SaveJobIntent: SaveJobAction(_formData, save),
             DeleteJobIntent: DeleteJobAction(delete),
           },

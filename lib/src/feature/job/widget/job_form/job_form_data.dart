@@ -6,16 +6,23 @@ import 'package:meta/meta.dart';
 import 'package:money2/money2.dart';
 
 class JobFormData {
-  /// Форма грязная и требуется сохранение
+  /// Форма грязная (измененная) и требуется сохранение
   ValueListenable<bool> get isDirty => _isDirty;
-  final ValueNotifier<bool> _isDirty = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isDirty;
 
-  /// Доступна только для чтения
+  /// Текущий статус формы: чтение, заблокирована, редактирование
   ValueListenable<FormStatus> get status => _status;
-  final ValueNotifier<FormStatus> _status = ValueNotifier<FormStatus>(FormStatus.readOnly);
+  final ValueNotifier<FormStatus> _status;
+
+  /// Работа (значение обновляется только при получении или установке реузультата)
+  /// Лучше вместо этого использовать `BlocScope.of<JobBLoC>(context).state.job` или BlocBuilder
+  /// Для получения состояния текущей работы у стейт машины
+  ValueListenable<Job> get lastJob => _lastJob;
+  final ValueNotifier<Job> _lastJob;
+
+  /// СПИСОК КОНТРОЛЛЕРОВ ВВОДА ФОРМЫ - НАЧАЛО
 
   final List<JobInputControllerMixin> _controllers = <JobInputControllerMixin>[];
-
   final JobFieldTitleController titleController = JobFieldTitleController();
   final JobFieldCompanyController companyController = JobFieldCompanyController();
   final JobFieldCountryController countryController = JobFieldCountryController();
@@ -23,14 +30,15 @@ class JobFormData {
   final JobFieldRemoteController remoteController = JobFieldRemoteController();
   final JobFieldSalaryController salaryController = JobFieldSalaryController();
 
+  /// СПИСОК КОНТРОЛЛЕРОВ ВВОДА ФОРМЫ - КОНЕЦ
+
   JobFormData({
-    final FormStatus? status,
-    final Job? job,
-  }) {
-    _status.value = status ?? FormStatus.readOnly;
-    if (job != null) {
-      updateFormData(job);
-    }
+    required final Job job,
+    required final FormStatus status,
+  })  : _isDirty = ValueNotifier<bool>(false),
+        _status = ValueNotifier<FormStatus>(status),
+        _lastJob = ValueNotifier<Job>(job) {
+    updateFormData(job);
     _controllers.addAll(
       <JobInputControllerMixin>[
         titleController,
@@ -41,6 +49,11 @@ class JobFormData {
         salaryController,
       ],
     );
+    for (final controller in _controllers) {
+      controller.addListener(() {
+        _isDirty.value = true;
+      });
+    }
   }
 
   /// Обновить контроллеры из актуального значения работы
@@ -51,11 +64,12 @@ class JobFormData {
     if (job.isEmpty) {
       _status.value = FormStatus.editing;
     }
+    _lastJob.value = job;
     _isDirty.value = false;
   }
 
   /// Обновить работу из текущего состояния контроллеров
-  Job updateJob(Job job) => job.copyWith(
+  Job updateJob(Job job) => _lastJob.value = job.copyWith(
         newTitle: titleController.text,
         newCompany: companyController.text,
         newCountry: countryController.text,
@@ -73,7 +87,7 @@ class JobFormData {
   bool validate() {
     var result = true;
     for (final controller in _controllers) {
-      result = result && controller.validate();
+      result = controller.validate() && result;
     }
     return result;
   }
@@ -114,8 +128,14 @@ enum FormStatus {
 
 /// Миксин для всех контроллеров
 mixin JobInputControllerMixin<T extends Object> implements ValueNotifier<T> {
+  /// Лиснер отвечающий за ошибки
+  /// Если есть строка - ошибка
+  /// Если null - ошибки нет
   ValueListenable<String?> get error => _error;
   final ValueNotifier<String?> _error = ValueNotifier<String?>(null);
+
+  /// Фокус нода для установки соответсвующему полю
+  final FocusNode focusNode = FocusNode();
 
   /// Проверить заполненние
   /// Если все верно и достаточно для сохранения работы - null
@@ -134,13 +154,24 @@ mixin JobInputControllerMixin<T extends Object> implements ValueNotifier<T> {
   void update(Job job);
 }
 
+abstract class JobTextFieldSingleLineController
+    implements TextEditingController, JobInputControllerMixin<TextEditingValue> {
+  /// Максимальная длинна поля ввода
+  int get maxLength;
+}
+
 /// Title controller
-class JobFieldTitleController extends TextEditingController with JobInputControllerMixin<TextEditingValue> {
+class JobFieldTitleController extends TextEditingController
+    with JobInputControllerMixin<TextEditingValue>
+    implements JobTextFieldSingleLineController {
+  @override
+  final int maxLength = 64;
+
   @override
   String? checkValue(TextEditingValue value) {
     final text = value.text.trim();
-    if (text.length < 3) return 'Must be longer than 2 characters';
-    if (text.length > 64) return 'Must be less than 65 characters';
+    if (text.isEmpty) return 'Must be filled';
+    if (text.length > maxLength) return 'Must be less than 65 characters';
     return null;
   }
 
@@ -149,12 +180,17 @@ class JobFieldTitleController extends TextEditingController with JobInputControl
 }
 
 /// Company controller
-class JobFieldCompanyController extends TextEditingController with JobInputControllerMixin<TextEditingValue> {
+class JobFieldCompanyController extends TextEditingController
+    with JobInputControllerMixin<TextEditingValue>
+    implements JobTextFieldSingleLineController {
+  @override
+  final int maxLength = 64;
+
   @override
   String? checkValue(TextEditingValue value) {
     final text = value.text.trim();
-    if (text.length < 3) return 'Must be longer than 2 characters';
-    if (text.length > 64) return 'Must be less than 65 characters';
+    if (text.isEmpty) return 'Must be filled';
+    if (text.length > maxLength) return 'Must be less than 65 characters';
     return null;
   }
 
@@ -163,12 +199,17 @@ class JobFieldCompanyController extends TextEditingController with JobInputContr
 }
 
 /// Country controller
-class JobFieldCountryController extends TextEditingController with JobInputControllerMixin<TextEditingValue> {
+class JobFieldCountryController extends TextEditingController
+    with JobInputControllerMixin<TextEditingValue>
+    implements JobTextFieldSingleLineController {
+  @override
+  final int maxLength = 64;
+
   @override
   String? checkValue(TextEditingValue value) {
     final text = value.text.trim();
-    if (text.length < 3) return 'Must be longer than 2 characters';
-    if (text.length > 64) return 'Must be less than 65 characters';
+    if (text.isEmpty) return 'Must be filled';
+    if (text.length > maxLength) return 'Must be less than 65 characters';
     return null;
   }
 
@@ -177,11 +218,16 @@ class JobFieldCountryController extends TextEditingController with JobInputContr
 }
 
 /// Location controller
-class JobFieldLocationController extends TextEditingController with JobInputControllerMixin<TextEditingValue> {
+class JobFieldLocationController extends TextEditingController
+    with JobInputControllerMixin<TextEditingValue>
+    implements JobTextFieldSingleLineController {
+  @override
+  final int maxLength = 64;
+
   @override
   String? checkValue(TextEditingValue value) {
     final text = value.text.trim();
-    if (text.length > 64) return 'Must be less than 65 characters';
+    if (text.length > maxLength) return 'Must be less than 65 characters';
     return null;
   }
 

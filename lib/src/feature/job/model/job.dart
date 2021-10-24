@@ -120,9 +120,7 @@ class Job extends Proposal<JobAttribute> {
         attributes: attributes ?? const JobAttributes.empty(),
       );
 
-  /// Если передан ID == null
   factory Job.create({
-    required final String id,
     required final String creatorId,
     required final String title,
     final String? company,
@@ -135,7 +133,7 @@ class Job extends Proposal<JobAttribute> {
   }) {
     final now = DateTime.now().toUtc();
     return Job(
-      id: id,
+      id: '',
       creatorId: creatorId,
       created: now,
       updated: now,

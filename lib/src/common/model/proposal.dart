@@ -49,8 +49,8 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   @JsonKey(
     name: 'created',
     required: true,
-    toJson: DateUtil.toUnixTime,
-    fromJson: DateUtil.fromUnixTime,
+    toJson: DateUtil.toTimestamp,
+    fromJson: DateUtil.fromTimestamp,
   )
   final DateTime created;
 
@@ -59,8 +59,8 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   @JsonKey(
     name: 'updated',
     required: true,
-    toJson: DateUtil.toUnixTime,
-    fromJson: DateUtil.fromUnixTime,
+    toJson: DateUtil.toTimestamp,
+    fromJson: DateUtil.fromTimestamp,
   )
   final DateTime updated;
 

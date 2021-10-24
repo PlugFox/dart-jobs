@@ -47,7 +47,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
         _collection
             .where(
               'updated',
-              isGreaterThan: DateUtil.toUnixTime(updatedAfter),
+              isGreaterThan: DateUtil.toTimestamp(updatedAfter),
             )
             .orderBy(
               'updated',
@@ -78,7 +78,7 @@ class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedReposi
         _collection
             .where(
               'updated',
-              isLessThan: DateUtil.toUnixTime(updatedBefore),
+              isLessThan: DateUtil.toTimestamp(updatedBefore),
             )
             .orderBy(
               'updated',

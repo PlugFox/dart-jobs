@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_escaping_inner_quotes
 
-import 'dart:math' as math;
-
 import 'package:dart_jobs/src/common/model/proposal.dart';
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
@@ -79,24 +77,4 @@ class FeedScope extends StatelessWidget {
         ),
         child: child,
       );
-}
-
-// ignore: unused_element
-class _WorkTitleRandomizer {
-  _WorkTitleRandomizer._();
-  static _WorkTitleRandomizer? _instance;
-  // ignore: unused_element
-  factory _WorkTitleRandomizer.instance() => _instance ??= _WorkTitleRandomizer._();
-  static const List<String> _variants = <String>[
-    'Best work ever',
-    'Let\'s work together',
-    'Dart developer required',
-    'Most wanted',
-    'Payment by cookies',
-    'Hiring for everyone',
-    'Dart goez fasta, brrr',
-  ];
-  final math.Random _rnd = math.Random();
-  final int _max = _variants.length - 1;
-  String next() => _variants[_rnd.nextInt(_max)];
 }

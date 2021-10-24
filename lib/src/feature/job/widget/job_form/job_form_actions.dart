@@ -1,3 +1,4 @@
+import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/model/job.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
 import 'package:flutter/widgets.dart';
@@ -9,14 +10,17 @@ class ReadJobIntent extends Intent {
   final Job job;
 }
 
-class ReadJobAction extends Action<EditJobIntent> {
+class ReadJobAction extends Action<ReadJobIntent> {
   ReadJobAction(JobFormData formData) : _formData = formData;
 
   final JobFormData _formData;
 
   @override
-  void invoke(covariant EditJobIntent intent) {
+  void invoke(covariant ReadJobIntent intent) {
     final job = intent.job;
+    if (job.isEmpty) {
+      return;
+    }
     _formData
       ..updateFormData(intent.job)
       ..setState(newStatus: job.isEmpty ? FormStatus.editing : FormStatus.readOnly);
@@ -25,21 +29,48 @@ class ReadJobAction extends Action<EditJobIntent> {
 
 /// EDIT
 class EditJobIntent extends Intent {
-  const EditJobIntent(this.job);
+  const EditJobIntent(
+    this.job,
+    this.user,
+  );
 
   final Job job;
+  final AuthenticatedUser user;
 }
 
 class EditJobAction extends Action<EditJobIntent> {
-  EditJobAction(JobFormData formData) : _formData = formData;
+  EditJobAction(
+    JobFormData formData,
+  ) : _formData = formData;
 
   final JobFormData _formData;
 
   @override
   void invoke(covariant EditJobIntent intent) {
+    if (intent.job.creatorId != intent.user.uid) {
+      return;
+    }
     _formData
       ..updateFormData(intent.job)
       ..setState(newStatus: FormStatus.editing);
+  }
+}
+
+/// DISABLE
+class DisableJobIntent extends Intent {
+  const DisableJobIntent();
+}
+
+class DisableJobAction extends Action<DisableJobIntent> {
+  DisableJobAction(
+    JobFormData formData,
+  ) : _formData = formData;
+
+  final JobFormData _formData;
+
+  @override
+  void invoke(covariant DisableJobIntent intent) {
+    _formData.setState(newStatus: FormStatus.processed);
   }
 }
 
@@ -54,10 +85,28 @@ class ValidateJobAction extends Action<ValidateJobIntent> {
   final JobFormData _formData;
 
   @override
-  void invoke(covariant ValidateJobIntent intent) => _formData.validate();
+  bool invoke(covariant ValidateJobIntent intent) => _formData.validate();
+}
+
+/// GET UPDATED JOB FROM CONTROLLER
+class GetUpdatedJobIntent extends Intent {
+  const GetUpdatedJobIntent(this.job);
+
+  final Job job;
+}
+
+class GetUpdatedJobAction extends Action<GetUpdatedJobIntent> {
+  GetUpdatedJobAction(JobFormData formData) : _formData = formData;
+
+  final JobFormData _formData;
+
+  @override
+  Job invoke(covariant GetUpdatedJobIntent intent) => _formData.updateJob(intent.job);
 }
 
 /// SAVE
+/// Внимание, перед вызовом этого метода - проверьте
+/// валидность заполнения работы с помощью [ValidateJobIntent]
 class SaveJobIntent extends Intent {
   const SaveJobIntent(this.job);
 
@@ -81,6 +130,7 @@ class SaveJobAction extends Action<SaveJobIntent> {
     }
     final newJob = _formData.updateJob(intent.job);
     _save(newJob);
+    return;
   }
 }
 

@@ -21,8 +21,10 @@ class JobEvent with _$JobEvent {
   }) = _CreateJobEvent;
 
   /// Запросить обновление по текущей работе
+  /// Можно передать идентификатор,
+  /// если обновление надо запросить по конкретному идентификатору
   const factory JobEvent.fetch([
-    final Job? job,
+    final String? id,
   ]) = _FetchJobEvent;
 
   /// Обновить (перезаписать) работу
@@ -105,13 +107,13 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       );
 
   Stream<JobState> _fetch([
-    final Job? job,
+    final String? id,
   ]) async* {
-    var currentJob = job ?? state.job;
-    if (currentJob.isEmpty) return;
+    var currentJob = state.job;
+    if (id != null && id.isEmpty && currentJob.isEmpty) return;
     try {
       yield JobState.processed(job: currentJob);
-      currentJob = await _repository.fetch(currentJob);
+      currentJob = await _repository.fetchById(id ?? currentJob.id);
     } on NotFoundException {
       yield JobState.notFound(
         job: currentJob,
