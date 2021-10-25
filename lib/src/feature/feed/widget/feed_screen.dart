@@ -61,7 +61,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   @override
   void didPopNext() {
     // При возвращении на страницу запрашиваем обновление списка
-    context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
+    //context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
   }
 
   @override

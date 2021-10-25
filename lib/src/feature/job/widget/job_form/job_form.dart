@@ -131,7 +131,9 @@ class _JobFormState extends State<JobForm> {
     }
   }
 
-  void _onNotFound(Job job) => PageRouter.pop(context);
+  void _onNotFound(Job job) {
+    //PageRouter.pop(context);
+  }
 
   void _onProcessed(Job job) => _formData.setState(newStatus: FormStatus.processed);
 

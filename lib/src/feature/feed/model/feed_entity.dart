@@ -26,6 +26,9 @@ abstract class FeedEntity implements Comparable<FeedEntity> {
   /// Заголовок
   String get title;
 
+  /// Пометка на удаление
+  bool get disabled;
+
   @override
   int compareTo(final FeedEntity other) => updated.compareTo(other.updated);
 

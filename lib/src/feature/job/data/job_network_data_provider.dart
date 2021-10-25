@@ -7,7 +7,7 @@ import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 import 'package:money2/money2.dart';
 
-abstract class JobNetworkDataProvider {
+abstract class IJobNetworkDataProvider {
   /// Создать новую работу
   Future<Job> create({
     required final AuthenticatedUser user,
@@ -31,7 +31,7 @@ abstract class JobNetworkDataProvider {
   Future<void> deleteById(final String id);
 }
 
-class JobFirestoreDataProvider implements JobNetworkDataProvider {
+class JobFirestoreDataProvider implements IJobNetworkDataProvider {
   /// Клиент Firebase Firestore
   final FirebaseFirestore _firestore;
 

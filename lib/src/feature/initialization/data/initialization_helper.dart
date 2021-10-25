@@ -3,12 +3,15 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_jobs/src/common/constant/environment.dart';
 import 'package:dart_jobs/src/common/constant/pubspec.yaml.g.dart' as pubspec;
 import 'package:dart_jobs/src/common/constant/storage_namespace.dart';
+import 'package:dart_jobs/src/common/model/app_metadata.dart';
 import 'package:dart_jobs/src/common/utils/screen_util.dart';
 import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs/src/feature/feed/data/feed_network_data_provider.dart';
 import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
@@ -16,7 +19,7 @@ import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/widgets.dart' show Orientation;
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
@@ -133,7 +136,9 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
         newFeedRepository: kFake
             ? FeedRepositoryFake()
             : FeedRepositoryFirebase(
-                firestore: progress.firebaseFirestore!,
+                networkDataProvider: FeedFirestoreDataProvider(
+                  firestore: progress.firebaseFirestore!,
+                ),
               ),
       ),
   'Create a job repository': (final progress) => progress.copyWith(
@@ -193,5 +198,37 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       rethrow;
     }
     return store;
+  },
+  'Creating app metadata': (final store) async {
+    final screenSize = ScreenUtil.screenSize();
+    final appMetadata = AppMetadata(
+      isWeb: kIsWeb,
+      isRelease: platform.buildMode.isRelease,
+      appVersion: pubspec.version,
+      appVersionMajor: pubspec.major,
+      appVersionMinor: pubspec.minor,
+      appVersionPatch: pubspec.patch,
+      appBuildTimestamp: pubspec.build.isNotEmpty ? (int.tryParse(pubspec.build.firstOrNull ?? '-1') ?? -1) : -1,
+      appPackageName: 'dart_jobs',
+      appName: 'Dart Jobs',
+      // deviceInfo.appName,
+      operatingSystem: platform.when<String>(
+            android: () => 'Android',
+            iOS: () => 'iOS',
+            macOS: () => 'macOS',
+            windows: () => 'Windows',
+            fuchsia: () => 'Fuchsia',
+            linux: () => 'Linux',
+          ) ??
+          'Other',
+      processorsCount: platform.numberOfProcessors,
+      appLaunchedTimestamp: DateTime.now().millisecondsSinceEpoch,
+      locale: platform.locale,
+
+      deviceRepresentation: screenSize.representation,
+      deviceLogicalSideMin: screenSize.min,
+      deviceLogicalSideMax: screenSize.max,
+    );
+    return store.copyWith(newAppMetadata: appMetadata);
   },
 };

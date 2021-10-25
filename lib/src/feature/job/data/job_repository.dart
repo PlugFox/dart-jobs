@@ -36,9 +36,9 @@ abstract class IJobRepository {
 }
 
 class JobRepositoryImpl implements IJobRepository {
-  final JobNetworkDataProvider _networkDataProvider;
+  final IJobNetworkDataProvider _networkDataProvider;
   JobRepositoryImpl({
-    required final JobNetworkDataProvider networkDataProvider,
+    required final IJobNetworkDataProvider networkDataProvider,
   }) : _networkDataProvider = networkDataProvider;
 
   @override

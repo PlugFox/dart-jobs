@@ -114,6 +114,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     try {
       yield JobState.processed(job: currentJob);
       currentJob = await _repository.fetchById(id ?? currentJob.id);
+      yield JobState.idle(job: currentJob);
     } on NotFoundException {
       yield JobState.notFound(
         job: currentJob,
@@ -123,9 +124,8 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         job: currentJob,
         message: 'Unsupported error',
       );
-      rethrow;
-    } finally {
       yield JobState.idle(job: currentJob);
+      rethrow;
     }
   }
 

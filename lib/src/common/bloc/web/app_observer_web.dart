@@ -1,4 +1,5 @@
 import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:l/l.dart';
 
 IBlocObserver createBlocObserver() => BlocObserverWeb();
 
@@ -22,7 +23,7 @@ class BlocObserverWeb implements IBlocObserver {
 
   @override
   void onError(IBloc<Object?, Object?> bloc, Object error, StackTrace stackTrace) {
-    // TODO: implement onError
+    l.e('Ошибка в блоке $bloc: $error');
   }
 
   @override

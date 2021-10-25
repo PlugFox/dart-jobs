@@ -76,6 +76,7 @@ class Job extends Proposal<JobAttribute> {
     required final this.remote,
     required final this.salaryFrom,
     required final this.salaryTo,
+    required final bool disabled,
     required final bool hasEnglishLocalization,
     required final bool hasRussianLocalization,
     required final this.attributes,
@@ -85,6 +86,7 @@ class Job extends Proposal<JobAttribute> {
           created: created,
           updated: updated,
           title: title,
+          disabled: disabled,
           hasEnglishLocalization: hasEnglishLocalization,
           hasRussianLocalization: hasRussianLocalization,
         );
@@ -101,6 +103,7 @@ class Job extends Proposal<JobAttribute> {
     final bool? remote,
     final Money? salaryFrom,
     final Money? salaryTo,
+    final bool? disabled,
     final JobAttributes? attributes,
   }) =>
       Job._(
@@ -115,6 +118,7 @@ class Job extends Proposal<JobAttribute> {
         remote: remote ?? true,
         salaryFrom: salaryFrom ?? MoneyUtil.zeroMoney,
         salaryTo: salaryTo ?? MoneyUtil.zeroMoney,
+        disabled: disabled ?? false,
         hasEnglishLocalization: attributes?.get(DescriptionJobAttribute.signature)?.isNotEmpty ?? false,
         hasRussianLocalization: attributes?.get(DescriptionRuJobAttribute.signature)?.isNotEmpty ?? false,
         attributes: attributes ?? const JobAttributes.empty(),

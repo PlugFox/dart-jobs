@@ -69,6 +69,16 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
   @JsonKey(name: 'title', required: true)
   final String title;
 
+  @override
+  @JsonKey(
+    name: 'disabled',
+    required: false,
+    defaultValue: false,
+    disallowNullValue: false,
+    includeIfNull: true,
+  )
+  final bool disabled;
+
   /// Есть описание на английском
   @JsonKey(name: 'has_english_localization', required: true)
   final bool hasEnglishLocalization;
@@ -83,6 +93,7 @@ abstract class Proposal<T extends Attribute> extends AttributesOwner<T> implemen
     required final this.created,
     required final this.updated,
     required final this.title,
+    required final this.disabled,
     required final this.hasEnglishLocalization,
     required final this.hasRussianLocalization,
   }) : super();

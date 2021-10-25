@@ -6,6 +6,7 @@ import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'feed_bloc.freezed.dart';
 
@@ -82,7 +83,13 @@ class FeedState with _$FeedState {
   }) = _ErrorFeedState;
 }
 
-class FeedBLoC extends Bloc<FeedEvent, FeedState> {
+/// Владелец [IFeedRepository] репозитория
+abstract class _IFeedRepositoryOwner {
+  IFeedRepository get _repository;
+}
+
+class FeedBLoC extends Bloc<FeedEvent, FeedState> with _SubscriptionOnRecentMixin implements _IFeedRepositoryOwner {
+  @override
   final IFeedRepository _repository;
   Timer? _fetchRecentTimer;
   FeedBLoC({
@@ -90,9 +97,9 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     final FeedState initialState = const FeedState.idle(),
   })  : _repository = repository,
         super(initialState) {
-    // Каждые 5 минут запрашиваем обновление на наличие новых элементов
+    // Каждый час запрашиваем обновление на наличие новых элементов
     _fetchRecentTimer = Timer.periodic(
-      const Duration(minutes: 5),
+      const Duration(hours: 1),
       (final timer) {
         add(const FeedEvent.fetchRecent());
       },
@@ -190,18 +197,6 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     }
   }
 
-  Stream<FeedState> _sanitize() async* {
-    try {} on Object catch (err) {
-      l.e('Произошла ошибка при очистке ленты');
-      yield FeedState.error(
-        list: state.list,
-        message: 'An error occurred while sanitizing the feed: $err',
-        endOfList: false,
-      );
-      rethrow;
-    }
-  }
-
   Stream<FeedState> _paginate(final int count) async* {
     if (state.endOfList) {
       yield FeedState.idle(
@@ -238,9 +233,99 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     }
   }
 
+  Stream<FeedState> _sanitize() async* {
+    try {
+      final proposals = await _repository.sanitize(List<Proposal>.of(state.list)).toList();
+      yield FeedState.idle(
+        list: proposals,
+        endOfList: state.endOfList,
+      );
+    } on Object catch (err) {
+      l.e('Произошла ошибка при очистке ленты');
+      yield FeedState.error(
+        list: state.list,
+        message: 'An error occurred while sanitizing the feed: $err',
+        endOfList: false,
+      );
+      rethrow;
+    }
+  }
+
   @override
   Future<void> close() {
+    _isClosed = true;
+    _subscriptionOnRecent?.cancel();
     _fetchRecentTimer?.cancel();
+    return super.close();
+  }
+}
+
+/// Подписка на изменение списка с добором данных
+mixin _SubscriptionOnRecentMixin on Bloc<FeedEvent, FeedState> implements _IFeedRepositoryOwner {
+  bool _isClosed = false;
+  StreamSubscription<List<Proposal>>? _subscriptionOnRecent;
+
+  @override
+  // ignore: long-method
+  void onTransition(Transition<FeedEvent, FeedState> transition) {
+    super.onTransition(transition);
+    if (_subscriptionOnRecent == null && !_isClosed) {
+      void subscribe(DateTime updatedAfter) {
+        l.i('Подписываемся на изменения ленты');
+        _subscriptionOnRecent = _repository
+            .subscribeOnRecent(updatedAfter: updatedAfter)
+            .bufferTime(const Duration(seconds: 2))
+            .where((changeList) => changeList.isNotEmpty)
+            .asyncMap<List<Proposal>>((changes) {
+          l.s('!!! Дополняю список изменениями: $changes');
+          final added = List<Proposal>.of(
+            changes
+                .where(
+                  (e) => e.when(
+                    added: () => true,
+                    modified: () => true,
+                    removed: () => false,
+                  ),
+                )
+                .map<Proposal>((e) => e.proposal),
+          );
+          final removeFromSource = List<String>.of(
+            changes
+                .where(
+                  (e) => e.when(
+                    added: () => false,
+                    modified: () => true,
+                    removed: () => true,
+                  ),
+                )
+                .map<String>((e) => e.proposal.id),
+          );
+          final source = List<Proposal>.of(state.list)..removeWhere((e) => removeFromSource.contains(e.id));
+          return _repository.sanitize(added..addAll(source)).toList();
+        }).listen(
+          (proposals) => setState(state.copyWith(list: proposals)),
+          onError: (Object error, StackTrace stackTrace) {
+            l.w('Ошибка при подписки на изменения ленты: $error');
+            onError(error, stackTrace);
+          },
+          cancelOnError: false,
+        );
+      }
+
+      transition.event.maybeMap<void>(
+        orElse: () {},
+        paginate: (_) => transition.nextState.maybeMap<void>(
+          orElse: () {},
+          idle: (idle) => subscribe(idle.list.first.updated),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _isClosed = true;
+    _subscriptionOnRecent?.cancel();
     return super.close();
   }
 }

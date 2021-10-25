@@ -1,4 +1,6 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:l/l.dart';
 
 IBlocObserver createBlocObserver() => BlocObserverIO();
 
@@ -20,7 +22,17 @@ class BlocObserverIO implements IBlocObserver {
 
   @override
   void onError(IBloc<Object?, Object?> bloc, Object error, StackTrace stackTrace) {
-    // TODO: implement onError
+    l.e('Ошибка в блоке $bloc: $error');
+    try {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        fatal: false,
+        reason: bloc.toString(),
+      );
+    } on Object {
+      l.w('Ошибка отправки из BlocObserverIO в крашлитикс ошибки');
+    }
   }
 
   @override

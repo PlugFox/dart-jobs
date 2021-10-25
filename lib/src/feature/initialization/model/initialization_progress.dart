@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_jobs/src/common/model/app_metadata.dart';
 import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
@@ -15,6 +16,7 @@ class InitializationProgress {
   final ISettingsRepository? settingsRepository;
   final IFeedRepository? feedRepository;
   final IJobRepository? jobRepository;
+  final AppMetadata? appMetadata;
 
   const InitializationProgress({
     this.analytics,
@@ -24,6 +26,7 @@ class InitializationProgress {
     this.settingsRepository,
     this.feedRepository,
     this.jobRepository,
+    this.appMetadata,
   });
 
   @factory
@@ -36,6 +39,7 @@ class InitializationProgress {
     final ISettingsRepository? newSettingsRepository,
     final IFeedRepository? newFeedRepository,
     final IJobRepository? newJobRepository,
+    final AppMetadata? newAppMetadata,
   }) =>
       InitializationProgress(
         analytics: newAnalytics ?? analytics,
@@ -45,6 +49,7 @@ class InitializationProgress {
         settingsRepository: newSettingsRepository ?? settingsRepository,
         feedRepository: newFeedRepository ?? feedRepository,
         jobRepository: newJobRepository ?? jobRepository,
+        appMetadata: newAppMetadata ?? appMetadata,
       );
 
   @factory
@@ -56,6 +61,7 @@ class InitializationProgress {
         settingsRepository: settingsRepository!,
         feedRepository: feedRepository!,
         jobRepository: jobRepository!,
+        appMetadata: appMetadata,
       );
 }
 
@@ -68,6 +74,7 @@ class RepositoryStore {
   final ISettingsRepository settingsRepository;
   final IFeedRepository feedRepository;
   final IJobRepository jobRepository;
+  final AppMetadata? appMetadata;
 
   const RepositoryStore._({
     required this.analytics,
@@ -77,5 +84,6 @@ class RepositoryStore {
     required this.settingsRepository,
     required this.feedRepository,
     required this.jobRepository,
+    required this.appMetadata,
   });
 }

@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math show Random;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs/src/common/model/proposal.dart';
-import 'package:dart_jobs/src/common/utils/iterable_to_stream_coverter.dart';
+import 'package:dart_jobs/src/common/model/proposal_change.dart';
 import 'package:dart_jobs/src/common/utils/list_unique.dart';
 import 'package:dart_jobs/src/common/utils/money_util.dart';
-import 'package:l/l.dart';
+import 'package:dart_jobs/src/feature/feed/data/feed_network_data_provider.dart';
 
 // ignore: one_member_abstracts
 abstract class IFeedRepository {
@@ -16,12 +15,18 @@ abstract class IFeedRepository {
     required final String id,
   });
 
-  /// Запросить новейшие
+  /// Запросить новейшие, стрим заканчивается после десериализации всех элементов
   Stream<Proposal> fetchRecent({
     required final DateTime updatedAfter,
   });
 
-  /// Запросить порцию старых
+  /// Подписка на последние события
+  /// Стрим не заканчивается, элементы выбираются при появлении их в фаербейзе
+  Stream<ProposalChange> subscribeOnRecent({
+    required final DateTime updatedAfter,
+  });
+
+  /// Запросить порцию старых, стрим заканчивается после десериализации всех элементов
   Stream<Proposal> paginate({
     required final DateTime updatedBefore,
     required final int count,
@@ -32,100 +37,37 @@ abstract class IFeedRepository {
 }
 
 class FeedRepositoryFirebase with ProposalsSanitizerMixin implements IFeedRepository {
-  /// Коллекция
-  final CollectionReference _collection;
-
+  final IFeedNetworkDataProvider _networkDataProvider;
   FeedRepositoryFirebase({
-    required final FirebaseFirestore firestore,
-  }) : _collection = firestore.collection('feed');
+    required final IFeedNetworkDataProvider networkDataProvider,
+  }) : _networkDataProvider = networkDataProvider;
+
+  @override
+  Future<Proposal<Attribute>?> getById({
+    required String id,
+  }) =>
+      _networkDataProvider.getById(id: id);
 
   @override
   Stream<Proposal<Attribute>> fetchRecent({
-    required final DateTime updatedAfter,
+    required DateTime updatedAfter,
   }) =>
-      Stream<QuerySnapshot<Object?>>.fromFuture(
-        _collection
-            .where(
-              'updated',
-              isGreaterThan: DateUtil.toTimestamp(updatedAfter),
-            )
-            .orderBy(
-              'updated',
-              descending: false,
-            )
-            .limit(100)
-            .get(
-              const GetOptions(
-                source: Source.serverAndCache,
-              ),
-            ),
-      ).asyncExpand<Proposal>(
-        (final snapshot) => snapshot.docs
-            .where((final doc) => doc.exists)
-            .map<Object?>((final doc) => doc.data())
-            .whereType<Map<String, Object?>>()
-            .mapJsonLogException(Proposal.fromJson)
-            .whereType<Proposal>()
-            .convert(),
-      );
+      _networkDataProvider.fetchRecent(updatedAfter: updatedAfter);
+
+  @override
+  Stream<ProposalChange> subscribeOnRecent({
+    required DateTime updatedAfter,
+  }) =>
+      _networkDataProvider.subscribeOnRecent(updatedAfter: updatedAfter);
 
   @override
   Stream<Proposal<Attribute>> paginate({
-    required final DateTime updatedBefore,
-    required final int count,
+    required DateTime updatedBefore,
+    required int count,
   }) =>
-      Stream<QuerySnapshot<Object?>>.fromFuture(
-        _collection
-            .where(
-              'updated',
-              isLessThan: DateUtil.toTimestamp(updatedBefore),
-            )
-            .orderBy(
-              'updated',
-              descending: true,
-            )
-            .limit(count)
-            .get(
-              const GetOptions(
-                source: Source.serverAndCache,
-              ),
-            ),
-      ).asyncExpand<Proposal>(
-        (final snapshot) => snapshot.docs
-            .where((final doc) => doc.exists)
-            .map<Object?>((final doc) => doc.data())
-            .whereType<Map<String, Object?>>()
-            .mapJsonLogException(Proposal.fromJson)
-            .whereType<Proposal>()
-            .convert(),
-      );
-
-  @override
-  Future<Proposal<Attribute>?> getById({required final String id}) async {
-    final snapshot = await _collection.doc('id').get(
-          const GetOptions(
-            source: Source.serverAndCache,
-          ),
-        );
-    if (!snapshot.exists) return null;
-    final data = snapshot.data();
-    if (data is! Map<String, Object?>) return null;
-    return Proposal.fromJson(data);
-  }
-}
-
-extension on Iterable<Map<String, Object?>> {
-  Iterable<R?> mapJsonLogException<R extends Object?>(final R Function(Map<String, Object?>) covert) => map<R?>(
-        (final json) {
-          try {
-            return covert(json);
-          } on Object catch (exception, stackTrace) {
-            l.w(exception, stackTrace);
-
-            /// TODO: заменить на класс ExceptionProposal для последующего вывода плиток с ошибками
-            return null;
-          }
-        },
+      _networkDataProvider.paginate(
+        updatedBefore: updatedBefore,
+        count: count,
       );
 }
 
@@ -190,12 +132,16 @@ class FeedRepositoryFake with ProposalsSanitizerMixin implements IFeedRepository
       },
     ).take(count);
   }
+
+  @override
+  Stream<ProposalChange> subscribeOnRecent({required DateTime updatedAfter}) => const Stream.empty();
 }
 
 mixin ProposalsSanitizerMixin implements IFeedRepository {
   @override
   Stream<Proposal<Attribute>> sanitize(final List<Proposal<Attribute>> proposal) {
     proposal.sort((final a, final b) => b.updated.compareTo(a.updated));
-    return Stream<Proposal<Attribute>>.fromIterable(proposal.unique((final p) => p.id));
+    return Stream<Proposal<Attribute>>.fromIterable(proposal.unique((final p) => p.id))
+        .where((proposal) => !proposal.disabled);
   }
 }

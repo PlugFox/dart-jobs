@@ -81,10 +81,10 @@ linter:
     depend_on_referenced_packages: false
     library_private_types_in_public_api: false
     prefer_final_parameters: false
+    avoid_types_on_closure_parameters: false
 
     # Enabled
     always_use_package_imports: true
-    avoid_types_on_closure_parameters: true
     use_named_constants: true
     use_is_even_rather_than_modulo: true
     unnecessary_await_in_return: true
