@@ -209,6 +209,13 @@ class Job extends Proposal<JobAttribute> {
   Job setAttribute(covariant final JobAttribute attribute) => copyWith(
         newAttributes: attributes.set(attribute),
       );
+
+  @override
+  String? validate() {
+    if (company.isEmpty) return 'Company is not filled';
+    if (country.isEmpty) return 'Country is not filled';
+    return super.validate();
+  }
 }
 
 /// Детальное описание работы
@@ -303,6 +310,9 @@ class DescriptionJobAttribute implements JobAttribute {
         description: newDescription,
       );
 
+  @override
+  String? validate() => null;
+
   factory DescriptionJobAttribute.fromJson(final Map<String, Object?> json) => _$DescriptionJobAttributeFromJson(json);
 
   @override
@@ -348,6 +358,9 @@ class DescriptionRuJobAttribute implements JobAttribute {
   DescriptionRuJobAttribute changeDescription(final String newDescription) => DescriptionRuJobAttribute(
         description: newDescription,
       );
+
+  @override
+  String? validate() => null;
 
   factory DescriptionRuJobAttribute.fromJson(final Map<String, Object?> json) =>
       _$DescriptionRuJobAttributeFromJson(json);
@@ -396,6 +409,9 @@ class CoordinatesJobAttribute implements JobAttribute {
   @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String? validate() => null;
 
   factory CoordinatesJobAttribute.fromJson(final Map<String, Object?> json) => _$CoordinatesJobAttributeFromJson(json);
 
@@ -451,6 +467,9 @@ class DeveloperLevelJobAttribute implements JobAttribute {
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
 
+  @override
+  String? validate() => null;
+
   factory DeveloperLevelJobAttribute.fromJson(final Map<String, Object?> json) =>
       _$DeveloperLevelJobAttributeFromJson(json);
 
@@ -492,6 +511,9 @@ class TagsJobAttribute implements JobAttribute {
   @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String? validate() => null;
 
   factory TagsJobAttribute.fromJson(final Map<String, Object?> json) => _$TagsJobAttributeFromJson(json);
 
@@ -539,6 +561,9 @@ class SkillsJobAttribute implements JobAttribute {
   @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String? validate() => null;
 
   factory SkillsJobAttribute.fromJson(final Map<String, Object?> json) => _$SkillsJobAttributeFromJson(json);
 
@@ -589,6 +614,9 @@ class RequirementsJobAttribute implements JobAttribute {
         requirements: newRequirements,
       );
 
+  @override
+  String? validate() => null;
+
   factory RequirementsJobAttribute.fromJson(final Map<String, Object?> json) =>
       _$RequirementsJobAttributeFromJson(json);
 
@@ -630,6 +658,9 @@ class ContactsJobAttribute implements JobAttribute {
   @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String? validate() => null;
 
   factory ContactsJobAttribute.fromJson(final Map<String, Object?> json) => _$ContactsJobAttributeFromJson(json);
 
@@ -677,6 +708,9 @@ class ContractTypeJobAttribute implements JobAttribute {
   @override
   @JsonKey(ignore: true)
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String? validate() => null;
 
   factory ContractTypeJobAttribute.fromJson(final Map<String, Object?> json) =>
       _$ContractTypeJobAttributeFromJson(json);

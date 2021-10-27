@@ -31,6 +31,18 @@ abstract class AttributesOwner<T extends Attribute> {
   AttributesOwner<T> removeAttribute(covariant final T attribute) => copyWith(
         newAttributes: attributes.remove(attribute),
       );
+
+  /// Проверить заполнение модели и её аттрибутов
+  /// Если возвращает null - модель заполненна и возможна её запись
+  /// Если возвращает String - описание первого не заполненного поля
+  @mustCallSuper
+  String? validate() {
+    for (final a in attributes) {
+      final r = a.validate();
+      if (r == null) continue;
+      return r;
+    }
+  }
 }
 
 @immutable
@@ -142,6 +154,11 @@ abstract class Attribute {
   bool get isNotEmpty => !isEmpty;
 
   const Attribute();
+
+  /// Проверить заполнение аттрибута
+  /// Если возвращает null - аттрибут заполнен (или не обязателен к заполнению) и возможна его запись
+  /// Если возвращает String - описание не заполненного поля
+  String? validate();
 
   @protected
   Map<String, Object?> toJson();

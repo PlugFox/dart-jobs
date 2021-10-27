@@ -134,7 +134,15 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     final Job job,
   ) async* {
     try {
-      yield JobState.processed(job: state.job);
+      yield JobState.processed(job: job);
+      final r = job.validate();
+      if (r != null) {
+        yield JobState.error(
+          job: job,
+          message: r,
+        );
+        return;
+      }
       final savedJob = await _repository.create(
         user: user,
         title: job.title,
@@ -149,7 +157,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       yield JobState.saved(job: savedJob);
     } on NotFoundException {
       yield JobState.notFound(
-        job: state.job,
+        job: job,
       );
     } on Object {
       yield JobState.error(
@@ -168,20 +176,28 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   ) async* {
     if (job.isEmpty || state.job.creatorId != user.uid || job.creatorId != user.uid) {
       yield JobState.error(
-        job: state.job,
+        job: job,
         message: 'Authorization exception',
       );
-      yield JobState.idle(job: state.job);
+      yield JobState.idle(job: job);
       return;
     }
     try {
-      yield JobState.processed(job: state.job);
+      yield JobState.processed(job: job);
+      final r = job.validate();
+      if (r != null) {
+        yield JobState.error(
+          job: job,
+          message: r,
+        );
+        return;
+      }
       await _repository.update(job);
       final savedJob = job;
       yield JobState.saved(job: savedJob);
     } on NotFoundException {
       yield JobState.notFound(
-        job: state.job,
+        job: job,
       );
     } on Object {
       yield JobState.error(
@@ -200,19 +216,19 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   ) async* {
     if (job.isEmpty || state.job.creatorId != user.uid || job.creatorId != user.uid) {
       yield JobState.error(
-        job: state.job,
+        job: job,
         message: 'Authorization exception',
       );
-      yield JobState.idle(job: state.job);
+      yield JobState.idle(job: job);
       return;
     }
     try {
-      yield JobState.processed(job: state.job);
+      yield JobState.processed(job: job);
       await _repository.delete(job);
       yield JobState.deleted(job: job);
     } on NotFoundException {
       yield JobState.notFound(
-        job: state.job,
+        job: job,
       );
     } on Object {
       yield JobState.error(
