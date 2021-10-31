@@ -1,4 +1,4 @@
-name: SERVER / BUILD AND DEPLOY / PRODUCTION
+name: SERVER / DEPLOY / PRODUCTION
 
 on:
   workflow_dispatch:

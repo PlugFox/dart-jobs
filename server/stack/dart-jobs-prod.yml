@@ -1,5 +1,5 @@
 # Deploy:
-# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune dart-jobs-prod
+# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
 
 # Logs:
 # docker service logs --no-task-ids -f -n all dart-jobs-prod_echo
