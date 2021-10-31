@@ -32,7 +32,7 @@ jobs:
           remote_host: ssh://pfx@49.12.224.115
           ssh_private_key: ${{ secrets.DOCKER_SWARM_SSH_PRIVATE_KEY }}
           ssh_public_key: ${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}
-          args: stack deploy --compose-file ./server/stack/dart-jobs-prod.yml --orchestrator swarm --prune dart-jobs-prod
+          args: stack deploy --compose-file ./server/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
 
       #- name: 🗑️ Prune images
       #  run: make prune
