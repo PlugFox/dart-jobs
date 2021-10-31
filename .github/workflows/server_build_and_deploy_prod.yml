@@ -24,7 +24,7 @@ jobs:
         run: make -C ./server -f ./Makefile docker-build-prod
 
       - name: 💾 Push images to registry
-        run: make -C ./server -f ./Makefile docker-build-prod
+        run: make -C ./server -f ./Makefile docker-push-prod
 
       - name: 🔥 Deploy to swarm
         uses: sagebind/docker-swarm-deploy-action@v2

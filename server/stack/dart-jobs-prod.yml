@@ -1,5 +1,5 @@
 # Deploy:
-# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune  dart-jobs-prod
+# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune dart-jobs-prod
 
 # Logs:
 # docker service logs --no-task-ids -f -n all dart-jobs-prod_echo
@@ -37,12 +37,12 @@ services:
       labels:
         ################################################################
         # TRAEFIK CONFIG
-        traefik.enable: true
+        traefik.enable: 'true'
         traefik.docker.network: traefik-public
         traefik.constraint-label: traefik-public
 
         # HTTPS
-        traefik.http.routers.dart-jobs-prod-echo.tls: true
+        traefik.http.routers.dart-jobs-prod-echo.tls: 'true'
         traefik.http.routers.dart-jobs-prod-echo.entrypoints: https
         traefik.http.routers.dart-jobs-prod-echo.tls.certresolver: le
 
