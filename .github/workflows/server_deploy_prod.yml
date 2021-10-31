@@ -34,11 +34,11 @@ jobs:
 
           echo "Registering SSH keys..."
           mkdir -p "$HOME/.ssh"
-          printf '%s' "${{ secrets.DOCKER_SWARM_SSH_PRIVATE_KEY }}" > "${HOME}/.ssh/docker"
+          printf '%s' "${{ secrets.DOCKER_SWARM_SSH_PRIVATE_KEY }}" >> "${HOME}/.ssh/docker"
           chmod 600 "$HOME/.ssh/docker" && eval $(ssh-agent) && ssh-add "${HOME}/.ssh/docker"
           
           echo "Add public key to known hosts..."
-          printf '%s %s\n' "$INPUT_REMOTE_HOST" "${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}" >> /etc/ssh/ssh_known_hosts
+          printf '%s %s\n' "$INPUT_REMOTE_HOST" "${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}" >> "${HOME}/.ssh/known_hosts"
 
           echo "Deploying..."
           docker --log-level debug --host "ssh://${INPUT_REMOTE_USER}@${INPUT_REMOTE_HOST}" "$INPUT_DEPLOY_ARGS" 2>&1
