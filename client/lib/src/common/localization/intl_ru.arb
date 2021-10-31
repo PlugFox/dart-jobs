@@ -1,0 +1,175 @@
+{
+  "@@locale": "ru",
+  "yes": "Да",
+  "@yes": {
+    "description": "Да"
+  },
+  "no": "Нет",
+  "@no": {
+    "description": "Нет"
+  },
+  "title": "Dart Jobs",
+  "@title": {
+    "description": "Заголовок приложения"
+  },
+  "settings": "Настройки",
+  "@settings": {
+    "description": "Настройки"
+  },
+  "profile": "Профиль",
+  "@profile": {
+    "description": "Профиль"
+  },
+  "not_found": "Не найдено",
+  "@not_found": {
+    "description": "Не найдено"
+  },
+  "job_not_found": "Работа не найдена",
+  "@job_not_found": {
+    "description": "Работа не найдена"
+  },
+  "delete_confirmation": "Напишите \"DELETE\" для подтверждения удаления",
+  "@delete_confirmation": {
+    "description": "Подтверждение удаления"
+  },
+  "irreversible_action": "Внимание, это действие необратимо",
+  "@irreversible_action": {
+    "description": "Предупреждение о необратимом действии"
+  },
+  "create_new_job": "Создать новую работу",
+  "@create_new_job": {
+    "description": "Создать новую работу"
+  },
+  "log_out": "Разлогиниться",
+  "@log_out": {
+    "description": "Разлогиниться"
+  },
+  "job_field_title": "Заголовок",
+  "@job_field_title": {
+    "description": "Заголовок"
+  },
+  "job_field_company_title": "Название компании",
+  "@job_field_company_title": {
+    "description": "Название компании"
+  },
+  "job_field_location_country": "Страна",
+  "@job_field_location_country": {
+    "description": "Страна"
+  },
+  "job_field_location_address": "Адрес",
+  "@job_field_location_address": {
+    "description": "Адрес"
+  },
+  "job_field_description": "Описание",
+  "@job_field_description": {
+    "description": "Описание"
+  },
+  "job_field_salary": "Зарплатная вилка",
+  "@job_field_salary": {
+    "description": "Зарплатная вилка"
+  },
+  "job_field_salary_from": "С",
+  "@job_field_salary_from": {
+    "description": "Зарплатная вилка - с"
+  },
+  "job_field_salary_to": "По",
+  "@job_field_salary_to": {
+    "description": "Зарплатная вилка - по"
+  },
+  "job_field_developer_level": "Квалификация",
+  "@job_field_developer_level": {
+    "description": "Уровень разработчика"
+  },
+  "job_field_developer_level_from": "С",
+  "@job_field_developer_level_from": {
+    "description": "Уровень разработчика - с"
+  },
+  "job_field_developer_level_to": "По",
+  "@job_field_developer_level_to": {
+    "description": "Уровень разработчика - по"
+  },
+  "developer_level": "Квалификация",
+  "@developer_level": {
+    "description": "Уровень разработчика"
+  },
+  "developer_level_intern": "Стажёр",
+  "@developer_level_intern": {
+    "description": "Уровень разработчика - Стажёр"
+  },
+  "developer_level_junior": "Младший",
+  "@developer_level_junior": {
+    "description": "Уровень разработчика - Младший"
+  },
+  "developer_level_middle": "Средний",
+  "@developer_level_middle": {
+    "description": "Уровень разработчика - Средний"
+  },
+  "developer_level_senior": "Старший",
+  "@developer_level_senior": {
+    "description": "Уровень разработчика - Старший"
+  },
+  "developer_level_lead": "Ведущий",
+  "@developer_level_lead": {
+    "description": "Уровень разработчика - Ведущий"
+  },
+  "developer_level_unknown": "Не указан",
+  "@developer_level_unknown": {
+    "description": "Уровень разработчика - Не указан"
+  },
+  "job_field_relocation": "Возможность релокации",
+  "@job_field_relocation": {
+    "description": "Возможность релокации"
+  },
+  "job_field_tags": "Тэги",
+  "@job_field_tags": {
+    "description": "Тэги"
+  },
+  "job_field_skills": "Навыки",
+  "@job_field_skills": {
+    "description": "Навыки"
+  },
+  "job_field_requirements": "Требования",
+  "@job_field_requirements": {
+    "description": "Требования к разработчику"
+  },
+  "job_field_contacts": "Контакты",
+  "@job_field_contacts": {
+    "description": "Контакты для обратной связи"
+  },
+  "job_field_contract_type": "Вид работы",
+  "@job_field_contract_type": {
+    "description": "Вид работы"
+  },
+  "job_type": "Вид работы",
+  "@job_type": {
+    "description": "Вид работы"
+  },
+  "job_type_unknown": "Не указан",
+  "@job_type_unknown": {
+    "description": "Вид работы - Неизвестный / Не указан (Unknown)"
+  },
+  "job_type_full_time": "Полный рабочий день",
+  "@job_type_full_time": {
+    "description": "Вид работы - Полный рабочий день (Full-time employment)"
+  },
+  "job_type_part_time": "Частичная занятость",
+  "@job_type_part_time": {
+    "description": "Вид работы - Частичная занятость (Part-time employment)"
+  },
+  "job_type_one_time": "Одноразовая работа",
+  "@job_type_one_time": {
+    "description": "Вид работы - Одноразовая работа (one-time job)"
+  },
+  "job_type_contract": "Работа по контракту",
+  "@job_type_contract": {
+    "description": "Вид работы - Работа по контракту (Contract job)"
+  },
+  "job_type_open_source": "Участие в опенсорс проекте",
+  "@job_type_open_source": {
+    "description": "Вид работы - Участие в опенсорс проекте (Open source project)"
+  },
+  "job_type_collaboration": "Поиск команды или сотрудничество",
+  "@job_type_collaboration": {
+    "description": "Вид работы - Поиск команды или сотрудничество (Team search or collaboration)"
+  }
+}

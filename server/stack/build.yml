@@ -1,0 +1,14 @@
+# Build and push:
+# docker-compose build && docker-compose push
+
+version: '3.3'
+
+services:
+  dart-jobs-echo:
+    restart: unless-stopped
+    image: registry.plugfox.dev/dart-jobs-echo:latest
+    build:
+      dockerfile: dart-jobs-echo.dockerfile
+      context: ./
+      args:
+        port: 80

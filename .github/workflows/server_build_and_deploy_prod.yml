@@ -1,0 +1,34 @@
+name: SERVER / BUILD AND DEPLOY / PRODUCTION
+
+on:
+  workflow_dispatch:
+    #inputs:
+    #  version:
+    #    description: 'Flutter version from https://github.com/flutter/flutter/tags'
+    #    required: true
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: ✨ Log into registry
+        run: echo "${{ secrets.DOCKER_REGISTRY_LOGIN_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_REGISTRY_LOGIN_USERNAME }} --password-stdin https://registry.plugfox.dev
+
+      - name: 📦 Pull dart:stable
+        run: docker pull dart:stable
+
+      - name: 🚙 Change directory
+        run: cd server
+
+      - name: 🏗️ Build images
+        run: make docker-build-prod
+
+      - name: 🔥 Push images to registry
+        run: make docker-push-prod
+
+      #- name: 🗑️ Prune images
+      #  run: make prune
+
