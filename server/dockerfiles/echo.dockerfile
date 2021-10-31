@@ -1,5 +1,3 @@
-ARG PORT=80
-
 FROM dart:stable AS build
 
 # Resolve app dependencies.
@@ -18,8 +16,6 @@ RUN dart pub get --offline \
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM scratch
 
-ARG PORT
-
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /app/bin/
 
@@ -32,5 +28,5 @@ LABEL name="registry.plugfox.dev/dart-jobs-echo" \
       family="plugfox/dart-jobs"
 
 # Start server.
-EXPOSE 80
-ENTRYPOINT ["/app/bin/server", "--port=${PORT}"]
+EXPOSE 80/tcp
+ENTRYPOINT ["/app/bin/server", "--PORT=80"]

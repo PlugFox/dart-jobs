@@ -30,7 +30,7 @@ void main(List<String> args) async {
   /// TODO: Ожидать сигнала завершения
 
   // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['port'] ?? '80');
+  final port = int.parse(Platform.environment['PORT'] ?? '80');
   final server = await serve(_handler, ip, port);
   print('Server listening on port ${server.port}');
 }

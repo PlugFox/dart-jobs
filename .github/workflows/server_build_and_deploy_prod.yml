@@ -20,14 +20,19 @@ jobs:
       - name: 📦 Pull dart:stable
         run: docker pull dart:stable
 
-      - name: 🚙 Change directory
-        run: cd server
-
       - name: 🏗️ Build images
-        run: make docker-build-prod
+        run: make -C .\server -f .\Makefile docker-build-prod
 
-      - name: 🔥 Push images to registry
-        run: make docker-push-prod
+      - name: 💾 Push images to registry
+        run: make -C .\server -f .\Makefile docker-build-prod
+
+      - name: 🔥 Deploy to swarm
+        uses: sagebind/docker-swarm-deploy-action@v2
+        with:
+          remote_host: ssh://pfx@api.plugfox.dev
+          ssh_private_key: ${{ secrets.DOCKER_SWARM_SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}
+          args: stack deploy --compose-file .\server\stack\dart-jobs-prod.yml dart-jobs-prod
 
       #- name: 🗑️ Prune images
       #  run: make prune
