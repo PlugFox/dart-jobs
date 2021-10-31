@@ -1,12 +1,12 @@
 # Deploy:
-# docker stack deploy -c /root/stack/dart-jobs-prod.yml dart-jobs-prod_echo
+# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune  dart-jobs-prod
 
 # Logs:
 # docker service logs --no-task-ids -f -n all dart-jobs-prod_echo
 
 version: '3.3'
 
-dart-jobs-prod:
+services:
   echo:
     image: registry.plugfox.dev/dart-jobs-echo:prod
     #volumes:
