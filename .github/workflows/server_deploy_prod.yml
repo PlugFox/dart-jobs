@@ -1,0 +1,39 @@
+name: SERVER / DEPLOY / PRODUCTION
+
+on:
+  workflow_dispatch:
+    #inputs:
+    #  version:
+    #    description: 'Flutter version from https://github.com/flutter/flutter/tags'
+    #    required: true
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: ✨ Log into registry
+        run: echo "${{ secrets.DOCKER_REGISTRY_LOGIN_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_REGISTRY_LOGIN_USERNAME }} --password-stdin https://registry.plugfox.dev
+
+      - name: 📦 Pull dart:stable
+        run: docker pull dart:stable
+
+      - name: 🏗️ Build images
+        run: make -C ./server -f ./Makefile docker-build-prod
+
+      - name: 💾 Push images to registry
+        run: make -C ./server -f ./Makefile docker-push-prod
+
+      - name: 🔥 Deploy to swarm
+        uses: sagebind/docker-swarm-deploy-action@v2
+        with:
+          remote_host: ssh://pfx@49.12.224.115
+          ssh_private_key: ${{ secrets.DOCKER_SWARM_SSH_PRIVATE_KEY }}
+          ssh_public_key: ${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}
+          args: stack deploy --compose-file ./server/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+
+      #- name: 🗑️ Prune images
+      #  run: make prune
+
