@@ -10,7 +10,7 @@ import 'package:l/l.dart';
 /// [onError] - произошла ошибка которая повлечет за собой закрытие сервера
 /// [initializationTimeout] - время отведенное на запуск сервера
 /// [shutdownTimeout] -
-Future<void>? runner<Config extends Object>({
+Future<Config>? runner<Config extends Object>({
   required final Future<Config> Function() initialization,
   required final Future<void> Function(Config config) onShutdown,
   final Future<void> Function(Object error, StackTrace stackTrace)? onError,
@@ -19,7 +19,7 @@ Future<void>? runner<Config extends Object>({
 }) {
   io.exitCode = 0; // presume success
   Config? config;
-  return runZonedGuarded<Future<void>>(
+  return runZonedGuarded<Future<Config>>(
     () async {
       config = await initialization().timeout(initializationTimeout);
       _shutdownHandler(() {
@@ -32,6 +32,7 @@ Future<void>? runner<Config extends Object>({
           io.exit(0);
         },
       );
+      return config!;
     },
     (Object error, StackTrace stackTrace) async {
       io.exitCode = 2; // presume error

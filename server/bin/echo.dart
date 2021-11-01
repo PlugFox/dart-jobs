@@ -40,9 +40,9 @@ void main(List<String> args) => l.capture(
 
           // Получим порт
           final portFromArg = argResult.wasParsed('port') ? argResult['port'] : null;
-          //final portFromEnv = io.Platform.environment['PORT'];
+          final portFromEnv = io.Platform.environment['PORT'];
           const defaultPort = '80';
-          final port = int.parse(portFromArg ?? defaultPort);
+          final port = int.parse(portFromArg ?? portFromEnv ?? defaultPort);
 
           // Пайплайн обработки запроса
           final handler = Pipeline()
