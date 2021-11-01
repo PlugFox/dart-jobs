@@ -73,5 +73,6 @@ void main(List<String> args) => l.capture(
       ),
       LogOptions(
         handlePrint: true,
+        outputInRelease: true,
       ),
     );

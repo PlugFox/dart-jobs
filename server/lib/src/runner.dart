@@ -82,7 +82,7 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
         if (formattedLine.contains('q')) {
           signalHandler(io.ProcessSignal.sigint);
         } else {
-          l.i('Press [Q] to exit, $formattedLine');
+          l.i('Press [Q] to exit');
         }
       },
     );
