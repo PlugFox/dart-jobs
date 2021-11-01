@@ -1,0 +1,43 @@
+name: SERVER / CHECKOUT
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
+    paths:
+      - 'server/**.dart'
+  pull_request:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
+    paths:
+      - 'server/**.dart'
+  workflow_dispatch:
+
+jobs:
+  check-server:
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🔎 Checkout server source code
+        run: |
+          cd server
+          echo Install Dependencies; \
+            dart pub get
+          echo Check format; \
+            dart format --set-exit-if-changed -l 120 -o none .
+          echo Check analyzer; \
+            dart analyze --fatal-infos --fatal-warnings lib
