@@ -22,6 +22,7 @@ Future<Config>? runner<Config extends Object>({
   return runZonedGuarded<Future<Config>>(
     () async {
       config = await initialization().timeout(initializationTimeout);
+      // ignore: unawaited_futures
       _shutdownHandler(() {
         final shutdownConfig = config;
         config = null;
@@ -54,7 +55,8 @@ Future<Config>? runner<Config extends Object>({
 /// Приготовимся к завершению приложения
 Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShutdown) {
   //StreamSubscription<String>? userKeySub;
-  StreamSubscription<io.ProcessSignal>? sigIntSub, sigTermSub; // , sigKillSub
+  StreamSubscription<io.ProcessSignal>? sigIntSub;
+  StreamSubscription<io.ProcessSignal>? sigTermSub;
   final shutdownCompleter = Completer<T>.sync();
   var catchShutdownEvent = false;
   {
@@ -65,9 +67,10 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
       T? result;
       try {
         //userKeySub?.cancel();
+        // ignore: unawaited_futures
         sigIntSub?.cancel();
+        // ignore: unawaited_futures
         sigTermSub?.cancel();
-        //sigKillSub?.cancel();
         result = await onShutdown();
       } finally {
         shutdownCompleter.complete(result);
@@ -95,12 +98,9 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
     */
 
     sigIntSub = io.ProcessSignal.sigint.watch().listen(signalHandler, cancelOnError: false);
-    // SIGTERM & SIGKILL is not supported on Windows. Attempting to register a SIGTERM
-    // handler raises an exception.
+    // SIGTERM is not supported on Windows. Attempting to register a SIGTERM handler raises an exception.
     if (!io.Platform.isWindows) {
       sigTermSub = io.ProcessSignal.sigterm.watch().listen(signalHandler, cancelOnError: false);
-      // SignalException: Listening for signal SIGKILL is not supported
-      //sigKillSub = io.ProcessSignal.sigkill.watch().listen(signalHandler, cancelOnError: false);
     }
   }
   return shutdownCompleter.future;
