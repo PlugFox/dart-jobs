@@ -19,6 +19,9 @@ Response _rootHandler(Request req) {
 }
 
 FutureOr<Response> _wsHandler(Request req) {
+  /// TODO: в продакшене для этого можно использовать shelf_proxy
+  /// для перенаправления обработки веб сокетов на отдельный сервер
+  /// или сразу роутером направлять такие запросы на сервер обслуживающий /ws
   l.i(
     'Запрос на соединение по ws, headers:\n'
     '${req.headers.entries.map<String>((e) => '${e.key}: ${e.value}').join('\n')}',
