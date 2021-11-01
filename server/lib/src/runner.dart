@@ -53,7 +53,7 @@ Future<void>? runner<Config extends Object>({
 /// Приготовимся к завершению приложения
 Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShutdown) {
   //StreamSubscription<String>? userKeySub;
-  StreamSubscription<io.ProcessSignal>? sigIntSub, sigTermSub, sigKillSub;
+  StreamSubscription<io.ProcessSignal>? sigIntSub, sigTermSub; // , sigKillSub
   final shutdownCompleter = Completer<T>.sync();
   var catchShutdownEvent = false;
   {
@@ -66,7 +66,7 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
         //userKeySub?.cancel();
         sigIntSub?.cancel();
         sigTermSub?.cancel();
-        sigKillSub?.cancel();
+        //sigKillSub?.cancel();
         result = await onShutdown();
       } finally {
         shutdownCompleter.complete(result);
@@ -98,7 +98,8 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
     // handler raises an exception.
     if (!io.Platform.isWindows) {
       sigTermSub = io.ProcessSignal.sigterm.watch().listen(signalHandler, cancelOnError: false);
-      sigKillSub = io.ProcessSignal.sigkill.watch().listen(signalHandler, cancelOnError: false);
+      // SignalException: Listening for signal SIGKILL is not supported
+      //sigKillSub = io.ProcessSignal.sigkill.watch().listen(signalHandler, cancelOnError: false);
     }
   }
   return shutdownCompleter.future;
