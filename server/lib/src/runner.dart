@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:l/l.dart';
@@ -53,7 +52,7 @@ Future<void>? runner<Config extends Object>({
 
 /// Приготовимся к завершению приложения
 Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShutdown) {
-  StreamSubscription<String>? userKeySub;
+  //StreamSubscription<String>? userKeySub;
   StreamSubscription<io.ProcessSignal>? sigIntSub, sigTermSub, sigKillSub;
   final shutdownCompleter = Completer<T>.sync();
   var catchShutdownEvent = false;
@@ -64,7 +63,7 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
       l.i('Received signal [$signal] - closing');
       T? result;
       try {
-        userKeySub?.cancel();
+        //userKeySub?.cancel();
         sigIntSub?.cancel();
         sigTermSub?.cancel();
         sigKillSub?.cancel();
@@ -74,6 +73,8 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
       }
     }
 
+    /*
+    // Ошибка в проде при попытке отслеживания событий с клавиатуры
     // StdinException: Error setting terminal echo mode, OS Error: Inappropriate ioctl for device, errno = 25
     if (io.stdin.hasTerminal) {
       l.i('Press [Q] to exit');
@@ -90,6 +91,7 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
         },
       );
     }
+    */
 
     sigIntSub = io.ProcessSignal.sigint.watch().listen(signalHandler, cancelOnError: false);
     // SIGTERM & SIGKILL is not supported on Windows. Attempting to register a SIGTERM
