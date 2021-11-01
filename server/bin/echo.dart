@@ -67,9 +67,6 @@ void main(List<String> args) => l.capture(
             server.close(force: true);
           }
         },
-        onError: (error, stackTrace) async {
-          l.e('Unsupported error: $error');
-        },
       ),
       LogOptions(
         handlePrint: true,

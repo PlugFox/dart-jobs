@@ -14,7 +14,7 @@ import 'package:l/l.dart';
 Future<void>? runner<Config extends Object>({
   required final Future<Config> Function() initialization,
   required final Future<void> Function(Config config) onShutdown,
-  required final Future<void> Function(Object error, StackTrace stackTrace) onError,
+  required final Future<void> Function(Object error, StackTrace stackTrace)? onError,
   final Duration initializationTimeout = const Duration(seconds: 15),
   final Duration shutdownTimeout = const Duration(seconds: 5),
 }) {
@@ -37,9 +37,10 @@ Future<void>? runner<Config extends Object>({
     (Object error, StackTrace stackTrace) async {
       io.exitCode = 2; // presume error
       try {
+        l.e('Unsupported error: $error\n' '$stackTrace');
         await Future.wait<void>(
           <Future<void>>[
-            onError(error, stackTrace),
+            if (onError != null) onError(error, stackTrace),
             if (config != null) onShutdown(config!),
           ],
         ).timeout(shutdownTimeout);
@@ -73,19 +74,22 @@ Future<T?> _shutdownHandler<T extends Object?>(final Future<T> Function() onShut
       }
     }
 
-    /// TODO: также по возможности слушать нажатие на клавишу [Q]
-    io.stdin.echoMode = false;
-    io.stdin.lineMode = false;
-    userKeySub = const Utf8Decoder().bind(io.stdin).listen(
-      (line) {
-        final formattedLine = line.trim().toLowerCase();
-        if (formattedLine.contains('q')) {
-          signalHandler(io.ProcessSignal.sigint);
-        } else {
-          l.i('Press [Q] to exit');
-        }
-      },
-    );
+    // StdinException: Error setting terminal echo mode, OS Error: Inappropriate ioctl for device, errno = 25
+    if (io.stdin.hasTerminal) {
+      l.i('Press [Q] to exit');
+      io.stdin.echoMode = false;
+      io.stdin.lineMode = false;
+      userKeySub = const Utf8Decoder().bind(io.stdin).listen(
+        (line) {
+          final formattedLine = line.trim().toLowerCase();
+          if (formattedLine.contains('q')) {
+            signalHandler(io.ProcessSignal.sigint);
+          } else {
+            l.i('Press [Q] to exit');
+          }
+        },
+      );
+    }
 
     sigIntSub = io.ProcessSignal.sigint.watch().listen(signalHandler, cancelOnError: false);
     // SIGTERM & SIGKILL is not supported on Windows. Attempting to register a SIGTERM
