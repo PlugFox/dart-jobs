@@ -24,6 +24,6 @@ jobs:
           echo Install Dependencies; \
             dart pub get
           echo Check format; \
-            dart format --set-exit-if-changed -l 80 -o none .
+            dart format --set-exit-if-changed -l 120 -o none .
           echo Check analyzer; \
             dart analyze --fatal-infos --fatal-warnings lib
