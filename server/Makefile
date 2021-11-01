@@ -27,17 +27,17 @@ docker-build-stage:
 			--file ./docker/echo.dockerfile \
 			--tag registry.plugfox.dev/dart-jobs-echo:stage .
 
-deploy-stage: docker-build-stage docker-push-stage
-	@echo "Deploy staging into docker swarm"
-	docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./docker/dart-jobs.stage.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-stage
-
 docker-push-stage:
 	@echo "Push staging docker images"
 	docker push registry.plugfox.dev/dart-jobs-echo:stage
 
 docker-run-stage:
 	@echo "Run staging docker images"
-	docker run -d -p 1001:80 --name dart-jobs-echo-stage registry.plugfox.dev/dart-jobs-echo:stage
+	docker run -d -p 8081:80 --name dart-jobs-echo-stage registry.plugfox.dev/dart-jobs-echo:stage
+
+deploy-stage: docker-build-stage docker-push-stage
+	@echo "Deploy staging into docker swarm"
+	docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./docker/dart-jobs.stage.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-stage
 
 docker-build-prod:
 	@echo "Build release docker images"

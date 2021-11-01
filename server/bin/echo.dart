@@ -1,75 +1,70 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:args/args.dart';
 import 'package:l/l.dart';
-import 'package:server/src/runner.dart';
+import 'package:meta/meta.dart';
+import 'package:server/src/common/util/get_port.dart';
+import 'package:server/src/common/util/runner.dart';
+import 'package:server/src/feature/echo/http_echo_router.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
-import 'package:shelf_router/shelf_router.dart';
-
-// Configure routes.
-final Router router = Router()
-  ..get('/', _rootHandler)
-  ..get('/echo/<message>', _echoHandler);
-
-Response _rootHandler(Request req) {
-  return Response.ok('Hello, World!\n');
-}
-
-Response _echoHandler(Request request) {
-  final message = request.params['message'];
-  return Response.ok('$message\n');
-}
 
 void main(List<String> args) => l.capture(
-      () => runner<io.HttpServer>(
+      () => runner<ServerConfig>(
         initialization: () async {
           final stopwatch = Stopwatch()..start();
-          final argResult = (ArgParser()
-                ..addOption(
-                  'port',
-                  abbr: 'p',
-                  valueHelp: '80',
-                  help: 'Порт запуска приложения',
-                ))
-              .parse(args);
 
           // Установим маску
           final ip = io.InternetAddress.anyIPv4;
 
-          // Получим порт
-          final portFromArg = argResult.wasParsed('port') ? argResult['port'] : null;
-          final portFromEnv = io.Platform.environment['PORT'];
-          const defaultPort = '80';
-          final port = int.parse(portFromArg ?? portFromEnv ?? defaultPort);
+          // Получим http порт
+          final port = getPort(args);
 
           // Пайплайн обработки запроса
-          final handler = Pipeline()
-              .addMiddleware(
-                logRequests(
-                  logger: (msg, isError) => isError ? l.e(msg) : l.i(msg),
-                ),
-              )
-              .addHandler(router);
+          final httpHandler = const Pipeline()
+              //.addMiddleware(exceptionResponse())
+              .addMiddleware(logRequests(logger: (msg, isError) => isError ? l.e(msg) : l.i(msg)))
+              //.addMiddleware(authMiddleware)
+              .addHandler(httpEchoRouter);
 
-          // Запуск сервера
-          final server = await serve(handler, ip, port);
+          // Запуск http сервера
+          final httpServer = await serve(
+            httpHandler,
+            ip,
+            port,
+            shared: false,
+          );
 
-          l.i('Server started in ${(stopwatch..stop()).elapsedMilliseconds} ms and listening on port [${server.port}]');
+          l.i(
+            'Server started in ${(stopwatch..stop()).elapsedMilliseconds} ms '
+            'at http://${httpServer.address.host}:${httpServer.port}',
+          );
 
-          return server;
+          return ServerConfig(
+            servers: <io.HttpServer>[
+              httpServer,
+            ],
+          );
         },
-        onShutdown: (server) async {
+        onShutdown: (config) async {
           try {
-            await server.close().timeout(const Duration(seconds: 5));
+            await Future.wait<void>(config.servers.map((s) => s.close())).timeout(const Duration(seconds: 5));
           } on TimeoutException {
-            server.close(force: true);
+            await Future.wait<void>(config.servers.map((s) => s.close(force: true)))
+                .timeout(const Duration(seconds: 5));
           }
         },
       ),
-      LogOptions(
+      const LogOptions(
         handlePrint: true,
         outputInRelease: true,
       ),
     );
+
+@immutable
+class ServerConfig {
+  final List<io.HttpServer> servers;
+  const ServerConfig({
+    required final this.servers,
+  });
+}
