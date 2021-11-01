@@ -1,11 +1,15 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:io' as io;
 
+import 'package:args/args.dart';
+import 'package:l/l.dart';
+import 'package:server/src/runner.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 // Configure routes.
-final _router = Router()
+final Router router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler);
 
@@ -18,19 +22,56 @@ Response _echoHandler(Request request) {
   return Response.ok('$message\n');
 }
 
-void main(List<String> args) async {
-  print('Run echo server with args: $args');
+void main(List<String> args) => l.capture(
+      () => runner<io.HttpServer>(
+        initialization: () async {
+          final stopwatch = Stopwatch()..start();
+          final argResult = (ArgParser()
+                ..addOption(
+                  'port',
+                  abbr: 'p',
+                  valueHelp: '80',
+                  help: 'Порт запуска приложения',
+                ))
+              .parse(args);
 
-  // Use any available host or container IP (usually `0.0.0.0`).
-  final ip = InternetAddress.anyIPv4;
+          // Установим маску
+          final ip = io.InternetAddress.anyIPv4;
 
-  // Configure a pipeline that logs requests.
-  final _handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
+          // Получим порт
+          const defaultPort = '80';
+          final portFromArg = argResult.wasParsed('port') ? argResult['port'] : null;
+          final portFromEnv = io.Platform.environment['PORT'];
+          final port = int.parse(portFromArg ?? portFromEnv ?? defaultPort);
 
-  /// TODO: Ожидать сигнала завершения
+          // Пайплайн обработки запроса
+          final handler = Pipeline()
+              .addMiddleware(
+                logRequests(
+                  logger: (msg, isError) => isError ? l.e(msg) : l.i(msg),
+                ),
+              )
+              .addHandler(router);
 
-  // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '80');
-  final server = await serve(_handler, ip, port);
-  print('Server listening on port ${server.port}');
-}
+          // Запуск сервера
+          final server = await serve(handler, ip, port);
+
+          l.i('Server started in ${(stopwatch..stop()).elapsedMilliseconds} ms and listening on port [${server.port}]');
+
+          return server;
+        },
+        onShutdown: (server) async {
+          try {
+            await server.close().timeout(const Duration(seconds: 5));
+          } on TimeoutException {
+            server.close(force: true);
+          }
+        },
+        onError: (error, stackTrace) async {
+          l.e('Unsupported error: $error');
+        },
+      ),
+      LogOptions(
+        handlePrint: true,
+      ),
+    );

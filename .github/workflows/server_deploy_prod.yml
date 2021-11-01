@@ -30,7 +30,6 @@ jobs:
         run: |
           INPUT_REMOTE_USER="pfx"
           INPUT_REMOTE_HOST="49.12.224.115"
-          INPUT_DEPLOY_ARGS="stack deploy --compose-file ./server/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod"
 
           echo "Registering SSH keys..."
           mkdir -p "$HOME/.ssh"
@@ -41,7 +40,7 @@ jobs:
           printf '%s %s\n' "$INPUT_REMOTE_HOST" "${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}" >> "${HOME}/.ssh/known_hosts"
 
           echo "Deploying..."
-          docker --log-level debug --host "ssh://${INPUT_REMOTE_USER}@${INPUT_REMOTE_HOST}" "$INPUT_DEPLOY_ARGS" 2>&1
+          docker --log-level debug --host ssh://${INPUT_REMOTE_USER}@${INPUT_REMOTE_HOST} stack deploy --compose-file ./server/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
           
           rm -rf "$HOME/.ssh"
 
