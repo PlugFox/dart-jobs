@@ -29,4 +29,5 @@ LABEL name="registry.plugfox.dev/dart-jobs-echo" \
 
 # Start server.
 EXPOSE 80/tcp
+
 ENTRYPOINT ["/app/bin/server", "--PORT=80"]

@@ -39,10 +39,10 @@ void main(List<String> args) => l.capture(
           final ip = io.InternetAddress.anyIPv4;
 
           // Получим порт
-          const defaultPort = '80';
           final portFromArg = argResult.wasParsed('port') ? argResult['port'] : null;
-          final portFromEnv = io.Platform.environment['PORT'];
-          final port = int.parse(portFromArg ?? portFromEnv ?? defaultPort);
+          //final portFromEnv = io.Platform.environment['PORT'];
+          const defaultPort = '80';
+          final port = int.parse(portFromArg ?? defaultPort);
 
           // Пайплайн обработки запроса
           final handler = Pipeline()
