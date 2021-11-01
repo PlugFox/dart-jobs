@@ -1,8 +1,10 @@
 # Deploy:
-# docker stack deploy --compose-file /root/stack/dart-jobs-prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+# make docker-build-prod
+# make docker-push-prod
+# docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./server/docker/dart-jobs.prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
 
 # Logs:
-# docker service logs --no-task-ids -f -n all dart-jobs-prod_echo
+# docker --log-level debug --host "ssh://pfx@api.plugfox.dev" service logs --no-task-ids -f -n all dart-jobs-prod_echo
 
 version: '3.3'
 

@@ -1,0 +1,27 @@
+name: SERVER / CHECKOUT
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'server/**.dart'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'server/**.dart'
+  workflow_dispatch:
+
+jobs:
+  check-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🔎 Checkout server source code
+        run: |
+          cd server
+          echo Install Dependencies; \
+            dart pub get
+          echo Check format; \
+            dart format --set-exit-if-changed -l 80 -o none .
+          echo Check analyzer; \
+            dart analyze --fatal-infos --fatal-warnings lib
