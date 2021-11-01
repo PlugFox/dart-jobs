@@ -14,7 +14,7 @@ import 'package:l/l.dart';
 Future<void>? runner<Config extends Object>({
   required final Future<Config> Function() initialization,
   required final Future<void> Function(Config config) onShutdown,
-  required final Future<void> Function(Object error, StackTrace stackTrace)? onError,
+  final Future<void> Function(Object error, StackTrace stackTrace)? onError,
   final Duration initializationTimeout = const Duration(seconds: 15),
   final Duration shutdownTimeout = const Duration(seconds: 5),
 }) {
