@@ -2,11 +2,25 @@ name: SERVER / CHECKOUT
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
     paths:
       - 'server/**.dart'
   pull_request:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
     paths:
       - 'server/**.dart'
   workflow_dispatch:
