@@ -25,7 +25,7 @@ services:
     networks:
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: 1
       placement:
         constraints:
           - node.role == worker

@@ -11,7 +11,7 @@ void main() => Future<void>(
         final client = HttpClient(context: SecurityContext.defaultContext);
 
         /// Send http echo request
-        final request = await client.get(uri.host, uri.port, '${uri.path}/message');
+        final request = await client.getUrl(uri);
         request.headers.add('Authentication', '123');
         final response = await request.close();
         l.i('statusCode: ${response.statusCode}\n' 'headers: ${response.headers}');
