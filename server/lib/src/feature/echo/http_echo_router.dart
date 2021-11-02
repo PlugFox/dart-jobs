@@ -11,7 +11,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 final Router httpEchoRouter = Router()
   ..get('/', _rootHandler)
   ..get('/ws', _wsHandler)
-  ..get('/<message>', _echoHandler);
+  ..get('/<message>', _echoHandler)
+  ..all('/<ignored|.*>', _notFound);
 
 Response _rootHandler(Request req) {
   l.i('http: /');
@@ -45,4 +46,9 @@ Response _echoHandler(Request request) {
   final message = request.params['message'];
   l.i('http: /$message');
   return Response.ok('$message\n');
+}
+
+Response _notFound(Request req) {
+  l.i('http: [${req.method}] ${req.handlerPath} not found');
+  return Response.notFound('http: [${req.method}] ${req.handlerPath} not found');
 }
