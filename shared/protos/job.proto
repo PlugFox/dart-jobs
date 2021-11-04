@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package job;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+//import "google/protobuf/any.proto";
+//import "google/protobuf/empty.proto";
+//import "google/protobuf/api.proto";
+//import "google/protobuf/descriptor.proto";
+//import "google/protobuf/struct.proto";
+//import "google/protobuf/type.proto";
+
+/// Сервис отвечающий за взаимодействие с работами
+service JobService {
+  /// Получение последних записей по указаной фильтрации
+  /// клиент в момент подписки получает все удовлетворяющее его отбору
+  /// и подписывается на дальнейшее получение данных
+  /// Отбирает существующие и удаленные
+  rpc GetRecent(JobFilter) returns (stream JobChanges) {}
+
+  /// Получение последних записей по указаной фильтрации
+  /// Отбирает только существующие
+  rpc Paginate(JobFilter) returns (JobChanges) {}
+
+  /// Создать новую работу
+  /// В ответ получаем созданую работу
+  rpc CreateJob(JobData) returns (JobChange) {}
+
+  /// Получить обновленные данные по работе
+  /// по её идентификатору
+  /// В ответ получаем созданую работу
+  rpc GetJob(google.protobuf.StringValue) returns (JobChange) {}
+
+  /// Обновить данные по работе
+  /// В ответ получаем обновленную работу
+  rpc UpdateJob(Job) returns (JobChange) {}
+
+  /// Удалить работу
+  rpc DeleteJob(Job) returns (JobChange) {}
+}
+
+/// Фильтр для отбора сообщений
+message JobFilter {
+  /// Ожидаемое количество
+  /// Если не указано - 100
+  uint32 limit = 1;
+
+  /// Создано до
+  google.protobuf.Timestamp before = 2;
+
+  /// Создано после
+  google.protobuf.Timestamp after = 3;
+}
+
+/// Коллекция состояний работ
+message JobChanges {
+  /// Это конец коллекции
+  bool endOfList = 1;
+
+  /// Список с работами и их статусами
+  repeated JobChange list = 2;
+}
+
+/// Работа и её текущее состояние (существует/удалена)
+message JobChange {
+  /// Существует?
+  /// Если false - удалена
+  bool exists = 1;
+
+  /// Работа
+  Job job = 2;
+}
+
+/// Работа
+message Job {
+  /// Вес элемента (влияет на сортировку)
+  uint64 weight = 1;
+
+  /// Идентификатор элемента
+  string id = 2;
+
+  /// Идентификатор создателя
+  string creatorId = 3;
+
+  /// Создано
+  google.protobuf.Timestamp created = 4;
+
+  /// Обновлено
+  google.protobuf.Timestamp updated = 5;
+
+  /// Заголовок
+  string title = 6;
+
+  /// Компания, например: Horns and hooves
+  /// Максимальная длина - 64 символов
+  /// Поле ввода
+  string company = 7;
+
+  /// Местоположение, например: Russia
+  /// Максимальная длина - 64 символов
+  /// Выпадающее поле выбора
+  string country = 8;
+
+  /// Удаленная работа?
+  /// Переключатель
+  bool remote = 9;
+
+  /// Данные работы
+  JobData data = 101;
+}
+
+/// Работа / данные работы
+message JobData {
+  /// Описания на различных языках
+  /// Ключ - локаль, например "en" или "ru"
+  /// Значение - описание
+  map<string, string> descriptions = 1;
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 64 символов
+  /// Поле ввода
+  string address = 2;
+
+  /// Уровень разработчика (Developer level)
+  /// Чекбоксы, Chips
+  repeated DeveloperLevel levels = 3;
+
+  /// Навыки (Skills)
+  repeated Skill skills = 4;
+
+  /// Контакты для обратной связи (Contacts)
+  /// Емейл, Сайт, Телефон, Различные мессенджеры
+  /// Поля ввода
+  repeated Contact contacts = 5;
+
+  /// Трудоустройство, занятость (Employment)
+  /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
+  /// Участие в опенсорс проекте, Поиск команды или сотрудничество
+  /// Чекбоксы, Chips
+  repeated Employment employment = 6;
+
+  /// Тэги (Tags)
+  /// Поле ввода
+  repeated string tags = 7;
+}
+
+/// Уровень разработчика
+enum DeveloperLevel {
+  /// Стажёр
+  INTERN = 0;
+
+  /// Младший
+  JUNIOR = 1;
+
+  /// Средний
+  MIDDLE = 2;
+
+  /// Старший
+  SENIOR = 3;
+
+  /// Ведущий
+  LEAD = 4;
+}
+
+enum Employment {
+  /// Полный рабочий день (Full-time employment)
+  FULL_TIME = 0;
+
+  /// Частичная занятость (Part-time employment)
+  PART_TIME = 1;
+
+  /// Одноразовая работа (one-time job)
+  ONE_TIME = 2;
+
+  /// Работа по контракту (Contract job)
+  CONTRACT = 3;
+
+  /// Участие в опенсорс проекте (Open source project)
+  OPEN_SOURCE = 4;
+
+  /// Поиск команды или сотрудничество (Team search or collaboration)
+  COLLABORATION = 5;
+}
+
+/// Навык (Skill)
+/// Язык, фреймвок, пакет
+message Skill {
+  /// Наименование
+  string title = 1;
+
+  /// Вид навыка
+  Skill type = 2;
+
+  /// Виды навыков
+  enum SkillType {
+    /// Неопределено, не получено или не указано (Unknown)
+    UNKNOWN = 0;
+
+    /// Фреймвок
+    FRAMEWORK = 1;
+
+    /// Пакет
+    PACKAGE = 2;
+  }
+}
+
+/// Контакт для обратной связи (Contact)
+/// Емейл, Сайт, Телефон, Различные мессенджеры
+message Contact {
+  /// Наименование
+  string title = 1;
+
+  /// Вид контакта
+  ContactType type = 2;
+
+  /// Виды контактов
+  enum ContactType {
+    /// Неопределено, не получено или не указано (Unknown)
+    UNKNOWN = 0;
+
+    /// Телефон
+    PHONE = 1;
+
+    /// Сайт
+    SITE = 2;
+
+    /// Почта
+    EMAIL = 3;
+
+    /// Телеграм
+    TELEGRAM = 4;
+  }
+}
+

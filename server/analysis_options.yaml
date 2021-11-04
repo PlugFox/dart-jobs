@@ -9,6 +9,11 @@ analyzer:
     - 'lib/**.gen.dart'
     - 'lib/generated_plugin_registrant.dart'
     - 'lib/pigeon.dart'
+    # gRPC
+    - 'lib/**.pb.dart'
+    - 'lib/**.pbenum.dart'
+    - 'lib/**.pbgrpc.dart'
+    - 'lib/**.pbjson.dart'
     # Tests
     - 'test/**.mocks.dart'
     - '.test_coverage.dart'

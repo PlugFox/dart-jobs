@@ -1,7 +1,3 @@
-# Customizing static analysis
-# https://dart.dev/guides/language/analysis-options/
-# https://dart-lang.github.io/linter/lints/
-
 include: package:lints/recommended.yaml
 
 analyzer:
@@ -13,14 +9,14 @@ analyzer:
     - 'lib/**.gen.dart'
     - 'lib/generated_plugin_registrant.dart'
     - 'lib/pigeon.dart'
-    # Localization
-    - 'lib/src/common/localization/intl/**'
-    - 'lib/src/common/localization/l10n.dart'
+    # gRPC
+    - 'lib/**.pb.dart'
+    - 'lib/**.pbenum.dart'
+    - 'lib/**.pbgrpc.dart'
+    - 'lib/**.pbjson.dart'
     # Tests
     - 'test/**.mocks.dart'
     - '.test_coverage.dart'
-    # Web
-    - 'web/**'
     # Build
     - 'build/**'
     # Assets

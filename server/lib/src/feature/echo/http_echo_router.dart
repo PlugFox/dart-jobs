@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:dart_jobs_server/src/feature/echo/websocket_echo_callback.dart';
 import 'package:l/l.dart';
-import 'package:server/src/feature/echo/websocket_echo_callback.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';

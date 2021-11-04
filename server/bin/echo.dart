@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:dart_jobs_server/src/common/util/get_port.dart';
+import 'package:dart_jobs_server/src/common/util/runner.dart';
+import 'package:dart_jobs_server/src/feature/echo/http_echo_router.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
-import 'package:server/src/common/util/get_port.dart';
-import 'package:server/src/common/util/runner.dart';
-import 'package:server/src/feature/echo/http_echo_router.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 
