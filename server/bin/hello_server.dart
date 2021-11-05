@@ -1,5 +1,4 @@
 import 'package:dart_jobs_server/src/common/util/runner.dart';
-import 'package:dart_jobs_shared/src/generated/hello.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:l/l.dart';
 

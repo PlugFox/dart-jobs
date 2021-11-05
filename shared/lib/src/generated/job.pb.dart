@@ -257,10 +257,6 @@ class Job extends $pb.GeneratedMessage {
         subBuilder: $2.Timestamp.create)
     ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updated',
         subBuilder: $2.Timestamp.create)
-    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
-    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'company')
-    ..aOS(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'country')
-    ..aOB(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'remote')
     ..aOM<JobData>(101, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'data',
         subBuilder: JobData.create)
     ..hasRequiredFields = false;
@@ -272,10 +268,6 @@ class Job extends $pb.GeneratedMessage {
     $core.String? creatorId,
     $2.Timestamp? created,
     $2.Timestamp? updated,
-    $core.String? title,
-    $core.String? company,
-    $core.String? country,
-    $core.bool? remote,
     JobData? data,
   }) {
     final _result = create();
@@ -293,18 +285,6 @@ class Job extends $pb.GeneratedMessage {
     }
     if (updated != null) {
       _result.updated = updated;
-    }
-    if (title != null) {
-      _result.title = title;
-    }
-    if (company != null) {
-      _result.company = company;
-    }
-    if (country != null) {
-      _result.country = country;
-    }
-    if (remote != null) {
-      _result.remote = remote;
     }
     if (data != null) {
       _result.data = data;
@@ -397,67 +377,19 @@ class Job extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $2.Timestamp ensureUpdated() => $_ensure(4);
 
-  @$pb.TagNumber(6)
-  $core.String get title => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set title($core.String v) {
-    $_setString(5, v);
-  }
-
-  @$pb.TagNumber(6)
-  $core.bool hasTitle() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearTitle() => clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get company => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set company($core.String v) {
-    $_setString(6, v);
-  }
-
-  @$pb.TagNumber(7)
-  $core.bool hasCompany() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearCompany() => clearField(7);
-
-  @$pb.TagNumber(8)
-  $core.String get country => $_getSZ(7);
-  @$pb.TagNumber(8)
-  set country($core.String v) {
-    $_setString(7, v);
-  }
-
-  @$pb.TagNumber(8)
-  $core.bool hasCountry() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearCountry() => clearField(8);
-
-  @$pb.TagNumber(9)
-  $core.bool get remote => $_getBF(8);
-  @$pb.TagNumber(9)
-  set remote($core.bool v) {
-    $_setBool(8, v);
-  }
-
-  @$pb.TagNumber(9)
-  $core.bool hasRemote() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearRemote() => clearField(9);
-
   @$pb.TagNumber(101)
-  JobData get data => $_getN(9);
+  JobData get data => $_getN(5);
   @$pb.TagNumber(101)
   set data(JobData v) {
     setField(101, v);
   }
 
   @$pb.TagNumber(101)
-  $core.bool hasData() => $_has(9);
+  $core.bool hasData() => $_has(5);
   @$pb.TagNumber(101)
   void clearData() => clearField(101);
   @$pb.TagNumber(101)
-  JobData ensureData() => $_ensure(9);
+  JobData ensureData() => $_ensure(5);
 }
 
 class JobData extends $pb.GeneratedMessage {
@@ -465,31 +397,39 @@ class JobData extends $pb.GeneratedMessage {
       const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'JobData',
       package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
       createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'company')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'country')
+    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'remote')
+    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'address')
     ..m<$core.String, $core.String>(
-        1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'descriptions',
+        6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'descriptions',
         entryClassName: 'JobData.DescriptionsEntry',
         keyFieldType: $pb.PbFieldType.OS,
         valueFieldType: $pb.PbFieldType.OS,
         packageName: const $pb.PackageName('job'))
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'address')
     ..pc<DeveloperLevel>(
-        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'levels', $pb.PbFieldType.PE,
+        7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'levels', $pb.PbFieldType.PE,
         valueOf: DeveloperLevel.valueOf, enumValues: DeveloperLevel.values)
-    ..pc<Skill>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'skills', $pb.PbFieldType.PM,
+    ..pc<Skill>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'skills', $pb.PbFieldType.PM,
         subBuilder: Skill.create)
     ..pc<Contact>(
-        5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'contacts', $pb.PbFieldType.PM,
+        9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'contacts', $pb.PbFieldType.PM,
         subBuilder: Contact.create)
     ..pc<Employment>(
-        6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'employment', $pb.PbFieldType.PE,
+        10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'employment', $pb.PbFieldType.PE,
         valueOf: Employment.valueOf, enumValues: Employment.values)
-    ..pPS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tags')
+    ..pPS(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tags')
     ..hasRequiredFields = false;
 
   JobData._() : super();
   factory JobData({
-    $core.Map<$core.String, $core.String>? descriptions,
+    $core.String? title,
+    $core.String? company,
+    $core.String? country,
+    $core.bool? remote,
     $core.String? address,
+    $core.Map<$core.String, $core.String>? descriptions,
     $core.Iterable<DeveloperLevel>? levels,
     $core.Iterable<Skill>? skills,
     $core.Iterable<Contact>? contacts,
@@ -497,11 +437,23 @@ class JobData extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? tags,
   }) {
     final _result = create();
-    if (descriptions != null) {
-      _result.descriptions.addAll(descriptions);
+    if (title != null) {
+      _result.title = title;
+    }
+    if (company != null) {
+      _result.company = company;
+    }
+    if (country != null) {
+      _result.country = country;
+    }
+    if (remote != null) {
+      _result.remote = remote;
     }
     if (address != null) {
       _result.address = address;
+    }
+    if (descriptions != null) {
+      _result.descriptions.addAll(descriptions);
     }
     if (levels != null) {
       _result.levels.addAll(levels);
@@ -543,34 +495,82 @@ class JobData extends $pb.GeneratedMessage {
   static JobData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.Map<$core.String, $core.String> get descriptions => $_getMap(0);
+  $core.String get title => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set title($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasTitle() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTitle() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get address => $_getSZ(1);
+  $core.String get company => $_getSZ(1);
   @$pb.TagNumber(2)
-  set address($core.String v) {
+  set company($core.String v) {
     $_setString(1, v);
   }
 
   @$pb.TagNumber(2)
-  $core.bool hasAddress() => $_has(1);
+  $core.bool hasCompany() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAddress() => clearField(2);
+  void clearCompany() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<DeveloperLevel> get levels => $_getList(2);
+  $core.String get country => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set country($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasCountry() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCountry() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<Skill> get skills => $_getList(3);
+  $core.bool get remote => $_getBF(3);
+  @$pb.TagNumber(4)
+  set remote($core.bool v) {
+    $_setBool(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasRemote() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRemote() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.List<Contact> get contacts => $_getList(4);
+  $core.String get address => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set address($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasAddress() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAddress() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.List<Employment> get employment => $_getList(5);
+  $core.Map<$core.String, $core.String> get descriptions => $_getMap(5);
 
   @$pb.TagNumber(7)
-  $core.List<$core.String> get tags => $_getList(6);
+  $core.List<DeveloperLevel> get levels => $_getList(6);
+
+  @$pb.TagNumber(8)
+  $core.List<Skill> get skills => $_getList(7);
+
+  @$pb.TagNumber(9)
+  $core.List<Contact> get contacts => $_getList(8);
+
+  @$pb.TagNumber(10)
+  $core.List<Employment> get employment => $_getList(9);
+
+  @$pb.TagNumber(11)
+  $core.List<$core.String> get tags => $_getList(10);
 }
 
 class Skill extends $pb.GeneratedMessage {
@@ -578,19 +578,19 @@ class Skill extends $pb.GeneratedMessage {
       const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Skill',
       package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
       createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value')
     ..aOM<Skill>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type',
         subBuilder: Skill.create)
     ..hasRequiredFields = false;
 
   Skill._() : super();
   factory Skill({
-    $core.String? title,
+    $core.String? value,
     Skill? type,
   }) {
     final _result = create();
-    if (title != null) {
-      _result.title = title;
+    if (value != null) {
+      _result.value = value;
     }
     if (type != null) {
       _result.type = type;
@@ -620,16 +620,16 @@ class Skill extends $pb.GeneratedMessage {
   static Skill? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get title => $_getSZ(0);
+  $core.String get value => $_getSZ(0);
   @$pb.TagNumber(1)
-  set title($core.String v) {
+  set value($core.String v) {
     $_setString(0, v);
   }
 
   @$pb.TagNumber(1)
-  $core.bool hasTitle() => $_has(0);
+  $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
-  void clearTitle() => clearField(1);
+  void clearValue() => clearField(1);
 
   @$pb.TagNumber(2)
   Skill get type => $_getN(1);
@@ -651,7 +651,7 @@ class Contact extends $pb.GeneratedMessage {
       const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Contact',
       package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
       createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value')
     ..e<Contact_ContactType>(
         2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type', $pb.PbFieldType.OE,
         defaultOrMaker: Contact_ContactType.UNKNOWN,
@@ -661,12 +661,12 @@ class Contact extends $pb.GeneratedMessage {
 
   Contact._() : super();
   factory Contact({
-    $core.String? title,
+    $core.String? value,
     Contact_ContactType? type,
   }) {
     final _result = create();
-    if (title != null) {
-      _result.title = title;
+    if (value != null) {
+      _result.value = value;
     }
     if (type != null) {
       _result.type = type;
@@ -696,16 +696,16 @@ class Contact extends $pb.GeneratedMessage {
   static Contact? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get title => $_getSZ(0);
+  $core.String get value => $_getSZ(0);
   @$pb.TagNumber(1)
-  set title($core.String v) {
+  set value($core.String v) {
     $_setString(0, v);
   }
 
   @$pb.TagNumber(1)
-  $core.bool hasTitle() => $_has(0);
+  $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
-  void clearTitle() => clearField(1);
+  void clearValue() => clearField(1);
 
   @$pb.TagNumber(2)
   Contact_ContactType get type => $_getN(1);

@@ -89,8 +89,8 @@ class Contact_ContactType extends $pb.ProtobufEnum {
       Contact_ContactType._(0, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'UNKNOWN');
   static const Contact_ContactType PHONE =
       Contact_ContactType._(1, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PHONE');
-  static const Contact_ContactType SITE =
-      Contact_ContactType._(2, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SITE');
+  static const Contact_ContactType WEBSITE =
+      Contact_ContactType._(2, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'WEBSITE');
   static const Contact_ContactType EMAIL =
       Contact_ContactType._(3, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'EMAIL');
   static const Contact_ContactType TELEGRAM =
@@ -99,7 +99,7 @@ class Contact_ContactType extends $pb.ProtobufEnum {
   static const $core.List<Contact_ContactType> values = <Contact_ContactType>[
     UNKNOWN,
     PHONE,
-    SITE,
+    WEBSITE,
     EMAIL,
     TELEGRAM,
   ];

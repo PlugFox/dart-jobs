@@ -86,28 +86,28 @@ const Job$json = {
     {'1': 'creatorId', '3': 3, '4': 1, '5': 9, '10': 'creatorId'},
     {'1': 'created', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
     {'1': 'updated', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'updated'},
-    {'1': 'title', '3': 6, '4': 1, '5': 9, '10': 'title'},
-    {'1': 'company', '3': 7, '4': 1, '5': 9, '10': 'company'},
-    {'1': 'country', '3': 8, '4': 1, '5': 9, '10': 'country'},
-    {'1': 'remote', '3': 9, '4': 1, '5': 8, '10': 'remote'},
     {'1': 'data', '3': 101, '4': 1, '5': 11, '6': '.job.JobData', '10': 'data'},
   ],
 };
 
 /// Descriptor for `Job`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobDescriptor = $convert.base64Decode(
-    'CgNKb2ISFgoGd2VpZ2h0GAEgASgEUgZ3ZWlnaHQSDgoCaWQYAiABKAlSAmlkEhwKCWNyZWF0b3JJZBgDIAEoCVIJY3JlYXRvcklkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEhQKBXRpdGxlGAYgASgJUgV0aXRsZRIYCgdjb21wYW55GAcgASgJUgdjb21wYW55EhgKB2NvdW50cnkYCCABKAlSB2NvdW50cnkSFgoGcmVtb3RlGAkgASgIUgZyZW1vdGUSIAoEZGF0YRhlIAEoCzIMLmpvYi5Kb2JEYXRhUgRkYXRh');
+    'CgNKb2ISFgoGd2VpZ2h0GAEgASgEUgZ3ZWlnaHQSDgoCaWQYAiABKAlSAmlkEhwKCWNyZWF0b3JJZBgDIAEoCVIJY3JlYXRvcklkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEiAKBGRhdGEYZSABKAsyDC5qb2IuSm9iRGF0YVIEZGF0YQ==');
 @$core.Deprecated('Use jobDataDescriptor instead')
 const JobData$json = {
   '1': 'JobData',
   '2': [
-    {'1': 'descriptions', '3': 1, '4': 3, '5': 11, '6': '.job.JobData.DescriptionsEntry', '10': 'descriptions'},
-    {'1': 'address', '3': 2, '4': 1, '5': 9, '10': 'address'},
-    {'1': 'levels', '3': 3, '4': 3, '5': 14, '6': '.job.DeveloperLevel', '10': 'levels'},
-    {'1': 'skills', '3': 4, '4': 3, '5': 11, '6': '.job.Skill', '10': 'skills'},
-    {'1': 'contacts', '3': 5, '4': 3, '5': 11, '6': '.job.Contact', '10': 'contacts'},
-    {'1': 'employment', '3': 6, '4': 3, '5': 14, '6': '.job.Employment', '10': 'employment'},
-    {'1': 'tags', '3': 7, '4': 3, '5': 9, '10': 'tags'},
+    {'1': 'title', '3': 1, '4': 1, '5': 9, '10': 'title'},
+    {'1': 'company', '3': 2, '4': 1, '5': 9, '10': 'company'},
+    {'1': 'country', '3': 3, '4': 1, '5': 9, '10': 'country'},
+    {'1': 'remote', '3': 4, '4': 1, '5': 8, '10': 'remote'},
+    {'1': 'address', '3': 5, '4': 1, '5': 9, '10': 'address'},
+    {'1': 'descriptions', '3': 6, '4': 3, '5': 11, '6': '.job.JobData.DescriptionsEntry', '10': 'descriptions'},
+    {'1': 'levels', '3': 7, '4': 3, '5': 14, '6': '.job.DeveloperLevel', '10': 'levels'},
+    {'1': 'skills', '3': 8, '4': 3, '5': 11, '6': '.job.Skill', '10': 'skills'},
+    {'1': 'contacts', '3': 9, '4': 3, '5': 11, '6': '.job.Contact', '10': 'contacts'},
+    {'1': 'employment', '3': 10, '4': 3, '5': 14, '6': '.job.Employment', '10': 'employment'},
+    {'1': 'tags', '3': 11, '4': 3, '5': 9, '10': 'tags'},
   ],
   '3': [JobData_DescriptionsEntry$json],
 };
@@ -124,12 +124,12 @@ const JobData_DescriptionsEntry$json = {
 
 /// Descriptor for `JobData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobDataDescriptor = $convert.base64Decode(
-    'CgdKb2JEYXRhEkIKDGRlc2NyaXB0aW9ucxgBIAMoCzIeLmpvYi5Kb2JEYXRhLkRlc2NyaXB0aW9uc0VudHJ5UgxkZXNjcmlwdGlvbnMSGAoHYWRkcmVzcxgCIAEoCVIHYWRkcmVzcxIrCgZsZXZlbHMYAyADKA4yEy5qb2IuRGV2ZWxvcGVyTGV2ZWxSBmxldmVscxIiCgZza2lsbHMYBCADKAsyCi5qb2IuU2tpbGxSBnNraWxscxIoCghjb250YWN0cxgFIAMoCzIMLmpvYi5Db250YWN0Ughjb250YWN0cxIvCgplbXBsb3ltZW50GAYgAygOMg8uam9iLkVtcGxveW1lbnRSCmVtcGxveW1lbnQSEgoEdGFncxgHIAMoCVIEdGFncxo/ChFEZXNjcmlwdGlvbnNFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEoCVIFdmFsdWU6AjgB');
+    'CgdKb2JEYXRhEhQKBXRpdGxlGAEgASgJUgV0aXRsZRIYCgdjb21wYW55GAIgASgJUgdjb21wYW55EhgKB2NvdW50cnkYAyABKAlSB2NvdW50cnkSFgoGcmVtb3RlGAQgASgIUgZyZW1vdGUSGAoHYWRkcmVzcxgFIAEoCVIHYWRkcmVzcxJCCgxkZXNjcmlwdGlvbnMYBiADKAsyHi5qb2IuSm9iRGF0YS5EZXNjcmlwdGlvbnNFbnRyeVIMZGVzY3JpcHRpb25zEisKBmxldmVscxgHIAMoDjITLmpvYi5EZXZlbG9wZXJMZXZlbFIGbGV2ZWxzEiIKBnNraWxscxgIIAMoCzIKLmpvYi5Ta2lsbFIGc2tpbGxzEigKCGNvbnRhY3RzGAkgAygLMgwuam9iLkNvbnRhY3RSCGNvbnRhY3RzEi8KCmVtcGxveW1lbnQYCiADKA4yDy5qb2IuRW1wbG95bWVudFIKZW1wbG95bWVudBISCgR0YWdzGAsgAygJUgR0YWdzGj8KEURlc2NyaXB0aW9uc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAE=');
 @$core.Deprecated('Use skillDescriptor instead')
 const Skill$json = {
   '1': 'Skill',
   '2': [
-    {'1': 'title', '3': 1, '4': 1, '5': 9, '10': 'title'},
+    {'1': 'value', '3': 1, '4': 1, '5': 9, '10': 'value'},
     {'1': 'type', '3': 2, '4': 1, '5': 11, '6': '.job.Skill', '10': 'type'},
   ],
   '4': [Skill_SkillType$json],
@@ -147,12 +147,12 @@ const Skill_SkillType$json = {
 
 /// Descriptor for `Skill`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List skillDescriptor = $convert.base64Decode(
-    'CgVTa2lsbBIUCgV0aXRsZRgBIAEoCVIFdGl0bGUSHgoEdHlwZRgCIAEoCzIKLmpvYi5Ta2lsbFIEdHlwZSI0CglTa2lsbFR5cGUSCwoHVU5LTk9XThAAEg0KCUZSQU1FV09SSxABEgsKB1BBQ0tBR0UQAg==');
+    'CgVTa2lsbBIUCgV2YWx1ZRgBIAEoCVIFdmFsdWUSHgoEdHlwZRgCIAEoCzIKLmpvYi5Ta2lsbFIEdHlwZSI0CglTa2lsbFR5cGUSCwoHVU5LTk9XThAAEg0KCUZSQU1FV09SSxABEgsKB1BBQ0tBR0UQAg==');
 @$core.Deprecated('Use contactDescriptor instead')
 const Contact$json = {
   '1': 'Contact',
   '2': [
-    {'1': 'title', '3': 1, '4': 1, '5': 9, '10': 'title'},
+    {'1': 'value', '3': 1, '4': 1, '5': 9, '10': 'value'},
     {'1': 'type', '3': 2, '4': 1, '5': 14, '6': '.job.Contact.ContactType', '10': 'type'},
   ],
   '4': [Contact_ContactType$json],
@@ -164,7 +164,7 @@ const Contact_ContactType$json = {
   '2': [
     {'1': 'UNKNOWN', '2': 0},
     {'1': 'PHONE', '2': 1},
-    {'1': 'SITE', '2': 2},
+    {'1': 'WEBSITE', '2': 2},
     {'1': 'EMAIL', '2': 3},
     {'1': 'TELEGRAM', '2': 4},
   ],
@@ -172,4 +172,4 @@ const Contact_ContactType$json = {
 
 /// Descriptor for `Contact`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contactDescriptor = $convert.base64Decode(
-    'CgdDb250YWN0EhQKBXRpdGxlGAEgASgJUgV0aXRsZRIsCgR0eXBlGAIgASgOMhguam9iLkNvbnRhY3QuQ29udGFjdFR5cGVSBHR5cGUiSAoLQ29udGFjdFR5cGUSCwoHVU5LTk9XThAAEgkKBVBIT05FEAESCAoEU0lURRACEgkKBUVNQUlMEAMSDAoIVEVMRUdSQU0QBA==');
+    'CgdDb250YWN0EhQKBXZhbHVlGAEgASgJUgV2YWx1ZRIsCgR0eXBlGAIgASgOMhguam9iLkNvbnRhY3QuQ29udGFjdFR5cGVSBHR5cGUiSwoLQ29udGFjdFR5cGUSCwoHVU5LTk9XThAAEgkKBVBIT05FEAESCwoHV0VCU0lURRACEgkKBUVNQUlMEAMSDAoIVEVMRUdSQU0QBA==');

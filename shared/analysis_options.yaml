@@ -47,6 +47,9 @@ analyzer:
     valid_regexps: error
     always_require_non_null_named_parameters: error
 
+    # Ignore
+    invalid_annotation_target: ignore
+
   plugins:
     - dart_code_metrics
 

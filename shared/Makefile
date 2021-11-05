@@ -22,7 +22,7 @@ upgrade-major: get
 
 codegen: get
 	@echo "Running codegeneration"
-	@protoc --dart_out=grpc:lib/src/generated -Iprotos protos/job.proto
+	@protoc --proto_path=protos --dart_out=grpc:lib/src/generated protos/job.proto
 	@dart format -l 120 --fix lib/src/generated
 	@dart run build_runner build --delete-conflicting-outputs --release
 

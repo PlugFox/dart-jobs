@@ -5,13 +5,6 @@ package job;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-//import "google/protobuf/any.proto";
-//import "google/protobuf/empty.proto";
-//import "google/protobuf/api.proto";
-//import "google/protobuf/descriptor.proto";
-//import "google/protobuf/struct.proto";
-//import "google/protobuf/type.proto";
-
 /// Сервис отвечающий за взаимодействие с работами
 service JobService {
   /// Получение последних записей по указаной фильтрации
@@ -90,60 +83,64 @@ message Job {
   /// Обновлено
   google.protobuf.Timestamp updated = 5;
 
-  /// Заголовок
-  string title = 6;
-
-  /// Компания, например: Horns and hooves
-  /// Максимальная длина - 64 символов
-  /// Поле ввода
-  string company = 7;
-
-  /// Местоположение, например: Russia
-  /// Максимальная длина - 64 символов
-  /// Выпадающее поле выбора
-  string country = 8;
-
-  /// Удаленная работа?
-  /// Переключатель
-  bool remote = 9;
-
   /// Данные работы
   JobData data = 101;
 }
 
 /// Работа / данные работы
 message JobData {
-  /// Описания на различных языках
-  /// Ключ - локаль, например "en" или "ru"
-  /// Значение - описание
-  map<string, string> descriptions = 1;
+  /// Заголовок
+  /// Максимальная длина - 64 символов
+  /// Поле ввода
+  string title = 1;
+
+  /// Компания, например: Horns and hooves
+  /// Максимальная длина - 64 символов
+  /// Поле ввода
+  string company = 2;
+
+  /// Местоположение, например: Russia
+  /// Максимальная длина - 64 символов
+  /// Выпадающее поле выбора
+  string country = 3;
+
+  /// Удаленная работа?
+  /// Переключатель
+  bool remote = 4;
 
   /// Местоположение, например: Moscow
   /// Максимальная длина - 64 символов
   /// Поле ввода
-  string address = 2;
+  string address = 5;
+
+  /// Описания на различных языках
+  /// Ключ - локаль, например "en" или "ru"
+  /// Максимальная длина - 2600 символов для каждого значения
+  /// Значение - описание
+  map<string, string> descriptions = 6;
 
   /// Уровень разработчика (Developer level)
   /// Чекбоксы, Chips
-  repeated DeveloperLevel levels = 3;
+  repeated DeveloperLevel levels = 7;
 
   /// Навыки (Skills)
-  repeated Skill skills = 4;
+  /// Поля ввода
+  repeated Skill skills = 8;
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
-  repeated Contact contacts = 5;
+  repeated Contact contacts = 9;
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
   /// Участие в опенсорс проекте, Поиск команды или сотрудничество
   /// Чекбоксы, Chips
-  repeated Employment employment = 6;
+  repeated Employment employment = 10;
 
   /// Тэги (Tags)
   /// Поле ввода
-  repeated string tags = 7;
+  repeated string tags = 11;
 }
 
 /// Уровень разработчика
@@ -164,6 +161,7 @@ enum DeveloperLevel {
   LEAD = 4;
 }
 
+/// Занятость
 enum Employment {
   /// Полный рабочий день (Full-time employment)
   FULL_TIME = 0;
@@ -187,8 +185,8 @@ enum Employment {
 /// Навык (Skill)
 /// Язык, фреймвок, пакет
 message Skill {
-  /// Наименование
-  string title = 1;
+  /// Значение
+  string value = 1;
 
   /// Вид навыка
   Skill type = 2;
@@ -207,10 +205,10 @@ message Skill {
 }
 
 /// Контакт для обратной связи (Contact)
-/// Емейл, Сайт, Телефон, Различные мессенджеры
+/// Емейл, Сайт, Телефон, Различные мессенджеры и тп и тд
 message Contact {
-  /// Наименование
-  string title = 1;
+  /// Значение
+  string value = 1;
 
   /// Вид контакта
   ContactType type = 2;
@@ -224,7 +222,7 @@ message Contact {
     PHONE = 1;
 
     /// Сайт
-    SITE = 2;
+    WEBSITE = 2;
 
     /// Почта
     EMAIL = 3;
