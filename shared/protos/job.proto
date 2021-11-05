@@ -10,72 +10,69 @@ service JobService {
   /// Получение последних записей по указаной фильтрации
   /// клиент в момент подписки получает все удовлетворяющее его отбору
   /// и подписывается на дальнейшее получение данных
-  /// Отбирает существующие и удаленные
-  rpc GetRecent(JobFilter) returns (stream JobChanges) {}
+  rpc ListenRecent(JobFilter) returns (stream JobsChunk) {}
 
   /// Получение последних записей по указаной фильтрации
-  /// Отбирает только существующие
-  rpc Paginate(JobFilter) returns (JobChanges) {}
+  rpc GetRecent(JobFilter) returns (JobsChunk) {}
+
+  /// Получение последних записей по указаной фильтрации
+  rpc Paginate(JobFilter) returns (JobsChunk) {}
 
   /// Создать новую работу
   /// В ответ получаем созданую работу
-  rpc CreateJob(JobData) returns (JobChange) {}
+  rpc CreateJob(JobData) returns (Job) {}
 
   /// Получить обновленные данные по работе
   /// по её идентификатору
   /// В ответ получаем созданую работу
-  rpc GetJob(google.protobuf.StringValue) returns (JobChange) {}
+  rpc GetJob(google.protobuf.StringValue) returns (Job) {}
 
   /// Обновить данные по работе
   /// В ответ получаем обновленную работу
-  rpc UpdateJob(Job) returns (JobChange) {}
+  rpc UpdateJob(Job) returns (Job) {}
 
   /// Удалить работу
-  rpc DeleteJob(Job) returns (JobChange) {}
+  rpc DeleteJob(Job) returns (Job) {}
 }
 
 /// Фильтр для отбора сообщений
 message JobFilter {
+  /// Включать в выборку с пометкой на удаление
+  /// false - только существующие
+  /// true - существующие и помеченные на удаленние
+  bool deletionMarkIncluded = 1;
+
   /// Ожидаемое количество
   /// Если не указано - 100
-  uint32 limit = 1;
+  uint32 limit = 2;
 
   /// Создано до
-  google.protobuf.Timestamp before = 2;
+  optional google.protobuf.Timestamp before = 3;
 
   /// Создано после
-  google.protobuf.Timestamp after = 3;
+  optional google.protobuf.Timestamp after = 4;
 }
 
-/// Коллекция состояний работ
-message JobChanges {
-  /// Это конец коллекции
+/// Кусок коллекции работ
+message JobsChunk {
+  /// Это последний кусок коллекции по указаному отбору
+  /// Если true - значит по указаному запросу больше нечего получать
   bool endOfList = 1;
 
-  /// Список с работами и их статусами
-  repeated JobChange list = 2;
-}
-
-/// Работа и её текущее состояние (существует/удалена)
-message JobChange {
-  /// Существует?
-  /// Если false - удалена
-  bool exists = 1;
-
-  /// Работа
-  Job job = 2;
+  /// Список с работами
+  repeated Job jobs = 2;
 }
 
 /// Работа
 message Job {
-  /// Вес элемента (влияет на сортировку)
-  uint64 weight = 1;
-
   /// Идентификатор элемента
-  string id = 2;
+  string id = 1;
 
   /// Идентификатор создателя
-  string creatorId = 3;
+  string creatorId = 2;
+
+  /// Вес элемента (влияет на сортировку)
+  uint64 weight = 3;
 
   /// Создано
   google.protobuf.Timestamp created = 4;
@@ -83,8 +80,17 @@ message Job {
   /// Обновлено
   google.protobuf.Timestamp updated = 5;
 
+  reserved 6 to 100;
+
   /// Данные работы
   JobData data = 101;
+
+  reserved 102 to 200;
+
+  /// Пометка на удаление
+  /// Если false - существует
+  /// Если true - помечена на удаление
+  bool deletionMark = 201;
 }
 
 /// Работа / данные работы
@@ -231,4 +237,3 @@ message Contact {
     TELEGRAM = 4;
   }
 }
-

@@ -7,21 +7,23 @@ part of 'job.dart';
 // **************************************************************************
 
 _$_Job _$$_JobFromJson(Map<String, dynamic> json) => _$_Job(
-      weight: json['weight'] as int,
       id: json['id'] as String,
       creatorId: json['creator_id'] as String,
+      weight: json['weight'] as int,
       created: DateTime.parse(json['created'] as String),
       updated: DateTime.parse(json['updated'] as String),
       data: JobData.fromJson(json['data'] as Map<String, dynamic>),
+      deletionMark: json['deletion_mark'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_JobToJson(_$_Job instance) => <String, dynamic>{
-      'weight': instance.weight,
       'id': instance.id,
       'creator_id': instance.creatorId,
+      'weight': instance.weight,
       'created': instance.created.toIso8601String(),
       'updated': instance.updated.toIso8601String(),
       'data': instance.data.toJson(),
+      'deletion_mark': instance.deletionMark,
     };
 
 _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
@@ -67,4 +69,23 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) =>
       'contacts': instance.contacts,
       'employment': instance.employment.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
+    };
+
+_$_JobFilter _$$_JobFilterFromJson(Map<String, dynamic> json) => _$_JobFilter(
+      deletionMarkIncluded: json['deletion_mark_included'] as bool? ?? false,
+      limit: json['limit'] as int? ?? 100,
+      before: json['before'] == null
+          ? null
+          : DateTime.parse(json['before'] as String),
+      after: json['after'] == null
+          ? null
+          : DateTime.parse(json['after'] as String),
+    );
+
+Map<String, dynamic> _$$_JobFilterToJson(_$_JobFilter instance) =>
+    <String, dynamic>{
+      'deletion_mark_included': instance.deletionMarkIncluded,
+      'limit': instance.limit,
+      'before': instance.before?.toIso8601String(),
+      'after': instance.after?.toIso8601String(),
     };

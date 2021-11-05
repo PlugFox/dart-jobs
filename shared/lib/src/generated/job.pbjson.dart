@@ -44,55 +44,53 @@ final $typed_data.Uint8List employmentDescriptor = $convert.base64Decode(
 const JobFilter$json = {
   '1': 'JobFilter',
   '2': [
-    {'1': 'limit', '3': 1, '4': 1, '5': 13, '10': 'limit'},
-    {'1': 'before', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'before'},
-    {'1': 'after', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'after'},
+    {'1': 'deletionMarkIncluded', '3': 1, '4': 1, '5': 8, '10': 'deletionMarkIncluded'},
+    {'1': 'limit', '3': 2, '4': 1, '5': 13, '10': 'limit'},
+    {'1': 'before', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'before', '17': true},
+    {'1': 'after', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 1, '10': 'after', '17': true},
+  ],
+  '8': [
+    {'1': '_before'},
+    {'1': '_after'},
   ],
 };
 
 /// Descriptor for `JobFilter`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobFilterDescriptor = $convert.base64Decode(
-    'CglKb2JGaWx0ZXISFAoFbGltaXQYASABKA1SBWxpbWl0EjIKBmJlZm9yZRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBmJlZm9yZRIwCgVhZnRlchgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBWFmdGVy');
-@$core.Deprecated('Use jobChangesDescriptor instead')
-const JobChanges$json = {
-  '1': 'JobChanges',
+    'CglKb2JGaWx0ZXISMgoUZGVsZXRpb25NYXJrSW5jbHVkZWQYASABKAhSFGRlbGV0aW9uTWFya0luY2x1ZGVkEhQKBWxpbWl0GAIgASgNUgVsaW1pdBI3CgZiZWZvcmUYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSBmJlZm9yZYgBARI1CgVhZnRlchgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAVIFYWZ0ZXKIAQFCCQoHX2JlZm9yZUIICgZfYWZ0ZXI=');
+@$core.Deprecated('Use jobsChunkDescriptor instead')
+const JobsChunk$json = {
+  '1': 'JobsChunk',
   '2': [
     {'1': 'endOfList', '3': 1, '4': 1, '5': 8, '10': 'endOfList'},
-    {'1': 'list', '3': 2, '4': 3, '5': 11, '6': '.job.JobChange', '10': 'list'},
+    {'1': 'jobs', '3': 2, '4': 3, '5': 11, '6': '.job.Job', '10': 'jobs'},
   ],
 };
 
-/// Descriptor for `JobChanges`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List jobChangesDescriptor = $convert.base64Decode(
-    'CgpKb2JDaGFuZ2VzEhwKCWVuZE9mTGlzdBgBIAEoCFIJZW5kT2ZMaXN0EiIKBGxpc3QYAiADKAsyDi5qb2IuSm9iQ2hhbmdlUgRsaXN0');
-@$core.Deprecated('Use jobChangeDescriptor instead')
-const JobChange$json = {
-  '1': 'JobChange',
-  '2': [
-    {'1': 'exists', '3': 1, '4': 1, '5': 8, '10': 'exists'},
-    {'1': 'job', '3': 2, '4': 1, '5': 11, '6': '.job.Job', '10': 'job'},
-  ],
-};
-
-/// Descriptor for `JobChange`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List jobChangeDescriptor =
-    $convert.base64Decode('CglKb2JDaGFuZ2USFgoGZXhpc3RzGAEgASgIUgZleGlzdHMSGgoDam9iGAIgASgLMgguam9iLkpvYlIDam9i');
+/// Descriptor for `JobsChunk`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List jobsChunkDescriptor = $convert
+    .base64Decode('CglKb2JzQ2h1bmsSHAoJZW5kT2ZMaXN0GAEgASgIUgllbmRPZkxpc3QSHAoEam9icxgCIAMoCzIILmpvYi5Kb2JSBGpvYnM=');
 @$core.Deprecated('Use jobDescriptor instead')
 const Job$json = {
   '1': 'Job',
   '2': [
-    {'1': 'weight', '3': 1, '4': 1, '5': 4, '10': 'weight'},
-    {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
-    {'1': 'creatorId', '3': 3, '4': 1, '5': 9, '10': 'creatorId'},
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'creatorId', '3': 2, '4': 1, '5': 9, '10': 'creatorId'},
+    {'1': 'weight', '3': 3, '4': 1, '5': 4, '10': 'weight'},
     {'1': 'created', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
     {'1': 'updated', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'updated'},
     {'1': 'data', '3': 101, '4': 1, '5': 11, '6': '.job.JobData', '10': 'data'},
+    {'1': 'deletionMark', '3': 201, '4': 1, '5': 8, '10': 'deletionMark'},
+  ],
+  '9': [
+    {'1': 6, '2': 101},
+    {'1': 102, '2': 201},
   ],
 };
 
 /// Descriptor for `Job`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobDescriptor = $convert.base64Decode(
-    'CgNKb2ISFgoGd2VpZ2h0GAEgASgEUgZ3ZWlnaHQSDgoCaWQYAiABKAlSAmlkEhwKCWNyZWF0b3JJZBgDIAEoCVIJY3JlYXRvcklkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEiAKBGRhdGEYZSABKAsyDC5qb2IuSm9iRGF0YVIEZGF0YQ==');
+    'CgNKb2ISDgoCaWQYASABKAlSAmlkEhwKCWNyZWF0b3JJZBgCIAEoCVIJY3JlYXRvcklkEhYKBndlaWdodBgDIAEoBFIGd2VpZ2h0EjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEiAKBGRhdGEYZSABKAsyDC5qb2IuSm9iRGF0YVIEZGF0YRIjCgxkZWxldGlvbk1hcmsYyQEgASgIUgxkZWxldGlvbk1hcmtKBAgGEGVKBQhmEMkB');
 @$core.Deprecated('Use jobDataDescriptor instead')
 const JobData$json = {
   '1': 'JobData',
