@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:dart_jobs_shared/grpc.dart' as grpc;
 import 'package:dart_jobs_shared/src/models/enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -34,6 +35,16 @@ class JobsChunk extends Iterable<Job> {
       jobs: jobs is Iterable<Job> ? List<Job>.of(jobs) : [],
     );
   }
+
+  factory JobsChunk.fromProtobuf(grpc.JobsChunk proto) => JobsChunk(
+        endOfList: proto.endOfList,
+        jobs: proto.jobs.map<Job>((e) => Job.fromProtobuf(e)).toList(),
+      );
+
+  grpc.JobsChunk toProtobuf() => grpc.JobsChunk(
+        endOfList: endOfList,
+        jobs: _jobs.map<grpc.Job>((e) => e.toProtobuf()).toList(),
+      );
 
   @override
   Iterator<Job> get iterator => _jobs.iterator;
@@ -70,7 +81,27 @@ class Job with _$Job {
     @JsonKey(name: 'deletion_mark') @Default(false) final bool deletionMark,
   }) = _Job;
 
-  /// Generate Class from Map<String, dynamic>
+  factory Job.fromProtobuf(grpc.Job proto) => Job(
+        id: proto.id,
+        creatorId: proto.creatorId,
+        weight: proto.weight.toInt(),
+        created: proto.created.toDateTime(),
+        updated: proto.updated.toDateTime(),
+        data: JobData.fromProtobuf(proto.data),
+        deletionMark: proto.deletionMark,
+      );
+
+  grpc.Job toProtobuf() => grpc.Job(
+        creatorId: creatorId,
+        created: grpc.Timestamp.fromDateTime(created),
+        updated: grpc.Timestamp.fromDateTime(updated),
+        id: id,
+        weight: grpc.Int64(weight),
+        deletionMark: deletionMark,
+        data: grpc.JobData(),
+      );
+
+  /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 }
 
@@ -122,7 +153,7 @@ class JobData with _$JobData {
     /// Контакты для обратной связи (Contacts)
     /// Емейл, Сайт, Телефон, Различные мессенджеры
     /// Поля ввода
-    @JsonKey(name: 'contacts') @Default(<String>[]) final List<String> contacts,
+    @JsonKey(name: 'contacts') @Default(<Contact>[]) final List<Contact> contacts,
 
     /// Трудоустройство, занятость (Employment)
     /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
@@ -135,8 +166,36 @@ class JobData with _$JobData {
     @JsonKey(name: 'tags') @Default(<String>[]) final List<String> tags,
   }) = _JobData;
 
-  /// Generate Class from Map<String, dynamic>
+  /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
+
+  factory JobData.fromProtobuf(grpc.JobData proto) => JobData(
+        title: proto.title,
+        remote: proto.remote,
+        country: proto.country,
+        address: proto.address,
+        company: proto.company,
+        contacts: proto.contacts.map<Contact>((e) => Contact.fromProtobuf(e)).toList(),
+        descriptions: Description(proto.descriptions),
+        employment: proto.employment.map<Employment>((e) => Employment.fromProtobuf(e)).toList(),
+        levels: proto.levels.map<DeveloperLevel>((e) => DeveloperLevel.fromProtobuf(e)).toList(),
+        skills: proto.skills.map<Skill>((e) => Skill.fromProtobuf(e)).toList(),
+        tags: proto.tags,
+      );
+
+  grpc.JobData toProtobuf() => grpc.JobData(
+        title: title,
+        remote: remote,
+        country: country,
+        address: address,
+        company: company,
+        contacts: contacts.map<grpc.Contact>((e) => e.toProtobuf()),
+        descriptions: descriptions,
+        employment: employment.map<grpc.Employment>((e) => e.toProtobuf()),
+        levels: levels.map<grpc.DeveloperLevel>((e) => e.toProtobuf()),
+        skills: skills.map<grpc.Skill>((e) => e.toProtobuf()),
+        tags: tags,
+      );
 }
 
 /// Описания на различных языках
@@ -174,6 +233,7 @@ class Description with MapMixin<String, String> {
   String? remove(Object? key) => _internalMap.remove(key);
 }
 
+/*
 /// Фильтр для отбора сообщений
 @immutable
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
@@ -197,6 +257,21 @@ class JobFilter with _$JobFilter {
     @JsonKey(name: 'after') final DateTime? after,
   }) = _JobFilter;
 
-  /// Generate Class from Map<String, dynamic>
+  /// Generate Class from Map<String, Object?>
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
+
+  factory JobFilter.fromProtobuf(grpc.JobFilter proto) => JobFilter(
+        deletionMarkIncluded: proto.deletionMarkIncluded,
+        limit: proto.limit,
+        before: proto.before.toDateTime(),
+        after: proto.after.toDateTime(),
+      );
+
+  grpc.JobFilter toProtobuf() => grpc.JobFilter(
+        deletionMarkIncluded: deletionMarkIncluded,
+        limit: limit,
+        before: before != null ? grpc.Timestamp.fromDateTime(before!) : null,
+        after: after != null ? grpc.Timestamp.fromDateTime(after!) : null,
+      );
 }
+*/

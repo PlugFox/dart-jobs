@@ -3,7 +3,7 @@ syntax = "proto3";
 package job;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
+import "common.proto";
 
 /// Сервис отвечающий за взаимодействие с работами
 service JobService {
@@ -25,7 +25,7 @@ service JobService {
   /// Получить обновленные данные по работе
   /// по её идентификатору
   /// В ответ получаем созданую работу
-  rpc GetJob(google.protobuf.StringValue) returns (Job) {}
+  rpc GetJob(common.UUID) returns (Job) {}
 
   /// Обновить данные по работе
   /// В ответ получаем обновленную работу
@@ -38,19 +38,26 @@ service JobService {
 /// Фильтр для отбора сообщений
 message JobFilter {
   /// Включать в выборку с пометкой на удаление
-  /// false - только существующие
+  /// false - только существующие (по умолчанию)
   /// true - существующие и помеченные на удаленние
-  bool deletionMarkIncluded = 1;
+  optional bool deletionMarkIncluded = 1;
 
   /// Ожидаемое количество
   /// Если не указано - 100
-  uint32 limit = 2;
+  optional uint32 limit = 2;
 
-  /// Создано до
-  optional google.protobuf.Timestamp before = 3;
+  /// Указатель отбора
+  /// Для [GetRecent] и [ListenRecent] используется - after
+  /// Для [Paginate] используется - before
+  oneof cursor {
+    /// Создано до
+    /// Для [Paginate]
+    google.protobuf.Timestamp before = 3;
 
-  /// Создано после
-  optional google.protobuf.Timestamp after = 4;
+    /// Создано после
+    /// Для [GetRecent] и [ListenRecent]
+    google.protobuf.Timestamp after = 4;
+  }
 }
 
 /// Кусок коллекции работ
@@ -151,14 +158,14 @@ message JobData {
 
 /// Уровень разработчика
 enum DeveloperLevel {
+  /// Средний
+  MIDDLE = 0;
+
   /// Стажёр
-  INTERN = 0;
+  INTERN = 1;
 
   /// Младший
-  JUNIOR = 1;
-
-  /// Средний
-  MIDDLE = 2;
+  JUNIOR = 2;
 
   /// Старший
   SENIOR = 3;
@@ -195,18 +202,12 @@ message Skill {
   string value = 1;
 
   /// Вид навыка
-  Skill type = 2;
+  SkillType type = 2;
 
   /// Виды навыков
   enum SkillType {
-    /// Неопределено, не получено или не указано (Unknown)
-    UNKNOWN = 0;
-
-    /// Фреймвок
-    FRAMEWORK = 1;
-
-    /// Пакет
-    PACKAGE = 2;
+    /// Неопределено, не получено или не указано, другое (Other / Unknown)
+    OTHER = 0;
   }
 }
 
@@ -222,7 +223,7 @@ message Contact {
   /// Виды контактов
   enum ContactType {
     /// Неопределено, не получено или не указано (Unknown)
-    UNKNOWN = 0;
+    OTHER = 0;
 
     /// Телефон
     PHONE = 1;

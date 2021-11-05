@@ -399,7 +399,7 @@ class _$JobDataTearOff {
       @JsonKey(name: 'skills')
           List<Skill> skills = const <Skill>[],
       @JsonKey(name: 'contacts')
-          List<String> contacts = const <String>[],
+          List<Contact> contacts = const <Contact>[],
       @JsonKey(name: 'employment')
           List<Employment> employment = const <Employment>[],
       @JsonKey(name: 'tags')
@@ -479,7 +479,7 @@ mixin _$JobData {
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<String> get contacts => throw _privateConstructorUsedError;
+  List<Contact> get contacts => throw _privateConstructorUsedError;
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
@@ -511,7 +511,7 @@ abstract class $JobDataCopyWith<$Res> {
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'contacts') List<Contact> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags});
 }
@@ -574,7 +574,7 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Contact>,
       employment: employment == freezed
           ? _value.employment
           : employment // ignore: cast_nullable_to_non_nullable
@@ -601,7 +601,7 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'contacts') List<Contact> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags});
 }
@@ -665,7 +665,7 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res>
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Contact>,
       employment: employment == freezed
           ? _value.employment
           : employment // ignore: cast_nullable_to_non_nullable
@@ -690,7 +690,7 @@ class _$_JobData extends _JobData {
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
       @JsonKey(name: 'levels') this.levels = const <DeveloperLevel>[],
       @JsonKey(name: 'skills') this.skills = const <Skill>[],
-      @JsonKey(name: 'contacts') this.contacts = const <String>[],
+      @JsonKey(name: 'contacts') this.contacts = const <Contact>[],
       @JsonKey(name: 'employment') this.employment = const <Employment>[],
       @JsonKey(name: 'tags') this.tags = const <String>[]})
       : super._();
@@ -758,7 +758,7 @@ class _$_JobData extends _JobData {
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  final List<String> contacts;
+  final List<Contact> contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
@@ -835,7 +835,7 @@ abstract class _JobData extends JobData {
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'contacts') List<Contact> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags}) = _$_JobData;
   const _JobData._() : super._();
@@ -902,7 +902,7 @@ abstract class _JobData extends JobData {
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<String> get contacts;
+  List<Contact> get contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
@@ -920,275 +920,5 @@ abstract class _JobData extends JobData {
   @override
   @JsonKey(ignore: true)
   _$JobDataCopyWith<_JobData> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-JobFilter _$JobFilterFromJson(Map<String, dynamic> json) {
-  return _JobFilter.fromJson(json);
-}
-
-/// @nodoc
-class _$JobFilterTearOff {
-  const _$JobFilterTearOff();
-
-  _JobFilter call(
-      {@JsonKey(name: 'deletion_mark_included')
-          bool deletionMarkIncluded = false,
-      @JsonKey(name: 'limit')
-          int limit = 100,
-      @JsonKey(name: 'before')
-          DateTime? before,
-      @JsonKey(name: 'after')
-          DateTime? after}) {
-    return _JobFilter(
-      deletionMarkIncluded: deletionMarkIncluded,
-      limit: limit,
-      before: before,
-      after: after,
-    );
-  }
-
-  JobFilter fromJson(Map<String, Object?> json) {
-    return JobFilter.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $JobFilter = _$JobFilterTearOff();
-
-/// @nodoc
-mixin _$JobFilter {
-  /// Включать в выборку с пометкой на удаление
-  /// false - только существующие
-  /// true - существующие и помеченные на удаленние
-  @JsonKey(name: 'deletion_mark_included')
-  bool get deletionMarkIncluded => throw _privateConstructorUsedError;
-
-  /// Ожидаемое количество
-  /// Если не указано - 100
-  @JsonKey(name: 'limit')
-  int get limit => throw _privateConstructorUsedError;
-
-  /// Создано до
-  @JsonKey(name: 'before')
-  DateTime? get before => throw _privateConstructorUsedError;
-
-  /// Создано после
-  @JsonKey(name: 'after')
-  DateTime? get after => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $JobFilterCopyWith<JobFilter> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $JobFilterCopyWith<$Res> {
-  factory $JobFilterCopyWith(JobFilter value, $Res Function(JobFilter) then) =
-      _$JobFilterCopyWithImpl<$Res>;
-  $Res call(
-      {@JsonKey(name: 'deletion_mark_included') bool deletionMarkIncluded,
-      @JsonKey(name: 'limit') int limit,
-      @JsonKey(name: 'before') DateTime? before,
-      @JsonKey(name: 'after') DateTime? after});
-}
-
-/// @nodoc
-class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
-  _$JobFilterCopyWithImpl(this._value, this._then);
-
-  final JobFilter _value;
-  // ignore: unused_field
-  final $Res Function(JobFilter) _then;
-
-  @override
-  $Res call({
-    Object? deletionMarkIncluded = freezed,
-    Object? limit = freezed,
-    Object? before = freezed,
-    Object? after = freezed,
-  }) {
-    return _then(_value.copyWith(
-      deletionMarkIncluded: deletionMarkIncluded == freezed
-          ? _value.deletionMarkIncluded
-          : deletionMarkIncluded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      limit: limit == freezed
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int,
-      before: before == freezed
-          ? _value.before
-          : before // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      after: after == freezed
-          ? _value.after
-          : after // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
-  }
-}
-
-/// @nodoc
-abstract class _$JobFilterCopyWith<$Res> implements $JobFilterCopyWith<$Res> {
-  factory _$JobFilterCopyWith(
-          _JobFilter value, $Res Function(_JobFilter) then) =
-      __$JobFilterCopyWithImpl<$Res>;
-  @override
-  $Res call(
-      {@JsonKey(name: 'deletion_mark_included') bool deletionMarkIncluded,
-      @JsonKey(name: 'limit') int limit,
-      @JsonKey(name: 'before') DateTime? before,
-      @JsonKey(name: 'after') DateTime? after});
-}
-
-/// @nodoc
-class __$JobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res>
-    implements _$JobFilterCopyWith<$Res> {
-  __$JobFilterCopyWithImpl(_JobFilter _value, $Res Function(_JobFilter) _then)
-      : super(_value, (v) => _then(v as _JobFilter));
-
-  @override
-  _JobFilter get _value => super._value as _JobFilter;
-
-  @override
-  $Res call({
-    Object? deletionMarkIncluded = freezed,
-    Object? limit = freezed,
-    Object? before = freezed,
-    Object? after = freezed,
-  }) {
-    return _then(_JobFilter(
-      deletionMarkIncluded: deletionMarkIncluded == freezed
-          ? _value.deletionMarkIncluded
-          : deletionMarkIncluded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      limit: limit == freezed
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int,
-      before: before == freezed
-          ? _value.before
-          : before // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      after: after == freezed
-          ? _value.after
-          : after // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_JobFilter extends _JobFilter {
-  const _$_JobFilter(
-      {@JsonKey(name: 'deletion_mark_included')
-          this.deletionMarkIncluded = false,
-      @JsonKey(name: 'limit')
-          this.limit = 100,
-      @JsonKey(name: 'before')
-          this.before,
-      @JsonKey(name: 'after')
-          this.after})
-      : super._();
-
-  factory _$_JobFilter.fromJson(Map<String, dynamic> json) =>
-      _$$_JobFilterFromJson(json);
-
-  @override
-
-  /// Включать в выборку с пометкой на удаление
-  /// false - только существующие
-  /// true - существующие и помеченные на удаленние
-  @JsonKey(name: 'deletion_mark_included')
-  final bool deletionMarkIncluded;
-  @override
-
-  /// Ожидаемое количество
-  /// Если не указано - 100
-  @JsonKey(name: 'limit')
-  final int limit;
-  @override
-
-  /// Создано до
-  @JsonKey(name: 'before')
-  final DateTime? before;
-  @override
-
-  /// Создано после
-  @JsonKey(name: 'after')
-  final DateTime? after;
-
-  @override
-  String toString() {
-    return 'JobFilter(deletionMarkIncluded: $deletionMarkIncluded, limit: $limit, before: $before, after: $after)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _JobFilter &&
-            (identical(other.deletionMarkIncluded, deletionMarkIncluded) ||
-                other.deletionMarkIncluded == deletionMarkIncluded) &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.before, before) || other.before == before) &&
-            (identical(other.after, after) || other.after == after));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, deletionMarkIncluded, limit, before, after);
-
-  @JsonKey(ignore: true)
-  @override
-  _$JobFilterCopyWith<_JobFilter> get copyWith =>
-      __$JobFilterCopyWithImpl<_JobFilter>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_JobFilterToJson(this);
-  }
-}
-
-abstract class _JobFilter extends JobFilter {
-  const factory _JobFilter(
-      {@JsonKey(name: 'deletion_mark_included') bool deletionMarkIncluded,
-      @JsonKey(name: 'limit') int limit,
-      @JsonKey(name: 'before') DateTime? before,
-      @JsonKey(name: 'after') DateTime? after}) = _$_JobFilter;
-  const _JobFilter._() : super._();
-
-  factory _JobFilter.fromJson(Map<String, dynamic> json) =
-      _$_JobFilter.fromJson;
-
-  @override
-
-  /// Включать в выборку с пометкой на удаление
-  /// false - только существующие
-  /// true - существующие и помеченные на удаленние
-  @JsonKey(name: 'deletion_mark_included')
-  bool get deletionMarkIncluded;
-  @override
-
-  /// Ожидаемое количество
-  /// Если не указано - 100
-  @JsonKey(name: 'limit')
-  int get limit;
-  @override
-
-  /// Создано до
-  @JsonKey(name: 'before')
-  DateTime? get before;
-  @override
-
-  /// Создано после
-  @JsonKey(name: 'after')
-  DateTime? get after;
-  @override
-  @JsonKey(ignore: true)
-  _$JobFilterCopyWith<_JobFilter> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -88,42 +88,21 @@ Map<String, dynamic> _$$CollaborationEmploymentToJson(
         _$CollaborationEmployment instance) =>
     <String, dynamic>{};
 
-_$UnknownSkill _$$UnknownSkillFromJson(Map<String, dynamic> json) =>
-    _$UnknownSkill(
+_$OtherSkill _$$OtherSkillFromJson(Map<String, dynamic> json) => _$OtherSkill(
       json['value'] as String,
     );
 
-Map<String, dynamic> _$$UnknownSkillToJson(_$UnknownSkill instance) =>
+Map<String, dynamic> _$$OtherSkillToJson(_$OtherSkill instance) =>
     <String, dynamic>{
       'value': instance.value,
     };
 
-_$FrameworkSkill _$$FrameworkSkillFromJson(Map<String, dynamic> json) =>
-    _$FrameworkSkill(
+_$OtherContact _$$OtherContactFromJson(Map<String, dynamic> json) =>
+    _$OtherContact(
       json['value'] as String,
     );
 
-Map<String, dynamic> _$$FrameworkSkillToJson(_$FrameworkSkill instance) =>
-    <String, dynamic>{
-      'value': instance.value,
-    };
-
-_$PackageSkill _$$PackageSkillFromJson(Map<String, dynamic> json) =>
-    _$PackageSkill(
-      json['value'] as String,
-    );
-
-Map<String, dynamic> _$$PackageSkillToJson(_$PackageSkill instance) =>
-    <String, dynamic>{
-      'value': instance.value,
-    };
-
-_$UnknownContact _$$UnknownContactFromJson(Map<String, dynamic> json) =>
-    _$UnknownContact(
-      json['value'] as String,
-    );
-
-Map<String, dynamic> _$$UnknownContactToJson(_$UnknownContact instance) =>
+Map<String, dynamic> _$$OtherContactToJson(_$OtherContact instance) =>
     <String, dynamic>{
       'value': instance.value,
     };

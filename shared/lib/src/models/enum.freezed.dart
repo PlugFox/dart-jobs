@@ -1815,38 +1815,15 @@ abstract class CollaborationEmployment extends Employment {
 }
 
 Skill _$SkillFromJson(Map<String, dynamic> json) {
-  switch (json['type'] as String?) {
-    case 'UNKNOWN':
-      return UnknownSkill.fromJson(json);
-    case 'FRAMEWORK':
-      return FrameworkSkill.fromJson(json);
-    case 'PACKAGE':
-      return PackageSkill.fromJson(json);
-
-    default:
-      throw CheckedFromJsonException(
-          json, 'type', 'Skill', 'Invalid union type "${json['type']}"!');
-  }
+  return OtherSkill.fromJson(json);
 }
 
 /// @nodoc
 class _$SkillTearOff {
   const _$SkillTearOff();
 
-  UnknownSkill unknown(String value) {
-    return UnknownSkill(
-      value,
-    );
-  }
-
-  FrameworkSkill framework(String value) {
-    return FrameworkSkill(
-      value,
-    );
-  }
-
-  PackageSkill package(String value) {
-    return PackageSkill(
+  OtherSkill other(String value) {
+    return OtherSkill(
       value,
     );
   }
@@ -1865,45 +1842,33 @@ mixin _$Skill {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
-    required TResult Function(String value) framework,
-    required TResult Function(String value) package,
+    required TResult Function(String value) other,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
+    TResult Function(String value)? other,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
+    TResult Function(String value)? other,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownSkill value) unknown,
-    required TResult Function(FrameworkSkill value) framework,
-    required TResult Function(PackageSkill value) package,
+    required TResult Function(OtherSkill value) other,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
+    TResult Function(OtherSkill value)? other,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
+    TResult Function(OtherSkill value)? other,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1941,29 +1906,28 @@ class _$SkillCopyWithImpl<$Res> implements $SkillCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class $UnknownSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
-  factory $UnknownSkillCopyWith(
-          UnknownSkill value, $Res Function(UnknownSkill) then) =
-      _$UnknownSkillCopyWithImpl<$Res>;
+abstract class $OtherSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
+  factory $OtherSkillCopyWith(
+          OtherSkill value, $Res Function(OtherSkill) then) =
+      _$OtherSkillCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$UnknownSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
-    implements $UnknownSkillCopyWith<$Res> {
-  _$UnknownSkillCopyWithImpl(
-      UnknownSkill _value, $Res Function(UnknownSkill) _then)
-      : super(_value, (v) => _then(v as UnknownSkill));
+class _$OtherSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
+    implements $OtherSkillCopyWith<$Res> {
+  _$OtherSkillCopyWithImpl(OtherSkill _value, $Res Function(OtherSkill) _then)
+      : super(_value, (v) => _then(v as OtherSkill));
 
   @override
-  UnknownSkill get _value => super._value as UnknownSkill;
+  OtherSkill get _value => super._value as OtherSkill;
 
   @override
   $Res call({
     Object? value = freezed,
   }) {
-    return _then(UnknownSkill(
+    return _then(OtherSkill(
       value == freezed
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -1974,26 +1938,26 @@ class _$UnknownSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-@FreezedUnionValue('UNKNOWN')
-class _$UnknownSkill extends UnknownSkill {
-  const _$UnknownSkill(this.value) : super._();
+@FreezedUnionValue('other')
+class _$OtherSkill extends OtherSkill {
+  const _$OtherSkill(this.value) : super._();
 
-  factory _$UnknownSkill.fromJson(Map<String, dynamic> json) =>
-      _$$UnknownSkillFromJson(json);
+  factory _$OtherSkill.fromJson(Map<String, dynamic> json) =>
+      _$$OtherSkillFromJson(json);
 
   @override
   final String value;
 
   @override
   String toString() {
-    return 'Skill.unknown(value: $value)';
+    return 'Skill.other(value: $value)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is UnknownSkill &&
+            other is OtherSkill &&
             (identical(other.value, value) || other.value == value));
   }
 
@@ -2002,39 +1966,33 @@ class _$UnknownSkill extends UnknownSkill {
 
   @JsonKey(ignore: true)
   @override
-  $UnknownSkillCopyWith<UnknownSkill> get copyWith =>
-      _$UnknownSkillCopyWithImpl<UnknownSkill>(this, _$identity);
+  $OtherSkillCopyWith<OtherSkill> get copyWith =>
+      _$OtherSkillCopyWithImpl<OtherSkill>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
-    required TResult Function(String value) framework,
-    required TResult Function(String value) package,
+    required TResult Function(String value) other,
   }) {
-    return unknown(value);
+    return other(value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
+    TResult Function(String value)? other,
   }) {
-    return unknown?.call(value);
+    return other?.call(value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
+    TResult Function(String value)? other,
     required TResult orElse(),
   }) {
-    if (unknown != null) {
-      return unknown(value);
+    if (other != null) {
+      return other(value);
     }
     return orElse();
   }
@@ -2042,370 +2000,56 @@ class _$UnknownSkill extends UnknownSkill {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownSkill value) unknown,
-    required TResult Function(FrameworkSkill value) framework,
-    required TResult Function(PackageSkill value) package,
+    required TResult Function(OtherSkill value) other,
   }) {
-    return unknown(this);
+    return other(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
+    TResult Function(OtherSkill value)? other,
   }) {
-    return unknown?.call(this);
+    return other?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
+    TResult Function(OtherSkill value)? other,
     required TResult orElse(),
   }) {
-    if (unknown != null) {
-      return unknown(this);
+    if (other != null) {
+      return other(this);
     }
     return orElse();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UnknownSkillToJson(this)..['type'] = 'UNKNOWN';
+    return _$$OtherSkillToJson(this);
   }
 }
 
-abstract class UnknownSkill extends Skill {
-  const factory UnknownSkill(String value) = _$UnknownSkill;
-  const UnknownSkill._() : super._();
+abstract class OtherSkill extends Skill {
+  const factory OtherSkill(String value) = _$OtherSkill;
+  const OtherSkill._() : super._();
 
-  factory UnknownSkill.fromJson(Map<String, dynamic> json) =
-      _$UnknownSkill.fromJson;
+  factory OtherSkill.fromJson(Map<String, dynamic> json) =
+      _$OtherSkill.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $UnknownSkillCopyWith<UnknownSkill> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $FrameworkSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
-  factory $FrameworkSkillCopyWith(
-          FrameworkSkill value, $Res Function(FrameworkSkill) then) =
-      _$FrameworkSkillCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$FrameworkSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
-    implements $FrameworkSkillCopyWith<$Res> {
-  _$FrameworkSkillCopyWithImpl(
-      FrameworkSkill _value, $Res Function(FrameworkSkill) _then)
-      : super(_value, (v) => _then(v as FrameworkSkill));
-
-  @override
-  FrameworkSkill get _value => super._value as FrameworkSkill;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(FrameworkSkill(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-@FreezedUnionValue('FRAMEWORK')
-class _$FrameworkSkill extends FrameworkSkill {
-  const _$FrameworkSkill(this.value) : super._();
-
-  factory _$FrameworkSkill.fromJson(Map<String, dynamic> json) =>
-      _$$FrameworkSkillFromJson(json);
-
-  @override
-  final String value;
-
-  @override
-  String toString() {
-    return 'Skill.framework(value: $value)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is FrameworkSkill &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $FrameworkSkillCopyWith<FrameworkSkill> get copyWith =>
-      _$FrameworkSkillCopyWithImpl<FrameworkSkill>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
-    required TResult Function(String value) framework,
-    required TResult Function(String value) package,
-  }) {
-    return framework(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
-  }) {
-    return framework?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
-    required TResult orElse(),
-  }) {
-    if (framework != null) {
-      return framework(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(UnknownSkill value) unknown,
-    required TResult Function(FrameworkSkill value) framework,
-    required TResult Function(PackageSkill value) package,
-  }) {
-    return framework(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
-  }) {
-    return framework?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
-    required TResult orElse(),
-  }) {
-    if (framework != null) {
-      return framework(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FrameworkSkillToJson(this)..['type'] = 'FRAMEWORK';
-  }
-}
-
-abstract class FrameworkSkill extends Skill {
-  const factory FrameworkSkill(String value) = _$FrameworkSkill;
-  const FrameworkSkill._() : super._();
-
-  factory FrameworkSkill.fromJson(Map<String, dynamic> json) =
-      _$FrameworkSkill.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $FrameworkSkillCopyWith<FrameworkSkill> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PackageSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
-  factory $PackageSkillCopyWith(
-          PackageSkill value, $Res Function(PackageSkill) then) =
-      _$PackageSkillCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$PackageSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
-    implements $PackageSkillCopyWith<$Res> {
-  _$PackageSkillCopyWithImpl(
-      PackageSkill _value, $Res Function(PackageSkill) _then)
-      : super(_value, (v) => _then(v as PackageSkill));
-
-  @override
-  PackageSkill get _value => super._value as PackageSkill;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(PackageSkill(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-@FreezedUnionValue('PACKAGE')
-class _$PackageSkill extends PackageSkill {
-  const _$PackageSkill(this.value) : super._();
-
-  factory _$PackageSkill.fromJson(Map<String, dynamic> json) =>
-      _$$PackageSkillFromJson(json);
-
-  @override
-  final String value;
-
-  @override
-  String toString() {
-    return 'Skill.package(value: $value)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is PackageSkill &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $PackageSkillCopyWith<PackageSkill> get copyWith =>
-      _$PackageSkillCopyWithImpl<PackageSkill>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
-    required TResult Function(String value) framework,
-    required TResult Function(String value) package,
-  }) {
-    return package(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
-  }) {
-    return package?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
-    TResult Function(String value)? framework,
-    TResult Function(String value)? package,
-    required TResult orElse(),
-  }) {
-    if (package != null) {
-      return package(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(UnknownSkill value) unknown,
-    required TResult Function(FrameworkSkill value) framework,
-    required TResult Function(PackageSkill value) package,
-  }) {
-    return package(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
-  }) {
-    return package?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownSkill value)? unknown,
-    TResult Function(FrameworkSkill value)? framework,
-    TResult Function(PackageSkill value)? package,
-    required TResult orElse(),
-  }) {
-    if (package != null) {
-      return package(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PackageSkillToJson(this)..['type'] = 'PACKAGE';
-  }
-}
-
-abstract class PackageSkill extends Skill {
-  const factory PackageSkill(String value) = _$PackageSkill;
-  const PackageSkill._() : super._();
-
-  factory PackageSkill.fromJson(Map<String, dynamic> json) =
-      _$PackageSkill.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $PackageSkillCopyWith<PackageSkill> get copyWith =>
+  $OtherSkillCopyWith<OtherSkill> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 Contact _$ContactFromJson(Map<String, dynamic> json) {
   switch (json['type'] as String?) {
-    case 'UNKNOWN':
-      return UnknownContact.fromJson(json);
+    case 'OTHER':
+      return OtherContact.fromJson(json);
     case 'PHONE':
       return PhoneContact.fromJson(json);
     case 'WEBSITE':
@@ -2425,8 +2069,8 @@ Contact _$ContactFromJson(Map<String, dynamic> json) {
 class _$ContactTearOff {
   const _$ContactTearOff();
 
-  UnknownContact unknown(String value) {
-    return UnknownContact(
+  OtherContact other(String value) {
+    return OtherContact(
       value,
     );
   }
@@ -2469,7 +2113,7 @@ mixin _$Contact {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
@@ -2478,7 +2122,7 @@ mixin _$Contact {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2487,7 +2131,7 @@ mixin _$Contact {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2497,7 +2141,7 @@ mixin _$Contact {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
@@ -2506,7 +2150,7 @@ mixin _$Contact {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -2515,7 +2159,7 @@ mixin _$Contact {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -2557,29 +2201,29 @@ class _$ContactCopyWithImpl<$Res> implements $ContactCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class $UnknownContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $UnknownContactCopyWith(
-          UnknownContact value, $Res Function(UnknownContact) then) =
-      _$UnknownContactCopyWithImpl<$Res>;
+abstract class $OtherContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
+  factory $OtherContactCopyWith(
+          OtherContact value, $Res Function(OtherContact) then) =
+      _$OtherContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$UnknownContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
-    implements $UnknownContactCopyWith<$Res> {
-  _$UnknownContactCopyWithImpl(
-      UnknownContact _value, $Res Function(UnknownContact) _then)
-      : super(_value, (v) => _then(v as UnknownContact));
+class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
+    implements $OtherContactCopyWith<$Res> {
+  _$OtherContactCopyWithImpl(
+      OtherContact _value, $Res Function(OtherContact) _then)
+      : super(_value, (v) => _then(v as OtherContact));
 
   @override
-  UnknownContact get _value => super._value as UnknownContact;
+  OtherContact get _value => super._value as OtherContact;
 
   @override
   $Res call({
     Object? value = freezed,
   }) {
-    return _then(UnknownContact(
+    return _then(OtherContact(
       value == freezed
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -2590,26 +2234,26 @@ class _$UnknownContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-@FreezedUnionValue('UNKNOWN')
-class _$UnknownContact extends UnknownContact {
-  const _$UnknownContact(this.value) : super._();
+@FreezedUnionValue('OTHER')
+class _$OtherContact extends OtherContact {
+  const _$OtherContact(this.value) : super._();
 
-  factory _$UnknownContact.fromJson(Map<String, dynamic> json) =>
-      _$$UnknownContactFromJson(json);
+  factory _$OtherContact.fromJson(Map<String, dynamic> json) =>
+      _$$OtherContactFromJson(json);
 
   @override
   final String value;
 
   @override
   String toString() {
-    return 'Contact.unknown(value: $value)';
+    return 'Contact.other(value: $value)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is UnknownContact &&
+            other is OtherContact &&
             (identical(other.value, value) || other.value == value));
   }
 
@@ -2618,45 +2262,45 @@ class _$UnknownContact extends UnknownContact {
 
   @JsonKey(ignore: true)
   @override
-  $UnknownContactCopyWith<UnknownContact> get copyWith =>
-      _$UnknownContactCopyWithImpl<UnknownContact>(this, _$identity);
+  $OtherContactCopyWith<OtherContact> get copyWith =>
+      _$OtherContactCopyWithImpl<OtherContact>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
     required TResult Function(String value) telegram,
   }) {
-    return unknown(value);
+    return other(value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
     TResult Function(String value)? telegram,
   }) {
-    return unknown?.call(value);
+    return other?.call(value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
     TResult Function(String value)? telegram,
     required TResult orElse(),
   }) {
-    if (unknown != null) {
-      return unknown(value);
+    if (other != null) {
+      return other(value);
     }
     return orElse();
   }
@@ -2664,61 +2308,61 @@ class _$UnknownContact extends UnknownContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
     required TResult Function(TelegramContact value) telegram,
   }) {
-    return unknown(this);
+    return other(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
     TResult Function(TelegramContact value)? telegram,
   }) {
-    return unknown?.call(this);
+    return other?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
     TResult Function(TelegramContact value)? telegram,
     required TResult orElse(),
   }) {
-    if (unknown != null) {
-      return unknown(this);
+    if (other != null) {
+      return other(this);
     }
     return orElse();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UnknownContactToJson(this)..['type'] = 'UNKNOWN';
+    return _$$OtherContactToJson(this)..['type'] = 'OTHER';
   }
 }
 
-abstract class UnknownContact extends Contact {
-  const factory UnknownContact(String value) = _$UnknownContact;
-  const UnknownContact._() : super._();
+abstract class OtherContact extends Contact {
+  const factory OtherContact(String value) = _$OtherContact;
+  const OtherContact._() : super._();
 
-  factory UnknownContact.fromJson(Map<String, dynamic> json) =
-      _$UnknownContact.fromJson;
+  factory OtherContact.fromJson(Map<String, dynamic> json) =
+      _$OtherContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $UnknownContactCopyWith<UnknownContact> get copyWith =>
+  $OtherContactCopyWith<OtherContact> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2790,7 +2434,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
@@ -2802,7 +2446,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2814,7 +2458,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2830,7 +2474,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
@@ -2842,7 +2486,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -2854,7 +2498,7 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -2956,7 +2600,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
@@ -2968,7 +2612,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2980,7 +2624,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -2996,7 +2640,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
@@ -3008,7 +2652,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -3020,7 +2664,7 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -3122,7 +2766,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
@@ -3134,7 +2778,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -3146,7 +2790,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -3162,7 +2806,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
@@ -3174,7 +2818,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -3186,7 +2830,7 @@ class _$EmailContact extends EmailContact {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -3289,7 +2933,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) unknown,
+    required TResult Function(String value) other,
     required TResult Function(String value) phone,
     required TResult Function(String value) website,
     required TResult Function(String value) email,
@@ -3301,7 +2945,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -3313,7 +2957,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? unknown,
+    TResult Function(String value)? other,
     TResult Function(String value)? phone,
     TResult Function(String value)? website,
     TResult Function(String value)? email,
@@ -3329,7 +2973,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(UnknownContact value) unknown,
+    required TResult Function(OtherContact value) other,
     required TResult Function(PhoneContact value) phone,
     required TResult Function(WebsiteContact value) website,
     required TResult Function(EmailContact value) email,
@@ -3341,7 +2985,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,
@@ -3353,7 +2997,7 @@ class _$TelegramContact extends TelegramContact {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(UnknownContact value)? unknown,
+    TResult Function(OtherContact value)? other,
     TResult Function(PhoneContact value)? phone,
     TResult Function(WebsiteContact value)? website,
     TResult Function(EmailContact value)? email,

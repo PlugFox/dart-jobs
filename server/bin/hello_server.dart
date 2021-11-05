@@ -1,25 +1,20 @@
 import 'package:dart_jobs_server/src/common/util/runner.dart';
+import 'package:dart_jobs_server/src/feature/job/service/job_service.dart';
 import 'package:grpc/grpc.dart';
 import 'package:l/l.dart';
-
-class GreeterService extends GreeterServiceBase {
-  GreeterService();
-
-  @override
-  Future<HelloReply> sayHello(ServiceCall call, HelloRequest request) {
-    l.i('${request.name} # ${call.headers}, ${call.clientMetadata}, ${call.trailers}');
-    return Future<HelloReply>.value(HelloReply()..message = 'Hello, ${request.name}!');
-  }
-}
 
 void main(List<String> args) => l.capture(
       () => runner<Server>(
         initialization: () async {
           final server = Server(
             <Service>[
-              GreeterService(),
+              JobService(),
             ],
-            const <Interceptor>[],
+            <Interceptor>[
+              (call, method) {
+                l.i('Вызван метод ${method.name}');
+              }
+            ],
             CodecRegistry(
               codecs: const <Codec>[
                 GzipCodec(),

@@ -1,3 +1,4 @@
+import 'package:dart_jobs_shared/grpc.dart' as grpc;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'enum.freezed.dart';
@@ -29,6 +30,30 @@ class DeveloperLevel with _$DeveloperLevel {
   const factory DeveloperLevel.lead() = LeadDeveloperLevel;
 
   factory DeveloperLevel.fromJson(Map<String, Object?> json) => _$DeveloperLevelFromJson(json);
+
+  factory DeveloperLevel.fromProtobuf(grpc.DeveloperLevel proto) {
+    switch (proto) {
+      case grpc.DeveloperLevel.INTERN:
+        return const DeveloperLevel.intern();
+      case grpc.DeveloperLevel.JUNIOR:
+        return const DeveloperLevel.junior();
+      case grpc.DeveloperLevel.SENIOR:
+        return const DeveloperLevel.senior();
+      case grpc.DeveloperLevel.LEAD:
+        return const DeveloperLevel.lead();
+      case grpc.DeveloperLevel.MIDDLE:
+      default:
+        return const DeveloperLevel.middle();
+    }
+  }
+
+  grpc.DeveloperLevel toProtobuf() => map<grpc.DeveloperLevel>(
+        intern: (_) => grpc.DeveloperLevel.INTERN,
+        junior: (_) => grpc.DeveloperLevel.JUNIOR,
+        middle: (_) => grpc.DeveloperLevel.MIDDLE,
+        senior: (_) => grpc.DeveloperLevel.SENIOR,
+        lead: (_) => grpc.DeveloperLevel.LEAD,
+      );
 
   static Map<String, DeveloperLevel> get values => const <String, DeveloperLevel>{
         'INTERN': InternDeveloperLevel(),
@@ -72,6 +97,33 @@ class Employment with _$Employment {
 
   factory Employment.fromJson(Map<String, Object?> json) => _$EmploymentFromJson(json);
 
+  factory Employment.fromProtobuf(grpc.Employment proto) {
+    switch (proto) {
+      case grpc.Employment.PART_TIME:
+        return const Employment.partTime();
+      case grpc.Employment.ONE_TIME:
+        return const Employment.oneTime();
+      case grpc.Employment.CONTRACT:
+        return const Employment.contract();
+      case grpc.Employment.OPEN_SOURCE:
+        return const Employment.openSource();
+      case grpc.Employment.COLLABORATION:
+        return const Employment.collaboration();
+      case grpc.Employment.FULL_TIME:
+      default:
+        return const Employment.fullTime();
+    }
+  }
+
+  grpc.Employment toProtobuf() => map<grpc.Employment>(
+        fullTime: (_) => grpc.Employment.FULL_TIME,
+        partTime: (_) => grpc.Employment.PART_TIME,
+        oneTime: (_) => grpc.Employment.ONE_TIME,
+        contract: (_) => grpc.Employment.CONTRACT,
+        openSource: (_) => grpc.Employment.OPEN_SOURCE,
+        collaboration: (_) => grpc.Employment.COLLABORATION,
+      );
+
   static Map<String, Employment> get values => const <String, Employment>{
         'FULL_TIME': FullTimeEmployment(),
         'PART_TIME': PartTimeEmployment(),
@@ -80,6 +132,7 @@ class Employment with _$Employment {
         'OPEN_SOURCE': OpenSourceEmployment(),
         'COLLABORATION': CollaborationEmployment(),
       };
+
   static Employment valueOf(String name) => values[name.trim().toUpperCase()] ?? const FullTimeEmployment();
 }
 
@@ -89,19 +142,23 @@ class Employment with _$Employment {
 class Skill with _$Skill {
   Skill._();
 
-  /// Стажёр
-  @FreezedUnionValue('UNKNOWN')
-  const factory Skill.unknown(String value) = UnknownSkill;
-
-  /// Младший
-  @FreezedUnionValue('FRAMEWORK')
-  const factory Skill.framework(String value) = FrameworkSkill;
-
-  /// Средний
-  @FreezedUnionValue('PACKAGE')
-  const factory Skill.package(String value) = PackageSkill;
+  /// Неопределено, не получено или не указано (Unknown)
+  @FreezedUnionValue('other')
+  const factory Skill.other(String value) = OtherSkill;
 
   factory Skill.fromJson(Map<String, Object?> json) => _$SkillFromJson(json);
+
+  factory Skill.fromProtobuf(grpc.Skill proto) {
+    switch (proto.type) {
+      case grpc.Skill_SkillType.OTHER:
+      default:
+        return Skill.other(proto.value);
+    }
+  }
+
+  grpc.Skill toProtobuf() => map<grpc.Skill>(
+        other: (skill) => grpc.Skill(value: skill.value, type: grpc.Skill_SkillType.OTHER),
+      );
 }
 
 /// Контакт для обратной связи (Contact)
@@ -111,8 +168,8 @@ class Contact with _$Contact {
   Contact._();
 
   /// Неопределено, не получено или не указано (Unknown)
-  @FreezedUnionValue('UNKNOWN')
-  const factory Contact.unknown(String value) = UnknownContact;
+  @FreezedUnionValue('OTHER')
+  const factory Contact.other(String value) = OtherContact;
 
   /// Телефон
   @FreezedUnionValue('PHONE')
@@ -131,4 +188,28 @@ class Contact with _$Contact {
   const factory Contact.telegram(String value) = TelegramContact;
 
   factory Contact.fromJson(Map<String, Object?> json) => _$ContactFromJson(json);
+
+  factory Contact.fromProtobuf(grpc.Contact proto) {
+    switch (proto.type) {
+      case grpc.Contact_ContactType.PHONE:
+        return Contact.phone(proto.value);
+      case grpc.Contact_ContactType.WEBSITE:
+        return Contact.website(proto.value);
+      case grpc.Contact_ContactType.EMAIL:
+        return Contact.email(proto.value);
+      case grpc.Contact_ContactType.TELEGRAM:
+        return Contact.telegram(proto.value);
+      case grpc.Contact_ContactType.OTHER:
+      default:
+        return Contact.other(proto.value);
+    }
+  }
+
+  grpc.Contact toProtobuf() => map<grpc.Contact>(
+        other: (contact) => grpc.Contact(type: grpc.Contact_ContactType.OTHER, value: contact.value),
+        phone: (contact) => grpc.Contact(type: grpc.Contact_ContactType.PHONE, value: contact.value),
+        website: (contact) => grpc.Contact(type: grpc.Contact_ContactType.WEBSITE, value: contact.value),
+        email: (contact) => grpc.Contact(type: grpc.Contact_ContactType.EMAIL, value: contact.value),
+        telegram: (contact) => grpc.Contact(type: grpc.Contact_ContactType.TELEGRAM, value: contact.value),
+      );
 }

@@ -44,9 +44,9 @@ _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
               .toList() ??
           const <Skill>[],
       contacts: (json['contacts'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => Contact.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          const <String>[],
+          const <Contact>[],
       employment: (json['employment'] as List<dynamic>?)
               ?.map((e) => Employment.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -66,26 +66,7 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) =>
       'descriptions': instance.descriptions.toJson(),
       'levels': instance.levels.map((e) => e.toJson()).toList(),
       'skills': instance.skills.map((e) => e.toJson()).toList(),
-      'contacts': instance.contacts,
+      'contacts': instance.contacts.map((e) => e.toJson()).toList(),
       'employment': instance.employment.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
-    };
-
-_$_JobFilter _$$_JobFilterFromJson(Map<String, dynamic> json) => _$_JobFilter(
-      deletionMarkIncluded: json['deletion_mark_included'] as bool? ?? false,
-      limit: json['limit'] as int? ?? 100,
-      before: json['before'] == null
-          ? null
-          : DateTime.parse(json['before'] as String),
-      after: json['after'] == null
-          ? null
-          : DateTime.parse(json['after'] as String),
-    );
-
-Map<String, dynamic> _$$_JobFilterToJson(_$_JobFilter instance) =>
-    <String, dynamic>{
-      'deletion_mark_included': instance.deletionMarkIncluded,
-      'limit': instance.limit,
-      'before': instance.before?.toIso8601String(),
-      'after': instance.after?.toIso8601String(),
     };
