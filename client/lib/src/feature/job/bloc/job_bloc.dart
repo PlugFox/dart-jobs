@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:dart_jobs/src/common/model/exceptions.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs_shared/models.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../../../../shared/lib/src/models/job.dart';
 
 part 'job_bloc.freezed.dart';
 

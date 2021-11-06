@@ -20,35 +20,29 @@ enum JobFilter_Cursor { before, after, notSet }
 
 class JobFilter extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, JobFilter_Cursor> _JobFilter_CursorByTag = {
-    3: JobFilter_Cursor.before,
-    4: JobFilter_Cursor.after,
+    2: JobFilter_Cursor.before,
+    3: JobFilter_Cursor.after,
     0: JobFilter_Cursor.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'JobFilter',
       package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4])
-    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deletionMarkIncluded',
-        protoName: 'deletionMarkIncluded')
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit', $pb.PbFieldType.OU3)
-    ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'before',
+    ..oo(0, [2, 3])
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit', $pb.PbFieldType.OU3)
+    ..aOM<$2.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'before',
         subBuilder: $2.Timestamp.create)
-    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'after',
+    ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'after',
         subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   JobFilter._() : super();
   factory JobFilter({
-    $core.bool? deletionMarkIncluded,
     $core.int? limit,
     $2.Timestamp? before,
     $2.Timestamp? after,
   }) {
     final _result = create();
-    if (deletionMarkIncluded != null) {
-      _result.deletionMarkIncluded = deletionMarkIncluded;
-    }
     if (limit != null) {
       _result.limit = limit;
     }
@@ -86,56 +80,44 @@ class JobFilter extends $pb.GeneratedMessage {
   void clearCursor() => clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  $core.bool get deletionMarkIncluded => $_getBF(0);
+  $core.int get limit => $_getIZ(0);
   @$pb.TagNumber(1)
-  set deletionMarkIncluded($core.bool v) {
-    $_setBool(0, v);
-  }
-
-  @$pb.TagNumber(1)
-  $core.bool hasDeletionMarkIncluded() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDeletionMarkIncluded() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.int get limit => $_getIZ(1);
-  @$pb.TagNumber(2)
   set limit($core.int v) {
-    $_setUnsignedInt32(1, v);
+    $_setUnsignedInt32(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasLimit() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLimit() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get before => $_getN(1);
+  @$pb.TagNumber(2)
+  set before($2.Timestamp v) {
+    setField(2, v);
   }
 
   @$pb.TagNumber(2)
-  $core.bool hasLimit() => $_has(1);
+  $core.bool hasBefore() => $_has(1);
   @$pb.TagNumber(2)
-  void clearLimit() => clearField(2);
+  void clearBefore() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureBefore() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.Timestamp get before => $_getN(2);
+  $2.Timestamp get after => $_getN(2);
   @$pb.TagNumber(3)
-  set before($2.Timestamp v) {
+  set after($2.Timestamp v) {
     setField(3, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasBefore() => $_has(2);
+  $core.bool hasAfter() => $_has(2);
   @$pb.TagNumber(3)
-  void clearBefore() => clearField(3);
+  void clearAfter() => clearField(3);
   @$pb.TagNumber(3)
-  $2.Timestamp ensureBefore() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  $2.Timestamp get after => $_getN(3);
-  @$pb.TagNumber(4)
-  set after($2.Timestamp v) {
-    setField(4, v);
-  }
-
-  @$pb.TagNumber(4)
-  $core.bool hasAfter() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearAfter() => clearField(4);
-  @$pb.TagNumber(4)
-  $2.Timestamp ensureAfter() => $_ensure(3);
+  $2.Timestamp ensureAfter() => $_ensure(2);
 }
 
 class JobsChunk extends $pb.GeneratedMessage {

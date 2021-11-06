@@ -5,10 +5,9 @@ import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope
 import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_create_screen.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_not_found.dart';
+import 'package:dart_jobs_shared/models.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
-
-import '../../../../../../shared/lib/src/models/job.dart';
 
 class JobCreatePage extends Page<void> {
   JobCreatePage()

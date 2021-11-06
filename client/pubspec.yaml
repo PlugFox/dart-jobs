@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.1.0+1634411913
 
 environment:
-  sdk: ">=2.14.1 <3.0.0"
-  flutter: ">=2.7.0-3.0.pre <3.0.0"
+  sdk: ">=2.15.0-178.1.beta"
+  flutter: ">=2.7.0-3.1.pre"
 
 dependencies:
   flutter:
@@ -21,12 +21,25 @@ dependencies:
   #built_value: ^8.1.2
   json_annotation: ^4.3.0
   freezed_annotation: ^0.15.0
+  protobuf: ^2.0.0
 
   # State manager & Inversion of Control
   fox_flutter_bloc: ^0.1.0
 
+  # Network
+  grpc: ^3.0.2
+
   # Storage and SQL
   shared_preferences: ^2.0.5
+
+  # Firebase
+  firebase_core: ^1.1.1
+  firebase_analytics: ^8.0.4
+  firebase_auth: ^3.1.0
+  cloud_firestore: ^2.1.0
+  firebase_crashlytics: ^2.0.3
+  firebase_performance: ^0.7.0+9
+  #firebase_messaging: ^10.0.8
 
   # Utility & Helpers
   platform_info: ^3.1.0
@@ -39,19 +52,13 @@ dependencies:
   #permission_handler: ^8.0.0+2
   async: ^2.6.1
   collection: ^1.15.0
-  money2: ^3.0.0-beta.6
+  #money2: ^3.0.0-beta.6
+  fixnum: ^1.0.0
+  dart_jobs_shared:
+    path: ../shared
 
   # Transformers
   rxdart: ^0.27.0
-
-  # Firebase
-  firebase_core: ^1.1.1
-  firebase_analytics: ^8.0.4
-  firebase_auth: ^3.1.0
-  cloud_firestore: ^2.1.0
-  firebase_crashlytics: ^2.0.3
-  firebase_performance: ^0.7.0+9
-  #firebase_messaging: ^10.0.8
 
   # Authentication
   sign_button: ^2.0.0 # Кнопки аутентификации

@@ -1,10 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:money2/money2.dart';
-
-import '../../../../../../../shared/lib/src/models/job.dart';
-import '../../../../../../../shared/lib/src/utils/money_util.dart';
 
 class JobFormData {
   /// Форма грязная (измененная) и требуется сохранение

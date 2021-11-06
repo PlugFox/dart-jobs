@@ -1,8 +1,7 @@
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
+import 'package:dart_jobs_shared/models.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../../../../../shared/lib/src/models/job.dart';
 
 /// READ
 class ReadJobIntent extends Intent {

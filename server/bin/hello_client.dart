@@ -1,5 +1,6 @@
 /*
 //import 'package:dart_jobs_shared/grpc.dart';
+import 'package:dart_jobs_shared/grpc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
@@ -30,7 +31,10 @@ void main(List<String> args) => l.capture(
             ),
           ),
         );
-        final stub = GreeterClient(channel);
+        final stub = JobServiceClient(
+          channel,
+          options: CallOptions(),
+        );
 
         final name = args.isNotEmpty ? args[0] : 'world';
         await Future<void>.delayed(const Duration(seconds: 1));

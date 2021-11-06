@@ -922,3 +922,163 @@ abstract class _JobData extends JobData {
   _$JobDataCopyWith<_JobData> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+JobFilter _$JobFilterFromJson(Map<String, dynamic> json) {
+  return PaginateJobFilter.fromJson(json);
+}
+
+/// @nodoc
+class _$JobFilterTearOff {
+  const _$JobFilterTearOff();
+
+  PaginateJobFilter call({@JsonKey(name: 'limit') int limit = 100}) {
+    return PaginateJobFilter(
+      limit: limit,
+    );
+  }
+
+  JobFilter fromJson(Map<String, Object?> json) {
+    return JobFilter.fromJson(json);
+  }
+}
+
+/// @nodoc
+const $JobFilter = _$JobFilterTearOff();
+
+/// @nodoc
+mixin _$JobFilter {
+  /// Ожидаемое количество
+  /// Если не указано - 100
+  @JsonKey(name: 'limit')
+  int get limit => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $JobFilterCopyWith<JobFilter> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $JobFilterCopyWith<$Res> {
+  factory $JobFilterCopyWith(JobFilter value, $Res Function(JobFilter) then) =
+      _$JobFilterCopyWithImpl<$Res>;
+  $Res call({@JsonKey(name: 'limit') int limit});
+}
+
+/// @nodoc
+class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
+  _$JobFilterCopyWithImpl(this._value, this._then);
+
+  final JobFilter _value;
+  // ignore: unused_field
+  final $Res Function(JobFilter) _then;
+
+  @override
+  $Res call({
+    Object? limit = freezed,
+  }) {
+    return _then(_value.copyWith(
+      limit: limit == freezed
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+abstract class $PaginateJobFilterCopyWith<$Res>
+    implements $JobFilterCopyWith<$Res> {
+  factory $PaginateJobFilterCopyWith(
+          PaginateJobFilter value, $Res Function(PaginateJobFilter) then) =
+      _$PaginateJobFilterCopyWithImpl<$Res>;
+  @override
+  $Res call({@JsonKey(name: 'limit') int limit});
+}
+
+/// @nodoc
+class _$PaginateJobFilterCopyWithImpl<$Res>
+    extends _$JobFilterCopyWithImpl<$Res>
+    implements $PaginateJobFilterCopyWith<$Res> {
+  _$PaginateJobFilterCopyWithImpl(
+      PaginateJobFilter _value, $Res Function(PaginateJobFilter) _then)
+      : super(_value, (v) => _then(v as PaginateJobFilter));
+
+  @override
+  PaginateJobFilter get _value => super._value as PaginateJobFilter;
+
+  @override
+  $Res call({
+    Object? limit = freezed,
+  }) {
+    return _then(PaginateJobFilter(
+      limit: limit == freezed
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PaginateJobFilter extends PaginateJobFilter {
+  const _$PaginateJobFilter({@JsonKey(name: 'limit') this.limit = 100})
+      : super._();
+
+  factory _$PaginateJobFilter.fromJson(Map<String, dynamic> json) =>
+      _$$PaginateJobFilterFromJson(json);
+
+  @override
+
+  /// Ожидаемое количество
+  /// Если не указано - 100
+  @JsonKey(name: 'limit')
+  final int limit;
+
+  @override
+  String toString() {
+    return 'JobFilter(limit: $limit)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is PaginateJobFilter &&
+            (identical(other.limit, limit) || other.limit == limit));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, limit);
+
+  @JsonKey(ignore: true)
+  @override
+  $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith =>
+      _$PaginateJobFilterCopyWithImpl<PaginateJobFilter>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PaginateJobFilterToJson(this);
+  }
+}
+
+abstract class PaginateJobFilter extends JobFilter {
+  const factory PaginateJobFilter({@JsonKey(name: 'limit') int limit}) =
+      _$PaginateJobFilter;
+  const PaginateJobFilter._() : super._();
+
+  factory PaginateJobFilter.fromJson(Map<String, dynamic> json) =
+      _$PaginateJobFilter.fromJson;
+
+  @override
+
+  /// Ожидаемое количество
+  /// Если не указано - 100
+  @JsonKey(name: 'limit')
+  int get limit;
+  @override
+  @JsonKey(ignore: true)
+  $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith =>
+      throw _privateConstructorUsedError;
+}

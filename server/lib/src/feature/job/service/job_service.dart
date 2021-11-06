@@ -6,21 +6,6 @@ class JobService extends grpc.JobServiceBase {
   JobService();
 
   @override
-  Future<grpc.Job> createJob(ServiceCall call, grpc.JobData request) => Future<grpc.Job>.value(Job(
-        id: (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36),
-        weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-        updated: DateTime.now().toUtc(),
-        created: DateTime.now().toUtc(),
-        creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
-        data: const JobData(),
-      ).toProtobuf()
-        ..data = request);
-
-  @override
-  Future<grpc.Job> deleteJob(ServiceCall call, grpc.Job request) =>
-      Future<grpc.Job>.value(request..deletionMark = true);
-
-  @override
   Future<grpc.JobsChunk> getRecent(ServiceCall call, grpc.JobFilter request) => Future<grpc.JobsChunk>.value(
         JobsChunk(
           endOfList: true,
@@ -37,12 +22,6 @@ class JobService extends grpc.JobServiceBase {
           ).toList(),
         ).toProtobuf(),
       );
-
-  @override
-  Stream<grpc.JobsChunk> listenRecent(ServiceCall call, grpc.JobFilter request) {
-    // TODO: implement listenRecent
-    throw UnimplementedError();
-  }
 
   @override
   Future<grpc.JobsChunk> paginate(ServiceCall call, grpc.JobFilter request) => Future<grpc.JobsChunk>.value(
@@ -62,12 +41,19 @@ class JobService extends grpc.JobServiceBase {
         ).toProtobuf(),
       );
 
+  /// TODO: verifyToken
+  /// https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
   @override
-  Future<grpc.Job> updateJob(ServiceCall call, grpc.Job request) => Future<grpc.Job>.value(
-        request
-          ..updated = grpc.Timestamp.fromDateTime(
-            DateTime.now().toUtc(),
-          ),
+  Future<grpc.Job> createJob(ServiceCall call, grpc.JobData request) => Future<grpc.Job>.value(
+        Job(
+          id: (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36),
+          weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          updated: DateTime.now().toUtc(),
+          created: DateTime.now().toUtc(),
+          creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
+          data: const JobData(),
+        ).toProtobuf()
+          ..data = request,
       );
 
   @override
@@ -80,5 +66,22 @@ class JobService extends grpc.JobServiceBase {
           creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
           data: const JobData(),
         ).toProtobuf(),
+      );
+
+  /// TODO: verifyToken
+  /// https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
+  @override
+  Future<grpc.Job> updateJob(ServiceCall call, grpc.Job request) => Future<grpc.Job>.value(
+        request
+          ..updated = grpc.Timestamp.fromDateTime(
+            DateTime.now().toUtc(),
+          ),
+      );
+
+  /// TODO: verifyToken
+  /// https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
+  @override
+  Future<grpc.Job> deleteJob(ServiceCall call, grpc.Job request) => Future<grpc.Job>.value(
+        request..deletionMark = true,
       );
 }

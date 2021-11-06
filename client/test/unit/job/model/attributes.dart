@@ -1,9 +1,7 @@
 // ignore_for_file: long-method
 
+import 'package:dart_jobs_shared/models.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:money2/money2.dart';
-
-import '../../../../../shared/lib/src/models/proposal.dart';
 
 void main() {
   group(

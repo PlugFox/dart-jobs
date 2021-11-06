@@ -15,8 +15,6 @@ import 'common.pb.dart' as $1;
 export 'job.pb.dart';
 
 class JobServiceClient extends $grpc.Client {
-  static final _$listenRecent = $grpc.ClientMethod<$0.JobFilter, $0.JobsChunk>('/job.JobService/ListenRecent',
-      ($0.JobFilter value) => value.writeToBuffer(), ($core.List<$core.int> value) => $0.JobsChunk.fromBuffer(value));
   static final _$getRecent = $grpc.ClientMethod<$0.JobFilter, $0.JobsChunk>('/job.JobService/GetRecent',
       ($0.JobFilter value) => value.writeToBuffer(), ($core.List<$core.int> value) => $0.JobsChunk.fromBuffer(value));
   static final _$paginate = $grpc.ClientMethod<$0.JobFilter, $0.JobsChunk>('/job.JobService/Paginate',
@@ -33,10 +31,6 @@ class JobServiceClient extends $grpc.Client {
   JobServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options, $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
-
-  $grpc.ResponseStream<$0.JobsChunk> listenRecent($0.JobFilter request, {$grpc.CallOptions? options}) {
-    return $createStreamingCall(_$listenRecent, $async.Stream.fromIterable([request]), options: options);
-  }
 
   $grpc.ResponseFuture<$0.JobsChunk> getRecent($0.JobFilter request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getRecent, request, options: options);
@@ -68,13 +62,6 @@ abstract class JobServiceBase extends $grpc.Service {
 
   JobServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.JobFilter, $0.JobsChunk>(
-        'ListenRecent',
-        listenRecent_Pre,
-        false,
-        true,
-        ($core.List<$core.int> value) => $0.JobFilter.fromBuffer(value),
-        ($0.JobsChunk value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.JobFilter, $0.JobsChunk>(
         'GetRecent',
         getRecent_Pre,
         false,
@@ -96,10 +83,6 @@ abstract class JobServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.Job.fromBuffer(value), ($0.Job value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Job, $0.Job>('DeleteJob', deleteJob_Pre, false, false,
         ($core.List<$core.int> value) => $0.Job.fromBuffer(value), ($0.Job value) => value.writeToBuffer()));
-  }
-
-  $async.Stream<$0.JobsChunk> listenRecent_Pre($grpc.ServiceCall call, $async.Future<$0.JobFilter> request) async* {
-    yield* listenRecent(call, await request);
   }
 
   $async.Future<$0.JobsChunk> getRecent_Pre($grpc.ServiceCall call, $async.Future<$0.JobFilter> request) async {
@@ -126,7 +109,6 @@ abstract class JobServiceBase extends $grpc.Service {
     return deleteJob(call, await request);
   }
 
-  $async.Stream<$0.JobsChunk> listenRecent($grpc.ServiceCall call, $0.JobFilter request);
   $async.Future<$0.JobsChunk> getRecent($grpc.ServiceCall call, $0.JobFilter request);
   $async.Future<$0.JobsChunk> paginate($grpc.ServiceCall call, $0.JobFilter request);
   $async.Future<$0.Job> createJob($grpc.ServiceCall call, $0.JobData request);

@@ -4,23 +4,22 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_jobs/src/common/constant/environment.dart';
 import 'package:dart_jobs/src/common/constant/pubspec.yaml.g.dart' as pubspec;
 import 'package:dart_jobs/src/common/constant/storage_namespace.dart';
 import 'package:dart_jobs/src/common/model/app_metadata.dart';
 import 'package:dart_jobs/src/common/utils/screen_util.dart';
 import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/feed/data/feed_network_data_provider.dart';
-import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
+import 'package:dart_jobs_shared/grpc.dart' as grpc;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/widgets.dart' show Orientation;
+import 'package:grpc/grpc.dart' as grpc;
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 import 'package:platform_info/platform_info.dart';
@@ -132,16 +131,44 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
-  'Create a feed repository': (final progress) => progress.copyWith(
-        newFeedRepository: kFake
-            ? FeedRepositoryFake()
-            : FeedRepositoryFirebase(
-                networkDataProvider: FeedFirestoreDataProvider(
-                  firestore: progress.firebaseFirestore!,
-                ),
-              ),
+  'Settings client channel': (final progress) => progress.copyWith(
+        newClientChannel: grpc.ClientChannel(
+          'localhost',
+          port: 9090,
+          options: grpc.ChannelOptions(
+            credentials: const grpc.ChannelCredentials.secure(),
+            idleTimeout: const Duration(minutes: 2),
+            connectionTimeout: const Duration(minutes: 25),
+            userAgent: 'dart-grpc/${platform.isWeb ? 'web' : 'io'}/${platform.operatingSystem.when(
+              android: () => 'android',
+              fuchsia: () => 'fuchsia',
+              iOS: () => 'iOS',
+              linux: () => 'linux',
+              macOS: () => 'macOS',
+              windows: () => 'windows',
+              unknown: () => 'unknown',
+            )}',
+            codecRegistry: grpc.CodecRegistry(
+              codecs: const <grpc.Codec>[
+                grpc.GzipCodec(),
+                grpc.IdentityCodec(),
+              ],
+            ),
+          ),
+        ),
       ),
   'Create a job repository': (final progress) => progress.copyWith(
+        newJobRepository: JobRepositoryImpl(
+          firebaseAuth: FirebaseAuth.instance,
+          networkDataProvider: JobNetworkDataProviderImpl(
+            client: grpc.JobServiceClient(
+              progress.clientChannel!,
+              options: grpc.CallOptions(),
+              interceptors: <grpc.ClientInterceptor>[],
+            ),
+          ),
+        ),
+        /*
         newJobRepository: kFake
             ? JobRepositoryFake()
             : JobRepositoryImpl(
@@ -149,6 +176,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
                   firestore: progress.firebaseFirestore!,
                 ),
               ),
+        */
       ),
   'Get current settings': (final progress) async {
     final repository = SettingsRepository(

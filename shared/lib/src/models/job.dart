@@ -233,45 +233,37 @@ class Description with MapMixin<String, String> {
   String? remove(Object? key) => _internalMap.remove(key);
 }
 
-/*
 /// Фильтр для отбора сообщений
+/// [before] и [after] это не период,
+/// это значения используемые для паджинации и запроса последних соответсвенно
 @immutable
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
 class JobFilter with _$JobFilter {
   const JobFilter._();
 
   const factory JobFilter({
-    /// Включать в выборку с пометкой на удаление
-    /// false - только существующие
-    /// true - существующие и помеченные на удаленние
-    @JsonKey(name: 'deletion_mark_included') @Default(false) final bool deletionMarkIncluded,
-
     /// Ожидаемое количество
     /// Если не указано - 100
     @JsonKey(name: 'limit') @Default(100) final int limit,
-
-    /// Создано до
-    @JsonKey(name: 'before') final DateTime? before,
-
-    /// Создано после
-    @JsonKey(name: 'after') final DateTime? after,
-  }) = _JobFilter;
+  }) = PaginateJobFilter;
 
   /// Generate Class from Map<String, Object?>
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
 
+  /// Фильтрация
   factory JobFilter.fromProtobuf(grpc.JobFilter proto) => JobFilter(
-        deletionMarkIncluded: proto.deletionMarkIncluded,
         limit: proto.limit,
-        before: proto.before.toDateTime(),
-        after: proto.after.toDateTime(),
       );
 
-  grpc.JobFilter toProtobuf() => grpc.JobFilter(
-        deletionMarkIncluded: deletionMarkIncluded,
+  /// Протобаф для запроса последних
+  grpc.JobFilter toRecentProtobuf(DateTime after) => grpc.JobFilter(
         limit: limit,
-        before: before != null ? grpc.Timestamp.fromDateTime(before!) : null,
-        after: after != null ? grpc.Timestamp.fromDateTime(after!) : null,
+        after: grpc.Timestamp.fromDateTime(after),
+      );
+
+  /// Протобаф для запроса более ранних
+  grpc.JobFilter toPaginateProtobuf(DateTime before) => grpc.JobFilter(
+        limit: limit,
+        before: grpc.Timestamp.fromDateTime(before),
       );
 }
-*/

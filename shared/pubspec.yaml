@@ -5,7 +5,7 @@ version: 0.1.0
 # homepage: https://www.example.com
 
 environment:
-  sdk: ">=2.14.1 <3.0.0"
+  sdk: ">=2.15.0-178.1.beta"
 
 dependencies:
   # Annotation & Code-generation

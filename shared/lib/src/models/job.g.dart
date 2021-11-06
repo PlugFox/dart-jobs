@@ -70,3 +70,13 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) =>
       'employment': instance.employment.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
     };
+
+_$PaginateJobFilter _$$PaginateJobFilterFromJson(Map<String, dynamic> json) =>
+    _$PaginateJobFilter(
+      limit: json['limit'] as int? ?? 100,
+    );
+
+Map<String, dynamic> _$$PaginateJobFilterToJson(_$PaginateJobFilter instance) =>
+    <String, dynamic>{
+      'limit': instance.limit,
+    };

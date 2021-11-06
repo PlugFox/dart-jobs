@@ -1,5 +1,7 @@
+/*
 import 'package:meta/meta.dart';
 import 'package:money2/money2.dart';
+
 
 /// Namespace
 @sealed
@@ -18,3 +20,4 @@ abstract class MoneyUtil {
   /// Получить валюту USD
   static final Currency usd = CommonCurrencies().usd;
 }
+*/

@@ -44,21 +44,19 @@ final $typed_data.Uint8List employmentDescriptor = $convert.base64Decode(
 const JobFilter$json = {
   '1': 'JobFilter',
   '2': [
-    {'1': 'deletionMarkIncluded', '3': 1, '4': 1, '5': 8, '9': 1, '10': 'deletionMarkIncluded', '17': true},
-    {'1': 'limit', '3': 2, '4': 1, '5': 13, '9': 2, '10': 'limit', '17': true},
-    {'1': 'before', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'before'},
-    {'1': 'after', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'after'},
+    {'1': 'limit', '3': 1, '4': 1, '5': 13, '9': 1, '10': 'limit', '17': true},
+    {'1': 'before', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'before'},
+    {'1': 'after', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'after'},
   ],
   '8': [
     {'1': 'cursor'},
-    {'1': '_deletionMarkIncluded'},
     {'1': '_limit'},
   ],
 };
 
 /// Descriptor for `JobFilter`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobFilterDescriptor = $convert.base64Decode(
-    'CglKb2JGaWx0ZXISNwoUZGVsZXRpb25NYXJrSW5jbHVkZWQYASABKAhIAVIUZGVsZXRpb25NYXJrSW5jbHVkZWSIAQESGQoFbGltaXQYAiABKA1IAlIFbGltaXSIAQESNAoGYmVmb3JlGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAUgZiZWZvcmUSMgoFYWZ0ZXIYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSBWFmdGVyQggKBmN1cnNvckIXChVfZGVsZXRpb25NYXJrSW5jbHVkZWRCCAoGX2xpbWl0');
+    'CglKb2JGaWx0ZXISGQoFbGltaXQYASABKA1IAVIFbGltaXSIAQESNAoGYmVmb3JlGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAUgZiZWZvcmUSMgoFYWZ0ZXIYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSBWFmdGVyQggKBmN1cnNvckIICgZfbGltaXQ=');
 @$core.Deprecated('Use jobsChunkDescriptor instead')
 const JobsChunk$json = {
   '1': 'JobsChunk',

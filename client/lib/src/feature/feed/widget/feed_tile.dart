@@ -2,12 +2,11 @@ import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs/src/common/localization/localizations.dart';
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs_shared/models.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../../../../shared/lib/src/models/job.dart';
 
 typedef FeedTileOnPressed = void Function(BuildContext context);
 
@@ -149,13 +148,13 @@ class _JobFeedTile extends FeedTile {
     final Key? key,
   }) : super._(
           title: _ShimmerTitle(
-            text: job.title,
+            text: job.data.title,
           ), // 'Title (Job name, Developer name)'
           subtitle: _ShimmerText(
-            text: job.company,
+            text: job.data.company,
           ), // 'Subtitle (Company, Developer occupation)'
           location: _ShimmerText(
-            text: job.remote ? 'Remote' : '${job.country} ${job.location}',
+            text: job.data.remote ? 'Remote' : '${job.data.country} ${job.data.address}',
           ), // 'Location'
           salary: const _ShimmerText(
             text: 'Unknown salary',
@@ -170,12 +169,12 @@ class _JobFeedTile extends FeedTile {
               context,
               (final configuration) => JobPageConfiguration(
                 jobId: job.id,
-                jobTitle: job.title,
+                jobTitle: job.data.title,
               ),
             );
             InitializationScope.storeOf(context).analytics?.logViewItem(
                   itemId: job.id,
-                  itemName: job.title,
+                  itemName: job.data.title,
                   itemCategory: 'job',
                 );
           },
