@@ -7,15 +7,16 @@ abstract class UserEntity {
   bool get isNotAuthenticated;
   AuthenticatedUser? get authenticatedOrNull;
 
-  factory UserEntity.fromFirebase(final firebase_auth.User? user) => user == null || user.isAnonymous || user.uid.isEmpty
-      ? const UserEntity.notAuthenticated()
-      : UserEntity.authenticated(
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-        );
+  factory UserEntity.fromFirebase(final firebase_auth.User? user) =>
+      user == null || user.isAnonymous || user.uid.isEmpty
+          ? const UserEntity.notAuthenticated()
+          : UserEntity.authenticated(
+              uid: user.uid,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+            );
 
   @literal
   const factory UserEntity.notAuthenticated() = NotAuthenticatedUser;

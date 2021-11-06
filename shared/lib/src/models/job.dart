@@ -38,7 +38,7 @@ class JobsChunk extends Iterable<Job> {
 
   factory JobsChunk.fromProtobuf(grpc.JobsChunk proto) => JobsChunk(
         endOfList: proto.endOfList,
-        jobs: proto.jobs.map<Job>((e) => Job.fromProtobuf(e)).toList(),
+        jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
       );
 
   grpc.JobsChunk toProtobuf() => grpc.JobsChunk(
@@ -175,11 +175,11 @@ class JobData with _$JobData {
         country: proto.country,
         address: proto.address,
         company: proto.company,
-        contacts: proto.contacts.map<Contact>((e) => Contact.fromProtobuf(e)).toList(),
+        contacts: proto.contacts.map<Contact>(Contact.fromProtobuf).toList(),
         descriptions: Description(proto.descriptions),
-        employment: proto.employment.map<Employment>((e) => Employment.fromProtobuf(e)).toList(),
-        levels: proto.levels.map<DeveloperLevel>((e) => DeveloperLevel.fromProtobuf(e)).toList(),
-        skills: proto.skills.map<Skill>((e) => Skill.fromProtobuf(e)).toList(),
+        employment: proto.employment.map<Employment>(Employment.fromProtobuf).toList(),
+        levels: proto.levels.map<DeveloperLevel>(DeveloperLevel.fromProtobuf).toList(),
+        skills: proto.skills.map<Skill>(Skill.fromProtobuf).toList(),
         tags: proto.tags,
       );
 
