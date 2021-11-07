@@ -4,7 +4,6 @@ import 'package:dart_jobs/src/feature/authentication/data/authentication_reposit
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:grpc/grpc.dart' as grpc;
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +13,6 @@ class InitializationProgress {
   final FirebaseFirestore? firebaseFirestore;
   final SharedPreferences? sharedPreferences;
   final ISettingsRepository? settingsRepository;
-  final grpc.ClientChannel? clientChannel;
   final IJobRepository? jobRepository;
   final AppMetadata? appMetadata;
 
@@ -24,7 +22,6 @@ class InitializationProgress {
     this.firebaseFirestore,
     this.sharedPreferences,
     this.settingsRepository,
-    this.clientChannel,
     this.jobRepository,
     this.appMetadata,
   });
@@ -37,7 +34,6 @@ class InitializationProgress {
     final FirebaseFirestore? newFirebaseFirestore,
     final SharedPreferences? newSharedPreferences,
     final ISettingsRepository? newSettingsRepository,
-    final grpc.ClientChannel? newClientChannel,
     final IJobRepository? newJobRepository,
     final AppMetadata? newAppMetadata,
   }) =>
@@ -47,7 +43,6 @@ class InitializationProgress {
         firebaseFirestore: newFirebaseFirestore ?? firebaseFirestore,
         sharedPreferences: newSharedPreferences ?? sharedPreferences,
         settingsRepository: newSettingsRepository ?? settingsRepository,
-        clientChannel: newClientChannel ?? clientChannel,
         jobRepository: newJobRepository ?? jobRepository,
         appMetadata: newAppMetadata ?? appMetadata,
       );

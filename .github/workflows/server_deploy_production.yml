@@ -21,14 +21,13 @@ jobs:
         run: docker pull dart:stable
 
       - name: 🏗️ Build images
-        run: make -C ./server -f ./Makefile docker-build-prod
+        run: make -C ./ -f ./Makefile build
 
       - name: 💾 Push images to registry
-        run: make -C ./server -f ./Makefile docker-push-prod
+        run: make -C ./ -f ./Makefile push
 
       - name: 🔥 Deploy to swarm
         run: |
-          INPUT_REMOTE_USER="pfx"
           INPUT_REMOTE_HOST="api.plugfox.dev"
 
           echo "Registering SSH keys..."
@@ -40,7 +39,7 @@ jobs:
           printf '%s %s\n' "$INPUT_REMOTE_HOST" "${{ secrets.DOCKER_SWARM_SSH_PUBLIC_KEY }}" >> "${HOME}/.ssh/known_hosts"
 
           echo "Deploying..."
-          docker --log-level debug --host ssh://${INPUT_REMOTE_USER}@${INPUT_REMOTE_HOST} stack deploy --compose-file ./server/docker/dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+          make -C ./ -f ./Makefile deploy
 
           rm -rf "$HOME/.ssh"
 

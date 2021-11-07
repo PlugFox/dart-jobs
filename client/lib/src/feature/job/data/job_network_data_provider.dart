@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dart_jobs_shared/grpc.dart' as grpc;
 import 'package:dart_jobs_shared/models.dart';
-import 'package:grpc/grpc.dart' as grpc;
+import 'package:grpc/grpc_or_grpcweb.dart' as grpc;
 
 abstract class IJobNetworkDataProvider {
   /// Запросить новейшие

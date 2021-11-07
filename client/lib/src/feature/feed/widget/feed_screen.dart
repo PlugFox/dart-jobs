@@ -35,6 +35,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   // ignore: close_sinks
   FeedBLoC? _bloc;
   final ScrollController controller = ScrollController();
+  // ignore: prefer_final_fields
   double _screenHeight = 0;
   ModalObserver? _routeObserver;
 
@@ -43,18 +44,22 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   void initState() {
     super.initState();
     controller.addListener(_checkPagination);
-    _bloc = BlocScope.of<FeedBLoC>(context, listen: false);
+    _bloc = BlocScope.of<FeedBLoC>(context, listen: false)..add(const FeedEvent.paginate());
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    /*
+    /// TODO: в браузере может привести к спаму - сделать debounce
     final newScreenHeight = MediaQuery.of(context).size.height;
+    _screenHeight ??= newScreenHeight;
     if (newScreenHeight != _screenHeight) {
       // Изменилась высота экрана
       _screenHeight = newScreenHeight;
       WidgetsBinding.instance?.addPostFrameCallback((final _) => _checkPagination());
     }
+    */
     final modalRoute = ModalRoute.of(context);
     if (modalRoute != null) {
       _routeObserver?.unsubscribe(this);

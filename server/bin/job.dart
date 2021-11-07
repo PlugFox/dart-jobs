@@ -11,16 +11,26 @@ void main(List<String> args) => l.capture(
               JobService(),
             ],
             <Interceptor>[
+              /// CORS
               (call, method) {
+                //call.headers?.addAll(
+                //  <String, String>{
+                //    'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
+                //    'Access-Control-Allow-Origin': '*',
+                //    'Access-Control-Expose-Headers': '*',
+                //    'Access-Control-Allow-Headers': 'user-agent,x-grpc-web,x-user-agent',
+                //    'Access-Control-Max-Age': '60',
+                //  },
+                //);
                 l.i('Вызван метод ${method.name}');
-              }
+              },
             ],
-            CodecRegistry(
-              codecs: const <Codec>[
-                GzipCodec(),
-                IdentityCodec(),
-              ],
-            ),
+            //CodecRegistry(
+            //  codecs: const <Codec>[
+            //    GzipCodec(),
+            //    IdentityCodec(),
+            //  ],
+            //),
           );
           await server.serve(
             port: 9090,

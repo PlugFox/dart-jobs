@@ -13,8 +13,10 @@ services:
     image: registry.plugfox.dev/dart-jobs-service:prod
     #volumes:
     #  - /var/run/docker.sock:/var/run/docker.sock:ro
-    #ports:
-    #  - '9090:9090'
+    ports:
+      - target: 9090
+        published: 9090
+        mode: host
     #healthcheck:
     #  test: ["CMD", "curl", "-f", "http://localhost:80"]
     #  interval: 60s
@@ -24,6 +26,7 @@ services:
     #  PORT: 80
     networks:
       - traefik-public
+    #  - dart-jobs
     deploy:
       replicas: 1
       placement:
@@ -42,19 +45,27 @@ services:
         traefik.enable: 'true'
         traefik.docker.network: traefik-public
         traefik.constraint-label: traefik-public
+
         # HTTPS Router
         traefik.http.routers.dart-jobs-prod-router.tls: 'true'
         traefik.http.routers.dart-jobs-prod-router.entrypoints: https
         traefik.http.routers.dart-jobs-prod-router.tls.certresolver: le
-        traefik.http.routers.dart-jobs-prod-router.rule: Host(`api.plugfox.dev`) && PathPrefix(`/dart_jobs/prod/service`)
+        traefik.http.routers.dart-jobs-prod-router.rule: Host(`jobs.api.plugfox.dev`)
+        #traefik.http.routers.dart-jobs-prod-router.rule: Host(`jobs.api.plugfox.dev`) && PathPrefix(`/jobs`)
+
         # Middlewares
-        traefik.http.routers.dart-jobs-prod-router.middlewares: dart-jobs-prod-stripprefix
-        traefik.http.middlewares.dart-jobs-prod-stripprefix.stripprefix.prefixes: /dart_jobs/prod/service
-        # Sets the maximum request and response body to 1Mb
-        traefik.http.middlewares.limit.buffering.maxRequestBodyBytes: 1000000
-        traefik.http.middlewares.limit.buffering.maxResponseBodyBytes: 1000000
+        traefik.http.routers.dart-jobs-prod-router.middlewares: 'dart-jobs-prod-headers'
+
+        # CORS
+        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowmethods: GET,PUT,DELETE,POST,OPTIONS
+        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolalloworiginlist: '*'
+        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolexposeheaders: '*'
+        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowheaders: '*'
+        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolmaxage: '60'
+
         # Service
         traefik.http.routers.dart-jobs-prod-router.service: dart-jobs-prod-service
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.scheme: h2c
         traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 9090
         ################################################################
 
@@ -112,3 +123,5 @@ networks:
   traefik-public:
     external: true
     driver: overlay
+  #dart-jobs:
+  #  driver: overlay
