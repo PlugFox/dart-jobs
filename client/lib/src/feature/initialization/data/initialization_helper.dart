@@ -173,9 +173,9 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   */
   'Create a job repository': (final progress) {
     final clientChannel = grpc.GrpcOrGrpcWebClientChannel.toSingleEndpoint(
-      host: 'localhost', // 'jobs.api.plugfox.dev',
-      port: 9090,
-      transportSecure: false,
+      host: 'jobs.api.plugfox.dev',
+      port: 443,
+      transportSecure: true,
     );
     return progress.copyWith(
       newJobRepository: JobRepositoryImpl(
