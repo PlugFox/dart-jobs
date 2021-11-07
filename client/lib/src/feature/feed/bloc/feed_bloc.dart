@@ -157,7 +157,6 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     }
   }
 
-  // ignore: long-method
   Stream<FeedState> _paginate() async* {
     if (state.endOfList) {
       yield FeedState.idle(
@@ -179,14 +178,6 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         filter: state.filter,
       );
 
-      /*
-        final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now();
-        final proposalsStream = _repository.paginate(count: loadingCount, updatedBefore: updatedBefore);
-        final newProposals = await proposalsStream.toList();
-        final endOfList = newProposals.length < loadingCount;
-        final proposals = await _repository.sanitize(List<Proposal>.of(state.list)..addAll(newProposals)).toList();
-        */
-
       // Список более старых (если updatedBefore совпадает с updated исключаю из предидущего состояния эти id)
       final idsForExclusion = List<String>.of(chunk.where((e) => e.updated == updatedBefore).map<String>((e) => e.id));
       await Future<void>.delayed(Duration.zero);
@@ -195,11 +186,12 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       // а затем объединяю исходный список и обновление
       final list = await _reducedStateList(idsForExclusion).toList().then<List<Job>>(
             (list) => <Job>[
-              ...chunk.where((e) => !e.deletionMark),
               ...list,
+              ...chunk.where((e) => !e.deletionMark),
             ],
           );
-      yield FeedState.fetchingRecent(
+
+      yield FeedState.pagination(
         list: list,
         filter: state.filter,
         endOfList: chunk.endOfList,
