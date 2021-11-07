@@ -32,6 +32,8 @@ class _FeedScrollable extends StatefulWidget {
 
 // ignore: prefer_mixin
 class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
+  // ignore: close_sinks
+  FeedBLoC? _bloc;
   final ScrollController controller = ScrollController();
   double _screenHeight = 0;
   ModalObserver? _routeObserver;
@@ -41,6 +43,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   void initState() {
     super.initState();
     controller.addListener(_checkPagination);
+    _bloc = BlocScope.of<FeedBLoC>(context, listen: false);
   }
 
   @override
@@ -61,8 +64,10 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
 
   @override
   void didPopNext() {
+    /// TODO: можно будет закомментировать после того как сделаю подписку на изменение списка
+    /// а также при состоянии "сохранено" буду отправлять Action Intent для запроса обновления списка
     // При возвращении на страницу запрашиваем обновление списка
-    //context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
+    context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
   }
 
   @override
@@ -77,6 +82,10 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   /// При изменении высоты экрана
   /// При окончании загрузки очередной порции
   void _checkPagination() {
+    if (_bloc?.state.isProcessed ?? false) {
+      // Блок уже в состоянии "запроса" - игнорируем проверку на запрос очередной порции
+      return;
+    }
     final screenHeight = _screenHeight;
     var triggerFetchMoreSize = .0;
     try {

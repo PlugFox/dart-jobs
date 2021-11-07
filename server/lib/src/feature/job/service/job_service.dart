@@ -12,12 +12,20 @@ class JobService extends grpc.JobServiceBase {
           jobs: Iterable<Job>.generate(
             3,
             (i) => Job(
-              id: (request.after.toDateTime().millisecondsSinceEpoch ~/ 1000 - i * 60).toRadixString(36),
+              id: (request.after.toDateTime().millisecondsSinceEpoch ~/ 1000 + i * 60).toRadixString(36),
               //weight: request.after.toDateTime().millisecondsSinceEpoch ~/ 1000,
-              updated: request.after.toDateTime().add(const Duration(seconds: 1)),
-              created: request.after.toDateTime().add(const Duration(minutes: 1)),
+              updated: request.after.toDateTime().add(Duration(minutes: i)),
+              created: request.after.toDateTime().add(Duration(minutes: i)),
               creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
-              data: const JobData(),
+              data: JobData(
+                title:
+                    'title ${request.before.toDateTime().add(Duration(minutes: i + 1)).millisecondsSinceEpoch.toRadixString(36)}',
+                company:
+                    'company ${request.before.toDateTime().add(Duration(minutes: i + 1)).millisecondsSinceEpoch.toRadixString(36)}',
+                country:
+                    'company ${request.before.toDateTime().add(Duration(minutes: i + 1)).millisecondsSinceEpoch.toRadixString(36)}',
+                remote: false,
+              ),
             ),
           ).toList(),
         ).toProtobuf(),
@@ -30,12 +38,20 @@ class JobService extends grpc.JobServiceBase {
           jobs: Iterable<Job>.generate(
             request.limit,
             (i) => Job(
-              id: (request.before.toDateTime().millisecondsSinceEpoch ~/ 1000 - i * 60).toRadixString(36),
+              id: (request.before.toDateTime().millisecondsSinceEpoch ~/ 1000 - i * 60 * 60).toRadixString(36),
               //weight: request.before.toDateTime().millisecondsSinceEpoch ~/ 1000,
-              updated: request.before.toDateTime().subtract(const Duration(minutes: 1)),
-              created: request.before.toDateTime().subtract(const Duration(minutes: 1)),
+              updated: request.before.toDateTime().subtract(Duration(hours: i)),
+              created: request.before.toDateTime().subtract(Duration(hours: i)),
               creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
-              data: const JobData(),
+              data: JobData(
+                title:
+                    'title ${request.before.toDateTime().subtract(Duration(hours: i)).millisecondsSinceEpoch.toRadixString(36)}',
+                company:
+                    'company ${request.before.toDateTime().subtract(Duration(hours: i)).millisecondsSinceEpoch.toRadixString(36)}',
+                country:
+                    'company ${request.before.toDateTime().subtract(Duration(hours: i)).millisecondsSinceEpoch.toRadixString(36)}',
+                remote: false,
+              ),
             ),
           ).toList(),
         ).toProtobuf(),
@@ -64,7 +80,12 @@ class JobService extends grpc.JobServiceBase {
           updated: DateTime.now().toUtc(),
           created: DateTime.now().toUtc(),
           creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
-          data: const JobData(),
+          data: JobData(
+            title: 'title ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
+            company: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
+            country: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
+            remote: false,
+          ),
         ).toProtobuf(),
       );
 

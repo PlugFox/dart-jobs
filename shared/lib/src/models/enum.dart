@@ -7,7 +7,7 @@ part 'enum.g.dart';
 /// Уровень разработчика
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
 class DeveloperLevel with _$DeveloperLevel {
-  DeveloperLevel._();
+  const DeveloperLevel._();
 
   /// Стажёр
   @FreezedUnionValue('INTERN')
@@ -69,7 +69,7 @@ class DeveloperLevel with _$DeveloperLevel {
 /// Занятость
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
 class Employment with _$Employment {
-  Employment._();
+  const Employment._();
 
   /// Полный рабочий день (Full-time employment)
   @FreezedUnionValue('FULL_TIME')
@@ -140,7 +140,7 @@ class Employment with _$Employment {
 /// Язык, фреймвок, пакет и тп и тд
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
 class Skill with _$Skill {
-  Skill._();
+  const Skill._();
 
   /// Неопределено, не получено или не указано (Unknown)
   @FreezedUnionValue('other')
@@ -165,7 +165,7 @@ class Skill with _$Skill {
 /// Емейл, Сайт, Телефон, Различные мессенджеры и тп и тд
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
 class Contact with _$Contact {
-  Contact._();
+  const Contact._();
 
   /// Неопределено, не получено или не указано (Unknown)
   @FreezedUnionValue('OTHER')

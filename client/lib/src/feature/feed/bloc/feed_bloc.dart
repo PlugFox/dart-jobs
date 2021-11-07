@@ -230,22 +230,72 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
               ),
       );
 
+  @override
+  Stream<Transition<FeedEvent, FeedState>> transformEvents(
+    Stream<FeedEvent> events,
+    TransitionFunction<FeedEvent, FeedState> transitionFn,
+  ) {
+    // Не позволяю добавлять в очередь больше чем одно событие паджинации
+    var paginationPlanned = false;
+    return events
+        .where((event) {
+          if (event is _PaginateFeedEvent) {
+            if (paginationPlanned) {
+              return false;
+            } else {
+              paginationPlanned = true;
+              return true;
+            }
+          }
+          return true;
+        })
+        .asyncExpand(transitionFn)
+        .map<Transition<FeedEvent, FeedState>>(
+          (t) {
+            if (paginationPlanned && t.event is _PaginateFeedEvent && t.nextState is _IdleFeedState) {
+              paginationPlanned = false;
+            } else if (t.event is _PaginateFeedEvent) {
+              paginationPlanned = true;
+            }
+            return t;
+          },
+        );
+  }
+
   /// Исключаю из исходной коллекции элементы
   Stream<Job> _reducedStateList(List<String> idsForExclusion) async* {
-    if (idsForExclusion.isEmpty || state.list.isEmpty) return;
+    // Если исходный список пуст - нечего проверять
+    if (state.list.isEmpty) return;
+    // Если список на исключение пуст - возвращаем исходную коллекцию
+    if (idsForExclusion.isEmpty) yield* Stream<Job>.fromIterable(state.list);
+    // Список идентификаторов на исключение
     final ids = List<String>.of(idsForExclusion);
     final sw = Stopwatch()..start();
     for (final job in state.list) {
-      for (final id in ids) {
-        if (job.id == id) {
-          ids.remove(id);
-        } else {
+      // Обход обратной выборкой, right fold
+      var idx = ids.length - 1;
+      if (idx < -1) {
+        // Если список на исключение пуст - возвращаем как есть
+        yield job;
+      } else {
+        // Сравниваем идентификатор текущего элемента с идентификаторами на исключение
+        while (idx >= 0) {
+          // Ели идентификаторы совпали - исключаем идентификатор на исключение
+          if (job.id == ids[idx]) {
+            ids.removeAt(idx);
+            break;
+          }
+          idx--;
+        }
+        // Если не один из идентификаторов не подошел - возвращаем как есть
+        if (idx < 0) {
           yield job;
         }
-        if (sw.elapsedMilliseconds > 8) {
-          await Future<void>.delayed(Duration.zero);
-          sw.reset();
-        }
+      }
+      // Если прошло больше 8 мс - уступаем другим событиям в эвент лупе
+      if (sw.elapsedMilliseconds > 8) {
+        await Future<void>.delayed(Duration.zero);
+        sw.reset();
       }
     }
     sw.stop();

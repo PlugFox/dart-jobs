@@ -25,16 +25,16 @@ codegen: get
 docker-build-stage:
 	@echo "Build staging docker images"
 	docker build --no-cache --force-rm --compress \
-			--file ./docker/echo.dockerfile \
-			--tag registry.plugfox.dev/dart-jobs-echo:stage .
+			--file ./docker/service.dockerfile \
+			--tag registry.plugfox.dev/dart-jobs-service:stage .
 
 docker-push-stage:
 	@echo "Push staging docker images"
-	docker push registry.plugfox.dev/dart-jobs-echo:stage
+	docker push registry.plugfox.dev/dart-jobs-service:stage
 
 docker-run-stage:
 	@echo "Run staging docker images"
-	docker run -d -p 8081:80 --name dart-jobs-echo-stage registry.plugfox.dev/dart-jobs-echo:stage
+	docker run -d -p 8081:80 --name dart-jobs-service-stage registry.plugfox.dev/dart-jobs-service:stage
 
 deploy-stage: docker-build-stage docker-push-stage
 	@echo "Deploy staging into docker swarm"
@@ -43,16 +43,16 @@ deploy-stage: docker-build-stage docker-push-stage
 docker-build-prod:
 	@echo "Build release docker images"
 	docker build --no-cache --force-rm --compress \
-			--file ./docker/echo.dockerfile \
-			--tag registry.plugfox.dev/dart-jobs-echo:prod .
+			--file ./docker/job.dockerfile \
+			--tag registry.plugfox.dev/dart-jobs-service:prod .
 
 docker-push-prod:
 	@echo "Push release docker images"
-	docker push registry.plugfox.dev/dart-jobs-echo:prod
+	docker push registry.plugfox.dev/dart-jobs-service:prod
 
 docker-run-prod:
 	@echo "Run release docker images"
-	docker run -d -p 8081:80 --name dart-jobs-echo-prod registry.plugfox.dev/dart-jobs-echo:prod
+	docker run -d -p 8081:80 --name dart-jobs-service-prod registry.plugfox.dev/dart-jobs-service:prod
 
 deploy-prod: docker-build-prod docker-push-prod
 	@echo "Deploy release into docker swarm"

@@ -62,7 +62,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     required DateTime updatedBefore,
     required JobFilter filter,
   }) =>
-      _client.getRecent(filter.toPaginateProtobuf(updatedBefore)).then<JobsChunk>(JobsChunk.fromProtobuf);
+      _client.paginate(filter.toPaginateProtobuf(updatedBefore)).then<JobsChunk>(JobsChunk.fromProtobuf);
 
   @override
   Future<Job> createJob({

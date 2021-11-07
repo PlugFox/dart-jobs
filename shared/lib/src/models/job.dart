@@ -102,7 +102,7 @@ class Job with _$Job, Comparable<Job> {
         id: id,
         //weight: grpc.Int64(weight),
         deletionMark: deletionMark,
-        data: grpc.JobData(),
+        data: data.toProtobuf(),
       );
 
   /// Generate Class from Map<String, Object?>

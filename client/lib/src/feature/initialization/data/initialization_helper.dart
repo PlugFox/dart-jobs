@@ -132,11 +132,12 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
   'Settings client channel': (final progress) => progress.copyWith(
+        /// TODO: эндпоинты и secure
         newClientChannel: grpc.ClientChannel(
-          'localhost',
+          '192.168.66.7',
           port: 9090,
           options: grpc.ChannelOptions(
-            credentials: const grpc.ChannelCredentials.secure(),
+            credentials: const grpc.ChannelCredentials.insecure(), // const grpc.ChannelCredentials.secure(),
             idleTimeout: const Duration(minutes: 2),
             connectionTimeout: const Duration(minutes: 25),
             userAgent: 'dart-grpc/${platform.isWeb ? 'web' : 'io'}/${platform.operatingSystem.when(
@@ -168,15 +169,6 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
             ),
           ),
         ),
-        /*
-        newJobRepository: kFake
-            ? JobRepositoryFake()
-            : JobRepositoryImpl(
-                networkDataProvider: JobFirestoreDataProvider(
-                  firestore: progress.firebaseFirestore!,
-                ),
-              ),
-        */
       ),
   'Get current settings': (final progress) async {
     final repository = SettingsRepository(
