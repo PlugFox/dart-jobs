@@ -36,8 +36,8 @@ class FeedState with _$FeedState {
   /// Выполняется запрос
   bool get isProcessed => maybeMap<bool>(
         orElse: () => false,
-        pagination: (final _) => true,
-        fetchingLatest: (final _) => true,
+        pagination: (_) => true,
+        fetchingRecent: (_) => true,
       );
 
   /// Выполняется обработка/загрузка ленты старых записей
@@ -108,20 +108,37 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         endOfList: state.endOfList,
       );
 
-      /*
-      final updatedAfter = state.list.firstOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
-      final proposalsStream = _repository.fetchRecent(updatedAfter: updatedAfter);
-      final newProposals = await proposalsStream.toList();
-      final jobs = await _repository.sanitize(List<Job>.of(newProposals)..addAll(state.list)).toList();
-      */
-      /// TODO: реализовать запрос
-      await Future<void>.delayed(const Duration(seconds: 5));
+      JobsChunk chunk;
+      do {
+        final updatedAfter = state.list.firstOrNull?.updated ?? DateTime.now().subtract(const Duration(days: 1));
+        chunk = await _repository.getRecent(
+          updatedAfter: updatedAfter,
+          filter: state.filter,
+        );
 
-      yield FeedState.idle(
-        filter: state.filter,
-        list: state.list,
-        endOfList: state.endOfList,
-      );
+        // Список обновленных (их нужно исключить из предидущего состояния)
+        // тк они будут перемещены в начало ленты
+        final idsForExclusion = List<String>.of(
+          chunk
+              .where((e) => e.deletionMark || e.updated != e.created || e.updated == updatedAfter)
+              .map<String>((e) => e.id),
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        // Исключаю из исходной коллекции обновленные и удаленные
+        // а затем объединяю исходный список и обновление
+        final list = await _reducedStateList(idsForExclusion).toList().then<List<Job>>(
+              (list) => <Job>[
+                ...chunk.where((e) => !e.deletionMark),
+                ...list,
+              ],
+            );
+        yield FeedState.fetchingRecent(
+          list: list,
+          filter: state.filter,
+          endOfList: state.endOfList,
+        );
+      } while (!chunk.endOfList);
     } on Object catch (err) {
       l.e('Произошла ошибка при запросе последних элементов ленты: $err');
       yield FeedState.error(
@@ -131,9 +148,16 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         endOfList: state.endOfList,
       );
       rethrow;
+    } finally {
+      yield FeedState.idle(
+        filter: state.filter,
+        list: state.list,
+        endOfList: state.endOfList,
+      );
     }
   }
 
+  // ignore: long-method
   Stream<FeedState> _paginate() async* {
     if (state.endOfList) {
       yield FeedState.idle(
@@ -149,20 +173,36 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         endOfList: false,
       );
 
-      /*
-      final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now();
-      final proposalsStream = _repository.paginate(count: loadingCount, updatedBefore: updatedBefore);
-      final newProposals = await proposalsStream.toList();
-      final endOfList = newProposals.length < loadingCount;
-      final proposals = await _repository.sanitize(List<Proposal>.of(state.list)..addAll(newProposals)).toList();
-      */
-      /// TODO: реализовать запрос
-      await Future<void>.delayed(const Duration(seconds: 5));
-
-      yield FeedState.idle(
+      final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now().subtract(const Duration(days: 1));
+      final chunk = await _repository.paginate(
+        updatedBefore: updatedBefore,
         filter: state.filter,
-        list: state.list,
-        endOfList: state.endOfList,
+      );
+
+      /*
+        final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now();
+        final proposalsStream = _repository.paginate(count: loadingCount, updatedBefore: updatedBefore);
+        final newProposals = await proposalsStream.toList();
+        final endOfList = newProposals.length < loadingCount;
+        final proposals = await _repository.sanitize(List<Proposal>.of(state.list)..addAll(newProposals)).toList();
+        */
+
+      // Список более старых (если updatedBefore совпадает с updated исключаю из предидущего состояния эти id)
+      final idsForExclusion = List<String>.of(chunk.where((e) => e.updated == updatedBefore).map<String>((e) => e.id));
+      await Future<void>.delayed(Duration.zero);
+
+      // Исключаю из исходной коллекции обновленные и удаленные
+      // а затем объединяю исходный список и обновление
+      final list = await _reducedStateList(idsForExclusion).toList().then<List<Job>>(
+            (list) => <Job>[
+              ...chunk.where((e) => !e.deletionMark),
+              ...list,
+            ],
+          );
+      yield FeedState.fetchingRecent(
+        list: list,
+        filter: state.filter,
+        endOfList: chunk.endOfList,
       );
     } on Object catch (err) {
       l.e('Произошла ошибка при обновлении ленты: $err');
@@ -173,6 +213,12 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         endOfList: state.endOfList,
       );
       rethrow;
+    } finally {
+      yield FeedState.idle(
+        filter: state.filter,
+        list: state.list,
+        endOfList: state.endOfList,
+      );
     }
   }
 
@@ -191,4 +237,25 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
                 endOfList: state.endOfList,
               ),
       );
+
+  /// Исключаю из исходной коллекции элементы
+  Stream<Job> _reducedStateList(List<String> idsForExclusion) async* {
+    if (idsForExclusion.isEmpty || state.list.isEmpty) return;
+    final ids = List<String>.of(idsForExclusion);
+    final sw = Stopwatch()..start();
+    for (final job in state.list) {
+      for (final id in ids) {
+        if (job.id == id) {
+          ids.remove(id);
+        } else {
+          yield job;
+        }
+        if (sw.elapsedMilliseconds > 8) {
+          await Future<void>.delayed(Duration.zero);
+          sw.reset();
+        }
+      }
+    }
+    sw.stop();
+  }
 }

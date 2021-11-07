@@ -1,3 +1,4 @@
+import 'package:dart_jobs_shared/models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
@@ -14,8 +15,8 @@ class JobFormData {
   /// Работа (значение обновляется только при получении или установке реузультата)
   /// Лучше вместо этого использовать `BlocScope.of<JobBLoC>(context).state.job` или BlocBuilder
   /// Для получения состояния текущей работы у стейт машины
-  ValueListenable<Job> get lastJob => _lastJob;
-  final ValueNotifier<Job> _lastJob;
+  ValueListenable<JobData> get lastJob => _lastJob;
+  final ValueNotifier<JobData> _lastJob;
 
   /// СПИСОК КОНТРОЛЛЕРОВ ВВОДА ФОРМЫ - НАЧАЛО
 
@@ -23,27 +24,37 @@ class JobFormData {
   final JobFieldTitleController titleController = JobFieldTitleController();
   final JobFieldCompanyController companyController = JobFieldCompanyController();
   final JobFieldCountryController countryController = JobFieldCountryController();
-  final JobFieldLocationController locationController = JobFieldLocationController();
+  final JobFieldAddressController addressController = JobFieldAddressController();
   final JobFieldRemoteController remoteController = JobFieldRemoteController();
-  final JobFieldSalaryController salaryController = JobFieldSalaryController();
+  final JobFieldTagsController tagsController = JobFieldTagsController();
+  final JobFieldSkillsController skillsController = JobFieldSkillsController();
+  final JobFieldLevelsController levelsController = JobFieldLevelsController();
+  final JobFieldEmploymentController employmentController = JobFieldEmploymentController();
+  final JobFieldContactsController contactsController = JobFieldContactsController();
+  final JobFieldDescriptionsController descriptionsController = JobFieldDescriptionsController();
 
   /// СПИСОК КОНТРОЛЛЕРОВ ВВОДА ФОРМЫ - КОНЕЦ
 
   JobFormData({
-    required final Job job,
+    required final JobData data,
     required final FormStatus status,
   })  : _isDirty = ValueNotifier<bool>(false),
         _status = ValueNotifier<FormStatus>(status),
-        _lastJob = ValueNotifier<Job>(job) {
-    updateFormData(job);
+        _lastJob = ValueNotifier<JobData>(data) {
+    updateFormData(data);
     _controllers.addAll(
       <JobInputControllerMixin>[
         titleController,
         companyController,
         countryController,
-        locationController,
+        addressController,
         remoteController,
-        salaryController,
+        tagsController,
+        skillsController,
+        levelsController,
+        employmentController,
+        contactsController,
+        descriptionsController,
       ],
     );
     for (final controller in _controllers) {
@@ -54,29 +65,27 @@ class JobFormData {
   }
 
   /// Обновить контроллеры из актуального значения работы
-  void updateFormData(Job job) {
+  void updateFormData(JobData data) {
     for (final controller in _controllers) {
-      controller.update(job);
+      controller.update(data);
     }
-    if (job.isEmpty) {
-      _status.value = FormStatus.editing;
-    }
-    _lastJob.value = job;
+    _lastJob.value = data;
     _isDirty.value = false;
   }
 
   /// Обновить работу из текущего состояния контроллеров
-  Job updateJob(Job job) => _lastJob.value = job.copyWith(
-        newTitle: titleController.text,
-        newCompany: companyController.text,
-        newCountry: countryController.text,
-        newLocation: locationController.text,
-        newRemote: remoteController.value,
-        newSalaryFrom: salaryController.value.from,
-        newSalaryTo: salaryController.value.to,
-        newAttributes: const JobAttributes.empty(),
-
-        /// TODO: реализовать добавление аттрибутов
+  JobData updateJob(JobData data) => _lastJob.value = data.copyWith(
+        title: titleController.text,
+        company: companyController.text,
+        country: countryController.text,
+        address: addressController.text,
+        remote: remoteController.value,
+        tags: tagsController.value,
+        skills: skillsController.value,
+        levels: levelsController.value,
+        employment: employmentController.value,
+        descriptions: descriptionsController.value,
+        contacts: contactsController.value,
       );
 
   /// Проверить заполненние контроллеров
@@ -148,7 +157,7 @@ mixin JobInputControllerMixin<T extends Object> implements ValueNotifier<T> {
     return result == null;
   }
 
-  void update(Job job);
+  void update(JobData data);
 }
 
 abstract class JobTextFieldSingleLineController
@@ -173,7 +182,7 @@ class JobFieldTitleController extends TextEditingController
   }
 
   @override
-  void update(Job job) => text = job.title;
+  void update(JobData data) => text = data.title;
 }
 
 /// Company controller
@@ -192,7 +201,7 @@ class JobFieldCompanyController extends TextEditingController
   }
 
   @override
-  void update(Job job) => text = job.company;
+  void update(JobData data) => text = data.company;
 }
 
 /// Country controller
@@ -211,11 +220,11 @@ class JobFieldCountryController extends TextEditingController
   }
 
   @override
-  void update(Job job) => text = job.country;
+  void update(JobData data) => text = data.country;
 }
 
 /// Location controller
-class JobFieldLocationController extends TextEditingController
+class JobFieldAddressController extends TextEditingController
     with JobInputControllerMixin<TextEditingValue>
     implements JobTextFieldSingleLineController {
   @override
@@ -229,7 +238,7 @@ class JobFieldLocationController extends TextEditingController
   }
 
   @override
-  void update(Job job) => text = job.location;
+  void update(JobData data) => text = data.address;
 }
 
 /// Remote controller
@@ -240,9 +249,116 @@ class JobFieldRemoteController extends ValueNotifier<bool> with JobInputControll
   String? checkValue(bool value) => null;
 
   @override
-  void update(Job job) => value = job.remote;
+  void update(JobData data) => value = data.remote;
 }
 
+/// Tags controller
+class JobFieldTagsController extends ValueNotifier<List<String>> with JobInputControllerMixin<List<String>> {
+  JobFieldTagsController() : super(<String>[]);
+
+  @override
+  String? checkValue(List<String> value) => null;
+
+  @override
+  void update(JobData data) => value = data.tags;
+}
+
+/// Skills controller
+class JobFieldSkillsController extends ValueNotifier<List<Skill>> with JobInputControllerMixin<List<Skill>> {
+  JobFieldSkillsController() : super(<Skill>[]);
+
+  @override
+  String? checkValue(List<Skill> value) => null;
+
+  @override
+  void update(JobData data) => value = data.skills;
+}
+
+/// Levels controller
+class JobFieldLevelsController extends ValueNotifier<List<DeveloperLevel>>
+    with JobInputControllerMixin<List<DeveloperLevel>> {
+  JobFieldLevelsController() : super(<DeveloperLevel>[]);
+
+  @override
+  String? checkValue(List<DeveloperLevel> value) => null;
+
+  @override
+  void update(JobData data) => value = data.levels;
+}
+
+/// Employment controller
+class JobFieldEmploymentController extends ValueNotifier<List<Employment>>
+    with JobInputControllerMixin<List<Employment>> {
+  JobFieldEmploymentController() : super(<Employment>[]);
+
+  @override
+  String? checkValue(List<Employment> value) => null;
+
+  @override
+  void update(JobData data) => value = data.employment;
+}
+
+/// Contacts controller
+class JobFieldContactsController extends ValueNotifier<List<Contact>> with JobInputControllerMixin<List<Contact>> {
+  JobFieldContactsController() : super(<Contact>[]);
+
+  @override
+  String? checkValue(List<Contact> value) => null;
+
+  @override
+  void update(JobData data) => value = data.contacts;
+}
+
+/// Descriptions controller
+class JobFieldDescriptionsController extends ChangeNotifier
+    with JobInputControllerMixin<Description>
+    implements ValueListenable<Description> {
+  JobFieldDescriptionsController();
+
+  /// Русский язык
+  final TextEditingController russian = TextEditingController(text: '');
+
+  /// Английский язык
+  final TextEditingController english = TextEditingController(text: '');
+
+  @override
+  String? checkValue(Description value) {
+    final ru = russian.text.trim();
+    final en = english.text.trim();
+    if (ru.isEmpty && en.isEmpty) {
+      return 'Must be filled';
+    } else if (ru.length > 2600 || en.length > 2600) {
+      return 'Must be less than 2601 characters';
+    }
+  }
+
+  @override
+  Description get value => Description(
+        <String, String>{
+          'en': english.text.trim(),
+          'ru': russian.text.trim(),
+        },
+      );
+
+  @override
+  set value(Description value) {
+    russian.text = value['ru']?.trim() ?? '';
+    english.text = value['en']?.trim() ?? '';
+    notifyListeners();
+  }
+
+  @override
+  void update(JobData data) => value = data.descriptions;
+
+  @override
+  void dispose() {
+    russian.dispose();
+    english.dispose();
+    super.dispose();
+  }
+}
+
+/*
 /// Salary From - To controller
 class JobFieldSalaryController extends ValueNotifier<MoneyTuple> with JobInputControllerMixin<MoneyTuple> {
   JobFieldSalaryController() : super(MoneyTuple.undefine());
@@ -256,9 +372,8 @@ class JobFieldSalaryController extends ValueNotifier<MoneyTuple> with JobInputCo
   }
 
   @override
-  void update(Job job) => value = MoneyTuple(job.salaryFrom, job.salaryTo);
+  void update(JobData data) => value = MoneyTuple(data.salaryFrom, data.salaryTo);
 }
-
 /// Salary tuple
 /// Контроллер зарплатной вилки
 class MoneyTuple {
@@ -276,5 +391,4 @@ class MoneyTuple {
   /// Зарплата заканчивая по
   final Money to;
 }
-
-/// TODO: JobAttributes
+*/

@@ -54,6 +54,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     }
     final modalRoute = ModalRoute.of(context);
     if (modalRoute != null) {
+      _routeObserver?.unsubscribe(this);
       _routeObserver = PageRouter.modalObserverOf(context)..subscribe(this, modalRoute);
     }
   }

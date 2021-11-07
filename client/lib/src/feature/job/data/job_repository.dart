@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:dart_jobs/src/common/model/exceptions.dart';
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
@@ -6,6 +7,10 @@ import 'package:dart_jobs_shared/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class IJobRepository {
+  /// Получить новую, пустую работу с идентификатором текущего пользователя
+  /// используется как основа для создания новой работы на сервере
+  Job getNewJobTemplate();
+
   /// Запросить новейшие
   /// Получение последних записей по указаной фильтрации
   Future<JobsChunk> getRecent({
@@ -38,11 +43,24 @@ abstract class IJobRepository {
 class JobRepositoryImpl implements IJobRepository {
   final IJobNetworkDataProvider _networkDataProvider;
   final FirebaseAuth _firebaseAuth;
+
   JobRepositoryImpl({
     required final IJobNetworkDataProvider networkDataProvider,
     required final FirebaseAuth firebaseAuth,
   })  : _networkDataProvider = networkDataProvider,
         _firebaseAuth = firebaseAuth;
+
+  @override
+  Job getNewJobTemplate() => Job(
+        id: '',
+        creatorId: _firebaseAuth.currentUser?.uid ?? '',
+        //weight: 0,
+        created: DateTime.now(),
+        updated: DateTime.now(),
+        data: JobData(
+          title: _WorkTitleRandomizer.instance().next(),
+        ),
+      );
 
   @override
   Future<JobsChunk> getRecent({
@@ -93,4 +111,24 @@ class JobRepositoryImpl implements IJobRepository {
     }
     return _networkDataProvider.deleteJob(job: job, idToken: idToken);
   }
+}
+
+// ignore: unused_element
+class _WorkTitleRandomizer {
+  _WorkTitleRandomizer._();
+  static _WorkTitleRandomizer? _instance;
+  // ignore: unused_element
+  factory _WorkTitleRandomizer.instance() => _instance ??= _WorkTitleRandomizer._();
+  static const List<String> _variants = <String>[
+    'Best work ever',
+    "Let's work together",
+    'Dart developer required',
+    'Most wanted',
+    'Payment by cookies',
+    'Hiring for everyone',
+    'Dart goez fasta, brrr',
+  ];
+  final math.Random _rnd = math.Random();
+  final int _max = _variants.length - 1;
+  String next() => _variants[_rnd.nextInt(_max)];
 }

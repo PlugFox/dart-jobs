@@ -27,7 +27,8 @@ DeveloperLevel _$DeveloperLevelFromJson(Map<String, dynamic> json) {
       return LeadDeveloperLevel.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'type', 'DeveloperLevel', 'Invalid union type "${json['type']}"!');
+      throw CheckedFromJsonException(json, 'type', 'DeveloperLevel',
+          'Invalid union type "${json['type']}"!');
   }
 }
 
@@ -126,12 +127,14 @@ mixin _$DeveloperLevel {
 
 /// @nodoc
 abstract class $DeveloperLevelCopyWith<$Res> {
-  factory $DeveloperLevelCopyWith(DeveloperLevel value, $Res Function(DeveloperLevel) then) =
+  factory $DeveloperLevelCopyWith(
+          DeveloperLevel value, $Res Function(DeveloperLevel) then) =
       _$DeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DeveloperLevelCopyWithImpl<$Res> implements $DeveloperLevelCopyWith<$Res> {
+class _$DeveloperLevelCopyWithImpl<$Res>
+    implements $DeveloperLevelCopyWith<$Res> {
   _$DeveloperLevelCopyWithImpl(this._value, this._then);
 
   final DeveloperLevel _value;
@@ -141,14 +144,17 @@ class _$DeveloperLevelCopyWithImpl<$Res> implements $DeveloperLevelCopyWith<$Res
 
 /// @nodoc
 abstract class $InternDeveloperLevelCopyWith<$Res> {
-  factory $InternDeveloperLevelCopyWith(InternDeveloperLevel value, $Res Function(InternDeveloperLevel) then) =
+  factory $InternDeveloperLevelCopyWith(InternDeveloperLevel value,
+          $Res Function(InternDeveloperLevel) then) =
       _$InternDeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$InternDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImpl<$Res>
+class _$InternDeveloperLevelCopyWithImpl<$Res>
+    extends _$DeveloperLevelCopyWithImpl<$Res>
     implements $InternDeveloperLevelCopyWith<$Res> {
-  _$InternDeveloperLevelCopyWithImpl(InternDeveloperLevel _value, $Res Function(InternDeveloperLevel) _then)
+  _$InternDeveloperLevelCopyWithImpl(
+      InternDeveloperLevel _value, $Res Function(InternDeveloperLevel) _then)
       : super(_value, (v) => _then(v as InternDeveloperLevel));
 
   @override
@@ -161,7 +167,8 @@ class _$InternDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 class _$InternDeveloperLevel extends InternDeveloperLevel {
   const _$InternDeveloperLevel() : super._();
 
-  factory _$InternDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$InternDeveloperLevelFromJson(json);
+  factory _$InternDeveloperLevel.fromJson(Map<String, dynamic> json) =>
+      _$$InternDeveloperLevelFromJson(json);
 
   @override
   String toString() {
@@ -170,7 +177,8 @@ class _$InternDeveloperLevel extends InternDeveloperLevel {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is InternDeveloperLevel);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is InternDeveloperLevel);
   }
 
   @override
@@ -266,19 +274,23 @@ abstract class InternDeveloperLevel extends DeveloperLevel {
   const factory InternDeveloperLevel() = _$InternDeveloperLevel;
   const InternDeveloperLevel._() : super._();
 
-  factory InternDeveloperLevel.fromJson(Map<String, dynamic> json) = _$InternDeveloperLevel.fromJson;
+  factory InternDeveloperLevel.fromJson(Map<String, dynamic> json) =
+      _$InternDeveloperLevel.fromJson;
 }
 
 /// @nodoc
 abstract class $JuniorDeveloperLevelCopyWith<$Res> {
-  factory $JuniorDeveloperLevelCopyWith(JuniorDeveloperLevel value, $Res Function(JuniorDeveloperLevel) then) =
+  factory $JuniorDeveloperLevelCopyWith(JuniorDeveloperLevel value,
+          $Res Function(JuniorDeveloperLevel) then) =
       _$JuniorDeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$JuniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImpl<$Res>
+class _$JuniorDeveloperLevelCopyWithImpl<$Res>
+    extends _$DeveloperLevelCopyWithImpl<$Res>
     implements $JuniorDeveloperLevelCopyWith<$Res> {
-  _$JuniorDeveloperLevelCopyWithImpl(JuniorDeveloperLevel _value, $Res Function(JuniorDeveloperLevel) _then)
+  _$JuniorDeveloperLevelCopyWithImpl(
+      JuniorDeveloperLevel _value, $Res Function(JuniorDeveloperLevel) _then)
       : super(_value, (v) => _then(v as JuniorDeveloperLevel));
 
   @override
@@ -291,7 +303,8 @@ class _$JuniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 class _$JuniorDeveloperLevel extends JuniorDeveloperLevel {
   const _$JuniorDeveloperLevel() : super._();
 
-  factory _$JuniorDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$JuniorDeveloperLevelFromJson(json);
+  factory _$JuniorDeveloperLevel.fromJson(Map<String, dynamic> json) =>
+      _$$JuniorDeveloperLevelFromJson(json);
 
   @override
   String toString() {
@@ -300,7 +313,8 @@ class _$JuniorDeveloperLevel extends JuniorDeveloperLevel {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is JuniorDeveloperLevel);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is JuniorDeveloperLevel);
   }
 
   @override
@@ -396,19 +410,23 @@ abstract class JuniorDeveloperLevel extends DeveloperLevel {
   const factory JuniorDeveloperLevel() = _$JuniorDeveloperLevel;
   const JuniorDeveloperLevel._() : super._();
 
-  factory JuniorDeveloperLevel.fromJson(Map<String, dynamic> json) = _$JuniorDeveloperLevel.fromJson;
+  factory JuniorDeveloperLevel.fromJson(Map<String, dynamic> json) =
+      _$JuniorDeveloperLevel.fromJson;
 }
 
 /// @nodoc
 abstract class $MiddleDeveloperLevelCopyWith<$Res> {
-  factory $MiddleDeveloperLevelCopyWith(MiddleDeveloperLevel value, $Res Function(MiddleDeveloperLevel) then) =
+  factory $MiddleDeveloperLevelCopyWith(MiddleDeveloperLevel value,
+          $Res Function(MiddleDeveloperLevel) then) =
       _$MiddleDeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$MiddleDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImpl<$Res>
+class _$MiddleDeveloperLevelCopyWithImpl<$Res>
+    extends _$DeveloperLevelCopyWithImpl<$Res>
     implements $MiddleDeveloperLevelCopyWith<$Res> {
-  _$MiddleDeveloperLevelCopyWithImpl(MiddleDeveloperLevel _value, $Res Function(MiddleDeveloperLevel) _then)
+  _$MiddleDeveloperLevelCopyWithImpl(
+      MiddleDeveloperLevel _value, $Res Function(MiddleDeveloperLevel) _then)
       : super(_value, (v) => _then(v as MiddleDeveloperLevel));
 
   @override
@@ -421,7 +439,8 @@ class _$MiddleDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 class _$MiddleDeveloperLevel extends MiddleDeveloperLevel {
   const _$MiddleDeveloperLevel() : super._();
 
-  factory _$MiddleDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$MiddleDeveloperLevelFromJson(json);
+  factory _$MiddleDeveloperLevel.fromJson(Map<String, dynamic> json) =>
+      _$$MiddleDeveloperLevelFromJson(json);
 
   @override
   String toString() {
@@ -430,7 +449,8 @@ class _$MiddleDeveloperLevel extends MiddleDeveloperLevel {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is MiddleDeveloperLevel);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is MiddleDeveloperLevel);
   }
 
   @override
@@ -526,19 +546,23 @@ abstract class MiddleDeveloperLevel extends DeveloperLevel {
   const factory MiddleDeveloperLevel() = _$MiddleDeveloperLevel;
   const MiddleDeveloperLevel._() : super._();
 
-  factory MiddleDeveloperLevel.fromJson(Map<String, dynamic> json) = _$MiddleDeveloperLevel.fromJson;
+  factory MiddleDeveloperLevel.fromJson(Map<String, dynamic> json) =
+      _$MiddleDeveloperLevel.fromJson;
 }
 
 /// @nodoc
 abstract class $SeniorDeveloperLevelCopyWith<$Res> {
-  factory $SeniorDeveloperLevelCopyWith(SeniorDeveloperLevel value, $Res Function(SeniorDeveloperLevel) then) =
+  factory $SeniorDeveloperLevelCopyWith(SeniorDeveloperLevel value,
+          $Res Function(SeniorDeveloperLevel) then) =
       _$SeniorDeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$SeniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImpl<$Res>
+class _$SeniorDeveloperLevelCopyWithImpl<$Res>
+    extends _$DeveloperLevelCopyWithImpl<$Res>
     implements $SeniorDeveloperLevelCopyWith<$Res> {
-  _$SeniorDeveloperLevelCopyWithImpl(SeniorDeveloperLevel _value, $Res Function(SeniorDeveloperLevel) _then)
+  _$SeniorDeveloperLevelCopyWithImpl(
+      SeniorDeveloperLevel _value, $Res Function(SeniorDeveloperLevel) _then)
       : super(_value, (v) => _then(v as SeniorDeveloperLevel));
 
   @override
@@ -551,7 +575,8 @@ class _$SeniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 class _$SeniorDeveloperLevel extends SeniorDeveloperLevel {
   const _$SeniorDeveloperLevel() : super._();
 
-  factory _$SeniorDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$SeniorDeveloperLevelFromJson(json);
+  factory _$SeniorDeveloperLevel.fromJson(Map<String, dynamic> json) =>
+      _$$SeniorDeveloperLevelFromJson(json);
 
   @override
   String toString() {
@@ -560,7 +585,8 @@ class _$SeniorDeveloperLevel extends SeniorDeveloperLevel {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is SeniorDeveloperLevel);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is SeniorDeveloperLevel);
   }
 
   @override
@@ -656,19 +682,23 @@ abstract class SeniorDeveloperLevel extends DeveloperLevel {
   const factory SeniorDeveloperLevel() = _$SeniorDeveloperLevel;
   const SeniorDeveloperLevel._() : super._();
 
-  factory SeniorDeveloperLevel.fromJson(Map<String, dynamic> json) = _$SeniorDeveloperLevel.fromJson;
+  factory SeniorDeveloperLevel.fromJson(Map<String, dynamic> json) =
+      _$SeniorDeveloperLevel.fromJson;
 }
 
 /// @nodoc
 abstract class $LeadDeveloperLevelCopyWith<$Res> {
-  factory $LeadDeveloperLevelCopyWith(LeadDeveloperLevel value, $Res Function(LeadDeveloperLevel) then) =
+  factory $LeadDeveloperLevelCopyWith(
+          LeadDeveloperLevel value, $Res Function(LeadDeveloperLevel) then) =
       _$LeadDeveloperLevelCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$LeadDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImpl<$Res>
+class _$LeadDeveloperLevelCopyWithImpl<$Res>
+    extends _$DeveloperLevelCopyWithImpl<$Res>
     implements $LeadDeveloperLevelCopyWith<$Res> {
-  _$LeadDeveloperLevelCopyWithImpl(LeadDeveloperLevel _value, $Res Function(LeadDeveloperLevel) _then)
+  _$LeadDeveloperLevelCopyWithImpl(
+      LeadDeveloperLevel _value, $Res Function(LeadDeveloperLevel) _then)
       : super(_value, (v) => _then(v as LeadDeveloperLevel));
 
   @override
@@ -681,7 +711,8 @@ class _$LeadDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImp
 class _$LeadDeveloperLevel extends LeadDeveloperLevel {
   const _$LeadDeveloperLevel() : super._();
 
-  factory _$LeadDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$LeadDeveloperLevelFromJson(json);
+  factory _$LeadDeveloperLevel.fromJson(Map<String, dynamic> json) =>
+      _$$LeadDeveloperLevelFromJson(json);
 
   @override
   String toString() {
@@ -690,7 +721,8 @@ class _$LeadDeveloperLevel extends LeadDeveloperLevel {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is LeadDeveloperLevel);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is LeadDeveloperLevel);
   }
 
   @override
@@ -786,7 +818,8 @@ abstract class LeadDeveloperLevel extends DeveloperLevel {
   const factory LeadDeveloperLevel() = _$LeadDeveloperLevel;
   const LeadDeveloperLevel._() : super._();
 
-  factory LeadDeveloperLevel.fromJson(Map<String, dynamic> json) = _$LeadDeveloperLevel.fromJson;
+  factory LeadDeveloperLevel.fromJson(Map<String, dynamic> json) =
+      _$LeadDeveloperLevel.fromJson;
 }
 
 Employment _$EmploymentFromJson(Map<String, dynamic> json) {
@@ -805,7 +838,8 @@ Employment _$EmploymentFromJson(Map<String, dynamic> json) {
       return CollaborationEmployment.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'type', 'Employment', 'Invalid union type "${json['type']}"!');
+      throw CheckedFromJsonException(
+          json, 'type', 'Employment', 'Invalid union type "${json['type']}"!');
   }
 }
 
@@ -914,7 +948,9 @@ mixin _$Employment {
 
 /// @nodoc
 abstract class $EmploymentCopyWith<$Res> {
-  factory $EmploymentCopyWith(Employment value, $Res Function(Employment) then) = _$EmploymentCopyWithImpl<$Res>;
+  factory $EmploymentCopyWith(
+          Employment value, $Res Function(Employment) then) =
+      _$EmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -928,14 +964,17 @@ class _$EmploymentCopyWithImpl<$Res> implements $EmploymentCopyWith<$Res> {
 
 /// @nodoc
 abstract class $FullTimeEmploymentCopyWith<$Res> {
-  factory $FullTimeEmploymentCopyWith(FullTimeEmployment value, $Res Function(FullTimeEmployment) then) =
+  factory $FullTimeEmploymentCopyWith(
+          FullTimeEmployment value, $Res Function(FullTimeEmployment) then) =
       _$FullTimeEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$FullTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$FullTimeEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $FullTimeEmploymentCopyWith<$Res> {
-  _$FullTimeEmploymentCopyWithImpl(FullTimeEmployment _value, $Res Function(FullTimeEmployment) _then)
+  _$FullTimeEmploymentCopyWithImpl(
+      FullTimeEmployment _value, $Res Function(FullTimeEmployment) _then)
       : super(_value, (v) => _then(v as FullTimeEmployment));
 
   @override
@@ -948,7 +987,8 @@ class _$FullTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 class _$FullTimeEmployment extends FullTimeEmployment {
   const _$FullTimeEmployment() : super._();
 
-  factory _$FullTimeEmployment.fromJson(Map<String, dynamic> json) => _$$FullTimeEmploymentFromJson(json);
+  factory _$FullTimeEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$FullTimeEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -957,7 +997,8 @@ class _$FullTimeEmployment extends FullTimeEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is FullTimeEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is FullTimeEmployment);
   }
 
   @override
@@ -1059,19 +1100,23 @@ abstract class FullTimeEmployment extends Employment {
   const factory FullTimeEmployment() = _$FullTimeEmployment;
   const FullTimeEmployment._() : super._();
 
-  factory FullTimeEmployment.fromJson(Map<String, dynamic> json) = _$FullTimeEmployment.fromJson;
+  factory FullTimeEmployment.fromJson(Map<String, dynamic> json) =
+      _$FullTimeEmployment.fromJson;
 }
 
 /// @nodoc
 abstract class $PartTimeEmploymentCopyWith<$Res> {
-  factory $PartTimeEmploymentCopyWith(PartTimeEmployment value, $Res Function(PartTimeEmployment) then) =
+  factory $PartTimeEmploymentCopyWith(
+          PartTimeEmployment value, $Res Function(PartTimeEmployment) then) =
       _$PartTimeEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$PartTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$PartTimeEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $PartTimeEmploymentCopyWith<$Res> {
-  _$PartTimeEmploymentCopyWithImpl(PartTimeEmployment _value, $Res Function(PartTimeEmployment) _then)
+  _$PartTimeEmploymentCopyWithImpl(
+      PartTimeEmployment _value, $Res Function(PartTimeEmployment) _then)
       : super(_value, (v) => _then(v as PartTimeEmployment));
 
   @override
@@ -1084,7 +1129,8 @@ class _$PartTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 class _$PartTimeEmployment extends PartTimeEmployment {
   const _$PartTimeEmployment() : super._();
 
-  factory _$PartTimeEmployment.fromJson(Map<String, dynamic> json) => _$$PartTimeEmploymentFromJson(json);
+  factory _$PartTimeEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$PartTimeEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -1093,7 +1139,8 @@ class _$PartTimeEmployment extends PartTimeEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is PartTimeEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is PartTimeEmployment);
   }
 
   @override
@@ -1195,19 +1242,23 @@ abstract class PartTimeEmployment extends Employment {
   const factory PartTimeEmployment() = _$PartTimeEmployment;
   const PartTimeEmployment._() : super._();
 
-  factory PartTimeEmployment.fromJson(Map<String, dynamic> json) = _$PartTimeEmployment.fromJson;
+  factory PartTimeEmployment.fromJson(Map<String, dynamic> json) =
+      _$PartTimeEmployment.fromJson;
 }
 
 /// @nodoc
 abstract class $OneTimeEmploymentCopyWith<$Res> {
-  factory $OneTimeEmploymentCopyWith(OneTimeEmployment value, $Res Function(OneTimeEmployment) then) =
+  factory $OneTimeEmploymentCopyWith(
+          OneTimeEmployment value, $Res Function(OneTimeEmployment) then) =
       _$OneTimeEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$OneTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$OneTimeEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $OneTimeEmploymentCopyWith<$Res> {
-  _$OneTimeEmploymentCopyWithImpl(OneTimeEmployment _value, $Res Function(OneTimeEmployment) _then)
+  _$OneTimeEmploymentCopyWithImpl(
+      OneTimeEmployment _value, $Res Function(OneTimeEmployment) _then)
       : super(_value, (v) => _then(v as OneTimeEmployment));
 
   @override
@@ -1220,7 +1271,8 @@ class _$OneTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Re
 class _$OneTimeEmployment extends OneTimeEmployment {
   const _$OneTimeEmployment() : super._();
 
-  factory _$OneTimeEmployment.fromJson(Map<String, dynamic> json) => _$$OneTimeEmploymentFromJson(json);
+  factory _$OneTimeEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$OneTimeEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -1229,7 +1281,8 @@ class _$OneTimeEmployment extends OneTimeEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is OneTimeEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is OneTimeEmployment);
   }
 
   @override
@@ -1331,19 +1384,23 @@ abstract class OneTimeEmployment extends Employment {
   const factory OneTimeEmployment() = _$OneTimeEmployment;
   const OneTimeEmployment._() : super._();
 
-  factory OneTimeEmployment.fromJson(Map<String, dynamic> json) = _$OneTimeEmployment.fromJson;
+  factory OneTimeEmployment.fromJson(Map<String, dynamic> json) =
+      _$OneTimeEmployment.fromJson;
 }
 
 /// @nodoc
 abstract class $ContractEmploymentCopyWith<$Res> {
-  factory $ContractEmploymentCopyWith(ContractEmployment value, $Res Function(ContractEmployment) then) =
+  factory $ContractEmploymentCopyWith(
+          ContractEmployment value, $Res Function(ContractEmployment) then) =
       _$ContractEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$ContractEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$ContractEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $ContractEmploymentCopyWith<$Res> {
-  _$ContractEmploymentCopyWithImpl(ContractEmployment _value, $Res Function(ContractEmployment) _then)
+  _$ContractEmploymentCopyWithImpl(
+      ContractEmployment _value, $Res Function(ContractEmployment) _then)
       : super(_value, (v) => _then(v as ContractEmployment));
 
   @override
@@ -1356,7 +1413,8 @@ class _$ContractEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 class _$ContractEmployment extends ContractEmployment {
   const _$ContractEmployment() : super._();
 
-  factory _$ContractEmployment.fromJson(Map<String, dynamic> json) => _$$ContractEmploymentFromJson(json);
+  factory _$ContractEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$ContractEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -1365,7 +1423,8 @@ class _$ContractEmployment extends ContractEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is ContractEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is ContractEmployment);
   }
 
   @override
@@ -1467,19 +1526,23 @@ abstract class ContractEmployment extends Employment {
   const factory ContractEmployment() = _$ContractEmployment;
   const ContractEmployment._() : super._();
 
-  factory ContractEmployment.fromJson(Map<String, dynamic> json) = _$ContractEmployment.fromJson;
+  factory ContractEmployment.fromJson(Map<String, dynamic> json) =
+      _$ContractEmployment.fromJson;
 }
 
 /// @nodoc
 abstract class $OpenSourceEmploymentCopyWith<$Res> {
-  factory $OpenSourceEmploymentCopyWith(OpenSourceEmployment value, $Res Function(OpenSourceEmployment) then) =
+  factory $OpenSourceEmploymentCopyWith(OpenSourceEmployment value,
+          $Res Function(OpenSourceEmployment) then) =
       _$OpenSourceEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$OpenSourceEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$OpenSourceEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $OpenSourceEmploymentCopyWith<$Res> {
-  _$OpenSourceEmploymentCopyWithImpl(OpenSourceEmployment _value, $Res Function(OpenSourceEmployment) _then)
+  _$OpenSourceEmploymentCopyWithImpl(
+      OpenSourceEmployment _value, $Res Function(OpenSourceEmployment) _then)
       : super(_value, (v) => _then(v as OpenSourceEmployment));
 
   @override
@@ -1492,7 +1555,8 @@ class _$OpenSourceEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<
 class _$OpenSourceEmployment extends OpenSourceEmployment {
   const _$OpenSourceEmployment() : super._();
 
-  factory _$OpenSourceEmployment.fromJson(Map<String, dynamic> json) => _$$OpenSourceEmploymentFromJson(json);
+  factory _$OpenSourceEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$OpenSourceEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -1501,7 +1565,8 @@ class _$OpenSourceEmployment extends OpenSourceEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is OpenSourceEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is OpenSourceEmployment);
   }
 
   @override
@@ -1603,19 +1668,23 @@ abstract class OpenSourceEmployment extends Employment {
   const factory OpenSourceEmployment() = _$OpenSourceEmployment;
   const OpenSourceEmployment._() : super._();
 
-  factory OpenSourceEmployment.fromJson(Map<String, dynamic> json) = _$OpenSourceEmployment.fromJson;
+  factory OpenSourceEmployment.fromJson(Map<String, dynamic> json) =
+      _$OpenSourceEmployment.fromJson;
 }
 
 /// @nodoc
 abstract class $CollaborationEmploymentCopyWith<$Res> {
-  factory $CollaborationEmploymentCopyWith(CollaborationEmployment value, $Res Function(CollaborationEmployment) then) =
+  factory $CollaborationEmploymentCopyWith(CollaborationEmployment value,
+          $Res Function(CollaborationEmployment) then) =
       _$CollaborationEmploymentCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$CollaborationEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Res>
+class _$CollaborationEmploymentCopyWithImpl<$Res>
+    extends _$EmploymentCopyWithImpl<$Res>
     implements $CollaborationEmploymentCopyWith<$Res> {
-  _$CollaborationEmploymentCopyWithImpl(CollaborationEmployment _value, $Res Function(CollaborationEmployment) _then)
+  _$CollaborationEmploymentCopyWithImpl(CollaborationEmployment _value,
+      $Res Function(CollaborationEmployment) _then)
       : super(_value, (v) => _then(v as CollaborationEmployment));
 
   @override
@@ -1628,7 +1697,8 @@ class _$CollaborationEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithIm
 class _$CollaborationEmployment extends CollaborationEmployment {
   const _$CollaborationEmployment() : super._();
 
-  factory _$CollaborationEmployment.fromJson(Map<String, dynamic> json) => _$$CollaborationEmploymentFromJson(json);
+  factory _$CollaborationEmployment.fromJson(Map<String, dynamic> json) =>
+      _$$CollaborationEmploymentFromJson(json);
 
   @override
   String toString() {
@@ -1637,7 +1707,8 @@ class _$CollaborationEmployment extends CollaborationEmployment {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is CollaborationEmployment);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is CollaborationEmployment);
   }
 
   @override
@@ -1739,7 +1810,8 @@ abstract class CollaborationEmployment extends Employment {
   const factory CollaborationEmployment() = _$CollaborationEmployment;
   const CollaborationEmployment._() : super._();
 
-  factory CollaborationEmployment.fromJson(Map<String, dynamic> json) = _$CollaborationEmployment.fromJson;
+  factory CollaborationEmployment.fromJson(Map<String, dynamic> json) =
+      _$CollaborationEmployment.fromJson;
 }
 
 Skill _$SkillFromJson(Map<String, dynamic> json) {
@@ -1807,7 +1879,8 @@ mixin _$Skill {
 
 /// @nodoc
 abstract class $SkillCopyWith<$Res> {
-  factory $SkillCopyWith(Skill value, $Res Function(Skill) then) = _$SkillCopyWithImpl<$Res>;
+  factory $SkillCopyWith(Skill value, $Res Function(Skill) then) =
+      _$SkillCopyWithImpl<$Res>;
   $Res call({String value});
 }
 
@@ -1834,13 +1907,16 @@ class _$SkillCopyWithImpl<$Res> implements $SkillCopyWith<$Res> {
 
 /// @nodoc
 abstract class $OtherSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
-  factory $OtherSkillCopyWith(OtherSkill value, $Res Function(OtherSkill) then) = _$OtherSkillCopyWithImpl<$Res>;
+  factory $OtherSkillCopyWith(
+          OtherSkill value, $Res Function(OtherSkill) then) =
+      _$OtherSkillCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$OtherSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res> implements $OtherSkillCopyWith<$Res> {
+class _$OtherSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res>
+    implements $OtherSkillCopyWith<$Res> {
   _$OtherSkillCopyWithImpl(OtherSkill _value, $Res Function(OtherSkill) _then)
       : super(_value, (v) => _then(v as OtherSkill));
 
@@ -1866,7 +1942,8 @@ class _$OtherSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res> implement
 class _$OtherSkill extends OtherSkill {
   const _$OtherSkill(this.value) : super._();
 
-  factory _$OtherSkill.fromJson(Map<String, dynamic> json) => _$$OtherSkillFromJson(json);
+  factory _$OtherSkill.fromJson(Map<String, dynamic> json) =>
+      _$$OtherSkillFromJson(json);
 
   @override
   final String value;
@@ -1889,7 +1966,8 @@ class _$OtherSkill extends OtherSkill {
 
   @JsonKey(ignore: true)
   @override
-  $OtherSkillCopyWith<OtherSkill> get copyWith => _$OtherSkillCopyWithImpl<OtherSkill>(this, _$identity);
+  $OtherSkillCopyWith<OtherSkill> get copyWith =>
+      _$OtherSkillCopyWithImpl<OtherSkill>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1957,13 +2035,15 @@ abstract class OtherSkill extends Skill {
   const factory OtherSkill(String value) = _$OtherSkill;
   const OtherSkill._() : super._();
 
-  factory OtherSkill.fromJson(Map<String, dynamic> json) = _$OtherSkill.fromJson;
+  factory OtherSkill.fromJson(Map<String, dynamic> json) =
+      _$OtherSkill.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $OtherSkillCopyWith<OtherSkill> get copyWith => throw _privateConstructorUsedError;
+  $OtherSkillCopyWith<OtherSkill> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 Contact _$ContactFromJson(Map<String, dynamic> json) {
@@ -1980,7 +2060,8 @@ Contact _$ContactFromJson(Map<String, dynamic> json) {
       return TelegramContact.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'type', 'Contact', 'Invalid union type "${json['type']}"!');
+      throw CheckedFromJsonException(
+          json, 'type', 'Contact', 'Invalid union type "${json['type']}"!');
   }
 }
 
@@ -2093,7 +2174,8 @@ mixin _$Contact {
 
 /// @nodoc
 abstract class $ContactCopyWith<$Res> {
-  factory $ContactCopyWith(Contact value, $Res Function(Contact) then) = _$ContactCopyWithImpl<$Res>;
+  factory $ContactCopyWith(Contact value, $Res Function(Contact) then) =
+      _$ContactCopyWithImpl<$Res>;
   $Res call({String value});
 }
 
@@ -2120,15 +2202,18 @@ class _$ContactCopyWithImpl<$Res> implements $ContactCopyWith<$Res> {
 
 /// @nodoc
 abstract class $OtherContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $OtherContactCopyWith(OtherContact value, $Res Function(OtherContact) then) =
+  factory $OtherContactCopyWith(
+          OtherContact value, $Res Function(OtherContact) then) =
       _$OtherContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $OtherContactCopyWith<$Res> {
-  _$OtherContactCopyWithImpl(OtherContact _value, $Res Function(OtherContact) _then)
+class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
+    implements $OtherContactCopyWith<$Res> {
+  _$OtherContactCopyWithImpl(
+      OtherContact _value, $Res Function(OtherContact) _then)
       : super(_value, (v) => _then(v as OtherContact));
 
   @override
@@ -2153,7 +2238,8 @@ class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 class _$OtherContact extends OtherContact {
   const _$OtherContact(this.value) : super._();
 
-  factory _$OtherContact.fromJson(Map<String, dynamic> json) => _$$OtherContactFromJson(json);
+  factory _$OtherContact.fromJson(Map<String, dynamic> json) =>
+      _$$OtherContactFromJson(json);
 
   @override
   final String value;
@@ -2176,7 +2262,8 @@ class _$OtherContact extends OtherContact {
 
   @JsonKey(ignore: true)
   @override
-  $OtherContactCopyWith<OtherContact> get copyWith => _$OtherContactCopyWithImpl<OtherContact>(this, _$identity);
+  $OtherContactCopyWith<OtherContact> get copyWith =>
+      _$OtherContactCopyWithImpl<OtherContact>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2268,26 +2355,31 @@ abstract class OtherContact extends Contact {
   const factory OtherContact(String value) = _$OtherContact;
   const OtherContact._() : super._();
 
-  factory OtherContact.fromJson(Map<String, dynamic> json) = _$OtherContact.fromJson;
+  factory OtherContact.fromJson(Map<String, dynamic> json) =
+      _$OtherContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $OtherContactCopyWith<OtherContact> get copyWith => throw _privateConstructorUsedError;
+  $OtherContactCopyWith<OtherContact> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PhoneContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $PhoneContactCopyWith(PhoneContact value, $Res Function(PhoneContact) then) =
+  factory $PhoneContactCopyWith(
+          PhoneContact value, $Res Function(PhoneContact) then) =
       _$PhoneContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$PhoneContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $PhoneContactCopyWith<$Res> {
-  _$PhoneContactCopyWithImpl(PhoneContact _value, $Res Function(PhoneContact) _then)
+class _$PhoneContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
+    implements $PhoneContactCopyWith<$Res> {
+  _$PhoneContactCopyWithImpl(
+      PhoneContact _value, $Res Function(PhoneContact) _then)
       : super(_value, (v) => _then(v as PhoneContact));
 
   @override
@@ -2312,7 +2404,8 @@ class _$PhoneContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 class _$PhoneContact extends PhoneContact {
   const _$PhoneContact(this.value) : super._();
 
-  factory _$PhoneContact.fromJson(Map<String, dynamic> json) => _$$PhoneContactFromJson(json);
+  factory _$PhoneContact.fromJson(Map<String, dynamic> json) =>
+      _$$PhoneContactFromJson(json);
 
   @override
   final String value;
@@ -2335,7 +2428,8 @@ class _$PhoneContact extends PhoneContact {
 
   @JsonKey(ignore: true)
   @override
-  $PhoneContactCopyWith<PhoneContact> get copyWith => _$PhoneContactCopyWithImpl<PhoneContact>(this, _$identity);
+  $PhoneContactCopyWith<PhoneContact> get copyWith =>
+      _$PhoneContactCopyWithImpl<PhoneContact>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2427,26 +2521,31 @@ abstract class PhoneContact extends Contact {
   const factory PhoneContact(String value) = _$PhoneContact;
   const PhoneContact._() : super._();
 
-  factory PhoneContact.fromJson(Map<String, dynamic> json) = _$PhoneContact.fromJson;
+  factory PhoneContact.fromJson(Map<String, dynamic> json) =
+      _$PhoneContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $PhoneContactCopyWith<PhoneContact> get copyWith => throw _privateConstructorUsedError;
+  $PhoneContactCopyWith<PhoneContact> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WebsiteContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $WebsiteContactCopyWith(WebsiteContact value, $Res Function(WebsiteContact) then) =
+  factory $WebsiteContactCopyWith(
+          WebsiteContact value, $Res Function(WebsiteContact) then) =
       _$WebsiteContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$WebsiteContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $WebsiteContactCopyWith<$Res> {
-  _$WebsiteContactCopyWithImpl(WebsiteContact _value, $Res Function(WebsiteContact) _then)
+class _$WebsiteContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
+    implements $WebsiteContactCopyWith<$Res> {
+  _$WebsiteContactCopyWithImpl(
+      WebsiteContact _value, $Res Function(WebsiteContact) _then)
       : super(_value, (v) => _then(v as WebsiteContact));
 
   @override
@@ -2471,7 +2570,8 @@ class _$WebsiteContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imp
 class _$WebsiteContact extends WebsiteContact {
   const _$WebsiteContact(this.value) : super._();
 
-  factory _$WebsiteContact.fromJson(Map<String, dynamic> json) => _$$WebsiteContactFromJson(json);
+  factory _$WebsiteContact.fromJson(Map<String, dynamic> json) =>
+      _$$WebsiteContactFromJson(json);
 
   @override
   final String value;
@@ -2587,26 +2687,31 @@ abstract class WebsiteContact extends Contact {
   const factory WebsiteContact(String value) = _$WebsiteContact;
   const WebsiteContact._() : super._();
 
-  factory WebsiteContact.fromJson(Map<String, dynamic> json) = _$WebsiteContact.fromJson;
+  factory WebsiteContact.fromJson(Map<String, dynamic> json) =
+      _$WebsiteContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $WebsiteContactCopyWith<WebsiteContact> get copyWith => throw _privateConstructorUsedError;
+  $WebsiteContactCopyWith<WebsiteContact> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EmailContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $EmailContactCopyWith(EmailContact value, $Res Function(EmailContact) then) =
+  factory $EmailContactCopyWith(
+          EmailContact value, $Res Function(EmailContact) then) =
       _$EmailContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
 }
 
 /// @nodoc
-class _$EmailContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $EmailContactCopyWith<$Res> {
-  _$EmailContactCopyWithImpl(EmailContact _value, $Res Function(EmailContact) _then)
+class _$EmailContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
+    implements $EmailContactCopyWith<$Res> {
+  _$EmailContactCopyWithImpl(
+      EmailContact _value, $Res Function(EmailContact) _then)
       : super(_value, (v) => _then(v as EmailContact));
 
   @override
@@ -2631,7 +2736,8 @@ class _$EmailContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 class _$EmailContact extends EmailContact {
   const _$EmailContact(this.value) : super._();
 
-  factory _$EmailContact.fromJson(Map<String, dynamic> json) => _$$EmailContactFromJson(json);
+  factory _$EmailContact.fromJson(Map<String, dynamic> json) =>
+      _$$EmailContactFromJson(json);
 
   @override
   final String value;
@@ -2654,7 +2760,8 @@ class _$EmailContact extends EmailContact {
 
   @JsonKey(ignore: true)
   @override
-  $EmailContactCopyWith<EmailContact> get copyWith => _$EmailContactCopyWithImpl<EmailContact>(this, _$identity);
+  $EmailContactCopyWith<EmailContact> get copyWith =>
+      _$EmailContactCopyWithImpl<EmailContact>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2746,18 +2853,22 @@ abstract class EmailContact extends Contact {
   const factory EmailContact(String value) = _$EmailContact;
   const EmailContact._() : super._();
 
-  factory EmailContact.fromJson(Map<String, dynamic> json) = _$EmailContact.fromJson;
+  factory EmailContact.fromJson(Map<String, dynamic> json) =
+      _$EmailContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $EmailContactCopyWith<EmailContact> get copyWith => throw _privateConstructorUsedError;
+  $EmailContactCopyWith<EmailContact> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TelegramContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $TelegramContactCopyWith(TelegramContact value, $Res Function(TelegramContact) then) =
+abstract class $TelegramContactCopyWith<$Res>
+    implements $ContactCopyWith<$Res> {
+  factory $TelegramContactCopyWith(
+          TelegramContact value, $Res Function(TelegramContact) then) =
       _$TelegramContactCopyWithImpl<$Res>;
   @override
   $Res call({String value});
@@ -2766,7 +2877,8 @@ abstract class $TelegramContactCopyWith<$Res> implements $ContactCopyWith<$Res> 
 /// @nodoc
 class _$TelegramContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
     implements $TelegramContactCopyWith<$Res> {
-  _$TelegramContactCopyWithImpl(TelegramContact _value, $Res Function(TelegramContact) _then)
+  _$TelegramContactCopyWithImpl(
+      TelegramContact _value, $Res Function(TelegramContact) _then)
       : super(_value, (v) => _then(v as TelegramContact));
 
   @override
@@ -2791,7 +2903,8 @@ class _$TelegramContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
 class _$TelegramContact extends TelegramContact {
   const _$TelegramContact(this.value) : super._();
 
-  factory _$TelegramContact.fromJson(Map<String, dynamic> json) => _$$TelegramContactFromJson(json);
+  factory _$TelegramContact.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramContactFromJson(json);
 
   @override
   final String value;
@@ -2907,11 +3020,13 @@ abstract class TelegramContact extends Contact {
   const factory TelegramContact(String value) = _$TelegramContact;
   const TelegramContact._() : super._();
 
-  factory TelegramContact.fromJson(Map<String, dynamic> json) = _$TelegramContact.fromJson;
+  factory TelegramContact.fromJson(Map<String, dynamic> json) =
+      _$TelegramContact.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  $TelegramContactCopyWith<TelegramContact> get copyWith => throw _privateConstructorUsedError;
+  $TelegramContactCopyWith<TelegramContact> get copyWith =>
+      throw _privateConstructorUsedError;
 }

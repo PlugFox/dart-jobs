@@ -23,7 +23,7 @@ class JobScreen extends StatelessWidget {
               orElse: () => Scaffold(
                 appBar: AppBar(
                   title: Text(
-                    state.job.title,
+                    state.job.data.title,
                     maxLines: 1,
                   ),
                 ),

@@ -13,7 +13,7 @@ class JobService extends grpc.JobServiceBase {
             3,
             (i) => Job(
               id: (request.after.toDateTime().millisecondsSinceEpoch ~/ 1000 - i * 60).toRadixString(36),
-              weight: request.after.toDateTime().millisecondsSinceEpoch ~/ 1000,
+              //weight: request.after.toDateTime().millisecondsSinceEpoch ~/ 1000,
               updated: request.after.toDateTime().add(const Duration(seconds: 1)),
               created: request.after.toDateTime().add(const Duration(minutes: 1)),
               creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
@@ -31,7 +31,7 @@ class JobService extends grpc.JobServiceBase {
             request.limit,
             (i) => Job(
               id: (request.before.toDateTime().millisecondsSinceEpoch ~/ 1000 - i * 60).toRadixString(36),
-              weight: request.before.toDateTime().millisecondsSinceEpoch ~/ 1000,
+              //weight: request.before.toDateTime().millisecondsSinceEpoch ~/ 1000,
               updated: request.before.toDateTime().subtract(const Duration(minutes: 1)),
               created: request.before.toDateTime().subtract(const Duration(minutes: 1)),
               creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
@@ -47,7 +47,7 @@ class JobService extends grpc.JobServiceBase {
   Future<grpc.Job> createJob(ServiceCall call, grpc.JobData request) => Future<grpc.Job>.value(
         Job(
           id: (DateTime.now().millisecondsSinceEpoch ~/ 1000).toRadixString(36),
-          weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          //weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
           updated: DateTime.now().toUtc(),
           created: DateTime.now().toUtc(),
           creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',
@@ -60,7 +60,7 @@ class JobService extends grpc.JobServiceBase {
   Future<grpc.Job> getJob(ServiceCall call, grpc.UUID request) => Future<grpc.Job>.value(
         Job(
           id: request.uuid,
-          weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          //weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
           updated: DateTime.now().toUtc(),
           created: DateTime.now().toUtc(),
           creatorId: call.clientMetadata?['Authorization']?.toString() ?? '',

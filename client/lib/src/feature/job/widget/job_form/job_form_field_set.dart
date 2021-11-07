@@ -62,7 +62,7 @@ class JobFormFieldSet extends StatelessWidget {
                   /// Адрес
                   _JobSingleLineText(
                     context.localization.job_field_location_address,
-                    formData.locationController,
+                    formData.addressController,
                     inputFormatters: <TextInputFormatter>[_denyCyrillic],
                     key: const ValueKey<String>('job_field_location_address'),
                   ),
@@ -189,7 +189,7 @@ class _BottomButtonsRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       if (status == FormStatus.readOnly) const Expanded(child: _EditButton()),
-                      if (status == FormStatus.editing && state.job.isNotEmpty) const Expanded(child: _CancelButton()),
+                      if (status == FormStatus.editing && state.job.hasID) const Expanded(child: _CancelButton()),
                       if (status == FormStatus.editing)
                         Expanded(
                           child: _SaveButton(
@@ -226,7 +226,7 @@ class _EditButton extends StatelessWidget {
               BlocScope.of<JobBLoC>(
                 context,
                 listen: false,
-              ).state.job,
+              ).state.job.data,
             );
           },
           icon: const Icon(Icons.edit),
@@ -258,7 +258,7 @@ class _CancelButton extends StatelessWidget {
               BlocScope.of<JobBLoC>(
                 context,
                 listen: false,
-              ).state.job,
+              ).state.job.data,
             );
           },
           icon: const Icon(Icons.cancel),
@@ -290,7 +290,7 @@ class _SaveButton extends StatelessWidget {
                   }
                   final job = JobForm.getUpdatedJob(
                     context,
-                    BlocScope.of<JobBLoC>(context, listen: false).state.job,
+                    BlocScope.of<JobBLoC>(context, listen: false).state.job.data,
                   );
                   if (job == null) {
                     return;

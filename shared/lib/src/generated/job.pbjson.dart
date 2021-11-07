@@ -75,13 +75,13 @@ const Job$json = {
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     {'1': 'creatorId', '3': 2, '4': 1, '5': 9, '10': 'creatorId'},
-    {'1': 'weight', '3': 3, '4': 1, '5': 4, '10': 'weight'},
     {'1': 'created', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
     {'1': 'updated', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'updated'},
     {'1': 'data', '3': 101, '4': 1, '5': 11, '6': '.job.JobData', '10': 'data'},
     {'1': 'deletionMark', '3': 201, '4': 1, '5': 8, '10': 'deletionMark'},
   ],
   '9': [
+    {'1': 3, '2': 4},
     {'1': 6, '2': 101},
     {'1': 102, '2': 201},
   ],
@@ -89,7 +89,7 @@ const Job$json = {
 
 /// Descriptor for `Job`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jobDescriptor = $convert.base64Decode(
-    'CgNKb2ISDgoCaWQYASABKAlSAmlkEhwKCWNyZWF0b3JJZBgCIAEoCVIJY3JlYXRvcklkEhYKBndlaWdodBgDIAEoBFIGd2VpZ2h0EjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEiAKBGRhdGEYZSABKAsyDC5qb2IuSm9iRGF0YVIEZGF0YRIjCgxkZWxldGlvbk1hcmsYyQEgASgIUgxkZWxldGlvbk1hcmtKBAgGEGVKBQhmEMkB');
+    'CgNKb2ISDgoCaWQYASABKAlSAmlkEhwKCWNyZWF0b3JJZBgCIAEoCVIJY3JlYXRvcklkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEjQKB3VwZGF0ZWQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgd1cGRhdGVkEiAKBGRhdGEYZSABKAsyDC5qb2IuSm9iRGF0YVIEZGF0YRIjCgxkZWxldGlvbk1hcmsYyQEgASgIUgxkZWxldGlvbk1hcmtKBAgDEARKBAgGEGVKBQhmEMkB');
 @$core.Deprecated('Use jobDataDescriptor instead')
 const JobData$json = {
   '1': 'JobData',

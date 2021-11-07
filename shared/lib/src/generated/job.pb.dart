@@ -7,7 +7,6 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'google/protobuf/timestamp.pb.dart' as $2;
@@ -189,9 +188,6 @@ class Job extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'creatorId', protoName: 'creatorId')
-    ..a<$fixnum.Int64>(
-        3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'weight', $pb.PbFieldType.OU6,
-        defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created',
         subBuilder: $2.Timestamp.create)
     ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updated',
@@ -206,7 +202,6 @@ class Job extends $pb.GeneratedMessage {
   factory Job({
     $core.String? id,
     $core.String? creatorId,
-    $fixnum.Int64? weight,
     $2.Timestamp? created,
     $2.Timestamp? updated,
     JobData? data,
@@ -218,9 +213,6 @@ class Job extends $pb.GeneratedMessage {
     }
     if (creatorId != null) {
       _result.creatorId = creatorId;
-    }
-    if (weight != null) {
-      _result.weight = weight;
     }
     if (created != null) {
       _result.created = created;
@@ -282,69 +274,57 @@ class Job extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearCreatorId() => clearField(2);
 
-  @$pb.TagNumber(3)
-  $fixnum.Int64 get weight => $_getI64(2);
-  @$pb.TagNumber(3)
-  set weight($fixnum.Int64 v) {
-    $_setInt64(2, v);
-  }
-
-  @$pb.TagNumber(3)
-  $core.bool hasWeight() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearWeight() => clearField(3);
-
   @$pb.TagNumber(4)
-  $2.Timestamp get created => $_getN(3);
+  $2.Timestamp get created => $_getN(2);
   @$pb.TagNumber(4)
   set created($2.Timestamp v) {
     setField(4, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasCreated() => $_has(3);
+  $core.bool hasCreated() => $_has(2);
   @$pb.TagNumber(4)
   void clearCreated() => clearField(4);
   @$pb.TagNumber(4)
-  $2.Timestamp ensureCreated() => $_ensure(3);
+  $2.Timestamp ensureCreated() => $_ensure(2);
 
   @$pb.TagNumber(5)
-  $2.Timestamp get updated => $_getN(4);
+  $2.Timestamp get updated => $_getN(3);
   @$pb.TagNumber(5)
   set updated($2.Timestamp v) {
     setField(5, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasUpdated() => $_has(4);
+  $core.bool hasUpdated() => $_has(3);
   @$pb.TagNumber(5)
   void clearUpdated() => clearField(5);
   @$pb.TagNumber(5)
-  $2.Timestamp ensureUpdated() => $_ensure(4);
+  $2.Timestamp ensureUpdated() => $_ensure(3);
 
   @$pb.TagNumber(101)
-  JobData get data => $_getN(5);
+  JobData get data => $_getN(4);
   @$pb.TagNumber(101)
   set data(JobData v) {
     setField(101, v);
   }
 
   @$pb.TagNumber(101)
-  $core.bool hasData() => $_has(5);
+  $core.bool hasData() => $_has(4);
   @$pb.TagNumber(101)
   void clearData() => clearField(101);
   @$pb.TagNumber(101)
-  JobData ensureData() => $_ensure(5);
+  JobData ensureData() => $_ensure(4);
 
   @$pb.TagNumber(201)
-  $core.bool get deletionMark => $_getBF(6);
+  $core.bool get deletionMark => $_getBF(5);
   @$pb.TagNumber(201)
   set deletionMark($core.bool v) {
-    $_setBool(6, v);
+    $_setBool(5, v);
   }
 
   @$pb.TagNumber(201)
-  $core.bool hasDeletionMark() => $_has(6);
+  $core.bool hasDeletionMark() => $_has(5);
   @$pb.TagNumber(201)
   void clearDeletionMark() => clearField(201);
 }

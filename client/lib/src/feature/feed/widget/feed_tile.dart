@@ -168,8 +168,8 @@ class _JobFeedTile extends FeedTile {
             PageRouter.navigate(
               context,
               (final configuration) => JobPageConfiguration(
-                jobId: job.id,
-                jobTitle: job.data.title,
+                job: job,
+                edit: false,
               ),
             );
             InitializationScope.storeOf(context).analytics?.logViewItem(

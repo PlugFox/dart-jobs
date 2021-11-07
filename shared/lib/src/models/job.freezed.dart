@@ -24,7 +24,6 @@ class _$JobTearOff {
   _Job call(
       {@JsonKey(name: 'id') required String id,
       @JsonKey(name: 'creator_id') required String creatorId,
-      @JsonKey(name: 'weight') required int weight,
       @JsonKey(name: 'created') required DateTime created,
       @JsonKey(name: 'updated') required DateTime updated,
       @JsonKey(name: 'data') required JobData data,
@@ -32,7 +31,6 @@ class _$JobTearOff {
     return _Job(
       id: id,
       creatorId: creatorId,
-      weight: weight,
       created: created,
       updated: updated,
       data: data,
@@ -57,10 +55,6 @@ mixin _$Job {
   /// Идентификатор создателя
   @JsonKey(name: 'creator_id')
   String get creatorId => throw _privateConstructorUsedError;
-
-  /// Вес элемента (влияет на сортировку)
-  @JsonKey(name: 'weight')
-  int get weight => throw _privateConstructorUsedError;
 
   /// Создано
   @JsonKey(name: 'created')
@@ -87,11 +81,11 @@ mixin _$Job {
 
 /// @nodoc
 abstract class $JobCopyWith<$Res> {
-  factory $JobCopyWith(Job value, $Res Function(Job) then) = _$JobCopyWithImpl<$Res>;
+  factory $JobCopyWith(Job value, $Res Function(Job) then) =
+      _$JobCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'id') String id,
       @JsonKey(name: 'creator_id') String creatorId,
-      @JsonKey(name: 'weight') int weight,
       @JsonKey(name: 'created') DateTime created,
       @JsonKey(name: 'updated') DateTime updated,
       @JsonKey(name: 'data') JobData data,
@@ -112,7 +106,6 @@ class _$JobCopyWithImpl<$Res> implements $JobCopyWith<$Res> {
   $Res call({
     Object? id = freezed,
     Object? creatorId = freezed,
-    Object? weight = freezed,
     Object? created = freezed,
     Object? updated = freezed,
     Object? data = freezed,
@@ -127,10 +120,6 @@ class _$JobCopyWithImpl<$Res> implements $JobCopyWith<$Res> {
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String,
-      weight: weight == freezed
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as int,
       created: created == freezed
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
@@ -160,12 +149,12 @@ class _$JobCopyWithImpl<$Res> implements $JobCopyWith<$Res> {
 
 /// @nodoc
 abstract class _$JobCopyWith<$Res> implements $JobCopyWith<$Res> {
-  factory _$JobCopyWith(_Job value, $Res Function(_Job) then) = __$JobCopyWithImpl<$Res>;
+  factory _$JobCopyWith(_Job value, $Res Function(_Job) then) =
+      __$JobCopyWithImpl<$Res>;
   @override
   $Res call(
       {@JsonKey(name: 'id') String id,
       @JsonKey(name: 'creator_id') String creatorId,
-      @JsonKey(name: 'weight') int weight,
       @JsonKey(name: 'created') DateTime created,
       @JsonKey(name: 'updated') DateTime updated,
       @JsonKey(name: 'data') JobData data,
@@ -176,8 +165,10 @@ abstract class _$JobCopyWith<$Res> implements $JobCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$JobCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res> implements _$JobCopyWith<$Res> {
-  __$JobCopyWithImpl(_Job _value, $Res Function(_Job) _then) : super(_value, (v) => _then(v as _Job));
+class __$JobCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res>
+    implements _$JobCopyWith<$Res> {
+  __$JobCopyWithImpl(_Job _value, $Res Function(_Job) _then)
+      : super(_value, (v) => _then(v as _Job));
 
   @override
   _Job get _value => super._value as _Job;
@@ -186,7 +177,6 @@ class __$JobCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res> implements _$JobC
   $Res call({
     Object? id = freezed,
     Object? creatorId = freezed,
-    Object? weight = freezed,
     Object? created = freezed,
     Object? updated = freezed,
     Object? data = freezed,
@@ -201,10 +191,6 @@ class __$JobCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res> implements _$JobC
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
               as String,
-      weight: weight == freezed
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as int,
       created: created == freezed
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
@@ -231,7 +217,6 @@ class _$_Job extends _Job {
   const _$_Job(
       {@JsonKey(name: 'id') required this.id,
       @JsonKey(name: 'creator_id') required this.creatorId,
-      @JsonKey(name: 'weight') required this.weight,
       @JsonKey(name: 'created') required this.created,
       @JsonKey(name: 'updated') required this.updated,
       @JsonKey(name: 'data') required this.data,
@@ -250,11 +235,6 @@ class _$_Job extends _Job {
   /// Идентификатор создателя
   @JsonKey(name: 'creator_id')
   final String creatorId;
-  @override
-
-  /// Вес элемента (влияет на сортировку)
-  @JsonKey(name: 'weight')
-  final int weight;
   @override
 
   /// Создано
@@ -280,7 +260,7 @@ class _$_Job extends _Job {
 
   @override
   String toString() {
-    return 'Job(id: $id, creatorId: $creatorId, weight: $weight, created: $created, updated: $updated, data: $data, deletionMark: $deletionMark)';
+    return 'Job(id: $id, creatorId: $creatorId, created: $created, updated: $updated, data: $data, deletionMark: $deletionMark)';
   }
 
   @override
@@ -289,20 +269,23 @@ class _$_Job extends _Job {
         (other.runtimeType == runtimeType &&
             other is _Job &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.creatorId, creatorId) || other.creatorId == creatorId) &&
-            (identical(other.weight, weight) || other.weight == weight) &&
+            (identical(other.creatorId, creatorId) ||
+                other.creatorId == creatorId) &&
             (identical(other.created, created) || other.created == created) &&
             (identical(other.updated, updated) || other.updated == updated) &&
             (identical(other.data, data) || other.data == data) &&
-            (identical(other.deletionMark, deletionMark) || other.deletionMark == deletionMark));
+            (identical(other.deletionMark, deletionMark) ||
+                other.deletionMark == deletionMark));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, creatorId, weight, created, updated, data, deletionMark);
+  int get hashCode => Object.hash(
+      runtimeType, id, creatorId, created, updated, data, deletionMark);
 
   @JsonKey(ignore: true)
   @override
-  _$JobCopyWith<_Job> get copyWith => __$JobCopyWithImpl<_Job>(this, _$identity);
+  _$JobCopyWith<_Job> get copyWith =>
+      __$JobCopyWithImpl<_Job>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -314,7 +297,6 @@ abstract class _Job extends Job {
   const factory _Job(
       {@JsonKey(name: 'id') required String id,
       @JsonKey(name: 'creator_id') required String creatorId,
-      @JsonKey(name: 'weight') required int weight,
       @JsonKey(name: 'created') required DateTime created,
       @JsonKey(name: 'updated') required DateTime updated,
       @JsonKey(name: 'data') required JobData data,
@@ -333,11 +315,6 @@ abstract class _Job extends Job {
   /// Идентификатор создателя
   @JsonKey(name: 'creator_id')
   String get creatorId;
-  @override
-
-  /// Вес элемента (влияет на сортировку)
-  @JsonKey(name: 'weight')
-  int get weight;
   @override
 
   /// Создано
@@ -374,17 +351,28 @@ class _$JobDataTearOff {
   const _$JobDataTearOff();
 
   _JobData call(
-      {@JsonKey(name: 'title') String title = '',
-      @JsonKey(name: 'company') String company = '',
-      @JsonKey(name: 'country') String country = '',
-      @JsonKey(name: 'remote') bool remote = true,
-      @JsonKey(name: 'address') String address = '',
-      @JsonKey(name: 'descriptions') Description descriptions = const Description(),
-      @JsonKey(name: 'levels') List<DeveloperLevel> levels = const <DeveloperLevel>[],
-      @JsonKey(name: 'skills') List<Skill> skills = const <Skill>[],
-      @JsonKey(name: 'contacts') List<Contact> contacts = const <Contact>[],
-      @JsonKey(name: 'employment') List<Employment> employment = const <Employment>[],
-      @JsonKey(name: 'tags') List<String> tags = const <String>[]}) {
+      {@JsonKey(name: 'title')
+          String title = '',
+      @JsonKey(name: 'company')
+          String company = '',
+      @JsonKey(name: 'country')
+          String country = '',
+      @JsonKey(name: 'remote')
+          bool remote = true,
+      @JsonKey(name: 'address')
+          String address = '',
+      @JsonKey(name: 'descriptions')
+          Description descriptions = const Description(),
+      @JsonKey(name: 'levels')
+          List<DeveloperLevel> levels = const <DeveloperLevel>[],
+      @JsonKey(name: 'skills')
+          List<Skill> skills = const <Skill>[],
+      @JsonKey(name: 'contacts')
+          List<Contact> contacts = const <Contact>[],
+      @JsonKey(name: 'employment')
+          List<Employment> employment = const <Employment>[],
+      @JsonKey(name: 'tags')
+          List<String> tags = const <String>[]}) {
     return _JobData(
       title: title,
       company: company,
@@ -481,7 +469,8 @@ mixin _$JobData {
 
 /// @nodoc
 abstract class $JobDataCopyWith<$Res> {
-  factory $JobDataCopyWith(JobData value, $Res Function(JobData) then) = _$JobDataCopyWithImpl<$Res>;
+  factory $JobDataCopyWith(JobData value, $Res Function(JobData) then) =
+      _$JobDataCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
@@ -569,7 +558,8 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
 
 /// @nodoc
 abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
-  factory _$JobDataCopyWith(_JobData value, $Res Function(_JobData) then) = __$JobDataCopyWithImpl<$Res>;
+  factory _$JobDataCopyWith(_JobData value, $Res Function(_JobData) then) =
+      __$JobDataCopyWithImpl<$Res>;
   @override
   $Res call(
       {@JsonKey(name: 'title') String title,
@@ -586,8 +576,10 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implements _$JobDataCopyWith<$Res> {
-  __$JobDataCopyWithImpl(_JobData _value, $Res Function(_JobData) _then) : super(_value, (v) => _then(v as _JobData));
+class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res>
+    implements _$JobDataCopyWith<$Res> {
+  __$JobDataCopyWithImpl(_JobData _value, $Res Function(_JobData) _then)
+      : super(_value, (v) => _then(v as _JobData));
 
   @override
   _JobData get _value => super._value as _JobData;
@@ -672,7 +664,8 @@ class _$_JobData extends _JobData {
       @JsonKey(name: 'tags') this.tags = const <String>[]})
       : super._();
 
-  factory _$_JobData.fromJson(Map<String, dynamic> json) => _$$_JobDataFromJson(json);
+  factory _$_JobData.fromJson(Map<String, dynamic> json) =>
+      _$$_JobDataFromJson(json);
 
   @override
 
@@ -765,11 +758,13 @@ class _$_JobData extends _JobData {
             (identical(other.country, country) || other.country == country) &&
             (identical(other.remote, remote) || other.remote == remote) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.descriptions, descriptions) || other.descriptions == descriptions) &&
+            (identical(other.descriptions, descriptions) ||
+                other.descriptions == descriptions) &&
             const DeepCollectionEquality().equals(other.levels, levels) &&
             const DeepCollectionEquality().equals(other.skills, skills) &&
             const DeepCollectionEquality().equals(other.contacts, contacts) &&
-            const DeepCollectionEquality().equals(other.employment, employment) &&
+            const DeepCollectionEquality()
+                .equals(other.employment, employment) &&
             const DeepCollectionEquality().equals(other.tags, tags));
   }
 
@@ -790,7 +785,8 @@ class _$_JobData extends _JobData {
 
   @JsonKey(ignore: true)
   @override
-  _$JobDataCopyWith<_JobData> get copyWith => __$JobDataCopyWithImpl<_JobData>(this, _$identity);
+  _$JobDataCopyWith<_JobData> get copyWith =>
+      __$JobDataCopyWithImpl<_JobData>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -892,7 +888,8 @@ abstract class _JobData extends JobData {
   List<String> get tags;
   @override
   @JsonKey(ignore: true)
-  _$JobDataCopyWith<_JobData> get copyWith => throw _privateConstructorUsedError;
+  _$JobDataCopyWith<_JobData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 JobFilter _$JobFilterFromJson(Map<String, dynamic> json) {
@@ -926,12 +923,14 @@ mixin _$JobFilter {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $JobFilterCopyWith<JobFilter> get copyWith => throw _privateConstructorUsedError;
+  $JobFilterCopyWith<JobFilter> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $JobFilterCopyWith<$Res> {
-  factory $JobFilterCopyWith(JobFilter value, $Res Function(JobFilter) then) = _$JobFilterCopyWithImpl<$Res>;
+  factory $JobFilterCopyWith(JobFilter value, $Res Function(JobFilter) then) =
+      _$JobFilterCopyWithImpl<$Res>;
   $Res call({@JsonKey(name: 'limit') int limit});
 }
 
@@ -957,17 +956,21 @@ class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class $PaginateJobFilterCopyWith<$Res> implements $JobFilterCopyWith<$Res> {
-  factory $PaginateJobFilterCopyWith(PaginateJobFilter value, $Res Function(PaginateJobFilter) then) =
+abstract class $PaginateJobFilterCopyWith<$Res>
+    implements $JobFilterCopyWith<$Res> {
+  factory $PaginateJobFilterCopyWith(
+          PaginateJobFilter value, $Res Function(PaginateJobFilter) then) =
       _$PaginateJobFilterCopyWithImpl<$Res>;
   @override
   $Res call({@JsonKey(name: 'limit') int limit});
 }
 
 /// @nodoc
-class _$PaginateJobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res>
+class _$PaginateJobFilterCopyWithImpl<$Res>
+    extends _$JobFilterCopyWithImpl<$Res>
     implements $PaginateJobFilterCopyWith<$Res> {
-  _$PaginateJobFilterCopyWithImpl(PaginateJobFilter _value, $Res Function(PaginateJobFilter) _then)
+  _$PaginateJobFilterCopyWithImpl(
+      PaginateJobFilter _value, $Res Function(PaginateJobFilter) _then)
       : super(_value, (v) => _then(v as PaginateJobFilter));
 
   @override
@@ -989,9 +992,11 @@ class _$PaginateJobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res
 /// @nodoc
 @JsonSerializable()
 class _$PaginateJobFilter extends PaginateJobFilter {
-  const _$PaginateJobFilter({@JsonKey(name: 'limit') this.limit = 100}) : super._();
+  const _$PaginateJobFilter({@JsonKey(name: 'limit') this.limit = 100})
+      : super._();
 
-  factory _$PaginateJobFilter.fromJson(Map<String, dynamic> json) => _$$PaginateJobFilterFromJson(json);
+  factory _$PaginateJobFilter.fromJson(Map<String, dynamic> json) =>
+      _$$PaginateJobFilterFromJson(json);
 
   @override
 
@@ -1028,10 +1033,12 @@ class _$PaginateJobFilter extends PaginateJobFilter {
 }
 
 abstract class PaginateJobFilter extends JobFilter {
-  const factory PaginateJobFilter({@JsonKey(name: 'limit') int limit}) = _$PaginateJobFilter;
+  const factory PaginateJobFilter({@JsonKey(name: 'limit') int limit}) =
+      _$PaginateJobFilter;
   const PaginateJobFilter._() : super._();
 
-  factory PaginateJobFilter.fromJson(Map<String, dynamic> json) = _$PaginateJobFilter.fromJson;
+  factory PaginateJobFilter.fromJson(Map<String, dynamic> json) =
+      _$PaginateJobFilter.fromJson;
 
   @override
 
@@ -1041,5 +1048,6 @@ abstract class PaginateJobFilter extends JobFilter {
   int get limit;
   @override
   @JsonKey(ignore: true)
-  $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith => throw _privateConstructorUsedError;
+  $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith =>
+      throw _privateConstructorUsedError;
 }

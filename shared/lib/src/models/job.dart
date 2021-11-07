@@ -53,8 +53,15 @@ class JobsChunk extends Iterable<Job> {
 /// Работа
 @immutable
 @Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
-class Job with _$Job {
+// ignore: prefer_mixin
+class Job with _$Job, Comparable<Job> {
   const Job._();
+
+  /// У работы не заполнен [id]
+  bool get hasNotID => id.isEmpty;
+
+  /// У работы заполнен [id]
+  bool get hasID => !id.isNotEmpty;
 
   const factory Job({
     /// Идентификатор элемента
@@ -62,9 +69,6 @@ class Job with _$Job {
 
     /// Идентификатор создателя
     @JsonKey(name: 'creator_id') required final String creatorId,
-
-    /// Вес элемента (влияет на сортировку)
-    @JsonKey(name: 'weight') required final int weight,
 
     /// Создано
     @JsonKey(name: 'created') required final DateTime created,
@@ -84,7 +88,7 @@ class Job with _$Job {
   factory Job.fromProtobuf(grpc.Job proto) => Job(
         id: proto.id,
         creatorId: proto.creatorId,
-        weight: proto.weight.toInt(),
+        //weight: proto.weight.toInt(),
         created: proto.created.toDateTime(),
         updated: proto.updated.toDateTime(),
         data: JobData.fromProtobuf(proto.data),
@@ -96,13 +100,16 @@ class Job with _$Job {
         created: grpc.Timestamp.fromDateTime(created),
         updated: grpc.Timestamp.fromDateTime(updated),
         id: id,
-        weight: grpc.Int64(weight),
+        //weight: grpc.Int64(weight),
         deletionMark: deletionMark,
         data: grpc.JobData(),
       );
 
   /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
+
+  @override
+  int compareTo(Job other) => other.updated.compareTo(updated);
 }
 
 /// Работа / данные работы

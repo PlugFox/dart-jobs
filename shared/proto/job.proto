@@ -87,7 +87,10 @@ message Job {
   string creatorId = 2;
 
   /// Вес элемента (влияет на сортировку)
-  uint64 weight = 3;
+  //uint64 weight = 3;
+
+  /// Сейчас сортировка не зависит от веса элемента и идет через [updated]
+  reserved 3;
 
   /// Создано
   google.protobuf.Timestamp created = 4;
