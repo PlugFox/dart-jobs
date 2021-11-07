@@ -17,7 +17,7 @@ jobs:
       - name: ✨ Log into registry
         run: echo "${{ secrets.DOCKER_REGISTRY_LOGIN_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_REGISTRY_LOGIN_USERNAME }} --password-stdin https://registry.plugfox.dev
 
-      - name: 📦 Pull dart:stable
+      - name: 📦 Pull dart:beta
         run: docker pull dart:stable
 
       - name: 🏗️ Build images
