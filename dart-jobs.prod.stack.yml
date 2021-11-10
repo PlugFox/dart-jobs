@@ -13,29 +13,38 @@ services:
     image: registry.plugfox.dev/dart-jobs-service:prod
     #volumes:
     #  - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - target: 9090
-        published: 9090
-        mode: host
-    #healthcheck:
-    #  test: ["CMD", "curl", "-f", "http://localhost:80"]
-    #  interval: 60s
-    #  timeout: 10s
-    #  retries: 3
-    #environment:
-    #  PORT: 80
+    #ports:
+    #  - target: 8080
+    #    published: 80
+    #    mode: host
+    healthcheck:
+      test: curl --fail -s http://127.0.0.1:80/health || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    environment:
+      PORT: 80
     networks:
       - traefik-public
-    #  - dart-jobs
+      - dart-jobs
     deploy:
-      replicas: 1
+      mode: replicated
+      replicas: 2
+      update_config:
+        failure_action: rollback
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
       placement:
         constraints:
           - node.role == worker
       resources:
         reservations:
-          cpus: '0.10'
-          memory: 64M
+          cpus: '0.15'
+          memory: 128M
         limits:
           cpus: '0.25'
           memory: 512M
@@ -50,8 +59,7 @@ services:
         traefik.http.routers.dart-jobs-prod-router.tls: 'true'
         traefik.http.routers.dart-jobs-prod-router.entrypoints: https
         traefik.http.routers.dart-jobs-prod-router.tls.certresolver: le
-        traefik.http.routers.dart-jobs-prod-router.rule: Host(`jobs.api.plugfox.dev`)
-        #traefik.http.routers.dart-jobs-prod-router.rule: Host(`jobs.api.plugfox.dev`) && PathPrefix(`/jobs`)
+        traefik.http.routers.dart-jobs-prod-router.rule: Host(`api.plugfox.dev`) && PathPrefix(`/jobs`)
 
         # Middlewares
         traefik.http.routers.dart-jobs-prod-router.middlewares: 'dart-jobs-prod-headers'
@@ -63,65 +71,21 @@ services:
         traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowheaders: '*'
         traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolmaxage: '60'
 
+        # STRIP PREFIX
+        #traefik.http.middlewares.dart-jobs-prod-stripprefix.stripprefix.prefixes: /jobs
+
         # Service
         traefik.http.routers.dart-jobs-prod-router.service: dart-jobs-prod-service
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.scheme: h2c
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 9090
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.scheme: http
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.path: /health
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.interval: 30s
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.timeout: 3s
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 80
         ################################################################
-
-  #echo:
-  #  image: registry.plugfox.dev/dart-jobs-echo:prod
-  #  #volumes:
-  #  #  - /var/run/docker.sock:/var/run/docker.sock:ro
-  #  #ports:
-  #  #  - 80:80
-  #  #healthcheck:
-  #  #  test: ["CMD", "curl", "-f", "http://localhost:80"]
-  #  #  interval: 60s
-  #  #  timeout: 10s
-  #  #  retries: 3
-  #  #environment:
-  #  #  PORT: 80
-  #  networks:
-  #    - traefik-public
-  #  deploy:
-  #    replicas: 1
-  #    placement:
-  #      constraints:
-  #        - node.role == worker
-  #    resources:
-  #      reservations:
-  #        cpus: '0.10'
-  #        memory: 64M
-  #      limits:
-  #        cpus: '0.25'
-  #        memory: 512M
-  #    labels:
-  #      ################################################################
-  #      # TRAEFIK CONFIG
-  #      traefik.enable: 'true'
-  #      traefik.docker.network: traefik-public
-  #      traefik.constraint-label: traefik-public
-  #
-  #      # HTTPS
-  #      traefik.http.routers.dart-jobs-prod-echo.tls: 'true'
-  #      traefik.http.routers.dart-jobs-prod-echo.entrypoints: https
-  #      traefik.http.routers.dart-jobs-prod-echo.tls.certresolver: le
-  #
-  #      # api.plugfox.dev/prod/echo
-  #      traefik.http.services.dart-jobs-prod-echo.loadbalancer.server.port: 80
-  #      traefik.http.routers.dart-jobs-prod-echo.rule: Host(`api.plugfox.dev`) && PathPrefix(`/dart_jobs/prod/echo`)
-  #      traefik.http.routers.dart-jobs-prod-echo.middlewares: dart-jobs-prod-echo-stripprefix
-  #      traefik.http.middlewares.dart-jobs-prod-echo-stripprefix.stripprefix.prefixes: /dart_jobs/prod/echo
-  #
-  #      # Sets the maximum request and response body to 1Mb
-  #      traefik.http.middlewares.limit.buffering.maxRequestBodyBytes: 1000000
-  #      traefik.http.middlewares.limit.buffering.maxResponseBodyBytes: 1000000
-  #      ################################################################
 
 networks:
   traefik-public:
     external: true
     driver: overlay
-  #dart-jobs:
-  #  driver: overlay
+  dart-jobs:
+    driver: overlay

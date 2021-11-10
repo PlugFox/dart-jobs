@@ -5,7 +5,7 @@ import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope
 import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_actions.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
 @immutable

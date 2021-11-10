@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:dart_jobs/src/common/model/exceptions.dart';
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class IJobRepository {

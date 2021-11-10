@@ -1,9 +1,7 @@
 FROM dart:beta AS build
 
-# Resolve app dependencies.
 WORKDIR /app
 
-# Copy app source code and AOT compile it.
 COPY ./shared /app/shared
 COPY ./server /app/server
 
@@ -14,12 +12,12 @@ RUN cd server && dart pub get \
 
 # Build minimal serving image from AOT-compiled `/server` and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.
-FROM scratch
+#FROM scratch
+FROM curlimages/curl AS production
 
 COPY --from=build /runtime/ /
 COPY --from=build /app/server/bin/server /app/bin/
 
-# Add lables
 LABEL name="registry.plugfox.dev/dart-jobs-service" \
       vcs-url="https://github.com/PlugFox/dart-jobs" \
       github="https://github.com/PlugFox/dart-jobs" \
@@ -27,7 +25,7 @@ LABEL name="registry.plugfox.dev/dart-jobs-service" \
       authors="@plugfox" \
       family="plugfox/dart-jobs"
 
-# Start server.
-EXPOSE 9090/tcp
+ENV PORT=80
+EXPOSE 80/tcp
 
-ENTRYPOINT ["/app/bin/server", "--port=9090"]
+ENTRYPOINT ["/app/bin/server", "--port=80"]

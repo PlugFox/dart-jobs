@@ -1,7 +1,8 @@
+import 'dart:math' as math;
 import 'dart:collection';
 
-import 'package:dart_jobs_shared/grpc.dart' as grpc;
-import 'package:dart_jobs_shared/src/models/enum.dart';
+import 'package:dart_jobs_shared/src/model/enum.dart';
+import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'job.freezed.dart';
@@ -36,15 +37,19 @@ class JobsChunk extends Iterable<Job> {
     );
   }
 
-  factory JobsChunk.fromProtobuf(grpc.JobsChunk proto) => JobsChunk(
+  factory JobsChunk.fromProtobuf(proto.JobsChunk proto) => JobsChunk(
         endOfList: proto.endOfList,
         jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
       );
 
-  grpc.JobsChunk toProtobuf() => grpc.JobsChunk(
+  proto.JobsChunk toProtobuf() => proto.JobsChunk(
         endOfList: endOfList,
-        jobs: _jobs.map<grpc.Job>((e) => e.toProtobuf()).toList(),
+        jobs: _jobs.map<proto.Job>((e) => e.toProtobuf()).toList(),
       );
+
+  factory JobsChunk.fromBytes(List<int> bytes) => JobsChunk.fromProtobuf(proto.JobsChunk.fromBuffer(bytes));
+
+  List<int> toBytes() => toProtobuf().writeToBuffer();
 
   @override
   Iterator<Job> get iterator => _jobs.iterator;
@@ -85,25 +90,29 @@ class Job with _$Job, Comparable<Job> {
     @JsonKey(name: 'deletion_mark') @Default(false) final bool deletionMark,
   }) = _Job;
 
-  factory Job.fromProtobuf(grpc.Job proto) => Job(
-        id: proto.id,
-        creatorId: proto.creatorId,
-        //weight: proto.weight.toInt(),
-        created: proto.created.toDateTime(),
-        updated: proto.updated.toDateTime(),
-        data: JobData.fromProtobuf(proto.data),
-        deletionMark: proto.deletionMark,
+  factory Job.fromProtobuf(proto.Job job) => Job(
+        id: job.id,
+        creatorId: job.creatorId,
+        //weight: job.weight.toInt(),
+        created: job.created.toDateTime(),
+        updated: job.updated.toDateTime(),
+        data: JobData.fromProtobuf(job.data),
+        deletionMark: job.deletionMark,
       );
 
-  grpc.Job toProtobuf() => grpc.Job(
+  proto.Job toProtobuf() => proto.Job(
         creatorId: creatorId,
-        created: grpc.Timestamp.fromDateTime(created),
-        updated: grpc.Timestamp.fromDateTime(updated),
+        created: proto.Timestamp.fromDateTime(created),
+        updated: proto.Timestamp.fromDateTime(updated),
         id: id,
-        //weight: grpc.Int64(weight),
+        //weight: proto.Int64(weight),
         deletionMark: deletionMark,
         data: data.toProtobuf(),
       );
+
+  factory Job.fromBytes(List<int> bytes) => Job.fromProtobuf(proto.Job.fromBuffer(bytes));
+
+  List<int> toBytes() => toProtobuf().writeToBuffer();
 
   /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
@@ -176,7 +185,7 @@ class JobData with _$JobData {
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
 
-  factory JobData.fromProtobuf(grpc.JobData proto) => JobData(
+  factory JobData.fromProtobuf(proto.JobData proto) => JobData(
         title: proto.title,
         remote: proto.remote,
         country: proto.country,
@@ -190,19 +199,23 @@ class JobData with _$JobData {
         tags: proto.tags,
       );
 
-  grpc.JobData toProtobuf() => grpc.JobData(
+  proto.JobData toProtobuf() => proto.JobData(
         title: title,
         remote: remote,
         country: country,
         address: address,
         company: company,
-        contacts: contacts.map<grpc.Contact>((e) => e.toProtobuf()),
+        contacts: contacts.map<proto.Contact>((e) => e.toProtobuf()),
         descriptions: descriptions,
-        employment: employment.map<grpc.Employment>((e) => e.toProtobuf()),
-        levels: levels.map<grpc.DeveloperLevel>((e) => e.toProtobuf()),
-        skills: skills.map<grpc.Skill>((e) => e.toProtobuf()),
+        employment: employment.map<proto.Employment>((e) => e.toProtobuf()),
+        levels: levels.map<proto.DeveloperLevel>((e) => e.toProtobuf()),
+        skills: skills.map<proto.Skill>((e) => e.toProtobuf()),
         tags: tags,
       );
+
+  factory JobData.fromBytes(List<int> bytes) => JobData.fromProtobuf(proto.JobData.fromBuffer(bytes));
+
+  List<int> toBytes() => toProtobuf().writeToBuffer();
 }
 
 /// Описания на различных языках
@@ -257,20 +270,7 @@ class JobFilter with _$JobFilter {
   /// Generate Class from Map<String, Object?>
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
 
-  /// Фильтрация
-  factory JobFilter.fromProtobuf(grpc.JobFilter proto) => JobFilter(
-        limit: proto.limit,
-      );
-
-  /// Протобаф для запроса последних
-  grpc.JobFilter toRecentProtobuf(DateTime after) => grpc.JobFilter(
-        limit: limit,
-        after: grpc.Timestamp.fromDateTime(after),
-      );
-
-  /// Протобаф для запроса более ранних
-  grpc.JobFilter toPaginateProtobuf(DateTime before) => grpc.JobFilter(
-        limit: limit,
-        before: grpc.Timestamp.fromDateTime(before),
-      );
+  Map<String, Object> toQueryParameters() => <String, Object>{
+    'limit': math.min(limit, 100),
+  };
 }

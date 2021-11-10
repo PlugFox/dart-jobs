@@ -1,7 +1,4 @@
-import 'package:dart_jobs_shared/grpc.dart' as grpc;
-import 'package:dart_jobs_shared/models.dart';
-import 'package:grpc/grpc.dart';
-
+/*
 class JobService extends grpc.JobServiceBase {
   JobService();
 
@@ -106,3 +103,5 @@ class JobService extends grpc.JobServiceBase {
         request..deletionMark = true,
       );
 }
+
+*/

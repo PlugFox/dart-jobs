@@ -21,13 +21,15 @@ dependencies:
   #built_value: ^8.1.2
   json_annotation: ^4.3.0
   freezed_annotation: ^0.15.0
-  protobuf: ^2.0.0
+  #protobuf: ^2.0.0
 
   # State manager & Inversion of Control
   fox_flutter_bloc: ^0.1.0
 
   # Network
-  grpc: ^3.0.2
+  #grpc: ^3.0.2
+  dio: ^4.0.1
+  #retrofit: ^2.2.0
 
   # Storage and SQL
   shared_preferences: ^2.0.5
@@ -82,6 +84,7 @@ dev_dependencies:
   #built_value_generator: ^8.1.2
   flutter_launcher_icons: ^0.9.0
   json_serializable: ^6.0.1
+  #retrofit_generator: ^2.2.0
   pubspec_generator: ^3.0.1
   flutter_gen_runner: ^4.0.1
   args: ^2.0.0

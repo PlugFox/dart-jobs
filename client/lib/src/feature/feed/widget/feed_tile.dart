@@ -2,7 +2,7 @@ import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs/src/common/localization/localizations.dart';
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_info/platform_info.dart';

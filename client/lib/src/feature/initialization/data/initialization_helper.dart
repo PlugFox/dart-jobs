@@ -14,12 +14,11 @@ import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
-import 'package:dart_jobs_shared/grpc.dart' as grpc;
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show immutable, kIsWeb, kReleaseMode;
 import 'package:flutter/widgets.dart' show Orientation;
-import 'package:grpc/grpc_or_grpcweb.dart' as grpc;
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -125,74 +124,48 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Preparing for authentication': (final progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),
       ),
+  'Creating REST client': (final progress) => progress.copyWith(
+        newDio: Dio(
+          BaseOptions(
+            baseUrl: 'https://api.plugfox.dev',
+            followRedirects: true,
+            maxRedirects: 3,
+            contentType: 'application/octet-stream',
+            responseType: ResponseType.bytes,
+            sendTimeout: 5000,
+            receiveTimeout: 5000,
+            connectTimeout: 5000,
+            setRequestContentTypeWhenNoPayload: false,
+            receiveDataWhenStatusError: false,
+          ),
+        )..interceptors.addAll(
+            <Interceptor>[
+              LogInterceptor(
+                request: true,
+                error: true,
+                requestBody: false,
+                requestHeader: true,
+                responseBody: false,
+                responseHeader: true,
+                logPrint: l.d,
+              ),
+            ],
+          ),
+      ),
   'Preparing main remote storage': (final progress) => progress.copyWith(
         newFirebaseFirestore: FirebaseFirestore.instance,
       ),
   'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
-  /*
-  'Settings client channel': (final progress) => progress.copyWith(
-        /// TODO: эндпоинты и secure
-        newClientChannel: grpc.GrpcOrGrpcWebClientChannel.grpc(
-          'jobs.api.plugfox.dev',
-          port: 443,
-          options: ChannelOptions(
-            credentials: ChannelCredentials.secure(
-              certificates: utf8.encode(grpcCertificate),
-            ),
-            idleTimeout: const Duration(minutes: 2),
-            connectionTimeout: const Duration(minutes: 25),
-            userAgent: 'dart-grpc/${platform.isWeb ? 'web' : 'io'}/${platform.operatingSystem.when(
-              android: () => 'android',
-              fuchsia: () => 'fuchsia',
-              iOS: () => 'iOS',
-              linux: () => 'linux',
-              macOS: () => 'macOS',
-              windows: () => 'windows',
-              unknown: () => 'unknown',
-            )}',
-            codecRegistry: CodecRegistry(
-              codecs: const <Codec>[
-                GzipCodec(),
-                IdentityCodec(),
-              ],
-            ),
+  'Create a job repository': (final progress) => progress.copyWith(
+        newJobRepository: JobRepositoryImpl(
+          firebaseAuth: FirebaseAuth.instance,
+          networkDataProvider: JobNetworkDataProviderImpl(
+            client: progress.dio!,
           ),
         ),
       ),
-  */
-  /*
-  'Making client transport': (final progress) => progress.copyWith(
-        newClientChannel: grpc.GrpcOrGrpcWebClientChannel.toSingleEndpoint(
-          host: 'jobs.api.plugfox.dev',
-          port: 443,
-          transportSecure: true,
-        ),
-      ),
-  */
-  'Create a job repository': (final progress) {
-    final clientChannel = grpc.GrpcOrGrpcWebClientChannel.toSingleEndpoint(
-      host: 'jobs.api.plugfox.dev',
-      port: 443,
-      transportSecure: true,
-    );
-    return progress.copyWith(
-      newJobRepository: JobRepositoryImpl(
-        firebaseAuth: FirebaseAuth.instance,
-        networkDataProvider: JobNetworkDataProviderImpl(
-          client: grpc.JobServiceClient(
-            clientChannel,
-            options: grpc.CallOptions(
-              //compression: const GzipCodec(),
-              timeout: const Duration(minutes: 2),
-            ),
-            //interceptors: <grpc.ClientInterceptor>[],
-          ),
-        ),
-      ),
-    );
-  },
   'Get current settings': (final progress) async {
     final repository = SettingsRepository(
       sharedPreferences: progress.sharedPreferences!,
@@ -275,39 +248,3 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     return store.copyWith(newAppMetadata: appMetadata);
   },
 };
-
-/// TODO: переместить в константы
-/// Сертификат для lets'e encrypt
-/// Взял с `https://letsencrypt.org/certs/lets-encrypt-r3.pem`
-const String grpcCertificate = '''
------BEGIN CERTIFICATE-----
-MIIFFjCCAv6gAwIBAgIRAJErCErPDBinU/bWLiWnX1owDQYJKoZIhvcNAQELBQAw
-TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
-cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMjAwOTA0MDAwMDAw
-WhcNMjUwOTE1MTYwMDAwWjAyMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNTGV0J3Mg
-RW5jcnlwdDELMAkGA1UEAxMCUjMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
-AoIBAQC7AhUozPaglNMPEuyNVZLD+ILxmaZ6QoinXSaqtSu5xUyxr45r+XXIo9cP
-R5QUVTVXjJ6oojkZ9YI8QqlObvU7wy7bjcCwXPNZOOftz2nwWgsbvsCUJCWH+jdx
-sxPnHKzhm+/b5DtFUkWWqcFTzjTIUu61ru2P3mBw4qVUq7ZtDpelQDRrK9O8Zutm
-NHz6a4uPVymZ+DAXXbpyb/uBxa3Shlg9F8fnCbvxK/eG3MHacV3URuPMrSXBiLxg
-Z3Vms/EY96Jc5lP/Ooi2R6X/ExjqmAl3P51T+c8B5fWmcBcUr2Ok/5mzk53cU6cG
-/kiFHaFpriV1uxPMUgP17VGhi9sVAgMBAAGjggEIMIIBBDAOBgNVHQ8BAf8EBAMC
-AYYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYB
-Af8CAQAwHQYDVR0OBBYEFBQusxe3WFbLrlAJQOYfr52LFMLGMB8GA1UdIwQYMBaA
-FHm0WeZ7tuXkAXOACIjIGlj26ZtuMDIGCCsGAQUFBwEBBCYwJDAiBggrBgEFBQcw
-AoYWaHR0cDovL3gxLmkubGVuY3Iub3JnLzAnBgNVHR8EIDAeMBygGqAYhhZodHRw
-Oi8veDEuYy5sZW5jci5vcmcvMCIGA1UdIAQbMBkwCAYGZ4EMAQIBMA0GCysGAQQB
-gt8TAQEBMA0GCSqGSIb3DQEBCwUAA4ICAQCFyk5HPqP3hUSFvNVneLKYY611TR6W
-PTNlclQtgaDqw+34IL9fzLdwALduO/ZelN7kIJ+m74uyA+eitRY8kc607TkC53wl
-ikfmZW4/RvTZ8M6UK+5UzhK8jCdLuMGYL6KvzXGRSgi3yLgjewQtCPkIVz6D2QQz
-CkcheAmCJ8MqyJu5zlzyZMjAvnnAT45tRAxekrsu94sQ4egdRCnbWSDtY7kh+BIm
-lJNXoB1lBMEKIq4QDUOXoRgffuDghje1WrG9ML+Hbisq/yFOGwXD9RiX8F6sw6W4
-avAuvDszue5L3sz85K+EC4Y/wFVDNvZo4TYXao6Z0f+lQKc0t8DQYzk1OXVu8rp2
-yJMC6alLbBfODALZvYH7n7do1AZls4I9d1P4jnkDrQoxB3UqQ9hVl3LEKQ73xF1O
-yK5GhDDX8oVfGKF5u+decIsH4YaTw7mP3GFxJSqv3+0lUFJoi5Lc5da149p90Ids
-hCExroL1+7mryIkXPeFM5TgO9r0rvZaBFOvV2z0gp35Z0+L4WPlbuEjN/lxPFin+
-HlUjr8gRsI3qfJOQFy/9rKIJR0Y/8Omwt/8oTWgy1mdeHmmjk7j1nYsvC9JSQ6Zv
-MldlTTKB3zhThV1+XWYp6rjd5JW1zbVWEkLNxE7GJThEUG3szgBVGP7pSWTUTsqX
-nLRbwHOoq7hHwg==
------END CERTIFICATE-----
-''';

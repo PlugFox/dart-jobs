@@ -1,4 +1,4 @@
-import 'package:dart_jobs_shared/grpc.dart' as grpc;
+import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'enum.freezed.dart';
@@ -31,29 +31,33 @@ class DeveloperLevel with _$DeveloperLevel {
 
   factory DeveloperLevel.fromJson(Map<String, Object?> json) => _$DeveloperLevelFromJson(json);
 
-  factory DeveloperLevel.fromProtobuf(grpc.DeveloperLevel proto) {
-    switch (proto) {
-      case grpc.DeveloperLevel.INTERN:
+  factory DeveloperLevel.fromProtobuf(proto.DeveloperLevel? value) {
+    switch (value) {
+      case proto.DeveloperLevel.INTERN:
         return const DeveloperLevel.intern();
-      case grpc.DeveloperLevel.JUNIOR:
+      case proto.DeveloperLevel.JUNIOR:
         return const DeveloperLevel.junior();
-      case grpc.DeveloperLevel.SENIOR:
+      case proto.DeveloperLevel.SENIOR:
         return const DeveloperLevel.senior();
-      case grpc.DeveloperLevel.LEAD:
+      case proto.DeveloperLevel.LEAD:
         return const DeveloperLevel.lead();
-      case grpc.DeveloperLevel.MIDDLE:
+      case proto.DeveloperLevel.MIDDLE:
       default:
         return const DeveloperLevel.middle();
     }
   }
 
-  grpc.DeveloperLevel toProtobuf() => map<grpc.DeveloperLevel>(
-        intern: (_) => grpc.DeveloperLevel.INTERN,
-        junior: (_) => grpc.DeveloperLevel.JUNIOR,
-        middle: (_) => grpc.DeveloperLevel.MIDDLE,
-        senior: (_) => grpc.DeveloperLevel.SENIOR,
-        lead: (_) => grpc.DeveloperLevel.LEAD,
+  proto.DeveloperLevel toProtobuf() => map<proto.DeveloperLevel>(
+        intern: (_) => proto.DeveloperLevel.INTERN,
+        junior: (_) => proto.DeveloperLevel.JUNIOR,
+        middle: (_) => proto.DeveloperLevel.MIDDLE,
+        senior: (_) => proto.DeveloperLevel.SENIOR,
+        lead: (_) => proto.DeveloperLevel.LEAD,
       );
+
+  factory DeveloperLevel.fromBytes(int value) => DeveloperLevel.fromProtobuf(proto.DeveloperLevel.valueOf(value));
+
+  int toBytes() => toProtobuf().value;
 
   static Map<String, DeveloperLevel> get values => const <String, DeveloperLevel>{
         'INTERN': InternDeveloperLevel(),
@@ -97,32 +101,36 @@ class Employment with _$Employment {
 
   factory Employment.fromJson(Map<String, Object?> json) => _$EmploymentFromJson(json);
 
-  factory Employment.fromProtobuf(grpc.Employment proto) {
-    switch (proto) {
-      case grpc.Employment.PART_TIME:
+  factory Employment.fromProtobuf(proto.Employment? value) {
+    switch (value) {
+      case proto.Employment.PART_TIME:
         return const Employment.partTime();
-      case grpc.Employment.ONE_TIME:
+      case proto.Employment.ONE_TIME:
         return const Employment.oneTime();
-      case grpc.Employment.CONTRACT:
+      case proto.Employment.CONTRACT:
         return const Employment.contract();
-      case grpc.Employment.OPEN_SOURCE:
+      case proto.Employment.OPEN_SOURCE:
         return const Employment.openSource();
-      case grpc.Employment.COLLABORATION:
+      case proto.Employment.COLLABORATION:
         return const Employment.collaboration();
-      case grpc.Employment.FULL_TIME:
+      case proto.Employment.FULL_TIME:
       default:
         return const Employment.fullTime();
     }
   }
 
-  grpc.Employment toProtobuf() => map<grpc.Employment>(
-        fullTime: (_) => grpc.Employment.FULL_TIME,
-        partTime: (_) => grpc.Employment.PART_TIME,
-        oneTime: (_) => grpc.Employment.ONE_TIME,
-        contract: (_) => grpc.Employment.CONTRACT,
-        openSource: (_) => grpc.Employment.OPEN_SOURCE,
-        collaboration: (_) => grpc.Employment.COLLABORATION,
+  proto.Employment toProtobuf() => map<proto.Employment>(
+        fullTime: (_) => proto.Employment.FULL_TIME,
+        partTime: (_) => proto.Employment.PART_TIME,
+        oneTime: (_) => proto.Employment.ONE_TIME,
+        contract: (_) => proto.Employment.CONTRACT,
+        openSource: (_) => proto.Employment.OPEN_SOURCE,
+        collaboration: (_) => proto.Employment.COLLABORATION,
       );
+
+  factory Employment.fromBytes(int value) => Employment.fromProtobuf(proto.Employment.valueOf(value));
+
+  int toBytes() => toProtobuf().value;
 
   static Map<String, Employment> get values => const <String, Employment>{
         'FULL_TIME': FullTimeEmployment(),
@@ -148,17 +156,21 @@ class Skill with _$Skill {
 
   factory Skill.fromJson(Map<String, Object?> json) => _$SkillFromJson(json);
 
-  factory Skill.fromProtobuf(grpc.Skill proto) {
-    switch (proto.type) {
-      case grpc.Skill_SkillType.OTHER:
+  factory Skill.fromProtobuf(proto.Skill skill) {
+    switch (skill.type) {
+      case proto.Skill_SkillType.OTHER:
       default:
-        return Skill.other(proto.value);
+        return Skill.other(skill.value);
     }
   }
 
-  grpc.Skill toProtobuf() => map<grpc.Skill>(
-        other: (skill) => grpc.Skill(value: skill.value, type: grpc.Skill_SkillType.OTHER),
+  proto.Skill toProtobuf() => map<proto.Skill>(
+        other: (skill) => proto.Skill(value: skill.value, type: proto.Skill_SkillType.OTHER),
       );
+
+  factory Skill.fromBytes(List<int> bytes) => Skill.fromProtobuf(proto.Skill.fromBuffer(bytes));
+
+  List<int> toBytes() => toProtobuf().writeToBuffer();
 }
 
 /// Контакт для обратной связи (Contact)
@@ -189,27 +201,31 @@ class Contact with _$Contact {
 
   factory Contact.fromJson(Map<String, Object?> json) => _$ContactFromJson(json);
 
-  factory Contact.fromProtobuf(grpc.Contact proto) {
-    switch (proto.type) {
-      case grpc.Contact_ContactType.PHONE:
-        return Contact.phone(proto.value);
-      case grpc.Contact_ContactType.WEBSITE:
-        return Contact.website(proto.value);
-      case grpc.Contact_ContactType.EMAIL:
-        return Contact.email(proto.value);
-      case grpc.Contact_ContactType.TELEGRAM:
-        return Contact.telegram(proto.value);
-      case grpc.Contact_ContactType.OTHER:
+  factory Contact.fromProtobuf(proto.Contact contact) {
+    switch (contact.type) {
+      case proto.Contact_ContactType.PHONE:
+        return Contact.phone(contact.value);
+      case proto.Contact_ContactType.WEBSITE:
+        return Contact.website(contact.value);
+      case proto.Contact_ContactType.EMAIL:
+        return Contact.email(contact.value);
+      case proto.Contact_ContactType.TELEGRAM:
+        return Contact.telegram(contact.value);
+      case proto.Contact_ContactType.OTHER:
       default:
-        return Contact.other(proto.value);
+        return Contact.other(contact.value);
     }
   }
 
-  grpc.Contact toProtobuf() => map<grpc.Contact>(
-        other: (contact) => grpc.Contact(type: grpc.Contact_ContactType.OTHER, value: contact.value),
-        phone: (contact) => grpc.Contact(type: grpc.Contact_ContactType.PHONE, value: contact.value),
-        website: (contact) => grpc.Contact(type: grpc.Contact_ContactType.WEBSITE, value: contact.value),
-        email: (contact) => grpc.Contact(type: grpc.Contact_ContactType.EMAIL, value: contact.value),
-        telegram: (contact) => grpc.Contact(type: grpc.Contact_ContactType.TELEGRAM, value: contact.value),
+  proto.Contact toProtobuf() => map<proto.Contact>(
+        other: (contact) => proto.Contact(type: proto.Contact_ContactType.OTHER, value: contact.value),
+        phone: (contact) => proto.Contact(type: proto.Contact_ContactType.PHONE, value: contact.value),
+        website: (contact) => proto.Contact(type: proto.Contact_ContactType.WEBSITE, value: contact.value),
+        email: (contact) => proto.Contact(type: proto.Contact_ContactType.EMAIL, value: contact.value),
+        telegram: (contact) => proto.Contact(type: proto.Contact_ContactType.TELEGRAM, value: contact.value),
       );
+
+  factory Contact.fromBytes(List<int> bytes) => Contact.fromProtobuf(proto.Contact.fromBuffer(bytes));
+
+  List<int> toBytes() => toProtobuf().writeToBuffer();
 }

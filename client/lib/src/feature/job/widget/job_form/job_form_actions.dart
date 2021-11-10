@@ -1,5 +1,5 @@
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/widgets.dart';
 
 /// READ

@@ -3,6 +3,7 @@ import 'package:dart_jobs/src/common/model/app_metadata.dart';
 import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ class InitializationProgress {
   final ISettingsRepository? settingsRepository;
   final IJobRepository? jobRepository;
   final AppMetadata? appMetadata;
+  final Dio? dio;
 
   const InitializationProgress({
     this.analytics,
@@ -24,6 +26,7 @@ class InitializationProgress {
     this.settingsRepository,
     this.jobRepository,
     this.appMetadata,
+    this.dio,
   });
 
   @factory
@@ -36,6 +39,7 @@ class InitializationProgress {
     final ISettingsRepository? newSettingsRepository,
     final IJobRepository? newJobRepository,
     final AppMetadata? newAppMetadata,
+    final Dio? newDio,
   }) =>
       InitializationProgress(
         analytics: newAnalytics ?? analytics,
@@ -45,6 +49,7 @@ class InitializationProgress {
         settingsRepository: newSettingsRepository ?? settingsRepository,
         jobRepository: newJobRepository ?? jobRepository,
         appMetadata: newAppMetadata ?? appMetadata,
+        dio: newDio ?? dio,
       );
 
   @factory

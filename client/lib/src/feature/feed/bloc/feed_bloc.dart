@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';

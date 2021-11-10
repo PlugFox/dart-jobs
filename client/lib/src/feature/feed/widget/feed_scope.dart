@@ -4,7 +4,7 @@ import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

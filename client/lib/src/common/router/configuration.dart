@@ -5,7 +5,7 @@ import 'package:dart_jobs/src/feature/job/widget/job_create_page.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_page.dart';
 import 'package:dart_jobs/src/feature/not_found/widget/not_found_page.dart';
 import 'package:dart_jobs/src/feature/settings/widget/settings_page.dart';
-import 'package:dart_jobs_shared/models.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 

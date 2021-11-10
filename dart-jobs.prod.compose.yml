@@ -4,7 +4,7 @@ services:
   dart-jobs-service:
     container_name: 'dart-jobs-service-prod'
     ports:
-      - '9090:9090'
+      - '80:80'
     image: registry.plugfox.dev/dart-jobs-service:prod
     build:
       context: ./
