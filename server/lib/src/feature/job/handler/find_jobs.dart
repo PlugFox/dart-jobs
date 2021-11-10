@@ -21,7 +21,7 @@ Response findJobs(Request request) {
   final date = before ?? DateTime.now();
   return Response.ok(
     JobsChunk(
-      endOfList: false,
+      endOfList: after is DateTime,
       jobs: Iterable<Job>.generate(
         filter.limit,
         (i) => Job(

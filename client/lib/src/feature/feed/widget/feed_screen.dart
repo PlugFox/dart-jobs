@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/common/router/router_delegate.dart';
 import 'package:dart_jobs/src/common/widget/custom_scroll_view_smooth.dart';
@@ -100,7 +102,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     }
     if (controller.position.pixels < triggerFetchMoreSize) return;
     // Загрузить еще контента на 5 экранов в высоту
-    FeedScope.paginateOf(context, count: (screenHeight * 5) ~/ FeedTile.height);
+    FeedScope.paginateOf(context, count: math.max(math.min((screenHeight * 5) ~/ FeedTile.height, 100), 25));
   }
 
   @override

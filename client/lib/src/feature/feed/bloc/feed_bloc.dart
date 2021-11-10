@@ -84,6 +84,8 @@ class FeedState with _$FeedState {
 }
 
 class FeedBLoC extends Bloc<FeedEvent, FeedState> {
+  DateTime _lastFetchRecent = DateTime.now();
+  Timer? _timer;
   final IJobRepository _repository;
   FeedBLoC({
     required final IJobRepository repository,
@@ -91,6 +93,20 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   })  : _repository = repository,
         super(initialState) {
     /// TODO: подписка на уведомления с сервера о новых элементах
+    _timer = Timer.periodic(
+      const Duration(minutes: 5),
+      (_) {
+        final now = DateTime.now();
+        if (!state.isProcessed &&
+            _lastFetchRecent.isBefore(
+              now.subtract(
+                const Duration(minutes: 3),
+              ),
+            )) {
+          add(const FeedEvent.fetchRecent());
+        }
+      },
+    );
   }
 
   @override
@@ -139,6 +155,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
           endOfList: state.endOfList,
         );
       } while (!chunk.endOfList);
+      _lastFetchRecent = DateTime.now();
     } on Object catch (err) {
       l.e('Произошла ошибка при запросе последних элементов ленты: $err');
       yield FeedState.error(
@@ -299,5 +316,11 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       }
     }
     sw.stop();
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
   }
 }

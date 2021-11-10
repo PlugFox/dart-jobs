@@ -147,7 +147,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
                 requestHeader: true,
                 responseBody: false,
                 responseHeader: true,
-                logPrint: l.d,
+                logPrint: l.v6,
               ),
             ],
           ),
