@@ -65,7 +65,14 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Jobs does not received from server');
-    return JobsChunk.fromBytes(bytes);
+    final chunk = JobsChunk.fromBytes(bytes);
+    if (chunk.isEmpty && !chunk.endOfList) {
+      return const JobsChunk(
+        jobs: <Job>[],
+        endOfList: true,
+      );
+    }
+    return chunk;
   }
 
   @override
@@ -84,7 +91,14 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Jobs does not received from server');
-    return JobsChunk.fromBytes(bytes);
+    final chunk = JobsChunk.fromBytes(bytes);
+    if (chunk.isEmpty && !chunk.endOfList) {
+      return const JobsChunk(
+        jobs: <Job>[],
+        endOfList: true,
+      );
+    }
+    return chunk;
   }
 
   @override
