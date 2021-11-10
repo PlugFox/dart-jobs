@@ -8,8 +8,6 @@ import 'package:dart_jobs/src/feature/job/widget/job_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
-import '../../../../../../shared/lib/src/models/job.dart';
-
 class JobCreatePage extends Page<void> {
   JobCreatePage()
       : super(
@@ -24,14 +22,8 @@ class JobCreatePage extends Page<void> {
   Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
         builder: (final context) => AuthenticationScope.userOf(context).when(
           authenticated: (user) => BlocScope<JobBLoC>.create(
-            create: (context) => JobBLoC(
+            create: (context) => JobBLoC.creation(
               repository: InitializationScope.storeOf(context).jobRepository,
-              initialState: JobState.idle(
-                job: Job.create(
-                  creatorId: user.uid,
-                  title: _WorkTitleRandomizer.instance().next(),
-                ),
-              ),
             ),
             child: const JobCreateScreen(),
           ),

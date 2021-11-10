@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Update build version" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" singleton="false">
-    <option name="filePath" value="$PROJECT_DIR$/tools/set_version.dart" />
-    <option name="workingDirectory" value="$PROJECT_DIR$" />
-    <method v="2" />
-  </configuration>
-</component>

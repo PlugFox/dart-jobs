@@ -1,27 +1,31 @@
 name: dart_jobs_shared
 description: Dart Jobs - shared entities
-publish_to: 'none'
+publish_to: none
 version: 0.1.0
 # homepage: https://www.example.com
 
 environment:
-  sdk: ">=2.14.1 <3.0.0"
+  sdk: ">=2.15.0-178.1.beta"
 
 dependencies:
-
   # Annotation & Code-generation
   meta: ^1.7.0
   #built_value: ^8.1.2
   json_annotation: ^4.3.0
   freezed_annotation: ^0.15.0
+  #built_value: ^8.1.3
+  #built_collection: ^5.1.1
+  protobuf: ^2.0.0
 
   # Utils
   #path: ^1.8.0
-  money2: ^3.0.0-beta.6
+  fixnum: ^1.0.0
+  #money2: ^3.0.0-beta.6
   l: ^3.0.1
 
 dev_dependencies:
   build_runner: ^2.1.4
+  #built_value_generator: ^8.1.3
   freezed: ^0.15.0+1
   json_serializable: ^6.0.1
   lints: ^1.0.0

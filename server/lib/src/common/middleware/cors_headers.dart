@@ -16,9 +16,19 @@ const List<String> _defaultHeadersList = <String>[
   'accept-encoding',
   'authorization',
   'content-type',
+  'content-length',
+  'content-location',
+  'connection',
+  'location',
+  'cache-control',
   'dnt',
   'origin',
   'user-agent',
+  'x-server-processing-duration',
+  'x-xss-protection',
+  'x-content-type-options',
+  'server',
+  'date',
 ];
 
 const List<String> _defaultMethodsList = <String>['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
@@ -59,7 +69,12 @@ Middleware corsHeaders({
         }
 
         final response = await handler(request);
-        return response.change(headers: {...response.headersAll, ...headers});
+        return response.change(
+          headers: <String, List<String>>{
+            ...response.headersAll,
+            ...headers,
+          },
+        );
       };
 }
 

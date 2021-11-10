@@ -3,8 +3,6 @@ import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
-import '../../../../../../shared/lib/src/models/job.dart';
-
 @immutable
 class FeedList extends StatelessWidget {
   const FeedList({
@@ -23,20 +21,15 @@ class FeedList extends StatelessWidget {
                 if (index >= length) {
                   return const FeedTile.loading();
                 }
-                final proposal = state.list[index];
-                if (proposal is Job) {
-                  return FeedTile.job(
-                    job: proposal,
-                    key: ValueKey<String>(proposal.id),
-                  );
-                }
-                return ErrorWidget(
-                  Exception('Unknown proposal type of $proposal'),
+                final job = state.list[index];
+                return FeedTile.job(
+                  job: job,
+                  key: ValueKey<String>(job.id),
                 );
               },
               childCount: state.maybeMap<int>(
                 orElse: () => length,
-                pagination: (final processed) => length + processed.loadingCount,
+                pagination: (final processed) => length + processed.filter.limit,
               ),
             ),
           );

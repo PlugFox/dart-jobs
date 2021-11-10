@@ -5,9 +5,8 @@ import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope
 import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_actions.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../../shared/lib/src/models/job.dart';
 
 @immutable
 class JobForm extends StatefulWidget {
@@ -28,23 +27,17 @@ class JobForm extends StatefulWidget {
 
   /// Переключиться на чтение текущей работы
   /// Также обновить поля из переданого [Job]
-  static void switchToRead(BuildContext context, Job job) => Actions.invoke<ReadJobIntent>(context, ReadJobIntent(job));
+  static void switchToRead(BuildContext context, JobData data) =>
+      Actions.invoke<ReadJobIntent>(context, ReadJobIntent(data));
 
   /// Переключиться на редактирование текущей работы
   /// Также обновить поля из переданого [Job]
-  static void switchToEdit(BuildContext context, Job job) => AuthenticationScope.authenticateOr(
-        context,
-        (user) => Actions.invoke<EditJobIntent>(
-          context,
-          EditJobIntent(job, user),
-        ),
-      );
+  static void switchToEdit(BuildContext context, JobData data) =>
+      Actions.invoke<EditJobIntent>(context, EditJobIntent(data));
 
   /// Заблокировать форму ввода
-  static void switchToDisable(BuildContext context, Job job) => Actions.invoke<DisableJobIntent>(
-        context,
-        const DisableJobIntent(),
-      );
+  static void switchToDisable(BuildContext context, Job job) =>
+      Actions.invoke<DisableJobIntent>(context, const DisableJobIntent());
 
   /// Проверить текущую работу
   /// Возвращает истину, если работа успешно заполненна
@@ -52,9 +45,9 @@ class JobForm extends StatefulWidget {
       Actions.invoke<ValidateJobIntent>(context, const ValidateJobIntent()) == true;
 
   /// Обновить работу из контроллеров
-  static Job? getUpdatedJob(BuildContext context, Job job) {
-    final result = Actions.invoke<GetUpdatedJobIntent>(context, GetUpdatedJobIntent(job));
-    if (result is Job) {
+  static JobData? getUpdatedJob(BuildContext context, JobData data) {
+    final result = Actions.invoke<GetUpdatedJobIntent>(context, GetUpdatedJobIntent(data));
+    if (result is JobData) {
       return result;
     }
     return null;
@@ -62,10 +55,11 @@ class JobForm extends StatefulWidget {
 
   /// Сохранить текущую работу
   /// Внимание, перед вызовом этого метода - проверьте валидность заполнения работы с помощью [ValidateJobIntent]
-  static void save(BuildContext context, Job job) => Actions.invoke<SaveJobIntent>(context, SaveJobIntent(job)) == true;
+  static void save(BuildContext context, JobData data) =>
+      Actions.invoke<SaveJobIntent>(context, SaveJobIntent(data)) == true;
 
   /// Удалить текущую работу
-  static void delete(BuildContext context, Job job) => Actions.invoke<DeleteJobIntent>(context, DeleteJobIntent(job));
+  static void delete(BuildContext context) => Actions.invoke<DeleteJobIntent>(context, const DeleteJobIntent());
 
   @override
   State<JobForm> createState() => _JobFormState();
@@ -86,10 +80,10 @@ class _JobFormState extends State<JobForm> {
 
     // Изначальное состояние формы
     _formData = JobFormData(
-      job: _bloc.state.job,
+      data: _bloc.state.job.data,
       status: _bloc.state.maybeMap<FormStatus>(
         // Если это создание работы - редактируем, в противном случае просматриваем
-        orElse: () => _bloc.state.job.isEmpty ? FormStatus.editing : FormStatus.readOnly,
+        orElse: () => _bloc.state.job.hasNotID ? FormStatus.editing : FormStatus.readOnly,
         // Если сейчас выполняем действие - блокируем форму
         processed: (_) => FormStatus.processed,
       ),
@@ -115,62 +109,53 @@ class _JobFormState extends State<JobForm> {
   }
 
   void _onSaved(Job job) => _dispatcher.invokeAction(
-        ReadJobAction(_formData),
-        ReadJobIntent(job),
+        FetchJobAction(_formData),
+        ReadJobIntent(job.data),
       );
 
-  void _onDeleted(Job job) => PageRouter.pop(context);
+  void _onDeleted(Job job) => PageRouter.goHome(context);
 
   void _onError(Job job, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
+      SnackBar(content: Text(message)),
     );
     if (_formData.status.value == FormStatus.processed) {
-      _formData.setState(newStatus: job.isEmpty ? FormStatus.editing : FormStatus.readOnly);
+      _formData.setState(newStatus: job.hasNotID ? FormStatus.editing : FormStatus.readOnly);
     }
   }
 
   void _onNotFound(Job job) {
-    //PageRouter.pop(context);
+    //PageRouter.goHome(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Not found')),
+    );
   }
 
   void _onProcessed(Job job) => _formData.setState(newStatus: FormStatus.processed);
 
   void _onIdle(Job job) {
     if (_formData.status.value == FormStatus.processed) {
-      _formData.setState(newStatus: job.isEmpty ? FormStatus.editing : FormStatus.readOnly);
+      _formData.setState(newStatus: job.hasNotID ? FormStatus.editing : FormStatus.readOnly);
     }
-    _formData.updateFormData(job);
+    _formData.updateFormData(job.data);
   }
 
   /// Сохранить/Создать работу
-  void save(Job job) => AuthenticationScope.authenticateOr(
+  void save(JobData data) => AuthenticationScope.authenticateOr(
         context,
         (user) => _bloc.add(
-          job.isEmpty
+          _bloc.state.job.hasNotID
               ? JobEvent.create(
-                  user: user,
-                  job: job,
+                  data: data,
                 )
               : JobEvent.update(
-                  user: user,
-                  job: job,
+                  data: data,
                 ),
         ),
       );
 
   /// Удалить работу
-  void delete(Job job) => AuthenticationScope.authenticateOr(
-        context,
-        (user) => _bloc.add(
-          JobEvent.delete(
-            user: user,
-            job: job,
-          ),
-        ),
-      );
+  void delete() => AuthenticationScope.authenticateOr(context, (user) => _bloc.add(const JobEvent.delete()));
 
   @override
   Widget build(BuildContext context) => _InheritedJobForm(
@@ -178,7 +163,7 @@ class _JobFormState extends State<JobForm> {
         child: Actions(
           dispatcher: _dispatcher,
           actions: <Type, Action<Intent>>{
-            ReadJobIntent: ReadJobAction(_formData),
+            ReadJobIntent: FetchJobAction(_formData),
             EditJobIntent: EditJobAction(_formData),
             DisableJobIntent: DisableJobAction(_formData),
             ValidateJobIntent: ValidateJobAction(_formData),

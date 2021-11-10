@@ -45,3 +45,20 @@ class NotFoundException extends AppException {
     return 'NotFoundException: $message';
   }
 }
+
+/// Не авторизован
+class NotAuthorized extends AppException {
+  const NotAuthorized(
+    StackTrace stackTrace, [
+    final String? message,
+  ]) : super(
+          stackTrace,
+          message,
+        );
+
+  @override
+  String toString() {
+    if (message == null) return 'NotAuthorized';
+    return 'NotAuthorized: $message';
+  }
+}

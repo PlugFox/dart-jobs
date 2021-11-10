@@ -5,6 +5,7 @@ import 'package:dart_jobs/src/feature/job/widget/job_create_page.dart';
 import 'package:dart_jobs/src/feature/job/widget/job_page.dart';
 import 'package:dart_jobs/src/feature/not_found/widget/not_found_page.dart';
 import 'package:dart_jobs/src/feature/settings/widget/settings_page.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -125,43 +126,37 @@ class SettingsPageConfiguration extends PageConfiguration {
 
 class JobPageConfiguration extends PageConfiguration {
   JobPageConfiguration({
-    required final this.jobId,
-    required final this.jobTitle,
+    required final this.job,
     final this.edit = false,
   }) : super(
           <String, Object?>{
             'job': <String, Object?>{
-              'id': jobId,
-              'title': jobTitle,
-              'edit': edit,
+              ...job.toJson(),
+              'edit': job.hasID && edit,
             },
           },
         );
 
-  /// Идентификатор работы
-  final String jobId;
-
-  /// Заголовок работы
-  final String jobTitle;
+  /// Работа
+  final Job job;
 
   /// Открыть в режиме редактирования, а не просмотра
   final bool edit;
 
   @override
-  String get pageTitle => '${Localized.current.title} / ${jobTitle.isEmpty ? jobId : jobTitle}';
+  String get pageTitle => '${Localized.current.title} / ${job.data.title.isEmpty ? job.id : job.data.title}';
 
   @override
   PageConfiguration? get previous => const FeedPageConfiguration();
 
   @override
-  Uri toUri() => Uri.parse('/job/$jobId');
+  Uri toUri() => Uri.parse('/job/${job.id}');
 
   @override
   Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
     yield* super.buildPages(context);
     yield JobPage(
-      id: jobId,
-      title: jobTitle,
+      job: job,
       edit: edit,
     );
   }

@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  dart-jobs-service:
+    container_name: 'dart-jobs-service-prod'
+    ports:
+      - '80:80'
+    image: registry.plugfox.dev/dart-jobs-service:prod
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/dart-jobs-service.dockerfile

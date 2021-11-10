@@ -4,25 +4,22 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_jobs/src/common/constant/environment.dart';
 import 'package:dart_jobs/src/common/constant/pubspec.yaml.g.dart' as pubspec;
 import 'package:dart_jobs/src/common/constant/storage_namespace.dart';
 import 'package:dart_jobs/src/common/model/app_metadata.dart';
 import 'package:dart_jobs/src/common/utils/screen_util.dart';
 import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/feed/data/feed_network_data_provider.dart';
-import 'package:dart_jobs/src/feature/feed/data/feed_repository.dart';
 import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
 import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
+import 'package:flutter/foundation.dart' show immutable, kIsWeb, kReleaseMode;
 import 'package:flutter/widgets.dart' show Orientation;
 import 'package:l/l.dart';
-import 'package:meta/meta.dart';
 import 'package:platform_info/platform_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,7 +107,8 @@ class InitializationProgressStatus {
   });
 }
 
-final Map<String, FutureOr<InitializationProgress> Function(InitializationProgress progress)> _initializationSteps = {
+final Map<String, FutureOr<InitializationProgress> Function(InitializationProgress progress)> _initializationSteps =
+    <String, FutureOr<InitializationProgress> Function(InitializationProgress progress)>{
   'Initializing analytics': (final progress) async {
     InitializationProgress newProgress;
     try {
@@ -126,29 +124,47 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Preparing for authentication': (final progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),
       ),
+  'Creating REST client': (final progress) => progress.copyWith(
+        newDio: Dio(
+          BaseOptions(
+            baseUrl: 'https://api.plugfox.dev',
+            followRedirects: true,
+            maxRedirects: 3,
+            contentType: 'application/octet-stream',
+            responseType: ResponseType.bytes,
+            sendTimeout: 5000,
+            receiveTimeout: 5000,
+            connectTimeout: 5000,
+            setRequestContentTypeWhenNoPayload: false,
+            receiveDataWhenStatusError: false,
+          ),
+        )..interceptors.addAll(
+            <Interceptor>[
+              LogInterceptor(
+                request: true,
+                error: true,
+                requestBody: false,
+                requestHeader: true,
+                responseBody: false,
+                responseHeader: true,
+                logPrint: l.v6,
+              ),
+            ],
+          ),
+      ),
   'Preparing main remote storage': (final progress) => progress.copyWith(
         newFirebaseFirestore: FirebaseFirestore.instance,
       ),
   'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
-  'Create a feed repository': (final progress) => progress.copyWith(
-        newFeedRepository: kFake
-            ? FeedRepositoryFake()
-            : FeedRepositoryFirebase(
-                networkDataProvider: FeedFirestoreDataProvider(
-                  firestore: progress.firebaseFirestore!,
-                ),
-              ),
-      ),
   'Create a job repository': (final progress) => progress.copyWith(
-        newJobRepository: kFake
-            ? JobRepositoryFake()
-            : JobRepositoryImpl(
-                networkDataProvider: JobFirestoreDataProvider(
-                  firestore: progress.firebaseFirestore!,
-                ),
-              ),
+        newJobRepository: JobRepositoryImpl(
+          firebaseAuth: FirebaseAuth.instance,
+          networkDataProvider: JobNetworkDataProviderImpl(
+            client: progress.dio!,
+          ),
+        ),
       ),
   'Get current settings': (final progress) async {
     final repository = SettingsRepository(

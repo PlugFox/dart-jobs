@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dart_jobs/src/common/router/page_router.dart';
 import 'package:dart_jobs/src/common/router/router_delegate.dart';
 import 'package:dart_jobs/src/common/widget/custom_scroll_view_smooth.dart';
@@ -32,7 +34,10 @@ class _FeedScrollable extends StatefulWidget {
 
 // ignore: prefer_mixin
 class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
+  // ignore: close_sinks
+  FeedBLoC? _bloc;
   final ScrollController controller = ScrollController();
+  // ignore: prefer_final_fields
   double _screenHeight = 0;
   ModalObserver? _routeObserver;
 
@@ -41,27 +46,35 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   void initState() {
     super.initState();
     controller.addListener(_checkPagination);
+    _bloc = BlocScope.of<FeedBLoC>(context, listen: false)..add(const FeedEvent.paginate());
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    /*
+    /// TODO: в браузере может привести к спаму - сделать debounce
     final newScreenHeight = MediaQuery.of(context).size.height;
+    _screenHeight ??= newScreenHeight;
     if (newScreenHeight != _screenHeight) {
       // Изменилась высота экрана
       _screenHeight = newScreenHeight;
       WidgetsBinding.instance?.addPostFrameCallback((final _) => _checkPagination());
     }
+    */
     final modalRoute = ModalRoute.of(context);
     if (modalRoute != null) {
+      _routeObserver?.unsubscribe(this);
       _routeObserver = PageRouter.modalObserverOf(context)..subscribe(this, modalRoute);
     }
   }
 
   @override
   void didPopNext() {
+    /// TODO: можно будет закомментировать после того как сделаю подписку на изменение списка
+    /// а также при состоянии "сохранено" буду отправлять Action Intent для запроса обновления списка
     // При возвращении на страницу запрашиваем обновление списка
-    //context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
+    context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
   }
 
   @override
@@ -76,6 +89,10 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   /// При изменении высоты экрана
   /// При окончании загрузки очередной порции
   void _checkPagination() {
+    if (_bloc?.state.isProcessed ?? false) {
+      // Блок уже в состоянии "запроса" - игнорируем проверку на запрос очередной порции
+      return;
+    }
     final screenHeight = _screenHeight;
     var triggerFetchMoreSize = .0;
     try {
@@ -85,7 +102,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     }
     if (controller.position.pixels < triggerFetchMoreSize) return;
     // Загрузить еще контента на 5 экранов в высоту
-    FeedScope.paginateOf(context, count: (screenHeight * 5) ~/ FeedTile.height);
+    FeedScope.paginateOf(context, count: math.max(math.min((screenHeight * 5) ~/ FeedTile.height, 100), 25));
   }
 
   @override

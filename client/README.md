@@ -58,6 +58,11 @@ flutter pub run build_runner build --delete-conflicting-outputs
 flutter build web --no-pub --release --no-source-maps --tree-shake-icons --pwa-strategy offline-first --web-renderer canvaskit --dart-define=FLUTTER_WEB_USE_SKIA=true
 ```
 
+Запустить веб сервер
+```bash
+flutter run -d web-server
+```
+
 
 ### Публикация в firebase
 
@@ -86,5 +91,4 @@ firebase deploy --only hosting --project "dart-job" -m "<Описание руч
 ### Сбор аналитики с помощью adb и top
 
 `adb shell top -m 50 | grep dev.plugfox.dart-jobs`  
-  
   

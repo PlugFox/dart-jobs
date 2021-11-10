@@ -18,8 +18,7 @@ class JobCreateScreen extends StatelessWidget {
           saved: (saved) => PageRouter.navigate(
             context,
             (configuration) => JobPageConfiguration(
-              jobId: saved.job.id,
-              jobTitle: saved.job.title,
+              job: saved.job,
             ),
           ),
         ),

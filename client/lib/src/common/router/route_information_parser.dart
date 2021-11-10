@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_jobs/src/common/router/configuration.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:l/l.dart';
@@ -80,15 +81,18 @@ mixin _ParseRouteInformationMixin on RouteInformationParser<PageConfiguration> {
       // Передана работа без идентификатора - переходим к флоу создания новой работы
       return JobCreatePageConfiguration();
     }
-    var jobState = state['job'];
+    final jobState = state['job'];
     if (jobState is! Map<String, Object?>) {
-      jobState = <String, Object?>{};
+      return const NotFoundPageConfiguration();
     }
-    final id = segment;
-    return JobPageConfiguration(
-      jobId: id,
-      jobTitle: jobState['title']?.toString() ?? id,
-      edit: jobState['edit'] == true,
-    );
+    try {
+      return JobPageConfiguration(
+        job: Job.fromJson(jobState),
+        edit: jobState['edit'] == true,
+      );
+    } on Object catch (err) {
+      l.w('Ошибка разбора параметров работы при создании конфигурации роутера: $err');
+      return const NotFoundPageConfiguration();
+    }
   }
 }

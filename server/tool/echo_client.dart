@@ -5,21 +5,22 @@ import 'package:l/l.dart';
 
 void main() => Future<void>(
       () async {
+        final uri = Uri.parse('https://api.plugfox.dev:443/dart_jobs/prod/echo');
+
         /// HTTP CLIENT
-        final client = HttpClient(/* optional security context here */);
-        final httpUri = Uri.parse('http://127.0.0.1:80/'); // form the correct url here
+        final client = HttpClient(context: SecurityContext.defaultContext);
 
         /// Send http echo request
-        final request = await client.get(httpUri.host, httpUri.port, 'some_echo_message');
+        final request = await client.getUrl(uri);
         request.headers.add('Authentication', '123');
         final response = await request.close();
+        l.i('statusCode: ${response.statusCode}\n' 'headers: ${response.headers}');
         final body = await const Utf8Decoder().bind(response).transform(const LineSplitter()).join('\n');
-        l.i('statusCode: ${response.statusCode}\n' 'headers: ${response.headers}\n' 'body: $body');
+        l.i('body: $body\n\n');
 
         /// WEB SOCKET CLIENT
-        final wsUri = Uri.parse('ws://127.0.0.1:80/ws');
         final ws = await WebSocket.connect(
-          wsUri.toString(),
+          'wss://${uri.host}${uri.path}/ws',
           protocols: <String>[
             'demo',
             'echo',

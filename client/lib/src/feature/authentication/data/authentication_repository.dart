@@ -30,6 +30,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
   @override
   Future<UserEntity> signInWithGoogle() {
     try {
+      //_firebaseAuth.currentUser?.getIdToken();
       l.vvvv('Начат процесс аутентификации в гугле');
       return platform.when<Future<UserEntity>>(
         io: _signInWithGoogleIO,
@@ -90,7 +91,7 @@ class AuthenticationRepository implements IAuthenticationRepository {
   UserEntity _mapUserToUserEntity(final User? user) => UserEntity.fromFirebase(user);
 }
 
-const List<String> _kGoogleSignInScopes = [
+const List<String> _kGoogleSignInScopes = <String>[
   'email',
   'profile',
   // 'https://www.googleapis.com/auth/contacts.readonly',
