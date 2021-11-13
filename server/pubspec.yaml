@@ -9,28 +9,65 @@ environment:
   sdk: '>=2.15.0-178.1.beta'
 
 dependencies:
-  meta: ^1.7.0
-  args: ^2.0.0
+  # HTTP Server
   shelf: ^1.1.0
   shelf_router: ^1.0.0
   #shelf_proxy: ^1.0.1
   #shelf_static: ^1.1.0
   shelf_web_socket: ^1.0.1
   web_socket_channel: ^2.1.0
+
+  # Utility
   l: ^3.0.2+1
   rxdart: ^0.27.2
   platform_info: ^3.1.0
-  #grpc: ^3.0.2
-  protobuf: ^2.0.0
+  multiline: ^3.0.0
+
+  # SQL
+  postgres: ^2.4.2
+  #drift: ^1.0.1
+  #drift_postgres: any
+
+  # Annotation
+  meta: ^1.7.0
+  args: ^2.0.0
 
   # Models
   dart_jobs_shared:
     path: ../shared
 
 dev_dependencies:
-  #build_runner: ^2.1.4
+  build_runner: ^2.1.4
   #shelf_router_generator: ^1.0.1
-  http: ^0.13.0
   lints: ^1.0.0
   test_process: ^2.0.0
   test: ^1.15.0
+  http: ^0.13.0
+
+  # SQL
+  #drift_dev: ^1.0.2
+
+#dependency_overrides:
+#  drift:
+#    git:
+#      url: 'https://github.com/simolus3/moor.git'
+#      ref: 'fad654a5aac897cbb2feef2eec83138c553ea8fa'
+#      path: 'drift'
+#
+#  drift_postgres:
+#    git:
+#      url: 'https://github.com/simolus3/moor.git'
+#      ref: 'fad654a5aac897cbb2feef2eec83138c553ea8fa'
+#      path: 'extras/drift_postgres'
+#
+#  drift_dev:
+#    git:
+#      url: 'https://github.com/simolus3/moor.git'
+#      ref: 'fad654a5aac897cbb2feef2eec83138c553ea8fa'
+#      path: 'drift_dev'
+#
+#  sqlparser:
+#    git:
+#      url: 'https://github.com/simolus3/moor.git'
+#      ref: 'fad654a5aac897cbb2feef2eec83138c553ea8fa'
+#      path: 'sqlparser'

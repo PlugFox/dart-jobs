@@ -1,4 +1,4 @@
-import 'package:dart_jobs_server/src/common/handler/helthcheck.dart';
+import 'package:dart_jobs_server/src/common/handler/healthcheck.dart';
 import 'package:dart_jobs_server/src/common/handler/not_found.dart';
 import 'package:dart_jobs_server/src/feature/job/handler/create_job.dart';
 import 'package:dart_jobs_server/src/feature/job/handler/delete_job.dart';

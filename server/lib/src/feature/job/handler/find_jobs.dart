@@ -25,7 +25,7 @@ Response findJobs(Request request) {
       jobs: Iterable<Job>.generate(
         filter.limit,
         (i) => Job(
-          id: (date.millisecondsSinceEpoch ~/ 1000 - i * 60 * 60).toRadixString(36),
+          id: date.millisecondsSinceEpoch ~/ 1000 - i * 60 * 60,
           //weight: request.before.toDateTime().millisecondsSinceEpoch ~/ 1000,
           updated: date.subtract(Duration(hours: i)),
           created: date.subtract(Duration(hours: i)),

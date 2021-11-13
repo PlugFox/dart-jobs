@@ -23,7 +23,7 @@ class JobEvent with _$JobEvent {
   /// Можно передать идентификатор,
   /// если обновление надо запросить по конкретному идентификатору
   const factory JobEvent.fetch([
-    final String? id,
+    final int? id,
   ]) = _FetchJobEvent;
 
   /// Обновить (перезаписать) работу
@@ -48,10 +48,10 @@ class JobState with _$JobState {
   Job get job;
 
   /// Это новая, еще не записаная работа?
-  bool get hasNotID => job.id.isEmpty;
+  bool get hasNotID => job.hasNotID;
 
   /// Есть ли идентификатор у работы?
-  bool get hasID => job.id.isNotEmpty;
+  bool get hasID => job.hasID;
 
   /// В ожидании событий
   const factory JobState.idle({
@@ -110,9 +110,9 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         delete: _delete,
       );
 
-  Stream<JobState> _fetch([final String? id]) async* {
+  Stream<JobState> _fetch([final int? id]) async* {
     var currentJob = state.job;
-    if (id != null && id.isEmpty && currentJob.hasNotID) return;
+    if (id != null && id < 0 && currentJob.hasNotID) return;
     try {
       yield JobState.processed(job: currentJob);
       currentJob = await _repository.getJob(id: id ?? currentJob.id);

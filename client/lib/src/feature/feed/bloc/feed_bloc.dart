@@ -134,10 +134,10 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
 
         // Список обновленных (их нужно исключить из предидущего состояния)
         // тк они будут перемещены в начало ленты
-        final idsForExclusion = List<String>.of(
+        final idsForExclusion = List<int>.of(
           chunk
               .where((e) => e.deletionMark || e.updated != e.created || e.updated == updatedAfter)
-              .map<String>((e) => e.id),
+              .map<int>((e) => e.id),
         );
         await Future<void>.delayed(Duration.zero);
 
@@ -196,7 +196,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       );
 
       // Список более старых (если updatedBefore совпадает с updated исключаю из предидущего состояния эти id)
-      final idsForExclusion = List<String>.of(chunk.where((e) => e.updated == updatedBefore).map<String>((e) => e.id));
+      final idsForExclusion = List<int>.of(chunk.where((e) => e.updated == updatedBefore).map<int>((e) => e.id));
       await Future<void>.delayed(Duration.zero);
 
       // Исключаю из исходной коллекции обновленные и удаленные
@@ -280,13 +280,13 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   }
 
   /// Исключаю из исходной коллекции элементы
-  Stream<Job> _reducedStateList(List<String> idsForExclusion) async* {
+  Stream<Job> _reducedStateList(List<int> idsForExclusion) async* {
     // Если исходный список пуст - нечего проверять
     if (state.list.isEmpty) return;
     // Если список на исключение пуст - возвращаем исходную коллекцию
     if (idsForExclusion.isEmpty) yield* Stream<Job>.fromIterable(state.list);
     // Список идентификаторов на исключение
-    final ids = List<String>.of(idsForExclusion);
+    final ids = List<int>.of(idsForExclusion);
     final sw = Stopwatch()..start();
     for (final job in state.list) {
       // Обход обратной выборкой, right fold

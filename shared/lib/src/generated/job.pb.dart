@@ -9,115 +9,11 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $2;
+import 'google/protobuf/timestamp.pb.dart' as $0;
 
 import 'job.pbenum.dart';
 
 export 'job.pbenum.dart';
-
-enum JobFilter_Cursor { before, after, notSet }
-
-class JobFilter extends $pb.GeneratedMessage {
-  static const $core.Map<$core.int, JobFilter_Cursor> _JobFilter_CursorByTag = {
-    2: JobFilter_Cursor.before,
-    3: JobFilter_Cursor.after,
-    0: JobFilter_Cursor.notSet
-  };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'JobFilter',
-      package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
-      createEmptyInstance: create)
-    ..oo(0, [2, 3])
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit', $pb.PbFieldType.OU3)
-    ..aOM<$2.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'before',
-        subBuilder: $2.Timestamp.create)
-    ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'after',
-        subBuilder: $2.Timestamp.create)
-    ..hasRequiredFields = false;
-
-  JobFilter._() : super();
-  factory JobFilter({
-    $core.int? limit,
-    $2.Timestamp? before,
-    $2.Timestamp? after,
-  }) {
-    final _result = create();
-    if (limit != null) {
-      _result.limit = limit;
-    }
-    if (before != null) {
-      _result.before = before;
-    }
-    if (after != null) {
-      _result.after = after;
-    }
-    return _result;
-  }
-  factory JobFilter.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JobFilter.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JobFilter clone() => JobFilter()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  JobFilter copyWith(void Function(JobFilter) updates) =>
-      super.copyWith((message) => updates(message as JobFilter)) as JobFilter; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static JobFilter create() => JobFilter._();
-  JobFilter createEmptyInstance() => create();
-  static $pb.PbList<JobFilter> createRepeated() => $pb.PbList<JobFilter>();
-  @$core.pragma('dart2js:noInline')
-  static JobFilter getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<JobFilter>(create);
-  static JobFilter? _defaultInstance;
-
-  JobFilter_Cursor whichCursor() => _JobFilter_CursorByTag[$_whichOneof(0)]!;
-  void clearCursor() => clearField($_whichOneof(0));
-
-  @$pb.TagNumber(1)
-  $core.int get limit => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set limit($core.int v) {
-    $_setUnsignedInt32(0, v);
-  }
-
-  @$pb.TagNumber(1)
-  $core.bool hasLimit() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearLimit() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $2.Timestamp get before => $_getN(1);
-  @$pb.TagNumber(2)
-  set before($2.Timestamp v) {
-    setField(2, v);
-  }
-
-  @$pb.TagNumber(2)
-  $core.bool hasBefore() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearBefore() => clearField(2);
-  @$pb.TagNumber(2)
-  $2.Timestamp ensureBefore() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  $2.Timestamp get after => $_getN(2);
-  @$pb.TagNumber(3)
-  set after($2.Timestamp v) {
-    setField(3, v);
-  }
-
-  @$pb.TagNumber(3)
-  $core.bool hasAfter() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAfter() => clearField(3);
-  @$pb.TagNumber(3)
-  $2.Timestamp ensureAfter() => $_ensure(2);
-}
 
 class JobsChunk extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -186,25 +82,25 @@ class Job extends $pb.GeneratedMessage {
       const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Job',
       package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'job'),
       createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.OU3)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'creatorId', protoName: 'creatorId')
-    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created',
-        subBuilder: $2.Timestamp.create)
-    ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updated',
-        subBuilder: $2.Timestamp.create)
-    ..aOM<JobData>(101, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'data',
-        subBuilder: JobData.create)
+    ..aOM<$0.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'updated',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<JobData>(101, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'jobData',
+        protoName: 'jobData', subBuilder: JobData.create)
     ..aOB(201, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deletionMark',
         protoName: 'deletionMark')
     ..hasRequiredFields = false;
 
   Job._() : super();
   factory Job({
-    $core.String? id,
+    $core.int? id,
     $core.String? creatorId,
-    $2.Timestamp? created,
-    $2.Timestamp? updated,
-    JobData? data,
+    $0.Timestamp? created,
+    $0.Timestamp? updated,
+    JobData? jobData,
     $core.bool? deletionMark,
   }) {
     final _result = create();
@@ -220,8 +116,8 @@ class Job extends $pb.GeneratedMessage {
     if (updated != null) {
       _result.updated = updated;
     }
-    if (data != null) {
-      _result.data = data;
+    if (jobData != null) {
+      _result.jobData = jobData;
     }
     if (deletionMark != null) {
       _result.deletionMark = deletionMark;
@@ -251,10 +147,10 @@ class Job extends $pb.GeneratedMessage {
   static Job? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($core.String v) {
-    $_setString(0, v);
+  set id($core.int v) {
+    $_setUnsignedInt32(0, v);
   }
 
   @$pb.TagNumber(1)
@@ -275,9 +171,9 @@ class Job extends $pb.GeneratedMessage {
   void clearCreatorId() => clearField(2);
 
   @$pb.TagNumber(4)
-  $2.Timestamp get created => $_getN(2);
+  $0.Timestamp get created => $_getN(2);
   @$pb.TagNumber(4)
-  set created($2.Timestamp v) {
+  set created($0.Timestamp v) {
     setField(4, v);
   }
 
@@ -286,12 +182,12 @@ class Job extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearCreated() => clearField(4);
   @$pb.TagNumber(4)
-  $2.Timestamp ensureCreated() => $_ensure(2);
+  $0.Timestamp ensureCreated() => $_ensure(2);
 
   @$pb.TagNumber(5)
-  $2.Timestamp get updated => $_getN(3);
+  $0.Timestamp get updated => $_getN(3);
   @$pb.TagNumber(5)
-  set updated($2.Timestamp v) {
+  set updated($0.Timestamp v) {
     setField(5, v);
   }
 
@@ -300,21 +196,21 @@ class Job extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearUpdated() => clearField(5);
   @$pb.TagNumber(5)
-  $2.Timestamp ensureUpdated() => $_ensure(3);
+  $0.Timestamp ensureUpdated() => $_ensure(3);
 
   @$pb.TagNumber(101)
-  JobData get data => $_getN(4);
+  JobData get jobData => $_getN(4);
   @$pb.TagNumber(101)
-  set data(JobData v) {
+  set jobData(JobData v) {
     setField(101, v);
   }
 
   @$pb.TagNumber(101)
-  $core.bool hasData() => $_has(4);
+  $core.bool hasJobData() => $_has(4);
   @$pb.TagNumber(101)
-  void clearData() => clearField(101);
+  void clearJobData() => clearField(101);
   @$pb.TagNumber(101)
-  JobData ensureData() => $_ensure(4);
+  JobData ensureJobData() => $_ensure(4);
 
   @$pb.TagNumber(201)
   $core.bool get deletionMark => $_getBF(5);

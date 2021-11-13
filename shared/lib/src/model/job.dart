@@ -1,8 +1,9 @@
-import 'dart:math' as math;
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:dart_jobs_shared/src/model/enum.dart';
 import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
+import 'package:dart_jobs_shared/util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'job.freezed.dart';
@@ -63,26 +64,26 @@ class Job with _$Job, Comparable<Job> {
   const Job._();
 
   /// У работы не заполнен [id]
-  bool get hasNotID => id.isEmpty;
+  bool get hasNotID => id.isNegative;
 
   /// У работы заполнен [id]
-  bool get hasID => !id.isNotEmpty;
+  bool get hasID => !hasNotID;
 
   const factory Job({
     /// Идентификатор элемента
-    @JsonKey(name: 'id') required final String id,
+    @JsonKey(name: 'id') required final int id,
 
     /// Идентификатор создателя
     @JsonKey(name: 'creator_id') required final String creatorId,
 
     /// Создано
-    @JsonKey(name: 'created') required final DateTime created,
+    @JsonKey(name: 'created', fromJson: DateUtil.fromJson, toJson: DateUtil.toJson) required final DateTime created,
 
     /// Обновлено
-    @JsonKey(name: 'updated') required final DateTime updated,
+    @JsonKey(name: 'updated', fromJson: DateUtil.fromJson, toJson: DateUtil.toJson) required final DateTime updated,
 
     /// Данные работы
-    @JsonKey(name: 'data') required final JobData data,
+    @JsonKey(name: 'job_data') required final JobData data,
 
     /// Пометка на удаление
     /// Если false - существует
@@ -96,7 +97,7 @@ class Job with _$Job, Comparable<Job> {
         //weight: job.weight.toInt(),
         created: job.created.toDateTime(),
         updated: job.updated.toDateTime(),
-        data: JobData.fromProtobuf(job.data),
+        data: JobData.fromProtobuf(job.jobData),
         deletionMark: job.deletionMark,
       );
 
@@ -107,7 +108,7 @@ class Job with _$Job, Comparable<Job> {
         id: id,
         //weight: proto.Int64(weight),
         deletionMark: deletionMark,
-        data: data.toProtobuf(),
+        jobData: data.toProtobuf(),
       );
 
   factory Job.fromBytes(List<int> bytes) => Job.fromProtobuf(proto.Job.fromBuffer(bytes));
@@ -148,7 +149,7 @@ class JobData with _$JobData {
     @JsonKey(name: 'remote') @Default(true) final bool remote,
 
     /// Местоположение, например: Moscow
-    /// Максимальная длина - 64 символов
+    /// Максимальная длина - 256 символов
     /// Поле ввода
     @JsonKey(name: 'address') @Default('') final String address,
 
@@ -271,6 +272,6 @@ class JobFilter with _$JobFilter {
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
 
   Map<String, Object> toQueryParameters() => <String, Object>{
-    'limit': math.min(limit, 100),
-  };
+        'limit': math.min(limit, 100),
+      };
 }

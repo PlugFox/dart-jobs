@@ -173,7 +173,7 @@ class _JobFeedTile extends FeedTile {
               ),
             );
             InitializationScope.storeOf(context).analytics?.logViewItem(
-                  itemId: job.id,
+                  itemId: job.id.toString(),
                   itemName: job.data.title,
                   itemCategory: 'job',
                 );

@@ -30,7 +30,7 @@ abstract class IJobRepository {
 
   /// Получить работу по идентификатору
   /// Если работа не найдена - возвращает с пометкой [deletionMark]
-  Future<Job> getJob({required final String id});
+  Future<Job> getJob({required final int id});
 
   /// Обновить данные по работе
   /// В ответ получаем обновленную работу
@@ -52,7 +52,7 @@ class JobRepositoryImpl implements IJobRepository {
 
   @override
   Job getNewJobTemplate() => Job(
-        id: '',
+        id: -1,
         creatorId: _firebaseAuth.currentUser?.uid ?? '',
         //weight: 0,
         created: DateTime.now(),
@@ -92,7 +92,7 @@ class JobRepositoryImpl implements IJobRepository {
   }
 
   @override
-  Future<Job> getJob({required String id}) => _networkDataProvider.getJob(id: id);
+  Future<Job> getJob({required int id}) => _networkDataProvider.getJob(id: id);
 
   @override
   Future<Job> updateJob({required Job job}) async {

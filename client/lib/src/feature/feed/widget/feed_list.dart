@@ -24,7 +24,7 @@ class FeedList extends StatelessWidget {
                 final job = state.list[index];
                 return FeedTile.job(
                   job: job,
-                  key: ValueKey<String>(job.id),
+                  key: ValueKey<String>('${job.id}_${job.updated.millisecondsSinceEpoch}'),
                 );
               },
               childCount: state.maybeMap<int>(

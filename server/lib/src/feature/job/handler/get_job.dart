@@ -10,7 +10,7 @@ Response getJob(Request request) {
 
   return Response.ok(
     Job(
-      id: uuid,
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       //weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       updated: DateTime.now().toUtc(),
       created: DateTime.now().toUtc(),

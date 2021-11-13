@@ -10,7 +10,7 @@ Response updateJob(Request request) {
   final userId = request.context['user_id'];
   if (userId == null) return Response.forbidden(List<int>.empty());
 
-  final id = request.params['id'];
+  final id = int.tryParse(request.params['id'] ?? '');
   if (id == null) return Response.notFound(List<int>.empty());
 
   return Response(

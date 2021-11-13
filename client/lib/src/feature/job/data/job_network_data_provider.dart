@@ -26,7 +26,7 @@ abstract class IJobNetworkDataProvider {
 
   /// Получить работу по идентификатору
   /// Если работа не найдена - возвращает с пометкой [deletionMark]
-  Future<Job> getJob({required final String id});
+  Future<Job> getJob({required final int id});
 
   /// Обновить данные по работе
   /// В ответ получаем обновленную работу
@@ -120,8 +120,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }
 
   @override
-  Future<Job> getJob({required String id}) async {
-    assert(id.isNotEmpty, 'id должен быть не пустой строкой');
+  Future<Job> getJob({required int id}) async {
+    assert(!id.isNegative, 'id должен быть положительным');
     final response = await _client.get<List<int>>('/jobs/id$id');
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Job does not returned from server');
@@ -131,7 +131,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   @override
   Future<Job> updateJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
-    assert(job.id.isNotEmpty, 'id должен быть не пустой строкой');
+    assert(job.hasID, 'У работы должен быть валидный идентификатор');
     final response = await _client.put<List<int>>(
       '/jobs/id${job.id}',
       data: job.data.toBytes(),
@@ -150,7 +150,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   @override
   Future<Job> deleteJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
-    assert(job.id.isNotEmpty, 'id должен быть не пустой строкой');
+    assert(job.hasID, 'У работы должен быть валидный идентификатор');
     final response = await _client.delete<List<int>>(
       '/jobs/id${job.id}',
       options: Options(
