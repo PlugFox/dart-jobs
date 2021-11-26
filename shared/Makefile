@@ -1,4 +1,4 @@
-.PHONY: clean format get upgrade outdated
+.PHONY: clean format get upgrade upgrade-major outdated
 
 clean:
 	@echo "Cleaning the project"
@@ -21,6 +21,9 @@ upgrade-major: get
 	@echo "Upgrading dependencies --major-versions"
 	@dart pub upgrade --major-versions
 
+outdated:
+	@dart pub outdated
+
 codegen: get
 	@echo "Running codegeneration"
 	@flutter pub global activate protoc_plugin
@@ -28,6 +31,3 @@ codegen: get
 	@protoc -Iproto proto/**.proto --dart_out="grpc:lib/src/generated"
 	@dart run build_runner build --delete-conflicting-outputs --release
 	@dart format -l 120 --fix lib/src/generated lib/src/model
-
-outdated:
-	@dart pub outdated

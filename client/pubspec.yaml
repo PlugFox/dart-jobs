@@ -103,7 +103,7 @@ flutter:
 # Flutter assets codegen
 flutter_gen:
   output: lib/src/common/constant/
-  line_length: 80
+  line_length: 120
 
 # Generate app icon
 # flutter pub run flutter_launcher_icons:main

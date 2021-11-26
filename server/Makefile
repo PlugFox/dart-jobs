@@ -1,21 +1,25 @@
-.PHONY: clean format get upgrade
+.PHONY: clean format get upgrade upgrade-major
 
 clean:
 	@echo "Cleaning the project"
-	dart clean
+	@dart clean
 
 format:
 	@echo "Formatting the code"
 	@dart fix --apply
-	dart format -l 120 --fix
+	@dart format -l 120 --fix
 
 get:
 	@echo "Geting dependencies"
-	dart pub get
+	@dart pub get
 
 upgrade: get
 	@echo "Upgrading dependencies"
-	dart pub upgrade
+	@dart pub upgrade
+
+upgrade-major: get
+	@echo "Upgrading dependencies --major-versions"
+	@dart pub upgrade --major-versions
 
 codegen: get
 	@echo "Running codegeneration"
