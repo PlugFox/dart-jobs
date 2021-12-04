@@ -1,29 +1,25 @@
-import 'package:dart_jobs_shared/model.dart';
+import 'package:dart_jobs_server/src/common/middleware/database_injector.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 /// Получение элемента по идентификатору
 /// 200 (OK) - получаем данные работы по идентификатору
-Response getJob(Request request) {
-  final uuid = request.params['id'];
-  if (uuid == null) return Response.notFound(List<int>.empty());
+Future<Response> getJob(Request request) async {
+  final id = int.tryParse(request.params['id'] ?? '');
+  if (id is! int) return Response.notFound(List<int>.empty());
 
-  return Response.ok(
-    Job(
-      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      //weight: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      updated: DateTime.now().toUtc(),
-      created: DateTime.now().toUtc(),
-      creatorId: 'creatorId',
-      data: JobData(
-        title: 'title ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
-        company: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
-        country: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
-        remote: false,
-      ),
-    ).toBytes(),
-    headers: <String, String>{
-      'Content-Type': 'application/octet-stream',
-    },
-  );
+  try {
+    final job = await request.jobDao.getJob(id);
+
+    return Response.ok(
+      job.toBytes(),
+      headers: <String, String>{
+        'Content-Type': 'application/octet-stream',
+      },
+    );
+  } on Object catch (err) {
+    return Response.internalServerError(
+      body: 'Server can not get job: $err',
+    );
+  }
 }
