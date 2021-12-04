@@ -54,7 +54,7 @@ class JobDao {
     final rows = await db.query(
       MultilineStringX('''
     |-- Обновим данные по работе по идентификатору
-    |UPDATE jobs.job SET data = @jobData::jsonb WHERE id = @id AND creator_id = @creatorId AND deletion_mark = false
+    |UPDATE jobs.job SET job_data = @jobData::jsonb WHERE id = @id AND creator_id = @creatorId AND deletion_mark = false
     |RETURNING
     |  id, deletion_mark, creator_id, created, updated, job_data;
     ''').multiline(),
@@ -98,9 +98,9 @@ class JobDao {
     |SELECT id, deletion_mark, creator_id, created, updated, job_data
     |FROM jobs.job
     |WHERE
-    |  (@after IS NOT NULL AND updated > @after)
-    |  AND (@before IS NOT NULL AND updated < @before);
-    |LIMIT ${filter.limit.toString()}
+    |  (@after IS NULL OR updated > @after)
+    |  AND (@before IS NULL OR updated < @before)
+    |LIMIT ${filter.limit.toString()};
     ''').multiline(),
       substitutionValues: <String, Object?>{
         'after': filter.after,
