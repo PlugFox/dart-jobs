@@ -1,0 +1,44 @@
+name: CLIENT / CHECKOUT
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
+    paths:
+      - 'client/lib/**.dart'
+  pull_request:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+      - 'support/**'
+    paths:
+      - 'client/lib/**.dart'
+  workflow_dispatch:
+
+jobs:
+  check-client:
+    runs-on: ubuntu-latest
+    container:
+      image: plugfox/flutter:beta
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🔎 Checkout source code
+        run: |
+          cd client
+          echo Install Dependencies; \
+            flutter pub get
+          echo Check format; \
+            dart format --set-exit-if-changed -l 120 -o none lib
+          echo Check analyzer; \
+            flutter analyze --fatal-infos --fatal-warnings lib
