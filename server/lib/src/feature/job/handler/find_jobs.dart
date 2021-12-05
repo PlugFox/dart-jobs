@@ -36,7 +36,7 @@ Future<Response> findJobs(Request request) async {
   try {
     return Response.ok(
       JobsChunk(
-        endOfList: before != null && jobs.length < filter.limit,
+        endOfList: jobs.length < filter.limit,
         jobs: jobs,
       ).toBytes(),
       headers: <String, String>{

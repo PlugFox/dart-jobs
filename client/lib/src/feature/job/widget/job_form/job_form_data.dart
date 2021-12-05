@@ -1,6 +1,7 @@
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
 class JobFormData {
@@ -93,7 +94,11 @@ class JobFormData {
   bool validate() {
     var result = true;
     for (final controller in _controllers) {
-      result = controller.validate() && result;
+      final validateResult = controller.validate();
+      if (!validateResult) {
+        l.i('Контроллер поля ${controller.runtimeType} не заполнен, валидация не пройдена');
+        result = false;
+      }
     }
     return result;
   }
@@ -315,6 +320,9 @@ class JobFieldDescriptionsController extends ChangeNotifier
     implements ValueListenable<Description> {
   JobFieldDescriptionsController();
 
+  /// Максимальное количество символов
+  int get maxLength => 2600;
+
   /// Русский язык
   final TextEditingController russian = TextEditingController(text: '');
 
@@ -327,7 +335,7 @@ class JobFieldDescriptionsController extends ChangeNotifier
     final en = english.text.trim();
     if (ru.isEmpty && en.isEmpty) {
       return 'Must be filled';
-    } else if (ru.length > 2600 || en.length > 2600) {
+    } else if (ru.length > maxLength || en.length > maxLength) {
       return 'Must be less than 2601 characters';
     }
   }

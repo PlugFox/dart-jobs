@@ -110,7 +110,7 @@ class JobDao {
     return deletedId;
   }
 
-  /// Пометить на удаление работу по идентификатору
+  /// Удалить работу по идентификатору
   Future<int> delete({
     required int id,
     required final String creatorId,
@@ -151,6 +151,7 @@ class JobDao {
     |  TRUE
     |  ${after == null ? '' : 'AND updated > @after'}
     |  ${before == null ? '' : 'AND updated < @before'}
+    |ORDER BY updated DESC
     |LIMIT ${filter.limit.toString()};
     ''').multiline(),
       substitutionValues: <String, Object?>{

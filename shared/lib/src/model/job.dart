@@ -12,22 +12,10 @@ part 'job.g.dart';
 /// Кусок коллекции работ / список с работами
 @immutable
 class JobsChunk extends Iterable<Job> {
-  /// Это последний кусок коллекции по указаному отбору
-  /// Если true - значит по указаному запросу больше нечего получать
-  final bool endOfList;
-
-  final List<Job> _jobs;
-
   const JobsChunk({
     required final List<Job> jobs,
     final this.endOfList = false,
   }) : _jobs = jobs;
-
-  /// Generate Map<String, Object?> from class
-  Map<String, Object?> toJson() => <String, Object?>{
-        'end_of_list': endOfList,
-        'jobs': _jobs.map<Map<String, Object?>>((e) => e.toJson()).toList(),
-      };
 
   /// Generate Class from Map<String, Object?>
   factory JobsChunk.fromJson(Map<String, Object?> json) {
@@ -42,6 +30,21 @@ class JobsChunk extends Iterable<Job> {
         endOfList: proto.endOfList,
         jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
       );
+
+  /// Это последний кусок коллекции по указаному отбору
+  /// Если true - значит по указаному запросу больше нечего получать
+  final bool endOfList;
+
+  final List<Job> _jobs;
+
+  @override
+  int get length => _jobs.length;
+
+  /// Generate Map<String, Object?> from class
+  Map<String, Object?> toJson() => <String, Object?>{
+        'end_of_list': endOfList,
+        'jobs': _jobs.map<Map<String, Object?>>((e) => e.toJson()).toList(),
+      };
 
   proto.JobsChunk toProtobuf() => proto.JobsChunk(
         endOfList: endOfList,

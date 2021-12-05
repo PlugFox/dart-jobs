@@ -4,11 +4,13 @@ import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_descriptions_field.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:l/l.dart';
 
 @immutable
 class JobFormFieldSet extends StatelessWidget {
@@ -73,6 +75,14 @@ class JobFormFieldSet extends StatelessWidget {
                   /// Оклад
                   //formData.salaryController;
 
+                  const SizedBox(height: 15),
+
+                  /// Поле описания
+                  JobDescriptionsField(
+                    context.localization.job_field_description,
+                    formData.descriptionsController,
+                  ),
+
                   const SizedBox(height: 75),
                 ],
               ),
@@ -93,19 +103,19 @@ class JobFormFieldSet extends StatelessWidget {
 }
 
 /// Не разрешать ввод кирилицы
-final TextInputFormatter _denyCyrillic = FilteringTextInputFormatter.deny(RegExp('[а-яА-Я]'));
+final TextInputFormatter _denyCyrillic = FilteringTextInputFormatter.deny(RegExp('[а-яА-ЯёЁ]'));
 
 class _JobSingleLineText extends StatelessWidget {
-  final String label;
-  final JobTextFieldSingleLineController controller;
-  final List<TextInputFormatter> inputFormatters;
-
   const _JobSingleLineText(
     final this.label,
     final this.controller, {
     this.inputFormatters = const <TextInputFormatter>[],
     final Key? key,
   }) : super(key: key);
+
+  final String label;
+  final JobTextFieldSingleLineController controller;
+  final List<TextInputFormatter> inputFormatters;
 
   @override
   Widget build(final BuildContext context) => ValueListenableBuilder<FormStatus>(
@@ -145,11 +155,11 @@ class _JobSingleLineText extends StatelessWidget {
 
 @immutable
 class _BottomButtons extends StatelessWidget {
-  final JobFormData formData;
   const _BottomButtons({
     required final this.formData,
     Key? key,
   }) : super(key: key);
+  final JobFormData formData;
 
   @override
   Widget build(BuildContext context) => AuthenticationScope.userOf(context, listen: true).when<Widget>(
@@ -163,11 +173,11 @@ class _BottomButtons extends StatelessWidget {
 
 @immutable
 class _BottomButtonsRow extends StatelessWidget {
-  final JobFormData formData;
   const _BottomButtonsRow({
     required final this.formData,
     Key? key,
   }) : super(key: key);
+  final JobFormData formData;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -269,11 +279,11 @@ class _CancelButton extends StatelessWidget {
 
 @immutable
 class _SaveButton extends StatelessWidget {
-  final bool enabled;
   const _SaveButton({
     final this.enabled = true,
     Key? key,
   }) : super(key: key);
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -286,6 +296,7 @@ class _SaveButton extends StatelessWidget {
               ? () {
                   FocusScope.of(context).unfocus();
                   if (!JobForm.validate(context)) {
+                    l.i('Работа не до заполнена, не будет сохранена');
                     return;
                   }
                   final job = JobForm.getUpdatedJob(
@@ -293,6 +304,7 @@ class _SaveButton extends StatelessWidget {
                     BlocScope.of<JobBLoC>(context, listen: false).state.job.data,
                   );
                   if (job == null) {
+                    l.i('Отсутсвует работа, не будет сохранена');
                     return;
                   }
                   JobForm.save(context, job);

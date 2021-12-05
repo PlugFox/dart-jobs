@@ -1,5 +1,8 @@
 {
   "@@locale": "ru",
+  "current_language": "Русский",
+  "russian": "Русский",
+  "english": "Английский",
   "yes": "Да",
   "@yes": {
     "description": "Да"
