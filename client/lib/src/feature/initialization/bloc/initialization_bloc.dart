@@ -1,5 +1,5 @@
-import 'package:dart_jobs/src/feature/initialization/data/initialization_helper.dart';
-import 'package:dart_jobs/src/feature/initialization/model/initialization_progress.dart';
+import 'package:dart_jobs_client/src/feature/initialization/data/initialization_helper.dart';
+import 'package:dart_jobs_client/src/feature/initialization/model/initialization_progress.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

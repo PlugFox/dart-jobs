@@ -1,4 +1,4 @@
-import 'package:dart_jobs/src/feature/not_found/widget/not_found_screen.dart';
+import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:flutter/material.dart';
 
 class NotFoundPage extends Page<void> {

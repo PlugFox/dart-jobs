@@ -1,9 +1,9 @@
-import 'package:dart_jobs/runner_stub.dart'
+import 'package:dart_jobs_client/runner_stub.dart'
     // ignore: uri_does_not_exist
-    if (dart.library.io) 'package:dart_jobs/runner_io.dart'
+    if (dart.library.io) 'package:dart_jobs_client/runner_io.dart'
     // ignore: uri_does_not_exist
-    if (dart.library.html) 'package:dart_jobs/runner_web.dart' as runner;
-import 'package:dart_jobs/src/common/bloc/bloc_observer.dart';
+    if (dart.library.html) 'package:dart_jobs_client/runner_web.dart' as runner;
+import 'package:dart_jobs_client/src/common/bloc/bloc_observer.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;

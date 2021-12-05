@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_form/job_form.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fox_flutter_bloc/bloc.dart';

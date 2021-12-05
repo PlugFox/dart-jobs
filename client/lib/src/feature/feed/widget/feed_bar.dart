@@ -1,9 +1,9 @@
-import 'package:dart_jobs/src/common/constant/assets.gen.dart' as assets;
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/common/utils/screen_util.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_search_bar.dart';
+import 'package:dart_jobs_client/src/common/constant/assets.gen.dart' as assets;
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_search_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Шапка

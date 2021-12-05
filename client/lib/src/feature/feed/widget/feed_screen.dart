@@ -1,14 +1,14 @@
 import 'dart:math' as math;
 
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/common/router/router_delegate.dart';
-import 'package:dart_jobs/src/common/widget/custom_scroll_view_smooth.dart';
-import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_bar.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_creation_buttons.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_list.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_scope.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/common/widget/custom_scroll_view_smooth.dart';
+import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_bar.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_creation_buttons.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_list.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 import 'package:l/l.dart';

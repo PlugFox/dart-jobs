@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_jobs/src/common/model/app_metadata.dart';
-import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
-import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
-import 'package:dart_jobs/src/feature/settings/data/settings_repository.dart';
+import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
+import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs_client/src/feature/settings/data/settings_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:meta/meta.dart';

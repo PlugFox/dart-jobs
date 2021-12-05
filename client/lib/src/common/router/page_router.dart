@@ -1,12 +1,12 @@
 // ignore_for_file: avoid-returning-widgets
 
-import 'package:dart_jobs/src/common/router/configuration.dart';
-import 'package:dart_jobs/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/common/router/configuration.dart';
+import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
 
-export 'package:dart_jobs/src/common/router/configuration.dart';
+export 'package:dart_jobs_client/src/common/router/configuration.dart';
 
 typedef NavigateCallback = PageConfiguration Function(PageConfiguration configuration);
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';

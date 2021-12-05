@@ -14,7 +14,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 DeveloperLevel _$DeveloperLevelFromJson(Map<String, dynamic> json) {
-  switch (json['type'] as String?) {
+  switch (json['type']) {
     case 'INTERN':
       return InternDeveloperLevel.fromJson(json);
     case 'JUNIOR':
@@ -159,9 +159,14 @@ class _$InternDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 @JsonSerializable()
 @FreezedUnionValue('INTERN')
 class _$InternDeveloperLevel extends InternDeveloperLevel {
-  const _$InternDeveloperLevel() : super._();
+  const _$InternDeveloperLevel({String? $type})
+      : $type = $type ?? 'INTERN',
+        super._();
 
   factory _$InternDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$InternDeveloperLevelFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -258,7 +263,7 @@ class _$InternDeveloperLevel extends InternDeveloperLevel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InternDeveloperLevelToJson(this)..['type'] = 'INTERN';
+    return _$$InternDeveloperLevelToJson(this);
   }
 }
 
@@ -289,9 +294,14 @@ class _$JuniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 @JsonSerializable()
 @FreezedUnionValue('JUNIOR')
 class _$JuniorDeveloperLevel extends JuniorDeveloperLevel {
-  const _$JuniorDeveloperLevel() : super._();
+  const _$JuniorDeveloperLevel({String? $type})
+      : $type = $type ?? 'JUNIOR',
+        super._();
 
   factory _$JuniorDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$JuniorDeveloperLevelFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -388,7 +398,7 @@ class _$JuniorDeveloperLevel extends JuniorDeveloperLevel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$JuniorDeveloperLevelToJson(this)..['type'] = 'JUNIOR';
+    return _$$JuniorDeveloperLevelToJson(this);
   }
 }
 
@@ -419,9 +429,14 @@ class _$MiddleDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 @JsonSerializable()
 @FreezedUnionValue('MIDDLE')
 class _$MiddleDeveloperLevel extends MiddleDeveloperLevel {
-  const _$MiddleDeveloperLevel() : super._();
+  const _$MiddleDeveloperLevel({String? $type})
+      : $type = $type ?? 'MIDDLE',
+        super._();
 
   factory _$MiddleDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$MiddleDeveloperLevelFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -518,7 +533,7 @@ class _$MiddleDeveloperLevel extends MiddleDeveloperLevel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MiddleDeveloperLevelToJson(this)..['type'] = 'MIDDLE';
+    return _$$MiddleDeveloperLevelToJson(this);
   }
 }
 
@@ -549,9 +564,14 @@ class _$SeniorDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithI
 @JsonSerializable()
 @FreezedUnionValue('SENIOR')
 class _$SeniorDeveloperLevel extends SeniorDeveloperLevel {
-  const _$SeniorDeveloperLevel() : super._();
+  const _$SeniorDeveloperLevel({String? $type})
+      : $type = $type ?? 'SENIOR',
+        super._();
 
   factory _$SeniorDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$SeniorDeveloperLevelFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -648,7 +668,7 @@ class _$SeniorDeveloperLevel extends SeniorDeveloperLevel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SeniorDeveloperLevelToJson(this)..['type'] = 'SENIOR';
+    return _$$SeniorDeveloperLevelToJson(this);
   }
 }
 
@@ -679,9 +699,14 @@ class _$LeadDeveloperLevelCopyWithImpl<$Res> extends _$DeveloperLevelCopyWithImp
 @JsonSerializable()
 @FreezedUnionValue('LEAD')
 class _$LeadDeveloperLevel extends LeadDeveloperLevel {
-  const _$LeadDeveloperLevel() : super._();
+  const _$LeadDeveloperLevel({String? $type})
+      : $type = $type ?? 'LEAD',
+        super._();
 
   factory _$LeadDeveloperLevel.fromJson(Map<String, dynamic> json) => _$$LeadDeveloperLevelFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -778,7 +803,7 @@ class _$LeadDeveloperLevel extends LeadDeveloperLevel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LeadDeveloperLevelToJson(this)..['type'] = 'LEAD';
+    return _$$LeadDeveloperLevelToJson(this);
   }
 }
 
@@ -790,7 +815,7 @@ abstract class LeadDeveloperLevel extends DeveloperLevel {
 }
 
 Employment _$EmploymentFromJson(Map<String, dynamic> json) {
-  switch (json['type'] as String?) {
+  switch (json['type']) {
     case 'FULL_TIME':
       return FullTimeEmployment.fromJson(json);
     case 'PART_TIME':
@@ -946,9 +971,14 @@ class _$FullTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 @JsonSerializable()
 @FreezedUnionValue('FULL_TIME')
 class _$FullTimeEmployment extends FullTimeEmployment {
-  const _$FullTimeEmployment() : super._();
+  const _$FullTimeEmployment({String? $type})
+      : $type = $type ?? 'FULL_TIME',
+        super._();
 
   factory _$FullTimeEmployment.fromJson(Map<String, dynamic> json) => _$$FullTimeEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1051,7 +1081,7 @@ class _$FullTimeEmployment extends FullTimeEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FullTimeEmploymentToJson(this)..['type'] = 'FULL_TIME';
+    return _$$FullTimeEmploymentToJson(this);
   }
 }
 
@@ -1082,9 +1112,14 @@ class _$PartTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 @JsonSerializable()
 @FreezedUnionValue('PART_TIME')
 class _$PartTimeEmployment extends PartTimeEmployment {
-  const _$PartTimeEmployment() : super._();
+  const _$PartTimeEmployment({String? $type})
+      : $type = $type ?? 'PART_TIME',
+        super._();
 
   factory _$PartTimeEmployment.fromJson(Map<String, dynamic> json) => _$$PartTimeEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1187,7 +1222,7 @@ class _$PartTimeEmployment extends PartTimeEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PartTimeEmploymentToJson(this)..['type'] = 'PART_TIME';
+    return _$$PartTimeEmploymentToJson(this);
   }
 }
 
@@ -1218,9 +1253,14 @@ class _$OneTimeEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$Re
 @JsonSerializable()
 @FreezedUnionValue('ONE_TIME')
 class _$OneTimeEmployment extends OneTimeEmployment {
-  const _$OneTimeEmployment() : super._();
+  const _$OneTimeEmployment({String? $type})
+      : $type = $type ?? 'ONE_TIME',
+        super._();
 
   factory _$OneTimeEmployment.fromJson(Map<String, dynamic> json) => _$$OneTimeEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1323,7 +1363,7 @@ class _$OneTimeEmployment extends OneTimeEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OneTimeEmploymentToJson(this)..['type'] = 'ONE_TIME';
+    return _$$OneTimeEmploymentToJson(this);
   }
 }
 
@@ -1354,9 +1394,14 @@ class _$ContractEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<$R
 @JsonSerializable()
 @FreezedUnionValue('CONTRACT')
 class _$ContractEmployment extends ContractEmployment {
-  const _$ContractEmployment() : super._();
+  const _$ContractEmployment({String? $type})
+      : $type = $type ?? 'CONTRACT',
+        super._();
 
   factory _$ContractEmployment.fromJson(Map<String, dynamic> json) => _$$ContractEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1459,7 +1504,7 @@ class _$ContractEmployment extends ContractEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContractEmploymentToJson(this)..['type'] = 'CONTRACT';
+    return _$$ContractEmploymentToJson(this);
   }
 }
 
@@ -1490,9 +1535,14 @@ class _$OpenSourceEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithImpl<
 @JsonSerializable()
 @FreezedUnionValue('OPEN_SOURCE')
 class _$OpenSourceEmployment extends OpenSourceEmployment {
-  const _$OpenSourceEmployment() : super._();
+  const _$OpenSourceEmployment({String? $type})
+      : $type = $type ?? 'OPEN_SOURCE',
+        super._();
 
   factory _$OpenSourceEmployment.fromJson(Map<String, dynamic> json) => _$$OpenSourceEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1595,7 +1645,7 @@ class _$OpenSourceEmployment extends OpenSourceEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OpenSourceEmploymentToJson(this)..['type'] = 'OPEN_SOURCE';
+    return _$$OpenSourceEmploymentToJson(this);
   }
 }
 
@@ -1626,9 +1676,14 @@ class _$CollaborationEmploymentCopyWithImpl<$Res> extends _$EmploymentCopyWithIm
 @JsonSerializable()
 @FreezedUnionValue('COLLABORATION')
 class _$CollaborationEmployment extends CollaborationEmployment {
-  const _$CollaborationEmployment() : super._();
+  const _$CollaborationEmployment({String? $type})
+      : $type = $type ?? 'COLLABORATION',
+        super._();
 
   factory _$CollaborationEmployment.fromJson(Map<String, dynamic> json) => _$$CollaborationEmploymentFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -1731,7 +1786,7 @@ class _$CollaborationEmployment extends CollaborationEmployment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CollaborationEmploymentToJson(this)..['type'] = 'COLLABORATION';
+    return _$$CollaborationEmploymentToJson(this);
   }
 }
 
@@ -1967,7 +2022,7 @@ abstract class OtherSkill extends Skill {
 }
 
 Contact _$ContactFromJson(Map<String, dynamic> json) {
-  switch (json['type'] as String?) {
+  switch (json['type']) {
     case 'OTHER':
       return OtherContact.fromJson(json);
     case 'PHONE':
@@ -2151,12 +2206,17 @@ class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 @JsonSerializable()
 @FreezedUnionValue('OTHER')
 class _$OtherContact extends OtherContact {
-  const _$OtherContact(this.value) : super._();
+  const _$OtherContact(this.value, {String? $type})
+      : $type = $type ?? 'OTHER',
+        super._();
 
   factory _$OtherContact.fromJson(Map<String, dynamic> json) => _$$OtherContactFromJson(json);
 
   @override
   final String value;
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -2260,7 +2320,7 @@ class _$OtherContact extends OtherContact {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OtherContactToJson(this)..['type'] = 'OTHER';
+    return _$$OtherContactToJson(this);
   }
 }
 
@@ -2310,12 +2370,17 @@ class _$PhoneContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 @JsonSerializable()
 @FreezedUnionValue('PHONE')
 class _$PhoneContact extends PhoneContact {
-  const _$PhoneContact(this.value) : super._();
+  const _$PhoneContact(this.value, {String? $type})
+      : $type = $type ?? 'PHONE',
+        super._();
 
   factory _$PhoneContact.fromJson(Map<String, dynamic> json) => _$$PhoneContactFromJson(json);
 
   @override
   final String value;
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -2419,7 +2484,7 @@ class _$PhoneContact extends PhoneContact {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PhoneContactToJson(this)..['type'] = 'PHONE';
+    return _$$PhoneContactToJson(this);
   }
 }
 
@@ -2469,12 +2534,17 @@ class _$WebsiteContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imp
 @JsonSerializable()
 @FreezedUnionValue('WEBSITE')
 class _$WebsiteContact extends WebsiteContact {
-  const _$WebsiteContact(this.value) : super._();
+  const _$WebsiteContact(this.value, {String? $type})
+      : $type = $type ?? 'WEBSITE',
+        super._();
 
   factory _$WebsiteContact.fromJson(Map<String, dynamic> json) => _$$WebsiteContactFromJson(json);
 
   @override
   final String value;
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -2579,7 +2649,7 @@ class _$WebsiteContact extends WebsiteContact {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WebsiteContactToJson(this)..['type'] = 'WEBSITE';
+    return _$$WebsiteContactToJson(this);
   }
 }
 
@@ -2629,12 +2699,17 @@ class _$EmailContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> imple
 @JsonSerializable()
 @FreezedUnionValue('EMAIL')
 class _$EmailContact extends EmailContact {
-  const _$EmailContact(this.value) : super._();
+  const _$EmailContact(this.value, {String? $type})
+      : $type = $type ?? 'EMAIL',
+        super._();
 
   factory _$EmailContact.fromJson(Map<String, dynamic> json) => _$$EmailContactFromJson(json);
 
   @override
   final String value;
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -2738,7 +2813,7 @@ class _$EmailContact extends EmailContact {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EmailContactToJson(this)..['type'] = 'EMAIL';
+    return _$$EmailContactToJson(this);
   }
 }
 
@@ -2789,12 +2864,17 @@ class _$TelegramContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
 @JsonSerializable()
 @FreezedUnionValue('Telegram')
 class _$TelegramContact extends TelegramContact {
-  const _$TelegramContact(this.value) : super._();
+  const _$TelegramContact(this.value, {String? $type})
+      : $type = $type ?? 'Telegram',
+        super._();
 
   factory _$TelegramContact.fromJson(Map<String, dynamic> json) => _$$TelegramContactFromJson(json);
 
   @override
   final String value;
+
+  @JsonKey(name: 'type')
+  final String $type;
 
   @override
   String toString() {
@@ -2899,7 +2979,7 @@ class _$TelegramContact extends TelegramContact {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TelegramContactToJson(this)..['type'] = 'Telegram';
+    return _$$TelegramContactToJson(this);
   }
 }
 

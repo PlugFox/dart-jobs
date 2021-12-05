@@ -1,7 +1,7 @@
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_info/platform_info.dart';
 

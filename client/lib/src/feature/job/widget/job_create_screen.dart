@@ -1,7 +1,7 @@
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_form.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 

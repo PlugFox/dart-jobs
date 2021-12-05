@@ -1,10 +1,10 @@
 library localizations;
 
-import 'package:dart_jobs/src/common/localization/l10n.dart';
+import 'package:dart_jobs_client/src/common/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-export 'package:dart_jobs/src/common/localization/l10n.dart';
+export 'package:dart_jobs_client/src/common/localization/l10n.dart';
 
 /// Шоткаты для контекста для управления локализацией
 extension AppLocalizationsX on BuildContext {

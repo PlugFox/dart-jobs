@@ -1,4 +1,4 @@
-import 'package:dart_jobs/src/feature/settings/widget/settings_screen.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends Page<void> {

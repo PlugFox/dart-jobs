@@ -1,5 +1,5 @@
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/feature/settings/widget/settings_widget.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/settings_widget.dart';
 import 'package:flutter/material.dart';
 
 @immutable

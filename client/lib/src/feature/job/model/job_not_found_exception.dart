@@ -1,4 +1,4 @@
-import 'package:dart_jobs/src/common/model/exceptions.dart';
+import 'package:dart_jobs_client/src/common/model/exceptions.dart';
 
 class JobNotFoundException extends NotFoundException {
   const JobNotFoundException(

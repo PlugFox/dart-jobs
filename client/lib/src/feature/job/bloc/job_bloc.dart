@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:dart_jobs/src/common/model/exceptions.dart';
-import 'package:dart_jobs/src/feature/job/data/job_repository.dart';
+import 'package:dart_jobs_client/src/common/model/exceptions.dart';
+import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,27 +15,44 @@ class JobEvent with _$JobEvent {
   /// Создать новую работу
   /// Передаем данные работы
   /// Владельцем новой работы будет являться текущий пользователь
-  const factory JobEvent.create({
-    required final JobData data,
-  }) = _CreateJobEvent;
+  @Implements<_JobDataContainer>()
+  @With<_ProcessedStateEmitter>()
+  @With<_NotFoundStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_SavedStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory JobEvent.create({required final JobData data}) = _CreateJobEvent;
 
   /// Запросить обновление по текущей работе
   /// Можно передать идентификатор,
   /// если обновление надо запросить по конкретному идентификатору
-  const factory JobEvent.fetch([
-    final int? id,
-  ]) = _FetchJobEvent;
+  @Implements<_OptionalIdContainer>()
+  @With<_ProcessedStateEmitter>()
+  @With<_NotFoundStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_FetchedStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory JobEvent.fetch([final int? id]) = _FetchJobEvent;
 
   /// Обновить (перезаписать) работу
   /// Передаем пользователя, которому должна принадлежать работа
   /// Работа обязательно должна содержать [id] и принадлежать текущему пользователю
-  const factory JobEvent.update({
-    required final JobData data,
-  }) = _UpdateJobEvent;
+  @Implements<_JobDataContainer>()
+  @With<_ProcessedStateEmitter>()
+  @With<_NotFoundStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_SavedStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory JobEvent.update({required final JobData data}) = _UpdateJobEvent;
 
   /// Удалить работу
   /// Передаем пользователя, которому должна принадлежать работа
   /// Работа обязательно должна содержать [id] и принадлежать текущему пользователю
+  @With<_ProcessedStateEmitter>()
+  @With<_NotFoundStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_DeletedStateEmitter>()
+  @With<_IdleStateEmitter>()
   const factory JobEvent.delete() = _DeleteJobEvent;
 }
 
@@ -53,36 +70,53 @@ class JobState with _$JobState {
   /// Есть ли идентификатор у работы?
   bool get hasID => job.hasID;
 
+  /// Выполняется обработка
+  bool get isProcessed => maybeMap<bool>(
+        orElse: () => false,
+        processed: (_) => true,
+      );
+
   /// В ожидании событий
   const factory JobState.idle({
     required final Job job,
+    @Default('Idle') final String message,
   }) = _IdleJobState;
 
   /// Выполняется обработка
   const factory JobState.processed({
     required final Job job,
+    @Default('Processed') final String message,
   }) = _ProcessedJobState;
 
   /// Работа сохранена или создана
   const factory JobState.saved({
     required final Job job,
+    @Default('Successfully saved') final String message,
   }) = _SavedJobState;
+
+  /// Работа получена
+  const factory JobState.fetched({
+    required final Job job,
+    @Default('Successfully fetched') final String message,
+  }) = _FetchedJobState;
 
   /// Работа удалена
   const factory JobState.deleted({
     required final Job job,
+    @Default('Successfully deleted') final String message,
   }) = _DeletedJobState;
 
   /// Работа не найдена
   /// Вероятно была удалена или открыта по не существующему идентификатору
   const factory JobState.notFound({
     required final Job job,
+    @Default('Not found') final String message,
   }) = _NotFoundJobState;
 
   /// Произошла ошибка
   const factory JobState.error({
     required final Job job,
-    required final String message,
+    @Default('An error has occurred') final String message,
   }) = _ErrorJobState;
 }
 
@@ -103,107 +137,186 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         super(JobState.idle(job: repository.getNewJobTemplate()));
 
   @override
-  Stream<JobState> mapEventToState(final JobEvent event) => event.when<Stream<JobState>>(
+  Stream<JobState> mapEventToState(final JobEvent event) => event.map<Stream<JobState>>(
         create: _create,
         fetch: _fetch,
         update: _update,
         delete: _delete,
       );
 
-  Stream<JobState> _fetch([final int? id]) async* {
-    var currentJob = state.job;
-    if (id != null && id < 0 && currentJob.hasNotID) return;
+  Stream<JobState> _fetch(_FetchJobEvent event) async* {
+    final id = event.id ?? state.job.id;
+    if (id.isNegative) return;
     try {
-      yield JobState.processed(job: currentJob);
-      currentJob = await _repository.getJob(id: id ?? currentJob.id);
-      yield JobState.idle(job: currentJob);
+      yield event.inProgress(state: state);
+      final job = await _repository.getJob(id: id).timeout(const Duration(seconds: 10));
+      yield event.fetched(state: state, job: job);
     } on NotFoundException {
-      yield JobState.notFound(
-        job: currentJob,
-      );
+      yield event.notFound(state: state);
     } on Object {
-      yield JobState.error(
-        job: currentJob,
-        message: 'Unsupported error',
-      );
+      yield event.error(state: state, message: 'Unsupported error');
       rethrow;
     } finally {
-      yield JobState.idle(job: currentJob);
+      yield event.idle(state: state);
     }
   }
 
-  Stream<JobState> _create(final JobData data) async* {
-    var job = state.job.copyWith(data: data);
+  Stream<JobState> _create(_CreateJobEvent event) async* {
     try {
-      yield JobState.processed(job: job);
-      job = await _repository.createJob(jobData: data);
-      yield JobState.saved(job: job);
+      yield event.inProgress(state: state);
+      final job = await _repository.createJob(jobData: event.data).timeout(const Duration(seconds: 10));
+      yield event.saved(state: state, job: job);
     } on NotFoundException {
-      yield JobState.notFound(
-        job: job,
-      );
+      yield event.notFound(state: state);
     } on Object {
-      yield JobState.error(
-        job: job,
-        message: 'Unsupported exception',
-      );
+      yield event.error(state: state, message: 'Unsupported error');
       rethrow;
     } finally {
-      yield JobState.idle(job: job);
+      yield event.idle(state: state);
     }
   }
 
-  Stream<JobState> _update(final JobData data) async* {
-    var job = state.job.copyWith(data: data);
+  Stream<JobState> _update(_UpdateJobEvent event) async* {
     try {
-      if (job.hasNotID) {
-        yield JobState.error(
-          job: job,
-          message: 'Job has not exist',
-        );
-        return;
+      yield event.inProgress(state: state);
+      var newJob = state.job.copyWith(data: event.data);
+      if (newJob.hasNotID) {
+        throw const FormatException('Job has not exist');
       }
-      yield JobState.processed(job: job);
-      job = await _repository.updateJob(job: job);
-      yield JobState.saved(job: job);
+      newJob = await _repository.updateJob(job: newJob).timeout(const Duration(seconds: 10));
+      yield event.saved(state: state, job: newJob);
     } on NotFoundException {
-      yield JobState.notFound(job: job);
+      yield event.notFound(state: state);
     } on Object {
-      yield JobState.error(
-        job: job,
-        message: 'Unsupported exception',
-      );
+      yield event.error(state: state, message: 'Unsupported error');
       rethrow;
     } finally {
-      yield JobState.idle(job: job);
+      yield event.idle(state: state);
     }
   }
 
-  Stream<JobState> _delete() async* {
-    var job = state.job;
+  Stream<JobState> _delete(_DeleteJobEvent event) async* {
     try {
-      if (job.hasNotID) {
-        yield JobState.error(
-          job: job,
-          message: 'Job has not exist',
-        );
-        return;
+      yield event.inProgress(state: state);
+      var deletedJob = state.job;
+      if (deletedJob.hasNotID) {
+        throw const FormatException('Job has not exist');
       }
-      yield JobState.processed(job: job);
-      job = await _repository.deleteJob(job: job);
-      yield JobState.deleted(job: job);
+      deletedJob = await _repository.deleteJob(job: deletedJob).timeout(const Duration(seconds: 10));
+      yield event.deleted(state: state, job: deletedJob);
     } on NotFoundException {
-      yield JobState.notFound(
-        job: job,
-      );
+      yield event.notFound(state: state);
     } on Object {
-      yield JobState.error(
-        job: job,
-        message: 'Unsupported exception',
-      );
+      yield event.error(state: state, message: 'Unsupported error');
       rethrow;
     } finally {
-      yield JobState.idle(job: job);
+      yield event.idle(state: state);
     }
   }
+}
+
+/* Миксины для эвентов и стейтов */
+
+abstract class _JobDataContainer {
+  JobData get data;
+}
+
+abstract class _OptionalIdContainer {
+  int? get id;
+}
+
+/// Создание состояний "в обработке"
+mixin _ProcessedStateEmitter on JobEvent {
+  /// Создание состояния "в обработке", [state] - текущее состояние
+  JobState inProgress({
+    required final JobState state,
+    final String? message,
+  }) =>
+      JobState.processed(
+        job: state.job,
+        message: message ?? 'Processed',
+      );
+}
+
+/// Выпуск состояния ошибки
+mixin _ErrorStateEmitter on JobEvent {
+  /// Произошла ошибка
+  JobState error({
+    required final JobState state,
+    final String? message,
+  }) =>
+      JobState.error(
+        job: state.job,
+        message: message ?? 'An error has occurred',
+      );
+}
+
+/// Выпуск состояния отсутсвующих данных
+mixin _NotFoundStateEmitter on JobEvent {
+  /// Данные отсутсвуют
+  JobState notFound({
+    required final JobState state,
+    final String? message,
+  }) =>
+      JobState.error(
+        job: state.job,
+        message: message ?? 'Not found',
+      );
+}
+
+/// Выпуск состояния успешного сохранения
+mixin _SavedStateEmitter on JobEvent {
+  /// Выпуск состояния успешного сохранения
+  JobState saved({
+    required final JobState state,
+    required final Job job,
+    final String? message,
+  }) =>
+      JobState.saved(
+        job: job,
+        message: message ?? 'Successfully saved',
+      );
+}
+
+/// Выпуск состояния успешного запроса
+mixin _FetchedStateEmitter on JobEvent {
+  /// Выпуск состояния успешного запроса
+  JobState fetched({
+    required final JobState state,
+    required final Job job,
+    final String? message,
+  }) =>
+      JobState.fetched(
+        job: job,
+        message: message ?? 'Successfully fetched',
+      );
+}
+
+/// Выпуск состояния успешного удаления
+mixin _DeletedStateEmitter on JobEvent {
+  /// Выпуск состояния успешного удаления
+  JobState deleted({
+    required final JobState state,
+    final Job? job,
+    final String? message,
+  }) =>
+      JobState.deleted(
+        job: (job ?? state.job).copyWith(
+          deletionMark: true,
+        ),
+        message: message ?? 'Successfully deleted',
+      );
+}
+
+/// Состояние ожидания действий пользователя
+mixin _IdleStateEmitter on JobEvent {
+  /// Состояние ожидания действий пользователя
+  JobState idle({
+    required final JobState state,
+    final String? message,
+  }) =>
+      JobState.idle(
+        job: state.job,
+        message: message ?? 'Idle',
+      );
 }

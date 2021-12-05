@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/common/router/root_route.dart';
-import 'package:dart_jobs/src/common/router/transition_delegate.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
-import 'package:dart_jobs/src/feature/not_found/widget/not_found_screen.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/root_route.dart';
+import 'package:dart_jobs_client/src/common/router/transition_delegate.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
+import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNo
   @override
   Widget build(final BuildContext context) {
     final configuration = currentConfiguration;
-    final analytics = InitializationScope.storeOf(context).analytics;
+    final analytics = RepositoryScope.of(context).analytics;
     _setBrowserTitle(context);
     return PageRouter(
       routerDelegate: this,

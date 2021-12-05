@@ -1,10 +1,10 @@
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/profile_page.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_page.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_create_page.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_page.dart';
-import 'package:dart_jobs/src/feature/not_found/widget/not_found_page.dart';
-import 'package:dart_jobs/src/feature/settings/widget/settings_page.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/profile_page.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_page.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_create_page.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_page.dart';
+import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_page.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/settings_page.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';

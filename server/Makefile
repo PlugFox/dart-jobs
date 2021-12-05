@@ -7,7 +7,7 @@ clean:
 format:
 	@echo "Formatting the code"
 	@dart fix --apply
-	@dart format -l 120 --fix
+	@dart format -l 120 --fix .
 
 get:
 	@echo "Geting dependencies"

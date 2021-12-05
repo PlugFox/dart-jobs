@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:dart_jobs/src/feature/authentication/bloc/authentication_bloc.dart';
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs_client/src/feature/authentication/bloc/authentication_bloc.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
@@ -103,9 +103,9 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
   void initState() {
     super.initState();
     bloc = AuthenticationBLoC(
-      authenticationRepository: InitializationScope.storeOf(context).authenticationRepository,
+      authenticationRepository: RepositoryScope.of(context).authenticationRepository,
     );
-    _analytics = InitializationScope.storeOf(context).analytics;
+    _analytics = RepositoryScope.of(context).analytics;
     _subscription = bloc.stream.listen(_onStateChanged);
     _onStateChanged(bloc.state);
   }

@@ -1,9 +1,9 @@
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/common/router/configuration.dart';
-import 'package:dart_jobs/src/common/router/route_information_parser.dart';
-import 'package:dart_jobs/src/common/router/route_information_provider.dart';
-import 'package:dart_jobs/src/common/router/router_delegate.dart';
-import 'package:dart_jobs/src/feature/settings/widget/settings_scope.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/configuration.dart';
+import 'package:dart_jobs_client/src/common/router/route_information_parser.dart';
+import 'package:dart_jobs_client/src/common/router/route_information_provider.dart';
+import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/settings_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

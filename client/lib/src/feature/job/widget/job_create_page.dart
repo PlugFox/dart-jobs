@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
-import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_create_screen.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_not_found.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
+import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_create_screen.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
 
@@ -23,7 +23,7 @@ class JobCreatePage extends Page<void> {
         builder: (final context) => AuthenticationScope.userOf(context).when(
           authenticated: (user) => BlocScope<JobBLoC>.create(
             create: (context) => JobBLoC.creation(
-              repository: InitializationScope.storeOf(context).jobRepository,
+              repository: RepositoryScope.of(context).jobRepository,
             ),
             child: const JobCreateScreen(),
           ),

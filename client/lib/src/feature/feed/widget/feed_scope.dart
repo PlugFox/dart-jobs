@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_escaping_inner_quotes
 
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_flutter_bloc/bloc.dart';
@@ -49,7 +49,7 @@ class FeedScope extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => BlocScope<FeedBLoC>.create(
         create: (final context) => FeedBLoC(
-          repository: InitializationScope.storeOf(context).jobRepository,
+          repository: RepositoryScope.of(context).jobRepository,
         ),
         child: child,
       );
