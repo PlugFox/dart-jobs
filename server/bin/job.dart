@@ -5,6 +5,7 @@ import 'package:dart_jobs_server/src/common/database/database.dart';
 import 'package:dart_jobs_server/src/common/middleware/cors_headers.dart';
 import 'package:dart_jobs_server/src/common/middleware/database_injector.dart';
 import 'package:dart_jobs_server/src/common/middleware/processing_duration_header.dart';
+import 'package:dart_jobs_server/src/common/util/args_util.dart';
 import 'package:dart_jobs_server/src/common/util/get_port.dart';
 import 'package:dart_jobs_server/src/common/util/init_database.dart';
 import 'package:dart_jobs_server/src/common/util/runner.dart';
@@ -28,18 +29,21 @@ void main(List<String> args) => l.capture(
           // Установим маску
           final ip = io.InternetAddress.anyIPv4;
 
+          // Извлечем аргументы запуска
+          final argResult = ArgsUtil.parse(args);
+
           // Получим http порт
-          final port = getPort(args);
+          final port = getPort(argResult);
 
           // Postgres
-          final database = await initDatabase(args);
+          final database = await initDatabase(argResult);
 
           // Пайплайн обработки запроса
           final httpHandler = const Pipeline()
               //.addMiddleware(exceptionResponse())
               .addMiddleware(processingDurationHeader)
               .addMiddleware(databaseInjector(database))
-              .addMiddleware(logRequests(logger: (msg, isError) => isError ? l.w(msg) : null))
+              .addMiddleware(logRequests(logger: (msg, isError) => isError ? l.w(msg) : l.v6(msg)))
               .addMiddleware(corsHeaders())
               //.addMiddleware(authMiddleware)
               .addHandler(jobsRouter);

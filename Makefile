@@ -32,3 +32,5 @@ run:
 deploy:
 	@echo "Deploy release into docker swarm"
 	docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+
+build_and_deploy: build push deploy

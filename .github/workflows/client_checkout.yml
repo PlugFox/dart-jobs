@@ -36,9 +36,12 @@ jobs:
       - name: 🔎 Checkout source code
         run: |
           cd client
-          echo Install Dependencies; \
+          echo Install Dependencies ; \
             flutter pub get
-          echo Check format; \
+          echo Codegeneration ; \
+            flutter pub run build_runner build --delete-conflicting-outputs --release ; \
+            flutter pub global run intl_utils:generate
+          echo Check format ; \
             dart format --set-exit-if-changed -l 120 -o none lib
-          echo Check analyzer; \
+          echo Check analyzer ; \
             flutter analyze --fatal-infos --fatal-warnings lib

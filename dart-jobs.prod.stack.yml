@@ -11,25 +11,32 @@ version: '3.3'
 services:
   dart-jobs-service:
     image: registry.plugfox.dev/dart-jobs-service:prod
+    secrets:
+      - dart-jobs-db-username
+      - dart-jobs-db-password
+    environment:
+      PORT: 80
+      DB_USERNAME_SECRET_PATH: /run/secrets/dart-jobs-db-username
+      DB_PASSWORD_SECRET_PATH: /run/secrets/dart-jobs-db-password
     #volumes:
     #  - /var/run/docker.sock:/var/run/docker.sock:ro
     #ports:
     #  - target: 8080
     #    published: 80
     #    mode: host
+    # TODO: расскоментить healthcheck в проде
     healthcheck:
       test: curl --fail -s http://127.0.0.1:80/health || exit 1
-      interval: 15s
-      timeout: 10s
+      interval: 30s
+      timeout: 15s
       retries: 3
-    environment:
-      PORT: 80
     networks:
       - traefik-public
+      - postgres
       - dart-jobs
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
       update_config:
         failure_action: rollback
         parallelism: 1
@@ -79,11 +86,20 @@ services:
         traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.scheme: http
         traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.path: /health
         traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.interval: 30s
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.timeout: 3s
+        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.timeout: 15s
         traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 80
         ################################################################
 
+secrets:
+  dart-jobs-db-username:
+    external: true
+  dart-jobs-db-password:
+    external: true
+
 networks:
+  postgres:
+    external: true
+    driver: overlay
   traefik-public:
     external: true
     driver: overlay

@@ -10,16 +10,16 @@ abstract class DateUtil {
 
   /// Миллисекунды UnixTime в дату
   static DateTime fromUnixTime(final int millisecondsSinceEpoch) =>
-      DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
+      DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch).toUtc();
 
   /// Преобразовать значение JSON в Дату
   static DateTime fromJson(final Object date) {
     if (date is DateTime) {
       return date;
     } else if (date is int) {
-      return DateTime.fromMillisecondsSinceEpoch(date);
+      return DateTime.fromMillisecondsSinceEpoch(date).toUtc();
     } else if (date is String) {
-      return DateTime.parse(date);
+      return DateTime.parse(date).toUtc();
     } else {
       throw FormatException('Invalid date type: ${date.runtimeType}');
     }

@@ -95,16 +95,16 @@ class Job with _$Job, Comparable<Job> {
         id: job.id,
         creatorId: job.creatorId,
         //weight: job.weight.toInt(),
-        created: job.created.toDateTime(),
-        updated: job.updated.toDateTime(),
+        created: job.created.toDateTime().toUtc(),
+        updated: job.updated.toDateTime().toUtc(),
         data: JobData.fromProtobuf(job.jobData),
         deletionMark: job.deletionMark,
       );
 
   proto.Job toProtobuf() => proto.Job(
         creatorId: creatorId,
-        created: proto.Timestamp.fromDateTime(created),
-        updated: proto.Timestamp.fromDateTime(updated),
+        created: proto.Timestamp.fromDateTime(created.toUtc()),
+        updated: proto.Timestamp.fromDateTime(updated.toUtc()),
         id: id,
         //weight: proto.Int64(weight),
         deletionMark: deletionMark,

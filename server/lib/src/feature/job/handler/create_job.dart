@@ -2,11 +2,14 @@ import 'dart:typed_data';
 
 import 'package:dart_jobs_server/src/common/middleware/database_injector.dart';
 import 'package:dart_jobs_shared/model.dart';
+import 'package:l/l.dart';
 import 'package:shelf/shelf.dart';
 
 /// Создание нового элемента в коллекции
 /// 201 (Created), заголовок 'Location' ссылается на /jobs/id{id}, где ID - идентификатор нового экземпляра.
 Future<Response> createJob(Request request) async {
+  //l.v6('createJob');
+
   /// TODO: разбор токена Firebase Authentication в мидлваре:
   final creatorId = request.context['user_id'];
   if (creatorId is! String) return Response.forbidden(List<int>.empty());
@@ -16,9 +19,10 @@ Future<Response> createJob(Request request) async {
     final bytesBuilder = BytesBuilder(copy: false);
     await request.read().forEach(bytesBuilder.add);
     jobData = JobData.fromBytes(bytesBuilder.takeBytes());
-  } on Object catch (err) {
+  } on Object catch (err, stackTrace) {
+    l.w(err, stackTrace);
     return Response.internalServerError(
-      body: 'Server can not read job data, maybe request contain corrupted body: $err',
+      body: 'Server can not read job data, maybe request contain corrupted body',
     );
   }
 
@@ -36,9 +40,10 @@ Future<Response> createJob(Request request) async {
         'Content-Location': '/jobs/id${job.id}',
       },
     );
-  } on Object catch (err) {
+  } on Object catch (err, stackTrace) {
+    l.w(err, stackTrace);
     return Response.internalServerError(
-      body: 'Server can not create new job: $err',
+      body: 'Server can not create new job',
     );
   }
 }
