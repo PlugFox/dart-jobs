@@ -17,6 +17,7 @@ import 'package:dart_jobs_client/src/feature/settings/data/settings_repository.d
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart' show immutable, kIsWeb, kReleaseMode;
 import 'package:flutter/widgets.dart' show Orientation;
 import 'package:l/l.dart';
@@ -91,6 +92,17 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       newProgress = progress;
     }
     return newProgress;
+  },
+  'Get remote config': (final progress) async {
+    try {
+      final config = RemoteConfig.instance;
+      await config.setDefaults(<String, Object?>{});
+      await config.fetch().timeout(const Duration(seconds: 1));
+      config.getAll();
+    } on Object catch (error, stackTrace) {
+      l.w('Не могу получить RemoteConfig при инициализации: $error', stackTrace);
+    }
+    return progress;
   },
   'Preparing for authentication': (final progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),
