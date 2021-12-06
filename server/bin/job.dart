@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:dart_jobs_server/src/common/database/database.dart';
+import 'package:dart_jobs_server/src/common/middleware/authentication.dart';
 import 'package:dart_jobs_server/src/common/middleware/cors_headers.dart';
 import 'package:dart_jobs_server/src/common/middleware/database_injector.dart';
 import 'package:dart_jobs_server/src/common/middleware/processing_duration_header.dart';
@@ -41,11 +42,11 @@ void main(List<String> args) => l.capture(
           // Пайплайн обработки запроса
           final httpHandler = const Pipeline()
               //.addMiddleware(exceptionResponse())
+              .addMiddleware(logRequests(logger: (msg, isError) => isError ? l.w(msg) : l.v6(msg)))
               .addMiddleware(processingDurationHeader)
               .addMiddleware(databaseInjector(database))
-              .addMiddleware(logRequests(logger: (msg, isError) => isError ? l.w(msg) : l.v6(msg)))
+              .addMiddleware(authMiddleware)
               .addMiddleware(corsHeaders())
-              //.addMiddleware(authMiddleware)
               .addHandler(jobsRouter);
 
           // Запуск http сервера

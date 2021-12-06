@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dart_jobs_server/src/common/middleware/authentication.dart';
 import 'package:dart_jobs_server/src/common/middleware/database_injector.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:l/l.dart';
@@ -10,10 +11,7 @@ import 'package:shelf_router/shelf_router.dart';
 /// в теле содержатся новые данные [JobData]
 /// 200 - в случае успеха и [Job] в теле
 Future<Response> updateJob(Request request) async {
-  //l.v6('updateJob');
-
-  /// TODO: разбор токена Firebase Authentication в мидлваре:
-  final creatorId = request.context['user_id'];
+  final creatorId = request.uid;
   if (creatorId is! String) return Response.forbidden(List<int>.empty());
 
   final id = int.tryParse(request.params['id'] ?? '');
