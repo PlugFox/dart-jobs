@@ -1,0 +1,48 @@
+mutation InsertJob(
+    $title: String!,
+    $company: String!,
+    $country: Int!,
+    $creatorId: String!,
+    $remote: Boolean!,
+    $englishDescription: String!,
+    $russianDescription: String!,
+    $contacts: _text!,
+    $employments: _employment!,
+    $levels: _level,
+    $skills: _text,
+    $tags: _text
+){
+    insert_job_one(
+        object: {
+            title: $title,
+            company: $company,
+            country: $country,
+            creator_id: $creatorId,
+            remote: $remote,
+            english_description: $englishDescription,
+            russian_description: $russianDescription,
+            contacts: $contacts,
+            employments: $employments,
+            levels: $levels,
+            skills: $skills,
+            tags: $tags
+        }
+    ) {
+        id
+        updated
+        title
+        tags
+        skills
+        russian_description
+        remote
+        levels
+        english_description
+        employments
+        deletion_mark
+        creator_id
+        created
+        country
+        contacts
+        company
+    }
+}

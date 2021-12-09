@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:dart_jobs_shared/src/model/enum.dart';
-import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
 import 'package:dart_jobs_shared/util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -26,11 +25,6 @@ class JobsChunk extends Iterable<Job> {
     );
   }
 
-  factory JobsChunk.fromProtobuf(proto.JobsChunk proto) => JobsChunk(
-        endOfList: proto.endOfList,
-        jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
-      );
-
   /// Это последний кусок коллекции по указаному отбору
   /// Если true - значит по указаному запросу больше нечего получать
   final bool endOfList;
@@ -46,6 +40,15 @@ class JobsChunk extends Iterable<Job> {
         'jobs': _jobs.map<Map<String, Object?>>((e) => e.toJson()).toList(),
       };
 
+  @override
+  Iterator<Job> get iterator => _jobs.iterator;
+
+  /*
+  factory JobsChunk.fromProtobuf(proto.JobsChunk proto) => JobsChunk(
+        endOfList: proto.endOfList,
+        jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
+      );
+
   proto.JobsChunk toProtobuf() => proto.JobsChunk(
         endOfList: endOfList,
         jobs: _jobs.map<proto.Job>((e) => e.toProtobuf()).toList(),
@@ -54,9 +57,7 @@ class JobsChunk extends Iterable<Job> {
   factory JobsChunk.fromBytes(List<int> bytes) => JobsChunk.fromProtobuf(proto.JobsChunk.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
-
-  @override
-  Iterator<Job> get iterator => _jobs.iterator;
+  */
 }
 
 /// Работа
@@ -94,6 +95,13 @@ class Job with _$Job, Comparable<Job> {
     @JsonKey(name: 'deletion_mark') @Default(false) final bool deletionMark,
   }) = _Job;
 
+  /// Generate Class from Map<String, Object?>
+  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
+
+  @override
+  int compareTo(Job other) => other.updated.compareTo(updated);
+
+  /*
   factory Job.fromProtobuf(proto.Job job) => Job(
         id: job.id,
         creatorId: job.creatorId,
@@ -117,12 +125,7 @@ class Job with _$Job, Comparable<Job> {
   factory Job.fromBytes(List<int> bytes) => Job.fromProtobuf(proto.Job.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
-
-  /// Generate Class from Map<String, Object?>
-  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
-
-  @override
-  int compareTo(Job other) => other.updated.compareTo(updated);
+  */
 }
 
 /// Работа / данные работы
@@ -168,12 +171,12 @@ class JobData with _$JobData {
 
     /// Навыки (Skills)
     /// Поля ввода
-    @JsonKey(name: 'skills') @Default(<Skill>[]) final List<Skill> skills,
+    @JsonKey(name: 'skills') @Default(<String>[]) final List<String> skills,
 
     /// Контакты для обратной связи (Contacts)
     /// Емейл, Сайт, Телефон, Различные мессенджеры
     /// Поля ввода
-    @JsonKey(name: 'contacts') @Default(<Contact>[]) final List<Contact> contacts,
+    @JsonKey(name: 'contacts') @Default(<String>[]) final List<String> contacts,
 
     /// Трудоустройство, занятость (Employment)
     /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
@@ -189,6 +192,7 @@ class JobData with _$JobData {
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
 
+  /*
   factory JobData.fromProtobuf(proto.JobData proto) => JobData(
         title: proto.title,
         remote: proto.remote,
@@ -220,6 +224,7 @@ class JobData with _$JobData {
   factory JobData.fromBytes(List<int> bytes) => JobData.fromProtobuf(proto.JobData.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
+  */
 }
 
 /// Описания на различных языках

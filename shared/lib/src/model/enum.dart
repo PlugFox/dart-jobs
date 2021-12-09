@@ -1,4 +1,3 @@
-import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'enum.freezed.dart';
@@ -31,6 +30,25 @@ class DeveloperLevel with _$DeveloperLevel {
 
   factory DeveloperLevel.fromJson(Map<String, Object?> json) => _$DeveloperLevelFromJson(json);
 
+  String get name => map<String>(
+        intern: (_) => 'INTERN',
+        junior: (_) => 'JUNIOR',
+        middle: (_) => 'MIDDLE',
+        senior: (_) => 'SENIOR',
+        lead: (_) => 'LEAD',
+      );
+
+  static DeveloperLevel fromName(String name) => values[name.trim().toUpperCase()] ?? const MiddleDeveloperLevel();
+
+  static Map<String, DeveloperLevel> get values => const <String, DeveloperLevel>{
+        'INTERN': InternDeveloperLevel(),
+        'JUNIOR': JuniorDeveloperLevel(),
+        'MIDDLE': MiddleDeveloperLevel(),
+        'SENIOR': SeniorDeveloperLevel(),
+        'LEAD': LeadDeveloperLevel(),
+      };
+
+  /*
   factory DeveloperLevel.fromProtobuf(proto.DeveloperLevel? value) {
     switch (value) {
       case proto.DeveloperLevel.INTERN:
@@ -58,16 +76,7 @@ class DeveloperLevel with _$DeveloperLevel {
   factory DeveloperLevel.fromBytes(int value) => DeveloperLevel.fromProtobuf(proto.DeveloperLevel.valueOf(value));
 
   int toBytes() => toProtobuf().value;
-
-  static Map<String, DeveloperLevel> get values => const <String, DeveloperLevel>{
-        'INTERN': InternDeveloperLevel(),
-        'JUNIOR': JuniorDeveloperLevel(),
-        'MIDDLE': MiddleDeveloperLevel(),
-        'SENIOR': SeniorDeveloperLevel(),
-        'LEAD': LeadDeveloperLevel(),
-      };
-
-  static DeveloperLevel valueOf(String name) => values[name.trim().toUpperCase()] ?? const MiddleDeveloperLevel();
+  */
 }
 
 /// Занятость
@@ -101,6 +110,27 @@ class Employment with _$Employment {
 
   factory Employment.fromJson(Map<String, Object?> json) => _$EmploymentFromJson(json);
 
+  String get name => map<String>(
+        fullTime: (_) => 'FULL_TIME',
+        partTime: (_) => 'PART_TIME',
+        oneTime: (_) => 'ONE_TIME',
+        contract: (_) => 'CONTRACT',
+        openSource: (_) => 'OPEN_SOURCE',
+        collaboration: (_) => 'COLLABORATION',
+      );
+
+  static Employment fromName(String name) => values[name.trim().toUpperCase()] ?? const FullTimeEmployment();
+
+  static Map<String, Employment> get values => const <String, Employment>{
+        'FULL_TIME': FullTimeEmployment(),
+        'PART_TIME': PartTimeEmployment(),
+        'ONE_TIME': OneTimeEmployment(),
+        'CONTRACT': ContractEmployment(),
+        'OPEN_SOURCE': OpenSourceEmployment(),
+        'COLLABORATION': CollaborationEmployment(),
+      };
+
+  /*
   factory Employment.fromProtobuf(proto.Employment? value) {
     switch (value) {
       case proto.Employment.PART_TIME:
@@ -131,101 +161,5 @@ class Employment with _$Employment {
   factory Employment.fromBytes(int value) => Employment.fromProtobuf(proto.Employment.valueOf(value));
 
   int toBytes() => toProtobuf().value;
-
-  static Map<String, Employment> get values => const <String, Employment>{
-        'FULL_TIME': FullTimeEmployment(),
-        'PART_TIME': PartTimeEmployment(),
-        'ONE_TIME': OneTimeEmployment(),
-        'CONTRACT': ContractEmployment(),
-        'OPEN_SOURCE': OpenSourceEmployment(),
-        'COLLABORATION': CollaborationEmployment(),
-      };
-
-  static Employment valueOf(String name) => values[name.trim().toUpperCase()] ?? const FullTimeEmployment();
-}
-
-/// Навык (Skill)
-/// Язык, фреймвок, пакет и тп и тд
-@Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
-class Skill with _$Skill {
-  const Skill._();
-
-  /// Неопределено, не получено или не указано (Unknown)
-  @FreezedUnionValue('other')
-  const factory Skill.other(String value) = OtherSkill;
-
-  factory Skill.fromJson(Map<String, Object?> json) => _$SkillFromJson(json);
-
-  factory Skill.fromProtobuf(proto.Skill skill) {
-    switch (skill.type) {
-      case proto.Skill_SkillType.OTHER:
-      default:
-        return Skill.other(skill.value);
-    }
-  }
-
-  proto.Skill toProtobuf() => map<proto.Skill>(
-        other: (skill) => proto.Skill(value: skill.value, type: proto.Skill_SkillType.OTHER),
-      );
-
-  factory Skill.fromBytes(List<int> bytes) => Skill.fromProtobuf(proto.Skill.fromBuffer(bytes));
-
-  List<int> toBytes() => toProtobuf().writeToBuffer();
-}
-
-/// Контакт для обратной связи (Contact)
-/// Емейл, Сайт, Телефон, Различные мессенджеры и тп и тд
-@Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
-class Contact with _$Contact {
-  const Contact._();
-
-  /// Неопределено, не получено или не указано (Unknown)
-  @FreezedUnionValue('OTHER')
-  const factory Contact.other(String value) = OtherContact;
-
-  /// Телефон
-  @FreezedUnionValue('PHONE')
-  const factory Contact.phone(String value) = PhoneContact;
-
-  /// Сайт
-  @FreezedUnionValue('WEBSITE')
-  const factory Contact.website(String value) = WebsiteContact;
-
-  /// Почта
-  @FreezedUnionValue('EMAIL')
-  const factory Contact.email(String value) = EmailContact;
-
-  /// Телеграм
-  @FreezedUnionValue('Telegram')
-  const factory Contact.telegram(String value) = TelegramContact;
-
-  factory Contact.fromJson(Map<String, Object?> json) => _$ContactFromJson(json);
-
-  factory Contact.fromProtobuf(proto.Contact contact) {
-    switch (contact.type) {
-      case proto.Contact_ContactType.PHONE:
-        return Contact.phone(contact.value);
-      case proto.Contact_ContactType.WEBSITE:
-        return Contact.website(contact.value);
-      case proto.Contact_ContactType.EMAIL:
-        return Contact.email(contact.value);
-      case proto.Contact_ContactType.TELEGRAM:
-        return Contact.telegram(contact.value);
-      case proto.Contact_ContactType.OTHER:
-      default:
-        return Contact.other(contact.value);
-    }
-  }
-
-  proto.Contact toProtobuf() => map<proto.Contact>(
-        other: (contact) => proto.Contact(type: proto.Contact_ContactType.OTHER, value: contact.value),
-        phone: (contact) => proto.Contact(type: proto.Contact_ContactType.PHONE, value: contact.value),
-        website: (contact) => proto.Contact(type: proto.Contact_ContactType.WEBSITE, value: contact.value),
-        email: (contact) => proto.Contact(type: proto.Contact_ContactType.EMAIL, value: contact.value),
-        telegram: (contact) => proto.Contact(type: proto.Contact_ContactType.TELEGRAM, value: contact.value),
-      );
-
-  factory Contact.fromBytes(List<int> bytes) => Contact.fromProtobuf(proto.Contact.fromBuffer(bytes));
-
-  List<int> toBytes() => toProtobuf().writeToBuffer();
+  */
 }

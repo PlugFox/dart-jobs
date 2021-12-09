@@ -36,11 +36,8 @@ _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
       levels:
           (json['levels'] as List<dynamic>?)?.map((e) => DeveloperLevel.fromJson(e as Map<String, dynamic>)).toList() ??
               const <DeveloperLevel>[],
-      skills: (json['skills'] as List<dynamic>?)?.map((e) => Skill.fromJson(e as Map<String, dynamic>)).toList() ??
-          const <Skill>[],
-      contacts:
-          (json['contacts'] as List<dynamic>?)?.map((e) => Contact.fromJson(e as Map<String, dynamic>)).toList() ??
-              const <Contact>[],
+      skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
+      contacts: (json['contacts'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
       employment:
           (json['employment'] as List<dynamic>?)?.map((e) => Employment.fromJson(e as Map<String, dynamic>)).toList() ??
               const <Employment>[],
@@ -55,8 +52,8 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) => <String, dynamic>
       'address': instance.address,
       'descriptions': instance.descriptions.toJson(),
       'levels': instance.levels.map((e) => e.toJson()).toList(),
-      'skills': instance.skills.map((e) => e.toJson()).toList(),
-      'contacts': instance.contacts.map((e) => e.toJson()).toList(),
+      'skills': instance.skills,
+      'contacts': instance.contacts,
       'employment': instance.employment.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
     };

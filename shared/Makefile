@@ -26,8 +26,5 @@ outdated:
 
 codegen: get
 	@echo "Running codegeneration"
-	@flutter pub global activate protoc_plugin
-	@protoc -Iproto proto/google/protobuf/**.proto --dart_out="grpc:lib/src/generated"
-	@protoc -Iproto proto/**.proto --dart_out="grpc:lib/src/generated"
 	@dart run build_runner build --delete-conflicting-outputs --release
 	@dart format -l 120 --fix lib/src/generated lib/src/model

@@ -73,3 +73,6 @@ android/keystore.properties
 *.sksl.json
 
 version.env
+
+# GraphQL
+.graphqlconfig

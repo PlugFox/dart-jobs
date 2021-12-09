@@ -350,8 +350,8 @@ class _$JobDataTearOff {
       @JsonKey(name: 'address') String address = '',
       @JsonKey(name: 'descriptions') Description descriptions = const Description(),
       @JsonKey(name: 'levels') List<DeveloperLevel> levels = const <DeveloperLevel>[],
-      @JsonKey(name: 'skills') List<Skill> skills = const <Skill>[],
-      @JsonKey(name: 'contacts') List<Contact> contacts = const <Contact>[],
+      @JsonKey(name: 'skills') List<String> skills = const <String>[],
+      @JsonKey(name: 'contacts') List<String> contacts = const <String>[],
       @JsonKey(name: 'employment') List<Employment> employment = const <Employment>[],
       @JsonKey(name: 'tags') List<String> tags = const <String>[]}) {
     return _JobData(
@@ -423,13 +423,13 @@ mixin _$JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  List<Skill> get skills => throw _privateConstructorUsedError;
+  List<String> get skills => throw _privateConstructorUsedError;
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<Contact> get contacts => throw _privateConstructorUsedError;
+  List<String> get contacts => throw _privateConstructorUsedError;
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
@@ -459,8 +459,8 @@ abstract class $JobDataCopyWith<$Res> {
       @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags});
 }
@@ -519,11 +519,11 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       skills: skills == freezed
           ? _value.skills
           : skills // ignore: cast_nullable_to_non_nullable
-              as List<Skill>,
+              as List<String>,
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<Contact>,
+              as List<String>,
       employment: employment == freezed
           ? _value.employment
           : employment // ignore: cast_nullable_to_non_nullable
@@ -548,8 +548,8 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
       @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags});
 }
@@ -607,11 +607,11 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
       skills: skills == freezed
           ? _value.skills
           : skills // ignore: cast_nullable_to_non_nullable
-              as List<Skill>,
+              as List<String>,
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<Contact>,
+              as List<String>,
       employment: employment == freezed
           ? _value.employment
           : employment // ignore: cast_nullable_to_non_nullable
@@ -635,8 +635,8 @@ class _$_JobData extends _JobData {
       @JsonKey(name: 'address') this.address = '',
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
       @JsonKey(name: 'levels') this.levels = const <DeveloperLevel>[],
-      @JsonKey(name: 'skills') this.skills = const <Skill>[],
-      @JsonKey(name: 'contacts') this.contacts = const <Contact>[],
+      @JsonKey(name: 'skills') this.skills = const <String>[],
+      @JsonKey(name: 'contacts') this.contacts = const <String>[],
       @JsonKey(name: 'employment') this.employment = const <Employment>[],
       @JsonKey(name: 'tags') this.tags = const <String>[]})
       : super._();
@@ -696,14 +696,14 @@ class _$_JobData extends _JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  final List<Skill> skills;
+  final List<String> skills;
   @override
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  final List<Contact> contacts;
+  final List<String> contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
@@ -776,8 +776,8 @@ abstract class _JobData extends JobData {
       @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
       @JsonKey(name: 'employment') List<Employment> employment,
       @JsonKey(name: 'tags') List<String> tags}) = _$_JobData;
   const _JobData._() : super._();
@@ -837,14 +837,14 @@ abstract class _JobData extends JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  List<Skill> get skills;
+  List<String> get skills;
   @override
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<Contact> get contacts;
+  List<String> get contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
