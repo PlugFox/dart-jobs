@@ -269,11 +269,11 @@ class JobFieldTagsController extends ValueNotifier<List<String>> with JobInputCo
 }
 
 /// Skills controller
-class JobFieldSkillsController extends ValueNotifier<List<Skill>> with JobInputControllerMixin<List<Skill>> {
-  JobFieldSkillsController() : super(<Skill>[]);
+class JobFieldSkillsController extends ValueNotifier<List<String>> with JobInputControllerMixin<List<String>> {
+  JobFieldSkillsController() : super(<String>[]);
 
   @override
-  String? checkValue(List<Skill> value) => null;
+  String? checkValue(List<String> value) => null;
 
   @override
   void update(JobData data) => value = data.skills;
@@ -304,11 +304,11 @@ class JobFieldEmploymentController extends ValueNotifier<List<Employment>>
 }
 
 /// Contacts controller
-class JobFieldContactsController extends ValueNotifier<List<Contact>> with JobInputControllerMixin<List<Contact>> {
-  JobFieldContactsController() : super(<Contact>[]);
+class JobFieldContactsController extends ValueNotifier<List<String>> with JobInputControllerMixin<List<String>> {
+  JobFieldContactsController() : super(<String>[]);
 
   @override
-  String? checkValue(List<Contact> value) => null;
+  String? checkValue(List<String> value) => null;
 
   @override
   void update(JobData data) => value = data.contacts;

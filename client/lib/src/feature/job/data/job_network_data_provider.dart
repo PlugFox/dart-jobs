@@ -65,6 +65,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Jobs does not received from server');
+    /*
     final chunk = JobsChunk.fromBytes(bytes);
     if (chunk.length < filter.limit && !chunk.endOfList) {
       return JobsChunk(
@@ -73,6 +74,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       );
     }
     return chunk;
+    */
+    throw UnimplementedError();
   }
 
   @override
@@ -91,6 +94,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Jobs does not received from server');
+    /*
     final chunk = JobsChunk.fromBytes(bytes);
     if (chunk.length < filter.limit && !chunk.endOfList) {
       return JobsChunk(
@@ -99,11 +103,14 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       );
     }
     return chunk;
+    */
+    throw UnimplementedError();
   }
 
   @override
   Future<Job> createJob({required JobData jobData, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
+    /*
     final response = await _client.post<List<int>>(
       '/jobs',
       data: jobData.toBytes(),
@@ -117,6 +124,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Job does not returned from server');
     return Job.fromBytes(bytes);
+    */
+    throw UnimplementedError();
   }
 
   @override
@@ -125,13 +134,15 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     final response = await _client.get<List<int>>('/jobs/id$id');
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Job does not returned from server');
-    return Job.fromBytes(bytes);
+    //return Job.fromBytes(bytes);
+    throw UnimplementedError();
   }
 
   @override
   Future<Job> updateJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
+    /*
     final response = await _client.put<List<int>>(
       '/jobs/id${job.id}',
       data: job.data.toBytes(),
@@ -145,6 +156,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Job does not updated at server');
     return Job.fromBytes(bytes);
+    */
+    throw UnimplementedError();
   }
 
   @override
@@ -161,9 +174,12 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     final bytes = response.data;
     if (bytes == null) throw UnsupportedError('Job does not deleted at server');
+    /*
     return job.copyWith(
       updated: DateTime.now(),
       deletionMark: true,
     );
+    */
+    throw UnimplementedError();
   }
 }
