@@ -18,7 +18,8 @@
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
-#.vscode/
+.vscode/
+.vs/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -124,4 +125,4 @@ Logs/
 *.assets.cache
 
 .vs/*
-/server/JwtValidatorFirebase/.vs/*
+/server/jwt_validator_firebase/.vs/*

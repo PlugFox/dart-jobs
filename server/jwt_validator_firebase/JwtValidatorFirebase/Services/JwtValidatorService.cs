@@ -19,20 +19,20 @@ namespace JwtValidatorFirebase.Services
         private ConcurrentDictionary<string, ValidatorResponse> ResponseCache { get; set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Task _clearTask;
-
-        private ValidatorResponse _anonymousUser;
+        private readonly ValidatorResponse _anonymousUser;
 
         public JwtValidatorService()
         {
             _anonymousUser = new ValidatorResponse();
-            _anonymousUser.SetRole(HasuraRoles.Anonymous);
+            _anonymousUser.SetAnonymous();
 
             _cancellationTokenSource = new CancellationTokenSource();
             ResponseCache = new ConcurrentDictionary<string, ValidatorResponse>();
             FirebaseApp.Create(new AppOptions()
             {
                 //Check [$env:GOOGLE_APPLICATION_CREDENTIALS] variable for app
-                Credential = GoogleCredential.GetApplicationDefault()
+                //Credential = GoogleCredential.GetApplicationDefault()
+                Credential = GoogleCredential.FromFile("dart-job-jwt-validator-firebase.json")
             });
 
             _clearTask = RunCacheClearTask();
@@ -63,12 +63,12 @@ namespace JwtValidatorFirebase.Services
         /// <returns></returns>
         public async Task<ValidatorResponse> ValidateIdTokenAsync(string rawJwt, bool useCache = true)
         {
-            if (string.IsNullOrWhiteSpace(rawJwt))
+            if (string.IsNullOrWhiteSpace(rawJwt) || rawJwt.Length < 7)
                 return _anonymousUser;
 
+            rawJwt = rawJwt.StartsWith("Bearer ") ? rawJwt.Substring(7) : rawJwt; // Trim "Bearer "
             var isCached = ResponseCache.TryGetValue(rawJwt, out var storedResponse);
-            if (isCached)
-                return storedResponse;
+            if (isCached) return storedResponse;
             var response = await InternalValidationAsync(rawJwt);
             ResponseCache.TryAdd(rawJwt, response);
             return response;
@@ -82,20 +82,16 @@ namespace JwtValidatorFirebase.Services
                 var firebaseToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(rawJwt);
                 if (firebaseToken.ExpirationTimeSeconds <= 0)
                 {
-                    response.SetRole(HasuraRoles.Anonymous);
+                    response.SetAnonymous();
                     return response;
                 }
 
-                response.UserId = firebaseToken.Uid;
-                response.ValidUntil = DateTime.UtcNow + TimeSpan.FromSeconds(firebaseToken.ExpirationTimeSeconds);
-
-                response.SetRole(HasuraRoles.User);
+                response.SetUser(firebaseToken.Uid, firebaseToken.ExpirationTimeSeconds);
             }
             catch (FirebaseAdmin.Auth.FirebaseAuthException e)
             {
                 Console.WriteLine(e.Message);
-                response.Error = e.Message;
-                response.IsValidated = false;
+                response.SetError(e.Message);
             }
 
             return response;
