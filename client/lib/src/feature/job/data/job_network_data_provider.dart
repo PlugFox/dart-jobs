@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:dart_jobs_shared/graphql.dart';
 import 'package:dart_jobs_shared/model.dart';
-import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 
 abstract class IJobNetworkDataProvider {
   /// Запросить новейшие
@@ -22,6 +23,7 @@ abstract class IJobNetworkDataProvider {
   Future<Job> createJob({
     required final JobData jobData,
     required final String idToken,
+    required final String creatorId,
   });
 
   /// Получить работу по идентификатору
@@ -43,127 +45,271 @@ abstract class IJobNetworkDataProvider {
 }
 
 class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
-  final Dio _client;
+  final GQLClient _client;
 
   const JobNetworkDataProviderImpl({
-    required final Dio client,
+    required final GQLClient client,
   }) : _client = client;
 
   @override
   Future<JobsChunk> getRecent({required DateTime updatedAfter, required JobFilter filter}) async {
-    final response = await _client.get<List<int>>(
-      '/jobs',
-      queryParameters: <String, Object>{
-        ...filter.toQueryParameters(),
-        'after': updatedAfter.toUtc().toIso8601String(),
-      },
-      options: Options(
-        headers: <String, String>{
-          'Content-Type': 'application/octet-stream',
-        },
+    final result = await _client.execute(
+      FetchRecentQuery(
+        variables: FetchRecentArguments(
+          after: updatedAfter,
+          limit: filter.limit,
+        ),
       ),
     );
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Jobs does not received from server');
-    final chunk = JobsChunk.fromBytes(bytes);
-    if (chunk.length < filter.limit && !chunk.endOfList) {
-      return JobsChunk(
-        jobs: chunk.toList(growable: false),
-        endOfList: true,
-      );
+    await Future<void>.delayed(Duration.zero);
+    final jobs = result.data?.job
+        .map<Job>(
+          (e) => Job(
+            creatorId: e.creatorId,
+            id: e.id,
+            deletionMark: e.deletionMark,
+            created: e.created,
+            updated: e.updated,
+            data: JobData(
+              title: e.title,
+              company: e.company,
+              country: e.country,
+              remote: e.remote,
+              relocation: e.relocation,
+              employments: e.employments,
+              levels: e.levels,
+            ),
+          ),
+        )
+        .toList(growable: false);
+
+    if (jobs == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
     }
-    return chunk;
+
+    await Future<void>.delayed(Duration.zero);
+
+    jobs.sort();
+
+    return JobsChunk(
+      jobs: jobs,
+      endOfList: jobs.isEmpty,
+    );
   }
 
   @override
   Future<JobsChunk> paginate({required DateTime updatedBefore, required JobFilter filter}) async {
-    final response = await _client.get<List<int>>(
-      '/jobs',
-      queryParameters: <String, Object>{
-        ...filter.toQueryParameters(),
-        'before': updatedBefore.toUtc().toIso8601String(),
-      },
-      options: Options(
-        headers: <String, String>{
-          'Content-Type': 'application/octet-stream',
-        },
+    final result = await _client.execute(
+      PaginateQuery(
+        variables: PaginateArguments(
+          before: updatedBefore,
+          limit: filter.limit,
+        ),
       ),
     );
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Jobs does not received from server');
-    final chunk = JobsChunk.fromBytes(bytes);
-    if (chunk.length < filter.limit && !chunk.endOfList) {
-      return JobsChunk(
-        jobs: chunk.toList(growable: false),
-        endOfList: true,
-      );
+
+    await Future<void>.delayed(Duration.zero);
+    final jobs = result.data?.job
+        .map<Job>(
+          (e) => Job(
+            creatorId: e.creatorId,
+            id: e.id,
+            deletionMark: e.deletionMark,
+            created: e.created,
+            updated: e.updated,
+            data: JobData(
+              title: e.title,
+              company: e.company,
+              country: e.country,
+              remote: e.remote,
+              relocation: e.relocation,
+              employments: e.employments,
+              levels: e.levels,
+            ),
+          ),
+        )
+        .toList(growable: false);
+
+    if (jobs == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
     }
-    return chunk;
+
+    await Future<void>.delayed(Duration.zero);
+
+    jobs.sort();
+
+    return JobsChunk(
+      jobs: jobs,
+      endOfList: jobs.isEmpty,
+    );
   }
 
   @override
-  Future<Job> createJob({required JobData jobData, required String idToken}) async {
+  Future<Job> createJob({
+    required JobData jobData,
+    required String idToken,
+    required String creatorId,
+  }) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
-    final response = await _client.post<List<int>>(
-      '/jobs',
-      data: jobData.toBytes(),
-      options: Options(
-        headers: <String, String>{
-          'Authorization': 'Bearer $idToken',
-          'Content-Type': 'application/octet-stream',
-        },
+    final result = await _client.execute(
+      InsertJobMutation(
+        variables: InsertJobArguments(
+          title: jobData.title,
+          company: jobData.company,
+          country: jobData.country,
+          creator_id: creatorId,
+          remote: jobData.remote,
+          relocation: jobData.relocation,
+          english_description: jobData.englishDescription,
+          russian_description: jobData.russianDescription,
+          contacts: jobData.contacts,
+          employments: jobData.employments,
+          levels: jobData.levels,
+          skills: jobData.skills,
+          tags: jobData.tags,
+        ),
       ),
     );
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Job does not returned from server');
-    return Job.fromBytes(bytes);
+    await Future<void>.delayed(Duration.zero);
+    final job = result.data?.insertJobOne;
+    if (job == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
+    }
+    return Job(
+      creatorId: job.creatorId,
+      id: job.id,
+      deletionMark: job.deletionMark,
+      created: job.created,
+      updated: job.updated,
+      data: JobData(
+        title: job.title,
+        company: job.company,
+        country: job.country,
+        remote: job.remote,
+        relocation: job.relocation,
+        employments: job.employments,
+        levels: job.levels,
+        tags: job.tags,
+        skills: job.skills,
+        contacts: job.contacts,
+        descriptions: Description.fromLanguages(
+          english: job.englishDescription,
+          russian: job.russianDescription,
+        ),
+      ),
+    );
   }
 
   @override
   Future<Job> getJob({required int id}) async {
     assert(!id.isNegative, 'id должен быть положительным');
-    final response = await _client.get<List<int>>('/jobs/id$id');
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Job does not returned from server');
-    return Job.fromBytes(bytes);
+    final result = await _client.execute(
+      GetJobQuery(
+        variables: GetJobArguments(
+          id: id,
+        ),
+      ),
+    );
+    await Future<void>.delayed(Duration.zero);
+    final job = result.data?.jobByPk;
+    if (job == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
+    }
+    return Job(
+      creatorId: job.creatorId,
+      id: job.id,
+      deletionMark: job.deletionMark,
+      created: job.created,
+      updated: job.updated,
+      data: JobData(
+        title: job.title,
+        company: job.company,
+        country: job.country,
+        remote: job.remote,
+        relocation: job.relocation,
+        employments: job.employments,
+        levels: job.levels,
+        tags: job.tags,
+        skills: job.skills,
+        contacts: job.contacts,
+        descriptions: Description.fromLanguages(
+          english: job.englishDescription,
+          russian: job.russianDescription,
+        ),
+      ),
+    );
   }
 
   @override
   Future<Job> updateJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
-    final response = await _client.put<List<int>>(
-      '/jobs/id${job.id}',
-      data: job.data.toBytes(),
-      options: Options(
-        headers: <String, String>{
-          'Authorization': 'Bearer $idToken',
-          'Content-Type': 'application/octet-stream',
-        },
+    final result = await _client.execute(
+      UpdateJobMutation(
+        variables: UpdateJobArguments(
+          id: job.id,
+          data: JobSetInput(
+            company: job.data.company,
+            contacts: job.data.contacts,
+            country: job.data.country,
+            employments: job.data.employments,
+            englishDescription: job.data.englishDescription,
+            levels: job.data.levels,
+            relocation: job.data.relocation,
+            remote: job.data.remote,
+            russianDescription: job.data.russianDescription,
+            skills: job.data.skills,
+            tags: job.data.tags,
+            title: job.data.title,
+          ),
+        ),
       ),
     );
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Job does not updated at server');
-    return Job.fromBytes(bytes);
+    await Future<void>.delayed(Duration.zero);
+    final updatedJob = result.data?.updateJobByPk;
+    if (updatedJob == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
+    }
+    return job.copyWith(
+      id: updatedJob.id,
+      updated: updatedJob.updated,
+      created: updatedJob.created,
+      deletionMark: updatedJob.deletionMark,
+      creatorId: updatedJob.creatorId,
+    );
   }
 
   @override
   Future<Job> deleteJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
-    final response = await _client.delete<List<int>>(
-      '/jobs/id${job.id}',
-      options: Options(
-        headers: <String, String>{
-          'Authorization': 'Bearer $idToken',
-        },
+
+    final result = await _client.execute(
+      DeleteJobMutation(
+        variables: DeleteJobArguments(
+          id: job.id,
+        ),
       ),
     );
-    final bytes = response.data;
-    if (bytes == null) throw UnsupportedError('Job does not deleted at server');
+    await Future<void>.delayed(Duration.zero);
+    final deletedJob = result.data?.updateJobByPk;
+    if (deletedJob == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
+    }
     return job.copyWith(
-      updated: DateTime.now(),
-      deletionMark: true,
+      id: deletedJob.id,
+      updated: deletedJob.updated,
+      created: deletedJob.created,
+      deletionMark: deletedJob.deletionMark,
+      creatorId: deletedJob.creatorId,
     );
   }
+}
+
+/// Исключение получения данных по работе
+@immutable
+class GraphQLJobException implements Exception {
+  const GraphQLJobException(this.errors);
+
+  final List<GraphQLError> errors;
 }

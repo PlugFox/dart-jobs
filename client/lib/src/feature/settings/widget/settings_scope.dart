@@ -4,7 +4,7 @@ import 'package:dart_jobs_client/src/feature/initialization/widget/repository_sc
 import 'package:dart_jobs_client/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:dart_jobs_client/src/feature/settings/model/user_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class SettingsScope extends StatefulWidget {

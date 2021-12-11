@@ -94,60 +94,26 @@ Map<String, dynamic> _$$CollaborationEmploymentToJson(_$CollaborationEmployment 
       'type': instance.$type,
     };
 
-_$OtherSkill _$$OtherSkillFromJson(Map<String, dynamic> json) => _$OtherSkill(
-      json['value'] as String,
-    );
-
-Map<String, dynamic> _$$OtherSkillToJson(_$OtherSkill instance) => <String, dynamic>{
-      'value': instance.value,
-    };
-
-_$OtherContact _$$OtherContactFromJson(Map<String, dynamic> json) => _$OtherContact(
-      json['value'] as String,
+_$ImpossibleRelocation _$$ImpossibleRelocationFromJson(Map<String, dynamic> json) => _$ImpossibleRelocation(
       $type: json['type'] as String?,
     );
 
-Map<String, dynamic> _$$OtherContactToJson(_$OtherContact instance) => <String, dynamic>{
-      'value': instance.value,
+Map<String, dynamic> _$$ImpossibleRelocationToJson(_$ImpossibleRelocation instance) => <String, dynamic>{
       'type': instance.$type,
     };
 
-_$PhoneContact _$$PhoneContactFromJson(Map<String, dynamic> json) => _$PhoneContact(
-      json['value'] as String,
+_$PossibleRelocation _$$PossibleRelocationFromJson(Map<String, dynamic> json) => _$PossibleRelocation(
       $type: json['type'] as String?,
     );
 
-Map<String, dynamic> _$$PhoneContactToJson(_$PhoneContact instance) => <String, dynamic>{
-      'value': instance.value,
+Map<String, dynamic> _$$PossibleRelocationToJson(_$PossibleRelocation instance) => <String, dynamic>{
       'type': instance.$type,
     };
 
-_$WebsiteContact _$$WebsiteContactFromJson(Map<String, dynamic> json) => _$WebsiteContact(
-      json['value'] as String,
+_$RequiredRelocation _$$RequiredRelocationFromJson(Map<String, dynamic> json) => _$RequiredRelocation(
       $type: json['type'] as String?,
     );
 
-Map<String, dynamic> _$$WebsiteContactToJson(_$WebsiteContact instance) => <String, dynamic>{
-      'value': instance.value,
-      'type': instance.$type,
-    };
-
-_$EmailContact _$$EmailContactFromJson(Map<String, dynamic> json) => _$EmailContact(
-      json['value'] as String,
-      $type: json['type'] as String?,
-    );
-
-Map<String, dynamic> _$$EmailContactToJson(_$EmailContact instance) => <String, dynamic>{
-      'value': instance.value,
-      'type': instance.$type,
-    };
-
-_$TelegramContact _$$TelegramContactFromJson(Map<String, dynamic> json) => _$TelegramContact(
-      json['value'] as String,
-      $type: json['type'] as String?,
-    );
-
-Map<String, dynamic> _$$TelegramContactToJson(_$TelegramContact instance) => <String, dynamic>{
-      'value': instance.value,
+Map<String, dynamic> _$$RequiredRelocationToJson(_$RequiredRelocation instance) => <String, dynamic>{
       'type': instance.$type,
     };

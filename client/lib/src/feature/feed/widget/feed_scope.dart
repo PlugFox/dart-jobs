@@ -6,7 +6,7 @@ import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @immutable
@@ -22,7 +22,7 @@ class FeedScope extends StatelessWidget {
     final BuildContext context, {
     required final int count,
   }) =>
-      BlocScope.of<FeedBLoC>(
+      BlocProvider.of<FeedBLoC>(
         context,
         listen: false,
       )..add(const FeedEvent.paginate());
@@ -32,7 +32,7 @@ class FeedScope extends StatelessWidget {
     final BuildContext context,
     final bool Function(Job proposal) test,
   ) =>
-      BlocScope.of<FeedBLoC>(
+      BlocProvider.of<FeedBLoC>(
         context,
         listen: false,
       ).state.list.firstWhereOrNull(test);
@@ -47,7 +47,7 @@ class FeedScope extends StatelessWidget {
       );
 
   @override
-  Widget build(final BuildContext context) => BlocScope<FeedBLoC>.create(
+  Widget build(final BuildContext context) => BlocProvider<FeedBLoC>(
         create: (final context) => FeedBLoC(
           repository: RepositoryScope.of(context).jobRepository,
         ),

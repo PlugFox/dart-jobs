@@ -9,7 +9,7 @@ import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l/l.dart';
 
 @immutable
@@ -54,20 +54,20 @@ class JobFormFieldSet extends StatelessWidget {
                   ),
 
                   /// Страна
-                  _JobSingleLineText(
-                    context.localization.job_field_location_country,
-                    formData.countryController,
-                    inputFormatters: <TextInputFormatter>[_denyCyrillic],
-                    key: const ValueKey<String>('job_field_location_country'),
-                  ),
+                  //_JobSingleLineText(
+                  //  context.localization.job_field_location_country,
+                  //  formData.countryController,
+                  //  inputFormatters: <TextInputFormatter>[_denyCyrillic],
+                  //  key: const ValueKey<String>('job_field_location_country'),
+                  //),
 
                   /// Адрес
-                  _JobSingleLineText(
-                    context.localization.job_field_location_address,
-                    formData.addressController,
-                    inputFormatters: <TextInputFormatter>[_denyCyrillic],
-                    key: const ValueKey<String>('job_field_location_address'),
-                  ),
+                  //_JobSingleLineText(
+                  //  context.localization.job_field_location_address,
+                  //  formData.addressController,
+                  //  inputFormatters: <TextInputFormatter>[_denyCyrillic],
+                  //  key: const ValueKey<String>('job_field_location_address'),
+                  //),
 
                   /// Удаленка
                   //formData.remoteController;
@@ -233,7 +233,7 @@ class _EditButton extends StatelessWidget {
             FocusScope.of(context).unfocus();
             JobForm.switchToEdit(
               context,
-              BlocScope.of<JobBLoC>(
+              BlocProvider.of<JobBLoC>(
                 context,
                 listen: false,
               ).state.job.data,
@@ -265,7 +265,7 @@ class _CancelButton extends StatelessWidget {
             FocusScope.of(context).unfocus();
             JobForm.switchToRead(
               context,
-              BlocScope.of<JobBLoC>(
+              BlocProvider.of<JobBLoC>(
                 context,
                 listen: false,
               ).state.job.data,
@@ -301,7 +301,7 @@ class _SaveButton extends StatelessWidget {
                   }
                   final job = JobForm.getUpdatedJob(
                     context,
-                    BlocScope.of<JobBLoC>(context, listen: false).state.job.data,
+                    BlocProvider.of<JobBLoC>(context, listen: false).state.job.data,
                   );
                   if (job == null) {
                     l.i('Отсутсвует работа, не будет сохранена');

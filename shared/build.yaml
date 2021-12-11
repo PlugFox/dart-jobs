@@ -2,10 +2,13 @@ targets:
   $default:
     sources:
       - $package$
-      - lib/**
       - pubspec.yaml
+      - schema.graphql
+      - lib/**
       - test/**
+      - queries/**
     builders:
+      # Data classes json
       json_serializable:
         enabled: true
         generate_for:
@@ -24,6 +27,7 @@ targets:
           ignore_unannotated: false
           include_if_null: true
           #nullable: true
+      # Data classes freezed
       freezed:
         enabled: true
         options:
@@ -34,6 +38,51 @@ targets:
             - test
           include:
             - lib/**
+      # GraphQL Artemis
+      artemis:
+        options:
+          schema_mapping:
+            - schema: schema.graphql
+              queries_glob: queries/**.graphql
+              output: lib/src/graphql/api.dart
+          scalar_mapping:
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/timestamp.dart'
+              graphql_type: timestamp
+              dart_type:
+                name: DateTime
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/text.dart'
+              graphql_type: _text
+              dart_type:
+                name: List<String>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/level.dart'
+              graphql_type: _level
+              dart_type:
+                name: List<DeveloperLevel>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/employment.dart'
+              graphql_type: _employment
+              dart_type:
+                name: List<Employment>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/relocation.dart'
+              graphql_type: relocation
+              dart_type:
+                name: Relocation
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+              #dart_type:
+              #  name: MultipartFile
+              #  imports:
+              #    - 'package:http/http.dart'
       #built_value_generator|built_value:
       #  enabled: true
       #  generate_for:

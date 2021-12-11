@@ -1,0 +1,25 @@
+query GetJob(
+    $id: Int!
+) {
+    job_by_pk(
+        id: $id
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark,
+        title,
+        company,
+        country,
+        remote,
+        relocation,
+        employments,
+        levels,
+        skills,
+        contacts,
+        tags,
+        russian_description,
+        english_description
+    }
+}

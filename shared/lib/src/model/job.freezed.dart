@@ -345,26 +345,26 @@ class _$JobDataTearOff {
   _JobData call(
       {@JsonKey(name: 'title') String title = '',
       @JsonKey(name: 'company') String company = '',
-      @JsonKey(name: 'country') String country = '',
+      @JsonKey(name: 'country') int country = 0,
       @JsonKey(name: 'remote') bool remote = true,
-      @JsonKey(name: 'address') String address = '',
+      @JsonKey(name: 'relocation') Relocation relocation = const Relocation.impossible(),
       @JsonKey(name: 'descriptions') Description descriptions = const Description(),
       @JsonKey(name: 'levels') List<DeveloperLevel> levels = const <DeveloperLevel>[],
-      @JsonKey(name: 'skills') List<Skill> skills = const <Skill>[],
-      @JsonKey(name: 'contacts') List<Contact> contacts = const <Contact>[],
-      @JsonKey(name: 'employment') List<Employment> employment = const <Employment>[],
+      @JsonKey(name: 'skills') List<String> skills = const <String>[],
+      @JsonKey(name: 'contacts') List<String> contacts = const <String>[],
+      @JsonKey(name: 'employments') List<Employment> employments = const <Employment>[],
       @JsonKey(name: 'tags') List<String> tags = const <String>[]}) {
     return _JobData(
       title: title,
       company: company,
       country: country,
       remote: remote,
-      address: address,
+      relocation: relocation,
       descriptions: descriptions,
       levels: levels,
       skills: skills,
       contacts: contacts,
-      employment: employment,
+      employments: employments,
       tags: tags,
     );
   }
@@ -392,22 +392,23 @@ mixin _$JobData {
   String get company => throw _privateConstructorUsedError;
 
   /// Страна, например: Russia
-  /// Максимальная длина - 64 символов
-  /// Выпадающее поле выбора
+  /// Идентификатор страны
+  /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  String get country => throw _privateConstructorUsedError;
+  int get country => throw _privateConstructorUsedError;
 
   /// Удаленная работа?
   /// Переключатель
   @JsonKey(name: 'remote')
   bool get remote => throw _privateConstructorUsedError;
 
-  /// Местоположение, например: Moscow
-  /// Максимальная длина - 256 символов
-  /// Поле ввода
-  @JsonKey(name: 'address')
-  String get address => throw _privateConstructorUsedError;
-
+  /// Возможность переезда
+  /// Выбор
+  @JsonKey(name: 'relocation')
+  Relocation get relocation => throw _privateConstructorUsedError; // /// Местоположение, например: Moscow
+// /// Максимальная длина - 256 символов
+// /// Поле ввода
+// @JsonKey(name: 'address') @Default('') final String address,
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -423,20 +424,20 @@ mixin _$JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  List<Skill> get skills => throw _privateConstructorUsedError;
+  List<String> get skills => throw _privateConstructorUsedError;
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<Contact> get contacts => throw _privateConstructorUsedError;
+  List<String> get contacts => throw _privateConstructorUsedError;
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
   /// Участие в опенсорс проекте, Поиск команды или сотрудничество
   /// Чекбоксы, Chips
-  @JsonKey(name: 'employment')
-  List<Employment> get employment => throw _privateConstructorUsedError;
+  @JsonKey(name: 'employments')
+  List<Employment> get employments => throw _privateConstructorUsedError;
 
   /// Тэги (Tags)
   /// Поле ввода
@@ -454,15 +455,17 @@ abstract class $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') String country,
+      @JsonKey(name: 'country') int country,
       @JsonKey(name: 'remote') bool remote,
-      @JsonKey(name: 'address') String address,
+      @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
-      @JsonKey(name: 'employment') List<Employment> employment,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'employments') List<Employment> employments,
       @JsonKey(name: 'tags') List<String> tags});
+
+  $RelocationCopyWith<$Res> get relocation;
 }
 
 /// @nodoc
@@ -479,12 +482,12 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
     Object? company = freezed,
     Object? country = freezed,
     Object? remote = freezed,
-    Object? address = freezed,
+    Object? relocation = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
     Object? contacts = freezed,
-    Object? employment = freezed,
+    Object? employments = freezed,
     Object? tags = freezed,
   }) {
     return _then(_value.copyWith(
@@ -499,15 +502,15 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
               as bool,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
+      relocation: relocation == freezed
+          ? _value.relocation
+          : relocation // ignore: cast_nullable_to_non_nullable
+              as Relocation,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -519,20 +522,27 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       skills: skills == freezed
           ? _value.skills
           : skills // ignore: cast_nullable_to_non_nullable
-              as List<Skill>,
+              as List<String>,
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<Contact>,
-      employment: employment == freezed
-          ? _value.employment
-          : employment // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      employments: employments == freezed
+          ? _value.employments
+          : employments // ignore: cast_nullable_to_non_nullable
               as List<Employment>,
       tags: tags == freezed
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
+  }
+
+  @override
+  $RelocationCopyWith<$Res> get relocation {
+    return $RelocationCopyWith<$Res>(_value.relocation, (value) {
+      return _then(_value.copyWith(relocation: value));
+    });
   }
 }
 
@@ -543,15 +553,18 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') String country,
+      @JsonKey(name: 'country') int country,
       @JsonKey(name: 'remote') bool remote,
-      @JsonKey(name: 'address') String address,
+      @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
-      @JsonKey(name: 'employment') List<Employment> employment,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'employments') List<Employment> employments,
       @JsonKey(name: 'tags') List<String> tags});
+
+  @override
+  $RelocationCopyWith<$Res> get relocation;
 }
 
 /// @nodoc
@@ -567,12 +580,12 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
     Object? company = freezed,
     Object? country = freezed,
     Object? remote = freezed,
-    Object? address = freezed,
+    Object? relocation = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
     Object? contacts = freezed,
-    Object? employment = freezed,
+    Object? employments = freezed,
     Object? tags = freezed,
   }) {
     return _then(_JobData(
@@ -587,15 +600,15 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
               as bool,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
+      relocation: relocation == freezed
+          ? _value.relocation
+          : relocation // ignore: cast_nullable_to_non_nullable
+              as Relocation,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -607,14 +620,14 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
       skills: skills == freezed
           ? _value.skills
           : skills // ignore: cast_nullable_to_non_nullable
-              as List<Skill>,
+              as List<String>,
       contacts: contacts == freezed
           ? _value.contacts
           : contacts // ignore: cast_nullable_to_non_nullable
-              as List<Contact>,
-      employment: employment == freezed
-          ? _value.employment
-          : employment // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      employments: employments == freezed
+          ? _value.employments
+          : employments // ignore: cast_nullable_to_non_nullable
               as List<Employment>,
       tags: tags == freezed
           ? _value.tags
@@ -630,14 +643,14 @@ class _$_JobData extends _JobData {
   const _$_JobData(
       {@JsonKey(name: 'title') this.title = '',
       @JsonKey(name: 'company') this.company = '',
-      @JsonKey(name: 'country') this.country = '',
+      @JsonKey(name: 'country') this.country = 0,
       @JsonKey(name: 'remote') this.remote = true,
-      @JsonKey(name: 'address') this.address = '',
+      @JsonKey(name: 'relocation') this.relocation = const Relocation.impossible(),
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
       @JsonKey(name: 'levels') this.levels = const <DeveloperLevel>[],
-      @JsonKey(name: 'skills') this.skills = const <Skill>[],
-      @JsonKey(name: 'contacts') this.contacts = const <Contact>[],
-      @JsonKey(name: 'employment') this.employment = const <Employment>[],
+      @JsonKey(name: 'skills') this.skills = const <String>[],
+      @JsonKey(name: 'contacts') this.contacts = const <String>[],
+      @JsonKey(name: 'employments') this.employments = const <Employment>[],
       @JsonKey(name: 'tags') this.tags = const <String>[]})
       : super._();
 
@@ -660,10 +673,10 @@ class _$_JobData extends _JobData {
   @override
 
   /// Страна, например: Russia
-  /// Максимальная длина - 64 символов
-  /// Выпадающее поле выбора
+  /// Идентификатор страны
+  /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  final String country;
+  final int country;
   @override
 
   /// Удаленная работа?
@@ -672,13 +685,14 @@ class _$_JobData extends _JobData {
   final bool remote;
   @override
 
-  /// Местоположение, например: Moscow
-  /// Максимальная длина - 256 символов
-  /// Поле ввода
-  @JsonKey(name: 'address')
-  final String address;
-  @override
-
+  /// Возможность переезда
+  /// Выбор
+  @JsonKey(name: 'relocation')
+  final Relocation relocation;
+  @override // /// Местоположение, например: Moscow
+// /// Максимальная длина - 256 символов
+// /// Поле ввода
+// @JsonKey(name: 'address') @Default('') final String address,
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -696,22 +710,22 @@ class _$_JobData extends _JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  final List<Skill> skills;
+  final List<String> skills;
   @override
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  final List<Contact> contacts;
+  final List<String> contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
   /// Участие в опенсорс проекте, Поиск команды или сотрудничество
   /// Чекбоксы, Chips
-  @JsonKey(name: 'employment')
-  final List<Employment> employment;
+  @JsonKey(name: 'employments')
+  final List<Employment> employments;
   @override
 
   /// Тэги (Tags)
@@ -721,7 +735,7 @@ class _$_JobData extends _JobData {
 
   @override
   String toString() {
-    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, address: $address, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employment: $employment, tags: $tags)';
+    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, relocation: $relocation, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employments: $employments, tags: $tags)';
   }
 
   @override
@@ -733,12 +747,12 @@ class _$_JobData extends _JobData {
             (identical(other.company, company) || other.company == company) &&
             (identical(other.country, country) || other.country == country) &&
             (identical(other.remote, remote) || other.remote == remote) &&
-            (identical(other.address, address) || other.address == address) &&
+            (identical(other.relocation, relocation) || other.relocation == relocation) &&
             (identical(other.descriptions, descriptions) || other.descriptions == descriptions) &&
             const DeepCollectionEquality().equals(other.levels, levels) &&
             const DeepCollectionEquality().equals(other.skills, skills) &&
             const DeepCollectionEquality().equals(other.contacts, contacts) &&
-            const DeepCollectionEquality().equals(other.employment, employment) &&
+            const DeepCollectionEquality().equals(other.employments, employments) &&
             const DeepCollectionEquality().equals(other.tags, tags));
   }
 
@@ -749,12 +763,12 @@ class _$_JobData extends _JobData {
       company,
       country,
       remote,
-      address,
+      relocation,
       descriptions,
       const DeepCollectionEquality().hash(levels),
       const DeepCollectionEquality().hash(skills),
       const DeepCollectionEquality().hash(contacts),
-      const DeepCollectionEquality().hash(employment),
+      const DeepCollectionEquality().hash(employments),
       const DeepCollectionEquality().hash(tags));
 
   @JsonKey(ignore: true)
@@ -771,14 +785,14 @@ abstract class _JobData extends JobData {
   const factory _JobData(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') String country,
+      @JsonKey(name: 'country') int country,
       @JsonKey(name: 'remote') bool remote,
-      @JsonKey(name: 'address') String address,
+      @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
-      @JsonKey(name: 'skills') List<Skill> skills,
-      @JsonKey(name: 'contacts') List<Contact> contacts,
-      @JsonKey(name: 'employment') List<Employment> employment,
+      @JsonKey(name: 'skills') List<String> skills,
+      @JsonKey(name: 'contacts') List<String> contacts,
+      @JsonKey(name: 'employments') List<Employment> employments,
       @JsonKey(name: 'tags') List<String> tags}) = _$_JobData;
   const _JobData._() : super._();
 
@@ -801,10 +815,10 @@ abstract class _JobData extends JobData {
   @override
 
   /// Страна, например: Russia
-  /// Максимальная длина - 64 символов
-  /// Выпадающее поле выбора
+  /// Идентификатор страны
+  /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  String get country;
+  int get country;
   @override
 
   /// Удаленная работа?
@@ -813,13 +827,14 @@ abstract class _JobData extends JobData {
   bool get remote;
   @override
 
-  /// Местоположение, например: Moscow
-  /// Максимальная длина - 256 символов
-  /// Поле ввода
-  @JsonKey(name: 'address')
-  String get address;
-  @override
-
+  /// Возможность переезда
+  /// Выбор
+  @JsonKey(name: 'relocation')
+  Relocation get relocation;
+  @override // /// Местоположение, например: Moscow
+// /// Максимальная длина - 256 символов
+// /// Поле ввода
+// @JsonKey(name: 'address') @Default('') final String address,
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -837,22 +852,22 @@ abstract class _JobData extends JobData {
   /// Навыки (Skills)
   /// Поля ввода
   @JsonKey(name: 'skills')
-  List<Skill> get skills;
+  List<String> get skills;
   @override
 
   /// Контакты для обратной связи (Contacts)
   /// Емейл, Сайт, Телефон, Различные мессенджеры
   /// Поля ввода
   @JsonKey(name: 'contacts')
-  List<Contact> get contacts;
+  List<String> get contacts;
   @override
 
   /// Трудоустройство, занятость (Employment)
   /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
   /// Участие в опенсорс проекте, Поиск команды или сотрудничество
   /// Чекбоксы, Chips
-  @JsonKey(name: 'employment')
-  List<Employment> get employment;
+  @JsonKey(name: 'employments')
+  List<Employment> get employments;
   @override
 
   /// Тэги (Tags)

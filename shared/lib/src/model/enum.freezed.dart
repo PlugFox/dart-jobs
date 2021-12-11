@@ -1797,483 +1797,179 @@ abstract class CollaborationEmployment extends Employment {
   factory CollaborationEmployment.fromJson(Map<String, dynamic> json) = _$CollaborationEmployment.fromJson;
 }
 
-Skill _$SkillFromJson(Map<String, dynamic> json) {
-  return OtherSkill.fromJson(json);
-}
-
-/// @nodoc
-class _$SkillTearOff {
-  const _$SkillTearOff();
-
-  OtherSkill other(String value) {
-    return OtherSkill(
-      value,
-    );
-  }
-
-  Skill fromJson(Map<String, Object?> json) {
-    return Skill.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Skill = _$SkillTearOff();
-
-/// @nodoc
-mixin _$Skill {
-  String get value => throw _privateConstructorUsedError;
-
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OtherSkill value) other,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherSkill value)? other,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherSkill value)? other,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $SkillCopyWith<Skill> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $SkillCopyWith<$Res> {
-  factory $SkillCopyWith(Skill value, $Res Function(Skill) then) = _$SkillCopyWithImpl<$Res>;
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$SkillCopyWithImpl<$Res> implements $SkillCopyWith<$Res> {
-  _$SkillCopyWithImpl(this._value, this._then);
-
-  final Skill _value;
-  // ignore: unused_field
-  final $Res Function(Skill) _then;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(_value.copyWith(
-      value: value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-abstract class $OtherSkillCopyWith<$Res> implements $SkillCopyWith<$Res> {
-  factory $OtherSkillCopyWith(OtherSkill value, $Res Function(OtherSkill) then) = _$OtherSkillCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$OtherSkillCopyWithImpl<$Res> extends _$SkillCopyWithImpl<$Res> implements $OtherSkillCopyWith<$Res> {
-  _$OtherSkillCopyWithImpl(OtherSkill _value, $Res Function(OtherSkill) _then)
-      : super(_value, (v) => _then(v as OtherSkill));
-
-  @override
-  OtherSkill get _value => super._value as OtherSkill;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(OtherSkill(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-@FreezedUnionValue('other')
-class _$OtherSkill extends OtherSkill {
-  const _$OtherSkill(this.value) : super._();
-
-  factory _$OtherSkill.fromJson(Map<String, dynamic> json) => _$$OtherSkillFromJson(json);
-
-  @override
-  final String value;
-
-  @override
-  String toString() {
-    return 'Skill.other(value: $value)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is OtherSkill &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $OtherSkillCopyWith<OtherSkill> get copyWith => _$OtherSkillCopyWithImpl<OtherSkill>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-  }) {
-    return other(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-  }) {
-    return other?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    required TResult orElse(),
-  }) {
-    if (other != null) {
-      return other(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OtherSkill value) other,
-  }) {
-    return other(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherSkill value)? other,
-  }) {
-    return other?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherSkill value)? other,
-    required TResult orElse(),
-  }) {
-    if (other != null) {
-      return other(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$OtherSkillToJson(this);
-  }
-}
-
-abstract class OtherSkill extends Skill {
-  const factory OtherSkill(String value) = _$OtherSkill;
-  const OtherSkill._() : super._();
-
-  factory OtherSkill.fromJson(Map<String, dynamic> json) = _$OtherSkill.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $OtherSkillCopyWith<OtherSkill> get copyWith => throw _privateConstructorUsedError;
-}
-
-Contact _$ContactFromJson(Map<String, dynamic> json) {
+Relocation _$RelocationFromJson(Map<String, dynamic> json) {
   switch (json['type']) {
-    case 'OTHER':
-      return OtherContact.fromJson(json);
-    case 'PHONE':
-      return PhoneContact.fromJson(json);
-    case 'WEBSITE':
-      return WebsiteContact.fromJson(json);
-    case 'EMAIL':
-      return EmailContact.fromJson(json);
-    case 'Telegram':
-      return TelegramContact.fromJson(json);
+    case 'IMPOSSIBLE':
+      return ImpossibleRelocation.fromJson(json);
+    case 'POSSIBLE':
+      return PossibleRelocation.fromJson(json);
+    case 'REQUIRED':
+      return RequiredRelocation.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'type', 'Contact', 'Invalid union type "${json['type']}"!');
+      throw CheckedFromJsonException(json, 'type', 'Relocation', 'Invalid union type "${json['type']}"!');
   }
 }
 
 /// @nodoc
-class _$ContactTearOff {
-  const _$ContactTearOff();
+class _$RelocationTearOff {
+  const _$RelocationTearOff();
 
-  OtherContact other(String value) {
-    return OtherContact(
-      value,
-    );
+  ImpossibleRelocation impossible() {
+    return const ImpossibleRelocation();
   }
 
-  PhoneContact phone(String value) {
-    return PhoneContact(
-      value,
-    );
+  PossibleRelocation possible() {
+    return const PossibleRelocation();
   }
 
-  WebsiteContact website(String value) {
-    return WebsiteContact(
-      value,
-    );
+  RequiredRelocation required() {
+    return const RequiredRelocation();
   }
 
-  EmailContact email(String value) {
-    return EmailContact(
-      value,
-    );
-  }
-
-  TelegramContact telegram(String value) {
-    return TelegramContact(
-      value,
-    );
-  }
-
-  Contact fromJson(Map<String, Object?> json) {
-    return Contact.fromJson(json);
+  Relocation fromJson(Map<String, Object?> json) {
+    return Relocation.fromJson(json);
   }
 }
 
 /// @nodoc
-const $Contact = _$ContactTearOff();
+const $Relocation = _$RelocationTearOff();
 
 /// @nodoc
-mixin _$Contact {
-  String get value => throw _privateConstructorUsedError;
-
+mixin _$Relocation {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ContactCopyWith<Contact> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ContactCopyWith<$Res> {
-  factory $ContactCopyWith(Contact value, $Res Function(Contact) then) = _$ContactCopyWithImpl<$Res>;
-  $Res call({String value});
+abstract class $RelocationCopyWith<$Res> {
+  factory $RelocationCopyWith(Relocation value, $Res Function(Relocation) then) = _$RelocationCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$ContactCopyWithImpl<$Res> implements $ContactCopyWith<$Res> {
-  _$ContactCopyWithImpl(this._value, this._then);
+class _$RelocationCopyWithImpl<$Res> implements $RelocationCopyWith<$Res> {
+  _$RelocationCopyWithImpl(this._value, this._then);
 
-  final Contact _value;
+  final Relocation _value;
   // ignore: unused_field
-  final $Res Function(Contact) _then;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(_value.copyWith(
-      value: value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+  final $Res Function(Relocation) _then;
 }
 
 /// @nodoc
-abstract class $OtherContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $OtherContactCopyWith(OtherContact value, $Res Function(OtherContact) then) =
-      _$OtherContactCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
+abstract class $ImpossibleRelocationCopyWith<$Res> {
+  factory $ImpossibleRelocationCopyWith(ImpossibleRelocation value, $Res Function(ImpossibleRelocation) then) =
+      _$ImpossibleRelocationCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$OtherContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $OtherContactCopyWith<$Res> {
-  _$OtherContactCopyWithImpl(OtherContact _value, $Res Function(OtherContact) _then)
-      : super(_value, (v) => _then(v as OtherContact));
+class _$ImpossibleRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $ImpossibleRelocationCopyWith<$Res> {
+  _$ImpossibleRelocationCopyWithImpl(ImpossibleRelocation _value, $Res Function(ImpossibleRelocation) _then)
+      : super(_value, (v) => _then(v as ImpossibleRelocation));
 
   @override
-  OtherContact get _value => super._value as OtherContact;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(OtherContact(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+  ImpossibleRelocation get _value => super._value as ImpossibleRelocation;
 }
 
 /// @nodoc
 @JsonSerializable()
-@FreezedUnionValue('OTHER')
-class _$OtherContact extends OtherContact {
-  const _$OtherContact(this.value, {String? $type})
-      : $type = $type ?? 'OTHER',
+@FreezedUnionValue('IMPOSSIBLE')
+class _$ImpossibleRelocation extends ImpossibleRelocation {
+  const _$ImpossibleRelocation({String? $type})
+      : $type = $type ?? 'IMPOSSIBLE',
         super._();
 
-  factory _$OtherContact.fromJson(Map<String, dynamic> json) => _$$OtherContactFromJson(json);
-
-  @override
-  final String value;
+  factory _$ImpossibleRelocation.fromJson(Map<String, dynamic> json) => _$$ImpossibleRelocationFromJson(json);
 
   @JsonKey(name: 'type')
   final String $type;
 
   @override
   String toString() {
-    return 'Contact.other(value: $value)';
+    return 'Relocation.impossible()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is OtherContact &&
-            (identical(other.value, value) || other.value == value));
+    return identical(this, other) || (other.runtimeType == runtimeType && other is ImpossibleRelocation);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $OtherContactCopyWith<OtherContact> get copyWith => _$OtherContactCopyWithImpl<OtherContact>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
   }) {
-    return other(value);
+    return impossible();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
   }) {
-    return other?.call(value);
+    return impossible?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
     required TResult orElse(),
   }) {
-    if (other != null) {
-      return other(value);
+    if (impossible != null) {
+      return impossible();
     }
     return orElse();
   }
@@ -2281,163 +1977,122 @@ class _$OtherContact extends OtherContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
   }) {
-    return other(this);
+    return impossible(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
   }) {
-    return other?.call(this);
+    return impossible?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
     required TResult orElse(),
   }) {
-    if (other != null) {
-      return other(this);
+    if (impossible != null) {
+      return impossible(this);
     }
     return orElse();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OtherContactToJson(this);
+    return _$$ImpossibleRelocationToJson(this);
   }
 }
 
-abstract class OtherContact extends Contact {
-  const factory OtherContact(String value) = _$OtherContact;
-  const OtherContact._() : super._();
+abstract class ImpossibleRelocation extends Relocation {
+  const factory ImpossibleRelocation() = _$ImpossibleRelocation;
+  const ImpossibleRelocation._() : super._();
 
-  factory OtherContact.fromJson(Map<String, dynamic> json) = _$OtherContact.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $OtherContactCopyWith<OtherContact> get copyWith => throw _privateConstructorUsedError;
+  factory ImpossibleRelocation.fromJson(Map<String, dynamic> json) = _$ImpossibleRelocation.fromJson;
 }
 
 /// @nodoc
-abstract class $PhoneContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $PhoneContactCopyWith(PhoneContact value, $Res Function(PhoneContact) then) =
-      _$PhoneContactCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
+abstract class $PossibleRelocationCopyWith<$Res> {
+  factory $PossibleRelocationCopyWith(PossibleRelocation value, $Res Function(PossibleRelocation) then) =
+      _$PossibleRelocationCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$PhoneContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $PhoneContactCopyWith<$Res> {
-  _$PhoneContactCopyWithImpl(PhoneContact _value, $Res Function(PhoneContact) _then)
-      : super(_value, (v) => _then(v as PhoneContact));
+class _$PossibleRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $PossibleRelocationCopyWith<$Res> {
+  _$PossibleRelocationCopyWithImpl(PossibleRelocation _value, $Res Function(PossibleRelocation) _then)
+      : super(_value, (v) => _then(v as PossibleRelocation));
 
   @override
-  PhoneContact get _value => super._value as PhoneContact;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(PhoneContact(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+  PossibleRelocation get _value => super._value as PossibleRelocation;
 }
 
 /// @nodoc
 @JsonSerializable()
-@FreezedUnionValue('PHONE')
-class _$PhoneContact extends PhoneContact {
-  const _$PhoneContact(this.value, {String? $type})
-      : $type = $type ?? 'PHONE',
+@FreezedUnionValue('POSSIBLE')
+class _$PossibleRelocation extends PossibleRelocation {
+  const _$PossibleRelocation({String? $type})
+      : $type = $type ?? 'POSSIBLE',
         super._();
 
-  factory _$PhoneContact.fromJson(Map<String, dynamic> json) => _$$PhoneContactFromJson(json);
-
-  @override
-  final String value;
+  factory _$PossibleRelocation.fromJson(Map<String, dynamic> json) => _$$PossibleRelocationFromJson(json);
 
   @JsonKey(name: 'type')
   final String $type;
 
   @override
   String toString() {
-    return 'Contact.phone(value: $value)';
+    return 'Relocation.possible()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is PhoneContact &&
-            (identical(other.value, value) || other.value == value));
+    return identical(this, other) || (other.runtimeType == runtimeType && other is PossibleRelocation);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $PhoneContactCopyWith<PhoneContact> get copyWith => _$PhoneContactCopyWithImpl<PhoneContact>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
   }) {
-    return phone(value);
+    return possible();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
   }) {
-    return phone?.call(value);
+    return possible?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
     required TResult orElse(),
   }) {
-    if (phone != null) {
-      return phone(value);
+    if (possible != null) {
+      return possible();
     }
     return orElse();
   }
@@ -2445,164 +2100,122 @@ class _$PhoneContact extends PhoneContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
   }) {
-    return phone(this);
+    return possible(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
   }) {
-    return phone?.call(this);
+    return possible?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
     required TResult orElse(),
   }) {
-    if (phone != null) {
-      return phone(this);
+    if (possible != null) {
+      return possible(this);
     }
     return orElse();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PhoneContactToJson(this);
+    return _$$PossibleRelocationToJson(this);
   }
 }
 
-abstract class PhoneContact extends Contact {
-  const factory PhoneContact(String value) = _$PhoneContact;
-  const PhoneContact._() : super._();
+abstract class PossibleRelocation extends Relocation {
+  const factory PossibleRelocation() = _$PossibleRelocation;
+  const PossibleRelocation._() : super._();
 
-  factory PhoneContact.fromJson(Map<String, dynamic> json) = _$PhoneContact.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $PhoneContactCopyWith<PhoneContact> get copyWith => throw _privateConstructorUsedError;
+  factory PossibleRelocation.fromJson(Map<String, dynamic> json) = _$PossibleRelocation.fromJson;
 }
 
 /// @nodoc
-abstract class $WebsiteContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $WebsiteContactCopyWith(WebsiteContact value, $Res Function(WebsiteContact) then) =
-      _$WebsiteContactCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
+abstract class $RequiredRelocationCopyWith<$Res> {
+  factory $RequiredRelocationCopyWith(RequiredRelocation value, $Res Function(RequiredRelocation) then) =
+      _$RequiredRelocationCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$WebsiteContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $WebsiteContactCopyWith<$Res> {
-  _$WebsiteContactCopyWithImpl(WebsiteContact _value, $Res Function(WebsiteContact) _then)
-      : super(_value, (v) => _then(v as WebsiteContact));
+class _$RequiredRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $RequiredRelocationCopyWith<$Res> {
+  _$RequiredRelocationCopyWithImpl(RequiredRelocation _value, $Res Function(RequiredRelocation) _then)
+      : super(_value, (v) => _then(v as RequiredRelocation));
 
   @override
-  WebsiteContact get _value => super._value as WebsiteContact;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(WebsiteContact(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+  RequiredRelocation get _value => super._value as RequiredRelocation;
 }
 
 /// @nodoc
 @JsonSerializable()
-@FreezedUnionValue('WEBSITE')
-class _$WebsiteContact extends WebsiteContact {
-  const _$WebsiteContact(this.value, {String? $type})
-      : $type = $type ?? 'WEBSITE',
+@FreezedUnionValue('REQUIRED')
+class _$RequiredRelocation extends RequiredRelocation {
+  const _$RequiredRelocation({String? $type})
+      : $type = $type ?? 'REQUIRED',
         super._();
 
-  factory _$WebsiteContact.fromJson(Map<String, dynamic> json) => _$$WebsiteContactFromJson(json);
-
-  @override
-  final String value;
+  factory _$RequiredRelocation.fromJson(Map<String, dynamic> json) => _$$RequiredRelocationFromJson(json);
 
   @JsonKey(name: 'type')
   final String $type;
 
   @override
   String toString() {
-    return 'Contact.website(value: $value)';
+    return 'Relocation.required()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is WebsiteContact &&
-            (identical(other.value, value) || other.value == value));
+    return identical(this, other) || (other.runtimeType == runtimeType && other is RequiredRelocation);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $WebsiteContactCopyWith<WebsiteContact> get copyWith =>
-      _$WebsiteContactCopyWithImpl<WebsiteContact>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
   }) {
-    return website(value);
+    return required();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
   }) {
-    return website?.call(value);
+    return required?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
     required TResult orElse(),
   }) {
-    if (website != null) {
-      return website(value);
+    if (required != null) {
+      return required();
     }
     return orElse();
   }
@@ -2610,388 +2223,46 @@ class _$WebsiteContact extends WebsiteContact {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
   }) {
-    return website(this);
+    return required(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
   }) {
-    return website?.call(this);
+    return required?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
     required TResult orElse(),
   }) {
-    if (website != null) {
-      return website(this);
+    if (required != null) {
+      return required(this);
     }
     return orElse();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WebsiteContactToJson(this);
+    return _$$RequiredRelocationToJson(this);
   }
 }
 
-abstract class WebsiteContact extends Contact {
-  const factory WebsiteContact(String value) = _$WebsiteContact;
-  const WebsiteContact._() : super._();
+abstract class RequiredRelocation extends Relocation {
+  const factory RequiredRelocation() = _$RequiredRelocation;
+  const RequiredRelocation._() : super._();
 
-  factory WebsiteContact.fromJson(Map<String, dynamic> json) = _$WebsiteContact.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $WebsiteContactCopyWith<WebsiteContact> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $EmailContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $EmailContactCopyWith(EmailContact value, $Res Function(EmailContact) then) =
-      _$EmailContactCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$EmailContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res> implements $EmailContactCopyWith<$Res> {
-  _$EmailContactCopyWithImpl(EmailContact _value, $Res Function(EmailContact) _then)
-      : super(_value, (v) => _then(v as EmailContact));
-
-  @override
-  EmailContact get _value => super._value as EmailContact;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(EmailContact(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-@FreezedUnionValue('EMAIL')
-class _$EmailContact extends EmailContact {
-  const _$EmailContact(this.value, {String? $type})
-      : $type = $type ?? 'EMAIL',
-        super._();
-
-  factory _$EmailContact.fromJson(Map<String, dynamic> json) => _$$EmailContactFromJson(json);
-
-  @override
-  final String value;
-
-  @JsonKey(name: 'type')
-  final String $type;
-
-  @override
-  String toString() {
-    return 'Contact.email(value: $value)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is EmailContact &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $EmailContactCopyWith<EmailContact> get copyWith => _$EmailContactCopyWithImpl<EmailContact>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
-  }) {
-    return email(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
-  }) {
-    return email?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
-    required TResult orElse(),
-  }) {
-    if (email != null) {
-      return email(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
-  }) {
-    return email(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
-  }) {
-    return email?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
-    required TResult orElse(),
-  }) {
-    if (email != null) {
-      return email(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$EmailContactToJson(this);
-  }
-}
-
-abstract class EmailContact extends Contact {
-  const factory EmailContact(String value) = _$EmailContact;
-  const EmailContact._() : super._();
-
-  factory EmailContact.fromJson(Map<String, dynamic> json) = _$EmailContact.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $EmailContactCopyWith<EmailContact> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $TelegramContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
-  factory $TelegramContactCopyWith(TelegramContact value, $Res Function(TelegramContact) then) =
-      _$TelegramContactCopyWithImpl<$Res>;
-  @override
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$TelegramContactCopyWithImpl<$Res> extends _$ContactCopyWithImpl<$Res>
-    implements $TelegramContactCopyWith<$Res> {
-  _$TelegramContactCopyWithImpl(TelegramContact _value, $Res Function(TelegramContact) _then)
-      : super(_value, (v) => _then(v as TelegramContact));
-
-  @override
-  TelegramContact get _value => super._value as TelegramContact;
-
-  @override
-  $Res call({
-    Object? value = freezed,
-  }) {
-    return _then(TelegramContact(
-      value == freezed
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-@FreezedUnionValue('Telegram')
-class _$TelegramContact extends TelegramContact {
-  const _$TelegramContact(this.value, {String? $type})
-      : $type = $type ?? 'Telegram',
-        super._();
-
-  factory _$TelegramContact.fromJson(Map<String, dynamic> json) => _$$TelegramContactFromJson(json);
-
-  @override
-  final String value;
-
-  @JsonKey(name: 'type')
-  final String $type;
-
-  @override
-  String toString() {
-    return 'Contact.telegram(value: $value)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is TelegramContact &&
-            (identical(other.value, value) || other.value == value));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, value);
-
-  @JsonKey(ignore: true)
-  @override
-  $TelegramContactCopyWith<TelegramContact> get copyWith =>
-      _$TelegramContactCopyWithImpl<TelegramContact>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String value) other,
-    required TResult Function(String value) phone,
-    required TResult Function(String value) website,
-    required TResult Function(String value) email,
-    required TResult Function(String value) telegram,
-  }) {
-    return telegram(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
-  }) {
-    return telegram?.call(value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String value)? other,
-    TResult Function(String value)? phone,
-    TResult Function(String value)? website,
-    TResult Function(String value)? email,
-    TResult Function(String value)? telegram,
-    required TResult orElse(),
-  }) {
-    if (telegram != null) {
-      return telegram(value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(OtherContact value) other,
-    required TResult Function(PhoneContact value) phone,
-    required TResult Function(WebsiteContact value) website,
-    required TResult Function(EmailContact value) email,
-    required TResult Function(TelegramContact value) telegram,
-  }) {
-    return telegram(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
-  }) {
-    return telegram?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(OtherContact value)? other,
-    TResult Function(PhoneContact value)? phone,
-    TResult Function(WebsiteContact value)? website,
-    TResult Function(EmailContact value)? email,
-    TResult Function(TelegramContact value)? telegram,
-    required TResult orElse(),
-  }) {
-    if (telegram != null) {
-      return telegram(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TelegramContactToJson(this);
-  }
-}
-
-abstract class TelegramContact extends Contact {
-  const factory TelegramContact(String value) = _$TelegramContact;
-  const TelegramContact._() : super._();
-
-  factory TelegramContact.fromJson(Map<String, dynamic> json) = _$TelegramContact.fromJson;
-
-  @override
-  String get value;
-  @override
-  @JsonKey(ignore: true)
-  $TelegramContactCopyWith<TelegramContact> get copyWith => throw _privateConstructorUsedError;
+  factory RequiredRelocation.fromJson(Map<String, dynamic> json) = _$RequiredRelocation.fromJson;
 }

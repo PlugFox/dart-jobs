@@ -1,13 +1,14 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:dart_jobs_client/runner_stub.dart'
     // ignore: uri_does_not_exist
     if (dart.library.io) 'package:dart_jobs_client/runner_io.dart'
     // ignore: uri_does_not_exist
     if (dart.library.html) 'package:dart_jobs_client/runner_web.dart' as runner;
-import 'package:dart_jobs_client/src/common/bloc/bloc_observer.dart';
+import 'package:dart_jobs_client/src/common/bloc/app_bloc_observer.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l/l.dart';
 
 /// Universal router for platform specific entry point
@@ -42,9 +43,10 @@ void main() => l.capture<Future<void>>(
         final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
 
         // Запуск приложения в зависимости от платформы
-        Bloc.observe(
+        BlocOverrides.runZoned(
           runner.run,
-          observer: BlocObserver.instance,
+          blocObserver: AppBlocObserver.instance,
+          eventTransformer: bloc_concurrency.sequential<Object?>(),
         );
 
         if ((stopwatchBeforeRunApp..stop()).elapsedMilliseconds > 250) {

@@ -10,11 +10,11 @@ import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/initialization/data/graphql_client_creator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_client/src/feature/settings/data/settings_repository.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -84,7 +84,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Initializing analytics': (final progress) async {
     InitializationProgress newProgress;
     try {
-      final analytics = FirebaseAnalytics();
+      final analytics = FirebaseAnalytics.instance;
       newProgress = progress.copyWith(newAnalytics: analytics);
       await analytics.setAnalyticsCollectionEnabled(kReleaseMode);
       await analytics.logAppOpen();
@@ -107,33 +107,8 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Preparing for authentication': (final progress) => progress.copyWith(
         newAuthenticationRepository: AuthenticationRepository(firebaseAuth: FirebaseAuth.instance),
       ),
-  'Creating REST client': (final progress) => progress.copyWith(
-        newDio: Dio(
-          BaseOptions(
-            baseUrl: 'https://api.plugfox.dev',
-            followRedirects: true,
-            maxRedirects: 3,
-            contentType: 'application/octet-stream',
-            responseType: ResponseType.bytes,
-            sendTimeout: 5000,
-            receiveTimeout: 5000,
-            connectTimeout: 5000,
-            setRequestContentTypeWhenNoPayload: false,
-            receiveDataWhenStatusError: false,
-          ),
-        )..interceptors.addAll(
-            <Interceptor>[
-              LogInterceptor(
-                request: true,
-                error: true,
-                requestBody: false,
-                requestHeader: true,
-                responseBody: false,
-                responseHeader: true,
-                logPrint: l.v6,
-              ),
-            ],
-          ),
+  'Creating GraphQL client': (final progress) => progress.copyWith(
+        newGQLClient: GraphQLClientCreator.create(),
       ),
   'Preparing main remote storage': (final progress) => progress.copyWith(
         newFirebaseFirestore: FirebaseFirestore.instance,
@@ -145,7 +120,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
         newJobRepository: JobRepositoryImpl(
           firebaseAuth: FirebaseAuth.instance,
           networkDataProvider: JobNetworkDataProviderImpl(
-            client: progress.dio!,
+            client: progress.gqlClient!,
           ),
         ),
       ),

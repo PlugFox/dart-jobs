@@ -2,7 +2,7 @@ import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_not_found.dart';
 import 'package:flutter/material.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class JobScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class JobScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => JobForm(
-        bloc: BlocScope.of<JobBLoC>(context, listen: false),
+        bloc: BlocProvider.of<JobBLoC>(context, listen: false),
         child: BlocListener<JobBLoC, JobState>(
           listener: (context, state) => state.maybeMap<void>(
             orElse: () {},

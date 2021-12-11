@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
+import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_shared/model.dart';
-import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'job_bloc.freezed.dart';
@@ -134,83 +135,100 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   JobBLoC.creation({
     required final IJobRepository repository,
   })  : _repository = repository,
-        super(JobState.idle(job: repository.getNewJobTemplate()));
+        super(JobState.idle(job: repository.getNewJobTemplate())) {
+    on<JobEvent>(
+      (event, emit) => event.map<void>(
+        create: (event) => _create(event, emit),
+        fetch: (event) => _fetch(event, emit),
+        update: (event) => _update(event, emit),
+        delete: (event) => _delete(event, emit),
+      ),
+    );
+  }
 
-  @override
-  Stream<JobState> mapEventToState(final JobEvent event) => event.map<Stream<JobState>>(
-        create: _create,
-        fetch: _fetch,
-        update: _update,
-        delete: _delete,
-      );
-
-  Stream<JobState> _fetch(_FetchJobEvent event) async* {
+  Future<void> _fetch(_FetchJobEvent event, Emitter<JobState> emit) async {
     final id = event.id ?? state.job.id;
     if (id.isNegative) return;
     try {
-      yield event.inProgress(state: state);
+      emit(event.inProgress(state: state));
       final job = await _repository.getJob(id: id).timeout(const Duration(seconds: 10));
-      yield event.fetched(state: state, job: job);
+      emit(event.fetched(state: state, job: job));
     } on NotFoundException {
-      yield event.notFound(state: state);
+      emit(event.notFound(state: state));
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object {
-      yield event.error(state: state, message: 'Unsupported error');
+      emit(event.error(state: state, message: 'Unsupported error'));
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(event.idle(state: state));
     }
   }
 
-  Stream<JobState> _create(_CreateJobEvent event) async* {
+  Future<void> _create(_CreateJobEvent event, Emitter<JobState> emit) async {
     try {
-      yield event.inProgress(state: state);
+      emit(event.inProgress(state: state));
       final job = await _repository.createJob(jobData: event.data).timeout(const Duration(seconds: 10));
-      yield event.saved(state: state, job: job);
+      emit(event.saved(state: state, job: job));
     } on NotFoundException {
-      yield event.notFound(state: state);
+      emit(event.notFound(state: state));
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object {
-      yield event.error(state: state, message: 'Unsupported error');
+      emit(event.error(state: state, message: 'Unsupported error'));
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(event.idle(state: state));
     }
   }
 
-  Stream<JobState> _update(_UpdateJobEvent event) async* {
+  Future<void> _update(_UpdateJobEvent event, Emitter<JobState> emit) async {
     try {
-      yield event.inProgress(state: state);
+      emit(event.inProgress(state: state));
       var newJob = state.job.copyWith(data: event.data);
       if (newJob.hasNotID) {
         throw const FormatException('Job has not exist');
       }
       newJob = await _repository.updateJob(job: newJob).timeout(const Duration(seconds: 10));
-      yield event.saved(state: state, job: newJob);
+      emit(event.saved(state: state, job: newJob));
     } on NotFoundException {
-      yield event.notFound(state: state);
+      emit(event.notFound(state: state));
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object {
-      yield event.error(state: state, message: 'Unsupported error');
+      emit(event.error(state: state, message: 'Unsupported error'));
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(event.idle(state: state));
     }
   }
 
-  Stream<JobState> _delete(_DeleteJobEvent event) async* {
+  Future<void> _delete(_DeleteJobEvent event, Emitter<JobState> emit) async {
     try {
-      yield event.inProgress(state: state);
+      emit(event.inProgress(state: state));
       var deletedJob = state.job;
       if (deletedJob.hasNotID) {
         throw const FormatException('Job has not exist');
       }
       deletedJob = await _repository.deleteJob(job: deletedJob).timeout(const Duration(seconds: 10));
-      yield event.deleted(state: state, job: deletedJob);
+      emit(event.deleted(state: state, job: deletedJob));
     } on NotFoundException {
-      yield event.notFound(state: state);
+      emit(event.notFound(state: state));
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object {
-      yield event.error(state: state, message: 'Unsupported error');
+      emit(event.error(state: state, message: 'Unsupported error'));
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(event.idle(state: state));
     }
   }
 }
