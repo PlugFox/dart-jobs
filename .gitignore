@@ -124,3 +124,4 @@ Logs/
 *.assets.cache
 
 .vs/*
+/server/JwtValidatorFirebase/.vs/*
