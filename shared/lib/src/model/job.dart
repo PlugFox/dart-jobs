@@ -98,6 +98,7 @@ class Job with _$Job, Comparable<Job> {
   /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 
+  /// Сортирую от новых к старым по полю [updated]
   @override
   int compareTo(Job other) => other.updated.compareTo(updated);
 
@@ -146,18 +147,22 @@ class JobData with _$JobData {
     @JsonKey(name: 'company') @Default('') final String company,
 
     /// Страна, например: Russia
-    /// Максимальная длина - 64 символов
-    /// Выпадающее поле выбора
-    @JsonKey(name: 'country') @Default('') final String country,
+    /// Идентификатор страны
+    /// Выпадающее поле поиска
+    @JsonKey(name: 'country') @Default(0) final int country,
 
     /// Удаленная работа?
     /// Переключатель
     @JsonKey(name: 'remote') @Default(true) final bool remote,
 
-    /// Местоположение, например: Moscow
-    /// Максимальная длина - 256 символов
-    /// Поле ввода
-    @JsonKey(name: 'address') @Default('') final String address,
+    /// Возможность переезда
+    /// Выбор
+    @JsonKey(name: 'relocation') @Default(Relocation.impossible()) final Relocation relocation,
+
+    // /// Местоположение, например: Moscow
+    // /// Максимальная длина - 256 символов
+    // /// Поле ввода
+    // @JsonKey(name: 'address') @Default('') final String address,
 
     /// Описания на различных языках
     /// Ключ - локаль, например "en" или "ru"
@@ -182,7 +187,7 @@ class JobData with _$JobData {
     /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
     /// Участие в опенсорс проекте, Поиск команды или сотрудничество
     /// Чекбоксы, Chips
-    @JsonKey(name: 'employment') @Default(<Employment>[]) final List<Employment> employment,
+    @JsonKey(name: 'employments') @Default(<Employment>[]) final List<Employment> employments,
 
     /// Тэги (Tags)
     /// Поле ввода
@@ -191,6 +196,12 @@ class JobData with _$JobData {
 
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
+
+  /// Англоязычное описание
+  String get englishDescription => descriptions.english;
+
+  /// Русскоязычное описание
+  String get russianDescription => descriptions.russian;
 
   /*
   factory JobData.fromProtobuf(proto.JobData proto) => JobData(
@@ -237,12 +248,27 @@ class Description with MapMixin<String, String> {
 
   const Description([Map<String, String>? data]) : _internalMap = data ?? const <String, String>{};
 
+  factory Description.fromLanguages({
+    required final String english,
+    required final String russian,
+  }) =>
+      Description(
+        <String, String>{
+          'en': english,
+          'ru': russian,
+        },
+      );
+
   factory Description.fromJson(Map<String, Object?> json) => Description(
         <String, String>{
           for (final e in json.entries)
             if (e.value is String) e.key: e.value.toString(),
         },
       );
+
+  String get english => this['en'] ?? '';
+
+  String get russian => this['ru'] ?? '';
 
   Map<String, String> toJson() => Map<String, String>.of(_internalMap);
 

@@ -1,3 +1,6 @@
 /// Использовать fake значения
 /// --dart-define=fake=true
-const kFake = bool.fromEnvironment('fake', defaultValue: false);
+const bool kFake = bool.fromEnvironment('fake', defaultValue: false);
+
+/// Эндпоинт графкл
+const String kGraphQLEndpoint = String.fromEnvironment('graphql', defaultValue: '');

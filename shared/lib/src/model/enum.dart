@@ -163,3 +163,37 @@ class Employment with _$Employment {
   int toBytes() => toProtobuf().value;
   */
 }
+
+/// Переезд
+@Freezed(unionKey: 'type', unionValueCase: FreezedUnionCase.snake)
+class Relocation with _$Relocation {
+  const Relocation._();
+
+  /// Невозможен
+  @FreezedUnionValue('IMPOSSIBLE')
+  const factory Relocation.impossible() = ImpossibleRelocation;
+
+  /// Возможен
+  @FreezedUnionValue('POSSIBLE')
+  const factory Relocation.possible() = PossibleRelocation;
+
+  /// Обязателен
+  @FreezedUnionValue('REQUIRED')
+  const factory Relocation.required() = RequiredRelocation;
+
+  factory Relocation.fromJson(Map<String, Object?> json) => _$RelocationFromJson(json);
+
+  String get name => map<String>(
+        impossible: (_) => 'IMPOSSIBLE',
+        possible: (_) => 'POSSIBLE',
+        required: (_) => 'REQUIRED',
+      );
+
+  static Relocation fromName(String name) => values[name.trim().toUpperCase()] ?? const ImpossibleRelocation();
+
+  static Map<String, Relocation> get values => const <String, Relocation>{
+        'IMPOSSIBLE': ImpossibleRelocation(),
+        'POSSIBLE': PossibleRelocation(),
+        'REQUIRED': RequiredRelocation(),
+      };
+}

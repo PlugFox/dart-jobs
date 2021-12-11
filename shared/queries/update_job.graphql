@@ -1,0 +1,17 @@
+mutation UpdateJob(
+    $id: Int!,
+    $data: job_set_input!
+) {
+    update_job_by_pk(
+        pk_columns: {
+            id: $id
+        },
+        _set: $data
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark
+    }
+}

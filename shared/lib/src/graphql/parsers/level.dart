@@ -14,14 +14,14 @@ String? fromDartDeveloperLevelNullableToGraphQLlevelNullable(DeveloperLevel? lev
 
 /* List<DeveloperLevel> <-> _level */
 
-List<DeveloperLevel> fromGraphQL$levelToDartListDeveloperLevel(String levels) =>
+List<DeveloperLevel> fromGraphQL$levelToDartListDeveloperLevel(Object levels) =>
     GraphQLArray.toDart<DeveloperLevel>(levels, DeveloperLevel.fromName).toList();
 
 String fromDartListDeveloperLevelToGraphQL$level(List<DeveloperLevel> levels) =>
     GraphQLArray.toGraphQL<DeveloperLevel>(levels, (e) => e.name);
 
-List<DeveloperLevel>? fromGraphQL$levelNullableToDartListDeveloperLevelNullable(String? levels) =>
+List<DeveloperLevel>? fromGraphQL$levelNullableToDartListNullableDeveloperLevel(Object? levels) =>
     levels.nullOr(fromGraphQL$levelToDartListDeveloperLevel);
 
-String? fromDartListDeveloperLevelNullableToGraphQLlevelNullable(List<DeveloperLevel>? levels) =>
+String? fromDartListNullableDeveloperLevelToGraphQL$levelNullable(List<DeveloperLevel>? levels) =>
     levels.nullOr(fromDartListDeveloperLevelToGraphQL$level);

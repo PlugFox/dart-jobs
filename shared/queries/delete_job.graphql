@@ -1,0 +1,18 @@
+mutation DeleteJob(
+    $id: Int!
+) {
+    update_job_by_pk(
+        pk_columns: {
+            id: $id
+        },
+        _set: {
+            deletion_mark: true
+        }
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark
+    }
+}

@@ -12,12 +12,12 @@ String? fromDartStringNullableToGraphQLtextNullable(String? string) => string;
 
 /* List<String> <-> _text */
 
-List<String> fromGraphQL$textToDartListString(String texts) => GraphQLArray.toDart<String>(texts, (e) => e).toList();
+List<String> fromGraphQL$textToDartListString(Object texts) => GraphQLArray.toDart<String>(texts, (e) => e).toList();
 
 String fromDartListStringToGraphQL$text(List<String> strings) => GraphQLArray.toGraphQL<String>(strings, (e) => e);
 
-List<String>? fromGraphQL$textNullableToDartListStringNullable(String? texts) =>
+List<String>? fromGraphQL$textNullableToDartListNullableString(Object? texts) =>
     texts.nullOr(fromGraphQL$textToDartListString);
 
-String? fromDartListStringNullableToGraphQLtextNullable(List<String>? strings) =>
+String? fromDartListNullableStringToGraphQL$textNullable(List<String>? strings) =>
     strings.nullOr(fromDartListStringToGraphQL$text);

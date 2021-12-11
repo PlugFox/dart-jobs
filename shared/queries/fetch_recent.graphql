@@ -1,0 +1,35 @@
+query FetchRecent(
+    $after: timestamp!,
+    $limit: Int! = 100
+){
+    job(
+        where: {
+            updated: {
+                _gt: $after
+            },
+            deletion_mark: {
+                _eq: false
+            }
+        },
+        order_by: [
+            {
+                updated: asc
+            }
+        ],
+        limit: $limit
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark,
+        # Data:
+        title,
+        company,
+        country,
+        remote,
+        relocation,
+        employments,
+        levels
+    }
+}

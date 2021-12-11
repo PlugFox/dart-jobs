@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:bloc/bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_shared/model.dart';
-import 'package:fox_core_bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
@@ -130,18 +131,18 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
         }
       },
     );
+    on<FeedEvent>(
+      (event, emit) => event.map<void>(
+        fetchRecent: (event) => _fetchRecent(event, emit),
+        paginate: (event) => _paginate(event, emit),
+        setFilter: (event) => _setFilter(event, emit),
+      ),
+    );
   }
 
-  @override
-  Stream<FeedState> mapEventToState(final FeedEvent event) => event.map<Stream<FeedState>>(
-        fetchRecent: _fetchRecent,
-        paginate: _paginate,
-        setFilter: _setFilter,
-      );
-
-  Stream<FeedState> _fetchRecent(_FetchRecentFeedEvent event) async* {
+  Future<void> _fetchRecent(_FetchRecentFeedEvent event, Emitter<FeedState> emit) async {
     try {
-      yield event.inProgress(state: state);
+      emit(event.inProgress(state: state));
 
       JobsChunk chunk;
       do {
@@ -171,37 +172,42 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
               ],
             );
 
-        yield event.inProgress(
-          state: state,
-          list: list,
-        );
+        emit(event.inProgress(state: state, list: list));
       } while (!chunk.endOfList);
       _lastFetchRecent = DateTime.now();
 
-      yield event.successful(state: state);
+      emit(event.successful(state: state));
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object catch (err) {
       l.e('Произошла ошибка при запросе последних элементов ленты: $err');
-      yield event.error(
-        state: state,
-        message: 'An error occurred while updating the feed',
+      emit(
+        event.error(
+          state: state,
+          message: 'An error occurred while updating the feed',
+        ),
       );
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(event.idle(state: state));
     }
   }
 
-  Stream<FeedState> _paginate(_PaginateFeedEvent event) async* {
+  Future<void> _paginate(_PaginateFeedEvent event, Emitter<FeedState> emit) async {
     if (state.endOfList) {
       return;
     }
     try {
-      yield event.inProgress(
-        state: state,
-        endOfList: false,
+      emit(
+        event.inProgress(
+          state: state,
+          endOfList: false,
+        ),
       );
 
-      final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now().subtract(const Duration(days: 1));
+      final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
       final chunk = await _repository
           .paginate(
             updatedBefore: updatedBefore,
@@ -222,58 +228,34 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
             ],
           );
 
-      yield event.successful(
-        state: state,
-        list: list,
-        endOfList: chunk.endOfList,
+      emit(
+        event.successful(
+          state: state,
+          list: list,
+          endOfList: chunk.endOfList,
+        ),
       );
+    } on GraphQLJobException {
+      emit(event.error(state: state, message: 'Network exception'));
+      await Future<void>.delayed(const Duration(seconds: 5));
+      rethrow;
     } on Object catch (err) {
       l.e('Произошла ошибка при обновлении ленты: $err');
-      yield event.error(
-        state: state,
-        message: 'An error occurred while updating the feed',
+      emit(
+        event.error(
+          state: state,
+          message: 'An error occurred while updating the feed',
+        ),
       );
       rethrow;
     } finally {
-      yield event.idle(state: state);
+      emit(
+        event.idle(state: state),
+      );
     }
   }
 
-  Stream<FeedState> _setFilter(_SetFilterFeedEvent event) => Stream<FeedState>.value(
-        event.setNewFilter(state: state),
-      );
-
-  @override
-  Stream<Transition<FeedEvent, FeedState>> transformEvents(
-    Stream<FeedEvent> events,
-    TransitionFunction<FeedEvent, FeedState> transitionFn,
-  ) {
-    // Не позволяю добавлять в очередь больше чем одно событие паджинации
-    var paginationPlanned = false;
-    return events
-        .where((event) {
-          if (event is _PaginateFeedEvent) {
-            if (paginationPlanned) {
-              return false;
-            } else {
-              paginationPlanned = true;
-              return true;
-            }
-          }
-          return true;
-        })
-        .asyncExpand(transitionFn)
-        .map<Transition<FeedEvent, FeedState>>(
-          (t) {
-            if (paginationPlanned && t.event is _PaginateFeedEvent && t.nextState is _IdleFeedState) {
-              paginationPlanned = false;
-            } else if (t.event is _PaginateFeedEvent) {
-              paginationPlanned = true;
-            }
-            return t;
-          },
-        );
-  }
+  void _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) => emit(event.setNewFilter(state: state));
 
   /// Исключаю из исходной коллекции элементы
   Stream<Job> _reducedStateList(List<int> idsForExclusion) async* {

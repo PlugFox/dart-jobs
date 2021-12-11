@@ -5,7 +5,7 @@ import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.da
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class AuthenticationScope extends StatefulWidget {
@@ -125,7 +125,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
       );
 
   @override
-  Widget build(final BuildContext context) => BlocScope<AuthenticationBLoC>.value(
+  Widget build(final BuildContext context) => BlocProvider<AuthenticationBLoC>.value(
         value: bloc,
         child: BlocBuilder<AuthenticationBLoC, AuthenticationState>(
           bloc: bloc,

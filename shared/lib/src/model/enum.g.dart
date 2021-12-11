@@ -93,3 +93,27 @@ _$CollaborationEmployment _$$CollaborationEmploymentFromJson(Map<String, dynamic
 Map<String, dynamic> _$$CollaborationEmploymentToJson(_$CollaborationEmployment instance) => <String, dynamic>{
       'type': instance.$type,
     };
+
+_$ImpossibleRelocation _$$ImpossibleRelocationFromJson(Map<String, dynamic> json) => _$ImpossibleRelocation(
+      $type: json['type'] as String?,
+    );
+
+Map<String, dynamic> _$$ImpossibleRelocationToJson(_$ImpossibleRelocation instance) => <String, dynamic>{
+      'type': instance.$type,
+    };
+
+_$PossibleRelocation _$$PossibleRelocationFromJson(Map<String, dynamic> json) => _$PossibleRelocation(
+      $type: json['type'] as String?,
+    );
+
+Map<String, dynamic> _$$PossibleRelocationToJson(_$PossibleRelocation instance) => <String, dynamic>{
+      'type': instance.$type,
+    };
+
+_$RequiredRelocation _$$RequiredRelocationFromJson(Map<String, dynamic> json) => _$RequiredRelocation(
+      $type: json['type'] as String?,
+    );
+
+Map<String, dynamic> _$$RequiredRelocationToJson(_$RequiredRelocation instance) => <String, dynamic>{
+      'type': instance.$type,
+    };

@@ -1796,3 +1796,473 @@ abstract class CollaborationEmployment extends Employment {
 
   factory CollaborationEmployment.fromJson(Map<String, dynamic> json) = _$CollaborationEmployment.fromJson;
 }
+
+Relocation _$RelocationFromJson(Map<String, dynamic> json) {
+  switch (json['type']) {
+    case 'IMPOSSIBLE':
+      return ImpossibleRelocation.fromJson(json);
+    case 'POSSIBLE':
+      return PossibleRelocation.fromJson(json);
+    case 'REQUIRED':
+      return RequiredRelocation.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(json, 'type', 'Relocation', 'Invalid union type "${json['type']}"!');
+  }
+}
+
+/// @nodoc
+class _$RelocationTearOff {
+  const _$RelocationTearOff();
+
+  ImpossibleRelocation impossible() {
+    return const ImpossibleRelocation();
+  }
+
+  PossibleRelocation possible() {
+    return const PossibleRelocation();
+  }
+
+  RequiredRelocation required() {
+    return const RequiredRelocation();
+  }
+
+  Relocation fromJson(Map<String, Object?> json) {
+    return Relocation.fromJson(json);
+  }
+}
+
+/// @nodoc
+const $Relocation = _$RelocationTearOff();
+
+/// @nodoc
+mixin _$Relocation {
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RelocationCopyWith<$Res> {
+  factory $RelocationCopyWith(Relocation value, $Res Function(Relocation) then) = _$RelocationCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$RelocationCopyWithImpl<$Res> implements $RelocationCopyWith<$Res> {
+  _$RelocationCopyWithImpl(this._value, this._then);
+
+  final Relocation _value;
+  // ignore: unused_field
+  final $Res Function(Relocation) _then;
+}
+
+/// @nodoc
+abstract class $ImpossibleRelocationCopyWith<$Res> {
+  factory $ImpossibleRelocationCopyWith(ImpossibleRelocation value, $Res Function(ImpossibleRelocation) then) =
+      _$ImpossibleRelocationCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$ImpossibleRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $ImpossibleRelocationCopyWith<$Res> {
+  _$ImpossibleRelocationCopyWithImpl(ImpossibleRelocation _value, $Res Function(ImpossibleRelocation) _then)
+      : super(_value, (v) => _then(v as ImpossibleRelocation));
+
+  @override
+  ImpossibleRelocation get _value => super._value as ImpossibleRelocation;
+}
+
+/// @nodoc
+@JsonSerializable()
+@FreezedUnionValue('IMPOSSIBLE')
+class _$ImpossibleRelocation extends ImpossibleRelocation {
+  const _$ImpossibleRelocation({String? $type})
+      : $type = $type ?? 'IMPOSSIBLE',
+        super._();
+
+  factory _$ImpossibleRelocation.fromJson(Map<String, dynamic> json) => _$$ImpossibleRelocationFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'Relocation.impossible()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other.runtimeType == runtimeType && other is ImpossibleRelocation);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
+  }) {
+    return impossible();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+  }) {
+    return impossible?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+    required TResult orElse(),
+  }) {
+    if (impossible != null) {
+      return impossible();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
+  }) {
+    return impossible(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+  }) {
+    return impossible?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+    required TResult orElse(),
+  }) {
+    if (impossible != null) {
+      return impossible(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ImpossibleRelocationToJson(this);
+  }
+}
+
+abstract class ImpossibleRelocation extends Relocation {
+  const factory ImpossibleRelocation() = _$ImpossibleRelocation;
+  const ImpossibleRelocation._() : super._();
+
+  factory ImpossibleRelocation.fromJson(Map<String, dynamic> json) = _$ImpossibleRelocation.fromJson;
+}
+
+/// @nodoc
+abstract class $PossibleRelocationCopyWith<$Res> {
+  factory $PossibleRelocationCopyWith(PossibleRelocation value, $Res Function(PossibleRelocation) then) =
+      _$PossibleRelocationCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$PossibleRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $PossibleRelocationCopyWith<$Res> {
+  _$PossibleRelocationCopyWithImpl(PossibleRelocation _value, $Res Function(PossibleRelocation) _then)
+      : super(_value, (v) => _then(v as PossibleRelocation));
+
+  @override
+  PossibleRelocation get _value => super._value as PossibleRelocation;
+}
+
+/// @nodoc
+@JsonSerializable()
+@FreezedUnionValue('POSSIBLE')
+class _$PossibleRelocation extends PossibleRelocation {
+  const _$PossibleRelocation({String? $type})
+      : $type = $type ?? 'POSSIBLE',
+        super._();
+
+  factory _$PossibleRelocation.fromJson(Map<String, dynamic> json) => _$$PossibleRelocationFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'Relocation.possible()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other.runtimeType == runtimeType && other is PossibleRelocation);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
+  }) {
+    return possible();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+  }) {
+    return possible?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+    required TResult orElse(),
+  }) {
+    if (possible != null) {
+      return possible();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
+  }) {
+    return possible(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+  }) {
+    return possible?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+    required TResult orElse(),
+  }) {
+    if (possible != null) {
+      return possible(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PossibleRelocationToJson(this);
+  }
+}
+
+abstract class PossibleRelocation extends Relocation {
+  const factory PossibleRelocation() = _$PossibleRelocation;
+  const PossibleRelocation._() : super._();
+
+  factory PossibleRelocation.fromJson(Map<String, dynamic> json) = _$PossibleRelocation.fromJson;
+}
+
+/// @nodoc
+abstract class $RequiredRelocationCopyWith<$Res> {
+  factory $RequiredRelocationCopyWith(RequiredRelocation value, $Res Function(RequiredRelocation) then) =
+      _$RequiredRelocationCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$RequiredRelocationCopyWithImpl<$Res> extends _$RelocationCopyWithImpl<$Res>
+    implements $RequiredRelocationCopyWith<$Res> {
+  _$RequiredRelocationCopyWithImpl(RequiredRelocation _value, $Res Function(RequiredRelocation) _then)
+      : super(_value, (v) => _then(v as RequiredRelocation));
+
+  @override
+  RequiredRelocation get _value => super._value as RequiredRelocation;
+}
+
+/// @nodoc
+@JsonSerializable()
+@FreezedUnionValue('REQUIRED')
+class _$RequiredRelocation extends RequiredRelocation {
+  const _$RequiredRelocation({String? $type})
+      : $type = $type ?? 'REQUIRED',
+        super._();
+
+  factory _$RequiredRelocation.fromJson(Map<String, dynamic> json) => _$$RequiredRelocationFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'Relocation.required()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other.runtimeType == runtimeType && other is RequiredRelocation);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() impossible,
+    required TResult Function() possible,
+    required TResult Function() required,
+  }) {
+    return required();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+  }) {
+    return required?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? impossible,
+    TResult Function()? possible,
+    TResult Function()? required,
+    required TResult orElse(),
+  }) {
+    if (required != null) {
+      return required();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ImpossibleRelocation value) impossible,
+    required TResult Function(PossibleRelocation value) possible,
+    required TResult Function(RequiredRelocation value) required,
+  }) {
+    return required(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+  }) {
+    return required?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ImpossibleRelocation value)? impossible,
+    TResult Function(PossibleRelocation value)? possible,
+    TResult Function(RequiredRelocation value)? required,
+    required TResult orElse(),
+  }) {
+    if (required != null) {
+      return required(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RequiredRelocationToJson(this);
+  }
+}
+
+abstract class RequiredRelocation extends Relocation {
+  const factory RequiredRelocation() = _$RequiredRelocation;
+  const RequiredRelocation._() : super._();
+
+  factory RequiredRelocation.fromJson(Map<String, dynamic> json) = _$RequiredRelocation.fromJson;
+}

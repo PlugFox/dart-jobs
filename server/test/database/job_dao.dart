@@ -15,7 +15,7 @@ void main([List<String>? args]) => group(
         final fakeJobData = JobData(
           title: 'title ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
           company: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
-          country: 'company ${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}',
+          country: 0,
           remote: false,
         );
 

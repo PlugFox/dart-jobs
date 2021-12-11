@@ -52,23 +52,30 @@ targets:
                 name: DateTime
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
-            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/string_list.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/text.dart'
               graphql_type: _text
               dart_type:
                 name: List<String>
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
-            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/string_list.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/level.dart'
               graphql_type: _level
               dart_type:
                 name: List<DeveloperLevel>
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
                   - 'package:dart_jobs_shared/model.dart'
-            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/string_list.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/employment.dart'
               graphql_type: _employment
               dart_type:
                 name: List<Employment>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/relocation.dart'
+              graphql_type: relocation
+              dart_type:
+                name: Relocation
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
                   - 'package:dart_jobs_shared/model.dart'

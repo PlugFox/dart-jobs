@@ -185,6 +185,8 @@ type job {
     id: Int!
     "Уровни разработчика"
     levels: _level!
+    "Релокация"
+    relocation: relocation!
     "Удаленная"
     remote: Boolean!
     "Описание на русском"
@@ -617,6 +619,8 @@ enum job_select_column {
     "column name"
     levels
     "column name"
+    relocation
+    "column name"
     remote
     "column name"
     russian_description
@@ -652,6 +656,8 @@ enum job_update_column {
     id
     "column name"
     levels
+    "column name"
+    relocation
     "column name"
     remote
     "column name"
@@ -913,6 +919,7 @@ input job_bool_exp {
     english_description: String_comparison_exp
     id: Int_comparison_exp
     levels: _level_comparison_exp
+    relocation: relocation_comparison_exp
     remote: Boolean_comparison_exp
     russian_description: String_comparison_exp
     skills: _text_comparison_exp
@@ -951,6 +958,8 @@ input job_insert_input {
     id: Int
     "Уровни разработчика"
     levels: _level
+    "Релокация"
+    relocation: relocation
     "Удаленная"
     remote: Boolean
     "Описание на русском"
@@ -984,6 +993,7 @@ input job_order_by {
     english_description: order_by
     id: order_by
     levels: order_by
+    relocation: order_by
     remote: order_by
     russian_description: order_by
     skills: order_by
@@ -1020,6 +1030,8 @@ input job_set_input {
     id: Int
     "Уровни разработчика"
     levels: _level
+    "Релокация"
+    relocation: relocation
     "Удаленная"
     remote: Boolean
     "Описание на русском"
@@ -1032,6 +1044,19 @@ input job_set_input {
     title: String
     "Последнее обновление"
     updated: timestamp
+}
+
+"Boolean expression to compare columns of type \"relocation\". All fields are combined with logical 'AND'."
+input relocation_comparison_exp {
+    _eq: relocation
+    _gt: relocation
+    _gte: relocation
+    _in: [relocation!]
+    _is_null: Boolean
+    _lt: relocation
+    _lte: relocation
+    _neq: relocation
+    _nin: [relocation!]
 }
 
 "Boolean expression to compare columns of type \"timestamp\". All fields are combined with logical 'AND'."
@@ -1055,5 +1080,7 @@ scalar _level
 scalar _text
 
 scalar bpchar
+
+scalar relocation
 
 scalar timestamp

@@ -24,7 +24,9 @@ dependencies:
   #protobuf: ^2.0.0
 
   # State manager & Inversion of Control
-  fox_flutter_bloc: ^0.1.0
+  #fox_flutter_bloc: ^0.1.0
+  flutter_bloc: ^8.0.0
+  bloc_concurrency: ^0.2.0
 
   # Network
   #grpc: ^3.0.2
@@ -36,11 +38,11 @@ dependencies:
 
   # Firebase
   firebase_core: ^1.1.1
-  firebase_analytics: ^8.0.4
+  firebase_analytics: ^9.0.3
   firebase_auth: ^3.1.0
   cloud_firestore: ^3.1.1
   firebase_crashlytics: ^2.0.3
-  firebase_performance: ^0.7.0+9
+  firebase_performance: ^0.8.0+2
   firebase_remote_config: ^1.0.0-dev.3
   #firebase_messaging: ^10.0.8
 
@@ -91,8 +93,9 @@ dev_dependencies:
   args: ^2.0.0
   #pigeon: ^0.3.0
 
-#dependency_overrides:
-#  analyzer: '0.39.14'
+dependency_overrides:
+  #analyzer: ^2.7.0
+  gql_exec: 0.3.0 # https://github.com/gql-dart/gql/issues/289
 
 # Flutter assets and config
 flutter:

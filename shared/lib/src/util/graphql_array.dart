@@ -12,9 +12,20 @@ abstract class GraphQLArray {
 
   /// Преобразует коллекцию графкл в виде строки к дарту
   /// Исходные данные не должны содержать символов "{,}"
-  static Iterable<T> toDart<T extends Object?>(String collection, T Function(String e) convert) {
-    final values = collection.trim();
-    return values.substring(1, values.length - 1).split(',').map((e) => e.trim()).map<T>(convert);
+  static Iterable<T> toDart<T extends Object?>(Object collection, T Function(String e) convert) {
+    if (collection is String) {
+      final values = collection.trim();
+      return values
+          .substring(1, values.length - 1)
+          .split(',')
+          .where((e) => e != 'null')
+          .map((e) => e.trim())
+          .map<T>(convert);
+    } else if (collection is List) {
+      return collection.cast<String>().map<T>(convert);
+    } else {
+      throw UnimplementedError('Unimplemented from GraphQL to Dart for type: ${collection.runtimeType}');
+    }
   }
 
   static String _defaultGraphQLConverter(final Object? object) => object == null ? 'null' : object.toString();

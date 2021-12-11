@@ -3,7 +3,7 @@ import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_screen.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobPage extends Page<void> {
   JobPage({
@@ -26,7 +26,7 @@ class JobPage extends Page<void> {
 
   @override
   Route<void> createRoute(final BuildContext context) => MaterialPageRoute<void>(
-        builder: (final context) => BlocScope<JobBLoC>.create(
+        builder: (final context) => BlocProvider<JobBLoC>(
           create: (context) => JobBLoC(
             repository: RepositoryScope.of(context).jobRepository,
             job: job,

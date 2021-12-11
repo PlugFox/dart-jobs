@@ -14,7 +14,7 @@ class JobFormData {
   final ValueNotifier<FormStatus> _status;
 
   /// Работа (значение обновляется только при получении или установке реузультата)
-  /// Лучше вместо этого использовать `BlocScope.of<JobBLoC>(context).state.job` или BlocBuilder
+  /// Лучше вместо этого использовать `BlocProvider.of<JobBLoC>(context).state.job` или BlocBuilder
   /// Для получения состояния текущей работы у стейт машины
   ValueListenable<JobData> get lastJob => _lastJob;
   final ValueNotifier<JobData> _lastJob;
@@ -24,13 +24,13 @@ class JobFormData {
   final List<JobInputControllerMixin> _controllers = <JobInputControllerMixin>[];
   final JobFieldTitleController titleController = JobFieldTitleController();
   final JobFieldCompanyController companyController = JobFieldCompanyController();
-  final JobFieldCountryController countryController = JobFieldCountryController();
-  final JobFieldAddressController addressController = JobFieldAddressController();
+  final JobFieldCountryController countryController = JobFieldCountryController(0);
+  //final JobFieldAddressController addressController = JobFieldAddressController();
   final JobFieldRemoteController remoteController = JobFieldRemoteController();
   final JobFieldTagsController tagsController = JobFieldTagsController();
   final JobFieldSkillsController skillsController = JobFieldSkillsController();
   final JobFieldLevelsController levelsController = JobFieldLevelsController();
-  final JobFieldEmploymentController employmentController = JobFieldEmploymentController();
+  final JobFieldEmploymentsController employmentsController = JobFieldEmploymentsController();
   final JobFieldContactsController contactsController = JobFieldContactsController();
   final JobFieldDescriptionsController descriptionsController = JobFieldDescriptionsController();
 
@@ -48,12 +48,12 @@ class JobFormData {
         titleController,
         companyController,
         countryController,
-        addressController,
+        //addressController,
         remoteController,
         tagsController,
         skillsController,
         levelsController,
-        employmentController,
+        employmentsController,
         contactsController,
         descriptionsController,
       ],
@@ -78,13 +78,13 @@ class JobFormData {
   JobData updateJob(JobData data) => _lastJob.value = data.copyWith(
         title: titleController.text,
         company: companyController.text,
-        country: countryController.text,
-        address: addressController.text,
+        country: countryController.value,
+        //address: addressController.text,
         remote: remoteController.value,
         tags: tagsController.value,
         skills: skillsController.value,
         levels: levelsController.value,
-        employment: employmentController.value,
+        employments: employmentsController.value,
         descriptions: descriptionsController.value,
         contacts: contactsController.value,
       );
@@ -210,24 +210,17 @@ class JobFieldCompanyController extends TextEditingController
 }
 
 /// Country controller
-class JobFieldCountryController extends TextEditingController
-    with JobInputControllerMixin<TextEditingValue>
-    implements JobTextFieldSingleLineController {
-  @override
-  final int maxLength = 64;
+class JobFieldCountryController extends ValueNotifier<int> with JobInputControllerMixin<int> {
+  JobFieldCountryController(int value) : super(value);
 
   @override
-  String? checkValue(TextEditingValue value) {
-    final text = value.text.trim();
-    if (text.isEmpty) return 'Must be filled';
-    if (text.length > maxLength) return 'Must be less than 65 characters';
-    return null;
-  }
+  String? checkValue(int value) => null;
 
   @override
-  void update(JobData data) => text = data.country;
+  void update(JobData data) => value = data.country;
 }
 
+/*
 /// Location controller
 class JobFieldAddressController extends TextEditingController
     with JobInputControllerMixin<TextEditingValue>
@@ -245,6 +238,7 @@ class JobFieldAddressController extends TextEditingController
   @override
   void update(JobData data) => text = data.address;
 }
+*/
 
 /// Remote controller
 class JobFieldRemoteController extends ValueNotifier<bool> with JobInputControllerMixin<bool> {
@@ -292,15 +286,15 @@ class JobFieldLevelsController extends ValueNotifier<List<DeveloperLevel>>
 }
 
 /// Employment controller
-class JobFieldEmploymentController extends ValueNotifier<List<Employment>>
+class JobFieldEmploymentsController extends ValueNotifier<List<Employment>>
     with JobInputControllerMixin<List<Employment>> {
-  JobFieldEmploymentController() : super(<Employment>[]);
+  JobFieldEmploymentsController() : super(<Employment>[]);
 
   @override
   String? checkValue(List<Employment> value) => null;
 
   @override
-  void update(JobData data) => value = data.employment;
+  void update(JobData data) => value = data.employments;
 }
 
 /// Contacts controller

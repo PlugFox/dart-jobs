@@ -14,14 +14,14 @@ String? fromDartEmploymentNullableToGraphQLemploymentNullable(Employment? employ
 
 /* List<Employment> <-> _employment */
 
-List<Employment> fromGraphQL$employmentToDartListEmployment(String employments) =>
+List<Employment> fromGraphQL$employmentToDartListEmployment(Object employments) =>
     GraphQLArray.toDart<Employment>(employments, Employment.fromName).toList();
 
 String fromDartListEmploymentToGraphQL$employment(List<Employment> employments) =>
     GraphQLArray.toGraphQL<Employment>(employments, (e) => e.name);
 
-List<Employment>? fromGraphQL$employmentNullableToDartListEmploymentNullable(String? employments) =>
+List<Employment>? fromGraphQL$employmentNullableToDartListNullableEmployment(Object? employments) =>
     employments.nullOr(fromGraphQL$employmentToDartListEmployment);
 
-String? fromDartListEmploymentNullableToGraphQLemploymentNullable(List<Employment>? employments) =>
+String? fromDartListNullableEmploymentToGraphQL$employmentNullable(List<Employment>? employments) =>
     employments.nullOr(fromDartListEmploymentToGraphQL$employment);
