@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/constant/environment.dart';
 import 'package:dart_jobs_shared/graphql.dart';
 
 abstract class GraphQLClientCreator {
@@ -22,7 +23,7 @@ abstract class GraphQLClientCreator {
     /// TODO: заменить на собственный хендлер линк
     /// берущий URL из переменных окружения, RemoteConfig, LocalStorage
     final httpLink = HttpLink(
-      'https://hasura.plugfox.dev/v1/graphql',
+      kGraphQLEndpoint,
     );
     links.add(httpLink);
 
