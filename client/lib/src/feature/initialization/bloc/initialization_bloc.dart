@@ -1,6 +1,6 @@
-import 'package:dart_jobs/src/feature/initialization/data/initialization_helper.dart';
-import 'package:dart_jobs/src/feature/initialization/model/initialization_progress.dart';
-import 'package:fox_core_bloc/bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:dart_jobs_client/src/feature/initialization/data/initialization_helper.dart';
+import 'package:dart_jobs_client/src/feature/initialization/model/initialization_progress.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'initialization_bloc.freezed.dart';
@@ -54,28 +54,35 @@ class InitializationBLoC extends Bloc<InitializationEvent, InitializationState> 
       message: 'Preparing for initialization',
     ),
   })  : _initializationHelper = initializationHelper,
-        super(initialState);
+        super(initialState) {
+    on<InitializationEvent>(_init);
+  }
 
-  @override
-  Stream<InitializationState> mapEventToState(final InitializationEvent event) async* {
+  Future<void> _init(final InitializationEvent event, final Emitter<InitializationState> emit) async {
     try {
-      if (_initializationHelper.isInitialized) {
-        yield InitializationState.initialized(result: _initializationHelper.getResult());
+      if (state.isInitialized || _initializationHelper.isInitialized) {
+        emit(InitializationState.initialized(result: _initializationHelper.getResult()));
       }
       _initializationHelper.reset();
-      yield* _initializationHelper.initialize().map<InitializationState>(
+
+      await _initializationHelper
+          .initialize()
+          .map<InitializationState>(
             (final value) => InitializationState.initializationInProgress(
               progress: value.progress,
               message: value.message,
             ),
-          );
-      yield InitializationState.initialized(result: _initializationHelper.getResult());
+          )
+          .forEach(emit);
+      emit(InitializationState.initialized(result: _initializationHelper.getResult()));
     } on Object catch (error, stackTrace) {
       // Произошла непредвиденная ошибка
-      yield InitializationState.error(
-        message: 'Unsupported initialization error',
-        error: error,
-        stackTrace: stackTrace,
+      emit(
+        InitializationState.error(
+          message: 'Unsupported initialization error',
+          error: error,
+          stackTrace: stackTrace,
+        ),
       );
       rethrow;
     }

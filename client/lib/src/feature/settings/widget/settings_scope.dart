@@ -1,10 +1,10 @@
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
-import 'package:dart_jobs/src/feature/settings/bloc/settings_bloc.dart';
-import 'package:dart_jobs/src/feature/settings/model/user_settings.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
+import 'package:dart_jobs_client/src/feature/settings/bloc/settings_bloc.dart';
+import 'package:dart_jobs_client/src/feature/settings/model/user_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class SettingsScope extends StatefulWidget {
@@ -58,7 +58,7 @@ class _SettingsScopeState extends State<SettingsScope> {
   void initState() {
     super.initState();
     settingsBLoC = SettingsBLoC(
-      repository: InitializationScope.storeOf(context).settingsRepository,
+      repository: RepositoryScope.of(context).settingsRepository,
     );
   }
 

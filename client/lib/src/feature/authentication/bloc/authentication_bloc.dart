@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:dart_jobs/src/feature/authentication/data/authentication_repository.dart';
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:fox_core_bloc/bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
@@ -68,41 +68,37 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
         super(initialState ?? AuthenticationState.fromUser(authenticationRepository.currentUser)) {
     _authStateChangesSubscription = authenticationRepository.authStateChanges
         .map<AuthenticationState>(AuthenticationState.fromUser)
-        .listen(setState, cancelOnError: false);
+        // ignore: invalid_use_of_visible_for_testing_member
+        .listen(emit, cancelOnError: false);
+    on<_SignInWithGoogleEvent>((event, emit) => _signInWithGoogle(emit));
+    on<_LogOutEvent>((event, emit) => _logOut(emit));
   }
 
-  @override
-  Stream<AuthenticationState> mapEventToState(final AuthenticationEvent event) =>
-      event.when<Stream<AuthenticationState>>(
-        signInWithGoogle: _signInWithGoogle,
-        logOut: _logOut,
-      );
-
-  Stream<AuthenticationState> _signInWithGoogle() async* {
+  Future<void> _signInWithGoogle(Emitter emit) async {
     if (state.isAuthenticated) return;
     l.vvvvvv('Начат процесс аутентификации в Google');
-    yield AuthenticationState.progress(user: state.user);
+    emit(AuthenticationState.progress(user: state.user));
     try {
       l.vvvvvv('Запросим у репозитория аутентификации аутентификацию в гугле');
       final user = await _authenticationRepository.signInWithGoogle();
-      yield AuthenticationState.fromUser(user);
+      emit(AuthenticationState.fromUser(user));
     } on Object {
       l.w('Во время аутентификации в гугле произошла ошибка');
-      yield const AuthenticationState.notAuthenticated();
+      emit(const AuthenticationState.notAuthenticated());
       rethrow;
     }
   }
 
-  Stream<AuthenticationState> _logOut() async* {
+  Future<void> _logOut(Emitter emit) async {
     if (state.isNotAuthenticated) return;
+    l.vvvvvv('Начат процесс разлогинивания');
+    emit(AuthenticationState.progress(user: state.user));
     try {
-      l.vvvvvv('Начат процесс разлогинивания');
-      yield AuthenticationState.progress(user: state.user);
       await _authenticationRepository.logOut();
-      yield const AuthenticationState.notAuthenticated();
+      emit(const AuthenticationState.notAuthenticated());
     } on Object {
       l.w('Во время разлогина произошла ошибка');
-      yield AuthenticationState.fromUser(state.user);
+      emit(AuthenticationState.fromUser(state.user));
       rethrow;
     }
   }

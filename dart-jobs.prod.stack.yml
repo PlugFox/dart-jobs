@@ -9,27 +9,125 @@
 version: '3.3'
 
 services:
-  dart-jobs-service:
-    image: registry.plugfox.dev/dart-jobs-service:prod
-    #volumes:
-    #  - /var/run/docker.sock:/var/run/docker.sock:ro
+#  dart-jobs-service:
+#    image: registry.plugfox.dev/dart-jobs-service:prod
+#    secrets:
+#      - dart-jobs-db-username
+#      - dart-jobs-db-password
+#    environment:
+#      PORT: 80
+#      DB_USERNAME_SECRET_PATH: /run/secrets/dart-jobs-db-username#      DB_PASSWORD_SECRET_PATH: /run/secrets/dart-jobs-db-password
+#    #volumes:
+#    #  - /var/run/docker.sock:/var/run/docker.sock:ro
+#    #ports:
+#    #  - target: 8080
+#    #    published: 80
+#    #    mode: host
+#    # TODO: расскоментить healthcheck в проде
+#    healthcheck:
+#      test: curl --fail -s http://127.0.0.1:80/health || exit 1
+#      interval: 30s
+#      timeout: 15s
+#      retries: 3
+#    networks:
+#      - traefik-public
+#      - postgres
+#      - dart-jobs
+#    deploy:
+#      mode: replicated
+#      replicas: 1
+#      update_config:
+#        failure_action: rollback
+#        parallelism: 1
+#        delay: 10s
+#      restart_policy:
+#        condition: on-failure
+#        delay: 10s
+#        max_attempts: 3
+#      placement:
+#        constraints:
+#          - node.role == worker
+#      resources:
+#        reservations:
+#          cpus: '0.15'
+#          memory: 128M
+#        limits:
+#          cpus: '0.25'
+#          memory: 512M
+#      labels:
+#        ################################################################
+#        # TRAEFIK CONFIG
+#        traefik.enable: 'true'
+#        traefik.docker.network: traefik-public
+#        traefik.constraint-label: traefik-public
+#
+#        # HTTPS Router
+#        traefik.http.routers.dart-jobs-prod-router.tls: 'true'
+#        traefik.http.routers.dart-jobs-prod-router.entrypoints: https
+#        traefik.http.routers.dart-jobs-prod-router.tls.certresolver: le
+#        traefik.http.routers.dart-jobs-prod-router.rule: Host(`api.plugfox.dev`) && PathPrefix(`/jobs`)
+#
+#        # Middlewares
+#        traefik.http.routers.dart-jobs-prod-router.middlewares: 'dart-jobs-prod-headers'
+#
+#        # CORS
+#        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowmethods: GET,PUT,DELETE,POST,OPTIONS
+#        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolalloworiginlist: '*'
+#        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolexposeheaders: '*'
+#        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowheaders: '*'
+#        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolmaxage: '60'
+#
+#        # STRIP PREFIX
+#        #traefik.http.middlewares.dart-jobs-prod-stripprefix.stripprefix.prefixes: /jobs
+#
+#        # Service
+#        traefik.http.routers.dart-jobs-prod-router.service: dart-jobs-prod-service
+#        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.scheme: http
+#        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.path: /health
+#        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.interval: 30s
+#        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.timeout: 15s
+#        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 80
+#        ################################################################
+
+  # Публичное API
+  graphql:
+    image: hasura/graphql-engine:v2.0.10
     #ports:
-    #  - target: 8080
-    #    published: 80
-    #    mode: host
-    healthcheck:
-      test: curl --fail -s http://127.0.0.1:80/health || exit 1
-      interval: 15s
-      timeout: 10s
-      retries: 3
+    #  - "8080:8080"
+    depends_on:
+      - postgres
+    #restart: always
     environment:
-      PORT: 80
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/hasura
+      ## Переменные с помощью которых можно добавить соединение с базой данных
+      HASURA_PG_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/hasura
+      DARTJOBS_PG_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/dart_jobs
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      HASURA_GRAPHQL_ADMIN_SECRET: 7E7B072W0we4pGRdA9p1kMsp
+      ## Разрешить неавторизованный логин
+      #HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+      ## Аутентификация по средством внутреннего сервиса проверяющего JWT Firebase
+      HASURA_GRAPHQL_AUTH_HOOK: registry
+      HASURA_GRAPHQL_AUTH_HOOK_MODE: GET
     networks:
       - traefik-public
-      - dart-jobs
+      - postgres
+    # Для хелсчеков предварительно собрать свой контейнер с cURL или wget
+    # https://github.com/hasura/graphql-engine/issues/1532
+    #healthcheck:
+    #  test: curl --fail -s http://127.0.0.1:8080/healthz || exit 1
+    #  interval: 30s
+    #  timeout: 15s
+    #  retries: 3
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
       update_config:
         failure_action: rollback
         parallelism: 1
@@ -43,11 +141,11 @@ services:
           - node.role == worker
       resources:
         reservations:
-          cpus: '0.15'
-          memory: 128M
-        limits:
-          cpus: '0.25'
-          memory: 512M
+          cpus: '1'
+          memory: 500M
+      #  limits:
+      #    cpus: '2.5'
+      #    memory: 1024M
       labels:
         ################################################################
         # TRAEFIK CONFIG
@@ -56,34 +154,43 @@ services:
         traefik.constraint-label: traefik-public
 
         # HTTPS Router
-        traefik.http.routers.dart-jobs-prod-router.tls: 'true'
-        traefik.http.routers.dart-jobs-prod-router.entrypoints: https
-        traefik.http.routers.dart-jobs-prod-router.tls.certresolver: le
-        traefik.http.routers.dart-jobs-prod-router.rule: Host(`api.plugfox.dev`) && PathPrefix(`/jobs`)
+        traefik.http.routers.hasura-router.tls: 'true'
+        traefik.http.routers.hasura-router.entrypoints: https
+        traefik.http.routers.hasura-router.tls.certresolver: le
+        traefik.http.routers.hasura-router.rule: Host(`job.api.plugfox.dev`)
 
         # Middlewares
-        traefik.http.routers.dart-jobs-prod-router.middlewares: 'dart-jobs-prod-headers'
+        #traefik.http.routers.hasura-router.middlewares: 'hasura-headers'
 
         # CORS
-        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowmethods: GET,PUT,DELETE,POST,OPTIONS
-        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolalloworiginlist: '*'
-        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolexposeheaders: '*'
-        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolallowheaders: '*'
-        traefik.http.middlewares.dart-jobs-prod-headers.headers.accesscontrolmaxage: '60'
+        traefik.http.middlewares.hasura-headers.headers.accesscontrolallowmethods: GET,PUT,DELETE,POST,OPTIONS
+        traefik.http.middlewares.hasura-headers.headers.accesscontrolalloworiginlist: '*'
+        traefik.http.middlewares.hasura-headers.headers.accesscontrolexposeheaders: '*'
+        traefik.http.middlewares.hasura-headers.headers.accesscontrolallowheaders: '*'
+        traefik.http.middlewares.hasura-headers.headers.accesscontrolmaxage: '60'
 
         # STRIP PREFIX
-        #traefik.http.middlewares.dart-jobs-prod-stripprefix.stripprefix.prefixes: /jobs
+        #traefik.http.middlewares.hasura-stripprefix.stripprefix.prefixes: /jobs
 
         # Service
-        traefik.http.routers.dart-jobs-prod-router.service: dart-jobs-prod-service
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.scheme: http
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.path: /health
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.interval: 30s
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.healthcheck.timeout: 3s
-        traefik.http.services.dart-jobs-prod-service.loadbalancer.server.port: 80
+        traefik.http.routers.hasura-router.service: hasura-service
+        traefik.http.services.hasura-service.loadbalancer.healthcheck.scheme: http
+        traefik.http.services.hasura-service.loadbalancer.healthcheck.path: /healthz
+        traefik.http.services.hasura-service.loadbalancer.healthcheck.interval: 30s
+        traefik.http.services.hasura-service.loadbalancer.healthcheck.timeout: 15s
+        traefik.http.services.hasura-service.loadbalancer.server.port: 8080
         ################################################################
 
+#secrets:
+#  dart-jobs-db-username:
+#    external: true
+#  dart-jobs-db-password:
+#    external: true
+
 networks:
+  postgres:
+    external: true
+    driver: overlay
   traefik-public:
     external: true
     driver: overlay

@@ -1,4 +1,4 @@
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:l/l.dart';

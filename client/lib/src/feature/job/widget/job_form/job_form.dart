@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/feature/authentication/widget/authentication_scope.dart';
-import 'package:dart_jobs/src/feature/job/bloc/job_bloc.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_actions.dart';
-import 'package:dart_jobs/src/feature/job/widget/job_form/job_form_data.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_actions.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
@@ -93,6 +93,7 @@ class _JobFormState extends State<JobForm> {
     _subscription = _bloc.stream.listen(
       (state) => state.when<void>(
         saved: _onSaved,
+        fetched: _onFetched,
         deleted: _onDeleted,
         error: _onError,
         notFound: _onNotFound,
@@ -108,12 +109,12 @@ class _JobFormState extends State<JobForm> {
     super.dispose();
   }
 
-  void _onSaved(Job job) => _dispatcher.invokeAction(
+  void _onSaved(Job job, String message) => _dispatcher.invokeAction(
         FetchJobAction(_formData),
         ReadJobIntent(job.data),
       );
 
-  void _onDeleted(Job job) => PageRouter.goHome(context);
+  void _onDeleted(Job job, String message) => PageRouter.goHome(context);
 
   void _onError(Job job, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -124,16 +125,18 @@ class _JobFormState extends State<JobForm> {
     }
   }
 
-  void _onNotFound(Job job) {
+  void _onNotFound(Job job, String message) {
     //PageRouter.goHome(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Not found')),
     );
   }
 
-  void _onProcessed(Job job) => _formData.setState(newStatus: FormStatus.processed);
+  void _onProcessed(Job job, String message) => _formData.setState(newStatus: FormStatus.processed);
 
-  void _onIdle(Job job) {
+  void _onFetched(Job job, String message) {}
+
+  void _onIdle(Job job, String message) {
     if (_formData.status.value == FormStatus.processed) {
       _formData.setState(newStatus: job.hasNotID ? FormStatus.editing : FormStatus.readOnly);
     }

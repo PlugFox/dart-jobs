@@ -1,8 +1,9 @@
-import 'package:dart_jobs/src/common/constant/layout_constraints.dart';
-import 'package:dart_jobs/src/common/localization/localizations.dart';
-import 'package:dart_jobs/src/common/router/page_router.dart';
-import 'package:dart_jobs/src/feature/initialization/widget/initialization_scope.dart';
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_shared/model.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_info/platform_info.dart';
@@ -154,7 +155,7 @@ class _JobFeedTile extends FeedTile {
             text: job.data.company,
           ), // 'Subtitle (Company, Developer occupation)'
           location: _ShimmerText(
-            text: job.data.remote ? 'Remote' : '${job.data.country} ${job.data.address}',
+            text: job.data.remote ? 'Remote' : '${job.data.country}',
           ), // 'Location'
           salary: const _ShimmerText(
             text: 'Unknown salary',
@@ -172,11 +173,21 @@ class _JobFeedTile extends FeedTile {
                 edit: false,
               ),
             );
-            InitializationScope.storeOf(context).analytics?.logViewItem(
+            RepositoryScope.of(context).analytics?.logViewItem(
+              value: job.id.toDouble(),
+              items: <AnalyticsEventItem>[
+                AnalyticsEventItem(
                   itemId: job.id.toString(),
-                  itemName: job.data.title,
                   itemCategory: 'job',
-                );
+                  itemCategory2: job.data.remote ? 'remote' : 'office',
+                  itemCategory3: job.data.relocation.name.toLowerCase(),
+                  itemListName: 'jobs',
+                  itemBrand: job.data.company,
+                  locationId: job.data.country.toString(),
+                  itemName: job.data.title,
+                ),
+              ],
+            );
           },
           key: key,
         );

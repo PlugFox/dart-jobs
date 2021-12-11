@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:dart_jobs_shared/src/model/enum.dart';
-import 'package:dart_jobs_shared/src/protobuf.dart' as proto;
 import 'package:dart_jobs_shared/util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,22 +11,10 @@ part 'job.g.dart';
 /// Кусок коллекции работ / список с работами
 @immutable
 class JobsChunk extends Iterable<Job> {
-  /// Это последний кусок коллекции по указаному отбору
-  /// Если true - значит по указаному запросу больше нечего получать
-  final bool endOfList;
-
-  final List<Job> _jobs;
-
   const JobsChunk({
     required final List<Job> jobs,
     final this.endOfList = false,
   }) : _jobs = jobs;
-
-  /// Generate Map<String, Object?> from class
-  Map<String, Object?> toJson() => <String, Object?>{
-        'end_of_list': endOfList,
-        'jobs': _jobs.map<Map<String, Object?>>((e) => e.toJson()).toList(),
-      };
 
   /// Generate Class from Map<String, Object?>
   factory JobsChunk.fromJson(Map<String, Object?> json) {
@@ -38,6 +25,25 @@ class JobsChunk extends Iterable<Job> {
     );
   }
 
+  /// Это последний кусок коллекции по указаному отбору
+  /// Если true - значит по указаному запросу больше нечего получать
+  final bool endOfList;
+
+  final List<Job> _jobs;
+
+  @override
+  int get length => _jobs.length;
+
+  /// Generate Map<String, Object?> from class
+  Map<String, Object?> toJson() => <String, Object?>{
+        'end_of_list': endOfList,
+        'jobs': _jobs.map<Map<String, Object?>>((e) => e.toJson()).toList(),
+      };
+
+  @override
+  Iterator<Job> get iterator => _jobs.iterator;
+
+  /*
   factory JobsChunk.fromProtobuf(proto.JobsChunk proto) => JobsChunk(
         endOfList: proto.endOfList,
         jobs: proto.jobs.map<Job>(Job.fromProtobuf).toList(),
@@ -51,9 +57,7 @@ class JobsChunk extends Iterable<Job> {
   factory JobsChunk.fromBytes(List<int> bytes) => JobsChunk.fromProtobuf(proto.JobsChunk.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
-
-  @override
-  Iterator<Job> get iterator => _jobs.iterator;
+  */
 }
 
 /// Работа
@@ -91,20 +95,28 @@ class Job with _$Job, Comparable<Job> {
     @JsonKey(name: 'deletion_mark') @Default(false) final bool deletionMark,
   }) = _Job;
 
+  /// Generate Class from Map<String, Object?>
+  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
+
+  /// Сортирую от новых к старым по полю [updated]
+  @override
+  int compareTo(Job other) => other.updated.compareTo(updated);
+
+  /*
   factory Job.fromProtobuf(proto.Job job) => Job(
         id: job.id,
         creatorId: job.creatorId,
         //weight: job.weight.toInt(),
-        created: job.created.toDateTime(),
-        updated: job.updated.toDateTime(),
+        created: job.created.toDateTime().toUtc(),
+        updated: job.updated.toDateTime().toUtc(),
         data: JobData.fromProtobuf(job.jobData),
         deletionMark: job.deletionMark,
       );
 
   proto.Job toProtobuf() => proto.Job(
         creatorId: creatorId,
-        created: proto.Timestamp.fromDateTime(created),
-        updated: proto.Timestamp.fromDateTime(updated),
+        created: proto.Timestamp.fromDateTime(created.toUtc()),
+        updated: proto.Timestamp.fromDateTime(updated.toUtc()),
         id: id,
         //weight: proto.Int64(weight),
         deletionMark: deletionMark,
@@ -114,12 +126,7 @@ class Job with _$Job, Comparable<Job> {
   factory Job.fromBytes(List<int> bytes) => Job.fromProtobuf(proto.Job.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
-
-  /// Generate Class from Map<String, Object?>
-  factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
-
-  @override
-  int compareTo(Job other) => other.updated.compareTo(updated);
+  */
 }
 
 /// Работа / данные работы
@@ -140,18 +147,22 @@ class JobData with _$JobData {
     @JsonKey(name: 'company') @Default('') final String company,
 
     /// Страна, например: Russia
-    /// Максимальная длина - 64 символов
-    /// Выпадающее поле выбора
-    @JsonKey(name: 'country') @Default('') final String country,
+    /// Идентификатор страны
+    /// Выпадающее поле поиска
+    @JsonKey(name: 'country') @Default(0) final int country,
 
     /// Удаленная работа?
     /// Переключатель
     @JsonKey(name: 'remote') @Default(true) final bool remote,
 
-    /// Местоположение, например: Moscow
-    /// Максимальная длина - 256 символов
-    /// Поле ввода
-    @JsonKey(name: 'address') @Default('') final String address,
+    /// Возможность переезда
+    /// Выбор
+    @JsonKey(name: 'relocation') @Default(Relocation.impossible()) final Relocation relocation,
+
+    // /// Местоположение, например: Moscow
+    // /// Максимальная длина - 256 символов
+    // /// Поле ввода
+    // @JsonKey(name: 'address') @Default('') final String address,
 
     /// Описания на различных языках
     /// Ключ - локаль, например "en" или "ru"
@@ -165,18 +176,18 @@ class JobData with _$JobData {
 
     /// Навыки (Skills)
     /// Поля ввода
-    @JsonKey(name: 'skills') @Default(<Skill>[]) final List<Skill> skills,
+    @JsonKey(name: 'skills') @Default(<String>[]) final List<String> skills,
 
     /// Контакты для обратной связи (Contacts)
     /// Емейл, Сайт, Телефон, Различные мессенджеры
     /// Поля ввода
-    @JsonKey(name: 'contacts') @Default(<Contact>[]) final List<Contact> contacts,
+    @JsonKey(name: 'contacts') @Default(<String>[]) final List<String> contacts,
 
     /// Трудоустройство, занятость (Employment)
     /// Полный рабочий день, Частичная занятость, Одноразовая работа, Работа по контракту,
     /// Участие в опенсорс проекте, Поиск команды или сотрудничество
     /// Чекбоксы, Chips
-    @JsonKey(name: 'employment') @Default(<Employment>[]) final List<Employment> employment,
+    @JsonKey(name: 'employments') @Default(<Employment>[]) final List<Employment> employments,
 
     /// Тэги (Tags)
     /// Поле ввода
@@ -186,6 +197,13 @@ class JobData with _$JobData {
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
 
+  /// Англоязычное описание
+  String get englishDescription => descriptions.english;
+
+  /// Русскоязычное описание
+  String get russianDescription => descriptions.russian;
+
+  /*
   factory JobData.fromProtobuf(proto.JobData proto) => JobData(
         title: proto.title,
         remote: proto.remote,
@@ -217,6 +235,7 @@ class JobData with _$JobData {
   factory JobData.fromBytes(List<int> bytes) => JobData.fromProtobuf(proto.JobData.fromBuffer(bytes));
 
   List<int> toBytes() => toProtobuf().writeToBuffer();
+  */
 }
 
 /// Описания на различных языках
@@ -229,12 +248,27 @@ class Description with MapMixin<String, String> {
 
   const Description([Map<String, String>? data]) : _internalMap = data ?? const <String, String>{};
 
+  factory Description.fromLanguages({
+    required final String english,
+    required final String russian,
+  }) =>
+      Description(
+        <String, String>{
+          'en': english,
+          'ru': russian,
+        },
+      );
+
   factory Description.fromJson(Map<String, Object?> json) => Description(
         <String, String>{
           for (final e in json.entries)
             if (e.value is String) e.key: e.value.toString(),
         },
       );
+
+  String get english => this['en'] ?? '';
+
+  String get russian => this['ru'] ?? '';
 
   Map<String, String> toJson() => Map<String, String>.of(_internalMap);
 

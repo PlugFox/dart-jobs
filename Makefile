@@ -19,16 +19,18 @@ upgrade: get
 
 build:
 	@echo "Build release docker images"
-	docker-compose -f ./dart-jobs.prod.compose.yml build --no-cache --force-rm --compress --parallel
+	#docker-compose -f ./dart-jobs.prod.compose.yml build --no-cache --force-rm --compress --parallel
 
 push:
 	@echo "Push release docker images"
-	docker-compose -f ./dart-jobs.prod.compose.yml push
+	#docker-compose -f ./dart-jobs.prod.compose.yml push
 
 run:
 	@echo "Run release docker images"
-	docker run -d -p 9090:9090 --name dart-jobs-service-prod registry.plugfox.dev/dart-jobs-service:prod
+	#docker run -d -p 9090:9090 --name dart-jobs-service-prod registry.plugfox.dev/dart-jobs-service:prod
 
 deploy:
 	@echo "Deploy release into docker swarm"
 	docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+
+build_and_deploy: build push deploy

@@ -1,4 +1,4 @@
-import 'package:dart_jobs/src/feature/authentication/widget/profile_screen.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends Page<void> {

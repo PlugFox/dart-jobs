@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:dart_jobs/src/common/router/configuration.dart';
+import 'package:dart_jobs_client/src/common/router/configuration.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';

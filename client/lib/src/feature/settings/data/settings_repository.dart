@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_jobs/src/feature/authentication/model/user_entity.dart';
-import 'package:dart_jobs/src/feature/settings/model/user_settings.dart';
+import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/settings/model/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ISettingsRepository {

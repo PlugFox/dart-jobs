@@ -1,0 +1,1086 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: query_root
+    mutation: mutation_root
+    subscription: subscription_root
+}
+
+"columns and relationships of \"country\""
+type country {
+    "Двухсимвольный код страны"
+    code: bpchar!
+    "Идентификатор страны"
+    id: Int!
+    "Приблизительная широта"
+    latitude: Float!
+    "Приблизительная долгота"
+    longitude: Float!
+    "Имя страны на английском"
+    title: String!
+}
+
+"aggregated selection of \"country\""
+type country_aggregate {
+    aggregate: country_aggregate_fields
+    nodes: [country!]!
+}
+
+"aggregate fields of \"country\""
+type country_aggregate_fields {
+    avg: country_avg_fields
+    count(columns: [country_select_column!], distinct: Boolean): Int!
+    max: country_max_fields
+    min: country_min_fields
+    stddev: country_stddev_fields
+    stddev_pop: country_stddev_pop_fields
+    stddev_samp: country_stddev_samp_fields
+    sum: country_sum_fields
+    var_pop: country_var_pop_fields
+    var_samp: country_var_samp_fields
+    variance: country_variance_fields
+}
+
+"aggregate avg on columns"
+type country_avg_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate max on columns"
+type country_max_fields {
+    "Двухсимвольный код страны"
+    code: bpchar
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+    "Имя страны на английском"
+    title: String
+}
+
+"aggregate min on columns"
+type country_min_fields {
+    "Двухсимвольный код страны"
+    code: bpchar
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+    "Имя страны на английском"
+    title: String
+}
+
+"response of any mutation on the table \"country\""
+type country_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [country!]!
+}
+
+"aggregate stddev on columns"
+type country_stddev_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate stddev_pop on columns"
+type country_stddev_pop_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate stddev_samp on columns"
+type country_stddev_samp_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate sum on columns"
+type country_sum_fields {
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate var_pop on columns"
+type country_var_pop_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate var_samp on columns"
+type country_var_samp_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"aggregate variance on columns"
+type country_variance_fields {
+    "Идентификатор страны"
+    id: Float
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"""
+
+Список работ
+
+
+columns and relationships of "job"
+"""
+type job {
+    "Компания"
+    company: String!
+    "Контакты для обратной связи"
+    contacts: _text!
+    "Страна"
+    country: Int!
+    "Создание"
+    created: timestamp!
+    "Идентификатор пользователя из ID token фаербейза"
+    creator_id: String!
+    "Пометка на удаление"
+    deletion_mark: Boolean!
+    "Трудоустройство, занятость"
+    employments: _employment!
+    "Описание на английском"
+    english_description: String!
+    "Идентификатор элемента"
+    id: Int!
+    "Уровни разработчика"
+    levels: _level!
+    "Релокация"
+    relocation: relocation!
+    "Удаленная"
+    remote: Boolean!
+    "Описание на русском"
+    russian_description: String!
+    "Навыки (Skills)"
+    skills: _text!
+    "Тэги"
+    tags: _text!
+    "Имя вакансии"
+    title: String!
+    "Последнее обновление"
+    updated: timestamp!
+}
+
+"aggregated selection of \"job\""
+type job_aggregate {
+    aggregate: job_aggregate_fields
+    nodes: [job!]!
+}
+
+"aggregate fields of \"job\""
+type job_aggregate_fields {
+    avg: job_avg_fields
+    count(columns: [job_select_column!], distinct: Boolean): Int!
+    max: job_max_fields
+    min: job_min_fields
+    stddev: job_stddev_fields
+    stddev_pop: job_stddev_pop_fields
+    stddev_samp: job_stddev_samp_fields
+    sum: job_sum_fields
+    var_pop: job_var_pop_fields
+    var_samp: job_var_samp_fields
+    variance: job_variance_fields
+}
+
+"aggregate avg on columns"
+type job_avg_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate max on columns"
+type job_max_fields {
+    "Компания"
+    company: String
+    "Страна"
+    country: Int
+    "Создание"
+    created: timestamp
+    "Идентификатор пользователя из ID token фаербейза"
+    creator_id: String
+    "Описание на английском"
+    english_description: String
+    "Идентификатор элемента"
+    id: Int
+    "Описание на русском"
+    russian_description: String
+    "Имя вакансии"
+    title: String
+    "Последнее обновление"
+    updated: timestamp
+}
+
+"aggregate min on columns"
+type job_min_fields {
+    "Компания"
+    company: String
+    "Страна"
+    country: Int
+    "Создание"
+    created: timestamp
+    "Идентификатор пользователя из ID token фаербейза"
+    creator_id: String
+    "Описание на английском"
+    english_description: String
+    "Идентификатор элемента"
+    id: Int
+    "Описание на русском"
+    russian_description: String
+    "Имя вакансии"
+    title: String
+    "Последнее обновление"
+    updated: timestamp
+}
+
+"response of any mutation on the table \"job\""
+type job_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job!]!
+}
+
+"aggregate stddev on columns"
+type job_stddev_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate stddev_pop on columns"
+type job_stddev_pop_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate stddev_samp on columns"
+type job_stddev_samp_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate sum on columns"
+type job_sum_fields {
+    "Страна"
+    country: Int
+    "Идентификатор элемента"
+    id: Int
+}
+
+"aggregate var_pop on columns"
+type job_var_pop_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate var_samp on columns"
+type job_var_samp_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"aggregate variance on columns"
+type job_variance_fields {
+    "Страна"
+    country: Float
+    "Идентификатор элемента"
+    id: Float
+}
+
+"mutation root"
+type mutation_root {
+    "delete data from the table: \"country\""
+    delete_country(
+        "filter the rows which have to be deleted"
+        where: country_bool_exp!
+    ): country_mutation_response
+    "delete single row from the table: \"country\""
+    delete_country_by_pk(
+        "Идентификатор страны"
+        id: Int!
+    ): country
+    "delete data from the table: \"job\""
+    delete_job(
+        "filter the rows which have to be deleted"
+        where: job_bool_exp!
+    ): job_mutation_response
+    "delete single row from the table: \"job\""
+    delete_job_by_pk(
+        "Идентификатор элемента"
+        id: Int!
+    ): job
+    "insert data into the table: \"country\""
+    insert_country(
+        "the rows to be inserted"
+        objects: [country_insert_input!]!,
+        "on conflict condition"
+        on_conflict: country_on_conflict
+    ): country_mutation_response
+    "insert a single row into the table: \"country\""
+    insert_country_one(
+        "the row to be inserted"
+        object: country_insert_input!,
+        "on conflict condition"
+        on_conflict: country_on_conflict
+    ): country
+    "insert data into the table: \"job\""
+    insert_job(
+        "the rows to be inserted"
+        objects: [job_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_on_conflict
+    ): job_mutation_response
+    "insert a single row into the table: \"job\""
+    insert_job_one(
+        "the row to be inserted"
+        object: job_insert_input!,
+        "on conflict condition"
+        on_conflict: job_on_conflict
+    ): job
+    "update data of the table: \"country\""
+    update_country(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: country_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: country_set_input,
+        "filter the rows which have to be updated"
+        where: country_bool_exp!
+    ): country_mutation_response
+    "update single row of the table: \"country\""
+    update_country_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: country_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: country_set_input,
+        pk_columns: country_pk_columns_input!
+    ): country
+    "update data of the table: \"job\""
+    update_job(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_set_input,
+        "filter the rows which have to be updated"
+        where: job_bool_exp!
+    ): job_mutation_response
+    "update single row of the table: \"job\""
+    update_job_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_set_input,
+        pk_columns: job_pk_columns_input!
+    ): job
+}
+
+type query_root {
+    "fetch data from the table: \"country\""
+    country(
+        "distinct select on columns"
+        distinct_on: [country_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [country_order_by!],
+        "filter the rows returned"
+        where: country_bool_exp
+    ): [country!]!
+    "fetch aggregated fields from the table: \"country\""
+    country_aggregate(
+        "distinct select on columns"
+        distinct_on: [country_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [country_order_by!],
+        "filter the rows returned"
+        where: country_bool_exp
+    ): country_aggregate!
+    "fetch data from the table: \"country\" using primary key columns"
+    country_by_pk(
+        "Идентификатор страны"
+        id: Int!
+    ): country
+    "fetch data from the table: \"job\""
+    job(
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "fetch aggregated fields from the table: \"job\""
+    job_aggregate(
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): job_aggregate!
+    "fetch data from the table: \"job\" using primary key columns"
+    job_by_pk(
+        "Идентификатор элемента"
+        id: Int!
+    ): job
+}
+
+type subscription_root {
+    "fetch data from the table: \"country\""
+    country(
+        "distinct select on columns"
+        distinct_on: [country_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [country_order_by!],
+        "filter the rows returned"
+        where: country_bool_exp
+    ): [country!]!
+    "fetch aggregated fields from the table: \"country\""
+    country_aggregate(
+        "distinct select on columns"
+        distinct_on: [country_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [country_order_by!],
+        "filter the rows returned"
+        where: country_bool_exp
+    ): country_aggregate!
+    "fetch data from the table: \"country\" using primary key columns"
+    country_by_pk(
+        "Идентификатор страны"
+        id: Int!
+    ): country
+    "fetch data from the table: \"job\""
+    job(
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "fetch aggregated fields from the table: \"job\""
+    job_aggregate(
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): job_aggregate!
+    "fetch data from the table: \"job\" using primary key columns"
+    job_by_pk(
+        "Идентификатор элемента"
+        id: Int!
+    ): job
+}
+
+"unique or primary key constraints on table \"country\""
+enum country_constraint {
+    "unique or primary key constraint"
+    country_code_idx
+    "unique or primary key constraint"
+    country_pk
+}
+
+"select columns of table \"country\""
+enum country_select_column {
+    "column name"
+    code
+    "column name"
+    id
+    "column name"
+    latitude
+    "column name"
+    longitude
+    "column name"
+    title
+}
+
+"update columns of table \"country\""
+enum country_update_column {
+    "column name"
+    code
+    "column name"
+    id
+    "column name"
+    latitude
+    "column name"
+    longitude
+    "column name"
+    title
+}
+
+"unique or primary key constraints on table \"job\""
+enum job_constraint {
+    "unique or primary key constraint"
+    job_pkey
+}
+
+"select columns of table \"job\""
+enum job_select_column {
+    "column name"
+    company
+    "column name"
+    contacts
+    "column name"
+    country
+    "column name"
+    created
+    "column name"
+    creator_id
+    "column name"
+    deletion_mark
+    "column name"
+    employments
+    "column name"
+    english_description
+    "column name"
+    id
+    "column name"
+    levels
+    "column name"
+    relocation
+    "column name"
+    remote
+    "column name"
+    russian_description
+    "column name"
+    skills
+    "column name"
+    tags
+    "column name"
+    title
+    "column name"
+    updated
+}
+
+"update columns of table \"job\""
+enum job_update_column {
+    "column name"
+    company
+    "column name"
+    contacts
+    "column name"
+    country
+    "column name"
+    created
+    "column name"
+    creator_id
+    "column name"
+    deletion_mark
+    "column name"
+    employments
+    "column name"
+    english_description
+    "column name"
+    id
+    "column name"
+    levels
+    "column name"
+    relocation
+    "column name"
+    remote
+    "column name"
+    russian_description
+    "column name"
+    skills
+    "column name"
+    tags
+    "column name"
+    title
+    "column name"
+    updated
+}
+
+"column ordering options"
+enum order_by {
+    "in ascending order, nulls last"
+    asc
+    "in ascending order, nulls first"
+    asc_nulls_first
+    "in ascending order, nulls last"
+    asc_nulls_last
+    "in descending order, nulls first"
+    desc
+    "in descending order, nulls first"
+    desc_nulls_first
+    "in descending order, nulls last"
+    desc_nulls_last
+}
+
+"Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'."
+input Boolean_comparison_exp {
+    _eq: Boolean
+    _gt: Boolean
+    _gte: Boolean
+    _in: [Boolean!]
+    _is_null: Boolean
+    _lt: Boolean
+    _lte: Boolean
+    _neq: Boolean
+    _nin: [Boolean!]
+}
+
+"Boolean expression to compare columns of type \"Float\". All fields are combined with logical 'AND'."
+input Float_comparison_exp {
+    _eq: Float
+    _gt: Float
+    _gte: Float
+    _in: [Float!]
+    _is_null: Boolean
+    _lt: Float
+    _lte: Float
+    _neq: Float
+    _nin: [Float!]
+}
+
+"Boolean expression to compare columns of type \"Int\". All fields are combined with logical 'AND'."
+input Int_comparison_exp {
+    _eq: Int
+    _gt: Int
+    _gte: Int
+    _in: [Int!]
+    _is_null: Boolean
+    _lt: Int
+    _lte: Int
+    _neq: Int
+    _nin: [Int!]
+}
+
+"Boolean expression to compare columns of type \"String\". All fields are combined with logical 'AND'."
+input String_comparison_exp {
+    _eq: String
+    _gt: String
+    _gte: String
+    "does the column match the given case-insensitive pattern"
+    _ilike: String
+    _in: [String!]
+    "does the column match the given POSIX regular expression, case insensitive"
+    _iregex: String
+    _is_null: Boolean
+    "does the column match the given pattern"
+    _like: String
+    _lt: String
+    _lte: String
+    _neq: String
+    "does the column NOT match the given case-insensitive pattern"
+    _nilike: String
+    _nin: [String!]
+    "does the column NOT match the given POSIX regular expression, case insensitive"
+    _niregex: String
+    "does the column NOT match the given pattern"
+    _nlike: String
+    "does the column NOT match the given POSIX regular expression, case sensitive"
+    _nregex: String
+    "does the column NOT match the given SQL regular expression"
+    _nsimilar: String
+    "does the column match the given POSIX regular expression, case sensitive"
+    _regex: String
+    "does the column match the given SQL regular expression"
+    _similar: String
+}
+
+"Boolean expression to compare columns of type \"_employment\". All fields are combined with logical 'AND'."
+input _employment_comparison_exp {
+    _eq: _employment
+    _gt: _employment
+    _gte: _employment
+    _in: [_employment!]
+    _is_null: Boolean
+    _lt: _employment
+    _lte: _employment
+    _neq: _employment
+    _nin: [_employment!]
+}
+
+"Boolean expression to compare columns of type \"_level\". All fields are combined with logical 'AND'."
+input _level_comparison_exp {
+    _eq: _level
+    _gt: _level
+    _gte: _level
+    _in: [_level!]
+    _is_null: Boolean
+    _lt: _level
+    _lte: _level
+    _neq: _level
+    _nin: [_level!]
+}
+
+"Boolean expression to compare columns of type \"_text\". All fields are combined with logical 'AND'."
+input _text_comparison_exp {
+    _eq: _text
+    _gt: _text
+    _gte: _text
+    _in: [_text!]
+    _is_null: Boolean
+    _lt: _text
+    _lte: _text
+    _neq: _text
+    _nin: [_text!]
+}
+
+"Boolean expression to compare columns of type \"bpchar\". All fields are combined with logical 'AND'."
+input bpchar_comparison_exp {
+    _eq: bpchar
+    _gt: bpchar
+    _gte: bpchar
+    "does the column match the given case-insensitive pattern"
+    _ilike: bpchar
+    _in: [bpchar!]
+    "does the column match the given POSIX regular expression, case insensitive"
+    _iregex: bpchar
+    _is_null: Boolean
+    "does the column match the given pattern"
+    _like: bpchar
+    _lt: bpchar
+    _lte: bpchar
+    _neq: bpchar
+    "does the column NOT match the given case-insensitive pattern"
+    _nilike: bpchar
+    _nin: [bpchar!]
+    "does the column NOT match the given POSIX regular expression, case insensitive"
+    _niregex: bpchar
+    "does the column NOT match the given pattern"
+    _nlike: bpchar
+    "does the column NOT match the given POSIX regular expression, case sensitive"
+    _nregex: bpchar
+    "does the column NOT match the given SQL regular expression"
+    _nsimilar: bpchar
+    "does the column match the given POSIX regular expression, case sensitive"
+    _regex: bpchar
+    "does the column match the given SQL regular expression"
+    _similar: bpchar
+}
+
+"Boolean expression to filter rows from the table \"country\". All fields are combined with a logical 'AND'."
+input country_bool_exp {
+    _and: [country_bool_exp!]
+    _not: country_bool_exp
+    _or: [country_bool_exp!]
+    code: bpchar_comparison_exp
+    id: Int_comparison_exp
+    latitude: Float_comparison_exp
+    longitude: Float_comparison_exp
+    title: String_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"country\""
+input country_inc_input {
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+}
+
+"input type for inserting data into table \"country\""
+input country_insert_input {
+    "Двухсимвольный код страны"
+    code: bpchar
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+    "Имя страны на английском"
+    title: String
+}
+
+"on conflict condition type for table \"country\""
+input country_on_conflict {
+    constraint: country_constraint!
+    update_columns: [country_update_column!]! = []
+    where: country_bool_exp
+}
+
+"Ordering options when selecting data from \"country\"."
+input country_order_by {
+    code: order_by
+    id: order_by
+    latitude: order_by
+    longitude: order_by
+    title: order_by
+}
+
+"primary key columns input for table: country"
+input country_pk_columns_input {
+    "Идентификатор страны"
+    id: Int!
+}
+
+"input type for updating data in table \"country\""
+input country_set_input {
+    "Двухсимвольный код страны"
+    code: bpchar
+    "Идентификатор страны"
+    id: Int
+    "Приблизительная широта"
+    latitude: Float
+    "Приблизительная долгота"
+    longitude: Float
+    "Имя страны на английском"
+    title: String
+}
+
+"Boolean expression to filter rows from the table \"job\". All fields are combined with a logical 'AND'."
+input job_bool_exp {
+    _and: [job_bool_exp!]
+    _not: job_bool_exp
+    _or: [job_bool_exp!]
+    company: String_comparison_exp
+    contacts: _text_comparison_exp
+    country: Int_comparison_exp
+    created: timestamp_comparison_exp
+    creator_id: String_comparison_exp
+    deletion_mark: Boolean_comparison_exp
+    employments: _employment_comparison_exp
+    english_description: String_comparison_exp
+    id: Int_comparison_exp
+    levels: _level_comparison_exp
+    relocation: relocation_comparison_exp
+    remote: Boolean_comparison_exp
+    russian_description: String_comparison_exp
+    skills: _text_comparison_exp
+    tags: _text_comparison_exp
+    title: String_comparison_exp
+    updated: timestamp_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job\""
+input job_inc_input {
+    "Страна"
+    country: Int
+    "Идентификатор элемента"
+    id: Int
+}
+
+"input type for inserting data into table \"job\""
+input job_insert_input {
+    "Компания"
+    company: String
+    "Контакты для обратной связи"
+    contacts: _text
+    "Страна"
+    country: Int
+    "Создание"
+    created: timestamp
+    "Идентификатор пользователя из ID token фаербейза"
+    creator_id: String
+    "Пометка на удаление"
+    deletion_mark: Boolean
+    "Трудоустройство, занятость"
+    employments: _employment
+    "Описание на английском"
+    english_description: String
+    "Идентификатор элемента"
+    id: Int
+    "Уровни разработчика"
+    levels: _level
+    "Релокация"
+    relocation: relocation
+    "Удаленная"
+    remote: Boolean
+    "Описание на русском"
+    russian_description: String
+    "Навыки (Skills)"
+    skills: _text
+    "Тэги"
+    tags: _text
+    "Имя вакансии"
+    title: String
+    "Последнее обновление"
+    updated: timestamp
+}
+
+"on conflict condition type for table \"job\""
+input job_on_conflict {
+    constraint: job_constraint!
+    update_columns: [job_update_column!]! = []
+    where: job_bool_exp
+}
+
+"Ordering options when selecting data from \"job\"."
+input job_order_by {
+    company: order_by
+    contacts: order_by
+    country: order_by
+    created: order_by
+    creator_id: order_by
+    deletion_mark: order_by
+    employments: order_by
+    english_description: order_by
+    id: order_by
+    levels: order_by
+    relocation: order_by
+    remote: order_by
+    russian_description: order_by
+    skills: order_by
+    tags: order_by
+    title: order_by
+    updated: order_by
+}
+
+"primary key columns input for table: job"
+input job_pk_columns_input {
+    "Идентификатор элемента"
+    id: Int!
+}
+
+"input type for updating data in table \"job\""
+input job_set_input {
+    "Компания"
+    company: String
+    "Контакты для обратной связи"
+    contacts: _text
+    "Страна"
+    country: Int
+    "Создание"
+    created: timestamp
+    "Идентификатор пользователя из ID token фаербейза"
+    creator_id: String
+    "Пометка на удаление"
+    deletion_mark: Boolean
+    "Трудоустройство, занятость"
+    employments: _employment
+    "Описание на английском"
+    english_description: String
+    "Идентификатор элемента"
+    id: Int
+    "Уровни разработчика"
+    levels: _level
+    "Релокация"
+    relocation: relocation
+    "Удаленная"
+    remote: Boolean
+    "Описание на русском"
+    russian_description: String
+    "Навыки (Skills)"
+    skills: _text
+    "Тэги"
+    tags: _text
+    "Имя вакансии"
+    title: String
+    "Последнее обновление"
+    updated: timestamp
+}
+
+"Boolean expression to compare columns of type \"relocation\". All fields are combined with logical 'AND'."
+input relocation_comparison_exp {
+    _eq: relocation
+    _gt: relocation
+    _gte: relocation
+    _in: [relocation!]
+    _is_null: Boolean
+    _lt: relocation
+    _lte: relocation
+    _neq: relocation
+    _nin: [relocation!]
+}
+
+"Boolean expression to compare columns of type \"timestamp\". All fields are combined with logical 'AND'."
+input timestamp_comparison_exp {
+    _eq: timestamp
+    _gt: timestamp
+    _gte: timestamp
+    _in: [timestamp!]
+    _is_null: Boolean
+    _lt: timestamp
+    _lte: timestamp
+    _neq: timestamp
+    _nin: [timestamp!]
+}
+
+
+scalar _employment
+
+scalar _level
+
+scalar _text
+
+scalar bpchar
+
+scalar relocation
+
+scalar timestamp

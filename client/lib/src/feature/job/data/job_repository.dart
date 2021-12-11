@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:dart_jobs/src/common/model/exceptions.dart';
-import 'package:dart_jobs/src/feature/job/data/job_network_data_provider.dart';
+import 'package:dart_jobs_client/src/common/model/exceptions.dart';
+import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -84,11 +84,13 @@ class JobRepositoryImpl implements IJobRepository {
 
   @override
   Future<Job> createJob({required JobData jobData}) async {
-    final idToken = await _firebaseAuth.currentUser?.getIdToken(true);
-    if (idToken == null || idToken.isEmpty) {
+    final currentUser = _firebaseAuth.currentUser;
+    final uid = currentUser?.uid;
+    final idToken = await currentUser?.getIdToken(true);
+    if (idToken == null || uid == null || idToken.isEmpty) {
       throw NotAuthorized(StackTrace.current, 'Token not received');
     }
-    return _networkDataProvider.createJob(jobData: jobData, idToken: idToken);
+    return _networkDataProvider.createJob(jobData: jobData, idToken: idToken, creatorId: uid);
   }
 
   @override

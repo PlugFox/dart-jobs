@@ -27,23 +27,23 @@ Map<String, dynamic> _$$_JobToJson(_$_Job instance) => <String, dynamic>{
 _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
       title: json['title'] as String? ?? '',
       company: json['company'] as String? ?? '',
-      country: json['country'] as String? ?? '',
+      country: json['country'] as int? ?? 0,
       remote: json['remote'] as bool? ?? true,
-      address: json['address'] as String? ?? '',
+      relocation: json['relocation'] == null
+          ? const Relocation.impossible()
+          : Relocation.fromJson(json['relocation'] as Map<String, dynamic>),
       descriptions: json['descriptions'] == null
           ? const Description()
           : Description.fromJson(json['descriptions'] as Map<String, dynamic>),
       levels:
           (json['levels'] as List<dynamic>?)?.map((e) => DeveloperLevel.fromJson(e as Map<String, dynamic>)).toList() ??
               const <DeveloperLevel>[],
-      skills: (json['skills'] as List<dynamic>?)?.map((e) => Skill.fromJson(e as Map<String, dynamic>)).toList() ??
-          const <Skill>[],
-      contacts:
-          (json['contacts'] as List<dynamic>?)?.map((e) => Contact.fromJson(e as Map<String, dynamic>)).toList() ??
-              const <Contact>[],
-      employment:
-          (json['employment'] as List<dynamic>?)?.map((e) => Employment.fromJson(e as Map<String, dynamic>)).toList() ??
-              const <Employment>[],
+      skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
+      contacts: (json['contacts'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
+      employments: (json['employments'] as List<dynamic>?)
+              ?.map((e) => Employment.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <Employment>[],
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const <String>[],
     );
 
@@ -52,12 +52,12 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) => <String, dynamic>
       'company': instance.company,
       'country': instance.country,
       'remote': instance.remote,
-      'address': instance.address,
+      'relocation': instance.relocation.toJson(),
       'descriptions': instance.descriptions.toJson(),
       'levels': instance.levels.map((e) => e.toJson()).toList(),
-      'skills': instance.skills.map((e) => e.toJson()).toList(),
-      'contacts': instance.contacts.map((e) => e.toJson()).toList(),
-      'employment': instance.employment.map((e) => e.toJson()).toList(),
+      'skills': instance.skills,
+      'contacts': instance.contacts,
+      'employments': instance.employments.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
     };
 

@@ -1,7 +1,7 @@
-import 'package:dart_jobs/src/feature/feed/bloc/feed_bloc.dart';
-import 'package:dart_jobs/src/feature/feed/widget/feed_tile.dart';
+import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_tile.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fox_flutter_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class FeedList extends StatelessWidget {
