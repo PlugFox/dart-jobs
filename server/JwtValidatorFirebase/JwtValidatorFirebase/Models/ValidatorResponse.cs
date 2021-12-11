@@ -36,8 +36,9 @@ namespace JwtValidatorFirebase.Models
         [JsonIgnore]
         public DateTime? WhenValidated { get; set; }
 
-        
         public DateTime? ValidUntil { get; set; }
+
+        public string Error { get; set; }
 
         public void SetRole(HasuraRoles hasuraRoles)
         {

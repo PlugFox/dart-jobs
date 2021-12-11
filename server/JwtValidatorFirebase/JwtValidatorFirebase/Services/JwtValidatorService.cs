@@ -20,8 +20,13 @@ namespace JwtValidatorFirebase.Services
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Task _clearTask;
 
+        private ValidatorResponse _anonymousUser;
+
         public JwtValidatorService()
         {
+            _anonymousUser = new ValidatorResponse();
+            _anonymousUser.SetRole(HasuraRoles.Anonymous);
+
             _cancellationTokenSource = new CancellationTokenSource();
             ResponseCache = new ConcurrentDictionary<string, ValidatorResponse>();
             FirebaseApp.Create(new AppOptions()
@@ -58,10 +63,12 @@ namespace JwtValidatorFirebase.Services
         /// <returns></returns>
         public async Task<ValidatorResponse> ValidateIdTokenAsync(string rawJwt, bool useCache = true)
         {
+            if (string.IsNullOrWhiteSpace(rawJwt))
+                return _anonymousUser;
+
             var isCached = ResponseCache.TryGetValue(rawJwt, out var storedResponse);
             if (isCached)
                 return storedResponse;
-
             var response = await InternalValidationAsync(rawJwt);
             ResponseCache.TryAdd(rawJwt, response);
             return response;
@@ -70,13 +77,6 @@ namespace JwtValidatorFirebase.Services
         private async Task<ValidatorResponse> InternalValidationAsync(string rawJwt)
         {
             var response = new ValidatorResponse();
-
-            if (string.IsNullOrWhiteSpace(rawJwt))
-            {
-                response.SetRole(HasuraRoles.Anonymous);
-                return response;
-            }
-            
             try
             {
                 var firebaseToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(rawJwt);
@@ -94,6 +94,7 @@ namespace JwtValidatorFirebase.Services
             catch (FirebaseAdmin.Auth.FirebaseAuthException e)
             {
                 Console.WriteLine(e.Message);
+                response.Error = e.Message;
                 response.IsValidated = false;
             }
 

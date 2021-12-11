@@ -24,12 +24,19 @@ namespace JwtValidatorFirebase.Controllers
         [HttpGet]
         public async Task<IActionResult> GetValidationResult()
         {
-            Request.Headers.TryGetValue(JwtValidatorService.TokenHeaderName, out var jwtToken);
-            var validatedResult = await _jwtValidatorService.ValidateIdTokenAsync(jwtToken);
-            if (validatedResult.IsValidated)
-                return Ok(validatedResult);
-            else
-                return Unauthorized();
+            try
+            {
+                Request.Headers.TryGetValue(JwtValidatorService.TokenHeaderName, out var jwtToken);
+                var validatedResult = await _jwtValidatorService.ValidateIdTokenAsync(jwtToken);
+                if (validatedResult.IsValidated)
+                    return Ok(validatedResult);
+                else
+                    return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return Unauthorized(e.Message);
+            }
         }
 
         [HttpGet("generate/{uid}")]
