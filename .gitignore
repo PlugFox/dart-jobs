@@ -18,7 +18,8 @@
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
-#.vscode/
+.vscode/
+.vs/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -76,3 +77,52 @@ client/android/keystore.properties
 
 # GraphQL
 .graphqlconfig
+
+
+# c-sharp
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#Folders
+obj/*
+obj/
+*/.vs/*
+#other
+bin/
+Logs/
+*.cache
+*.assets.cache
+
+.vs/*
+/server/jwt_validator_firebase/.vs/*

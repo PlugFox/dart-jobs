@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "dart-job",
+  "private_key_id": "69f3fbc3f8bc1c9ae34c9af6f239a8fcdfb6504e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCUSHCEq8e1J4Me\n8/yOaEEF2IO17+jh47oKjUB/9tvH7rSlXr4pPoej9cXe7/Upp6tWUjcRT/ebFUMz\nf0Bz6VHoSLTteBLpzRj4fTMxNBQ15w2AHm1/4Z5Rz8gJef5QxlXtaBbzmNkafqXX\nNWUngENI3GnE8Qg5tvtmPDlv2J9eo4nPeaj1HXT6makukmFY4pyeqd0nuxBniCr4\ng6JgPzPpgfZ5P+i+xA2+xzHLgc322rhc/xMFMz4IUMWrLdix5FSqynk7zV4B9k0B\nCxrV2H4Ung7L9XYohlVyq9Jlrd0Ol2K0DetX7s4Gm/WqtTFCyIjFVoHSVRmfFHdz\nBuc3C5wZAgMBAAECggEACgWQqpF8QIoYb+cdkqJegqlM0ucRXkhTMpNetfIBOKoG\nxjEjuQs42k6qE5SJhUndEqB2iFJXRxamIWeK+5/b9qReALlfeIhxakShSRoJTlCn\nYO6th+RqcYJm3/0WwG7R2pHGZgBWlqvTRDr08zkqqFSn8V+OUW2Z4CGsisVL6swY\nW8t3Eo+JuhJH8niSVAvXph5tkvFETfB+uUNwCZfZS3auD4Bi5UOUH0r77GpezYUA\nl24cH6lLCQlWuWtLEOR8aPKkHkrhYIwQ7YQFtbDVvva3PPeC8dc9seObIpN3pAvu\nyicDMiQV2M+iKCdONQhlUX1m65dmoHwQ5NC0XXCngQKBgQDQn6tLS6jCEb1cxmP1\nsGA9NTpMKMC+pbshwXHe9g86guISxjuh8FV0WfAN9QnX5fBGImFuKT95fism+3ta\nyR34YxfCWdnRseJe9F2s9Ah6PaTC3TYlANt5pnT70BLkUh5geoA7o09rOqxnfW1+\nZgkJwn7+nl7f5WPrTlznJ6vFdQKBgQC19N0mcg0wHpKCsTTFPuLLflqL1KkjuEat\nt8rKhaDHvFGpFUiRsTyVOIEbZUk6z89GgoM8zNfemyfyD+h7+NRjNbhustjnWyse\nC3d0GiblfSt9p+wsFkd5taMNGGIgOFYDQp6jngIGp9y8Hj7arw3PM2NHf+NLTVbE\ngG36T4ITlQKBgQC6HvjO//zaxsDN2CCtvGDfunD8KQ9sBqdgghh49cS4SrQuU7Q3\n0RYr62EC0q2pc3Zc26dYhGwgk7Mj4BA4+lxGkQFNXqO5NJ3kYNaBymUVyZEIWBpK\nAO3NJfgP/54bHDgFksR8cEIWRA4zde8NaTJ/BooN1nSGAzyVXR/9CaNxUQKBgGgG\nohjEw71q/SAy55SNK2RjzKh84GZHiEDw/sNiOlV22MjuHhsNVTGKqGVdNsyk2j/Z\nheZQxmnCEshVR/j4fZRqthKztUYv3SrEK3r5KJuzQBYK1v8tjZeLvLhT5GW/T411\nnPS19TqQ5aW3NQAZbK+1FWFfQDdg8+ZL9pRQuHExAoGARC+uNlsHXrGyjIYCchp8\nxv7tawOVondIyyhLTSs6v+FP0hdrcp+WctIjULpH30aKhPVEb6wqCoQI6wBi1tvU\ntYuLrVnD2wIrh2sT3OWI8whTrhZnsJdSFHlx+1HZ4hpBFRtCI4oFnM2mY9HNGKHU\nsBlPPPY1+Sb+uU3+BzVabdM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "jwtvalidatorfirebase@dart-job.iam.gserviceaccount.com",
+  "client_id": "114240934091136844490",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/jwtvalidatorfirebase%40dart-job.iam.gserviceaccount.com"
+}
