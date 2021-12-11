@@ -129,13 +129,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
     required final IJobRepository repository,
     required final Job job,
   })  : _repository = repository,
-        super(JobState.idle(job: job));
-
-  /// БЛоК создан для создания новой работы
-  JobBLoC.creation({
-    required final IJobRepository repository,
-  })  : _repository = repository,
-        super(JobState.idle(job: repository.getNewJobTemplate())) {
+        super(JobState.idle(job: job)) {
     on<JobEvent>(
       (event, emit) => event.map<void>(
         create: (event) => _create(event, emit),
@@ -145,6 +139,15 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       ),
     );
   }
+
+  /// БЛоК создан для создания новой работы
+  factory JobBLoC.creation({
+    required final IJobRepository repository,
+  }) =>
+      JobBLoC(
+        repository: repository,
+        job: repository.getNewJobTemplate(),
+      );
 
   Future<void> _fetch(_FetchJobEvent event, Emitter<JobState> emit) async {
     final id = event.id ?? state.job.id;
@@ -187,9 +190,10 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Future<void> _update(_UpdateJobEvent event, Emitter<JobState> emit) async {
+    Job? newJob;
     try {
       emit(event.inProgress(state: state));
-      var newJob = state.job.copyWith(data: event.data);
+      newJob = state.job.copyWith(data: event.data);
       if (newJob.hasNotID) {
         throw const FormatException('Job has not exist');
       }
@@ -205,7 +209,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       emit(event.error(state: state, message: 'Unsupported error'));
       rethrow;
     } finally {
-      emit(event.idle(state: state));
+      emit(event.idle(state: state, job: newJob));
     }
   }
 
@@ -332,9 +336,10 @@ mixin _IdleStateEmitter on JobEvent {
   JobState idle({
     required final JobState state,
     final String? message,
+    final Job? job,
   }) =>
       JobState.idle(
-        job: state.job,
+        job: job ?? state.job,
         message: message ?? 'Idle',
       );
 }

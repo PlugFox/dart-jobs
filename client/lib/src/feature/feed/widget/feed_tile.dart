@@ -174,7 +174,6 @@ class _JobFeedTile extends FeedTile {
               ),
             );
             RepositoryScope.of(context).analytics?.logViewItem(
-              value: job.id.toDouble(),
               items: <AnalyticsEventItem>[
                 AnalyticsEventItem(
                   itemId: job.id.toString(),

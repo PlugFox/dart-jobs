@@ -169,6 +169,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
           tags: jobData.tags,
         ),
       ),
+      context: _addTokenToContext(idToken),
     );
     await Future<void>.delayed(Duration.zero);
     final job = result.data?.insertJobOne;
@@ -264,6 +265,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
           ),
         ),
       ),
+      context: _addTokenToContext(idToken),
     );
     await Future<void>.delayed(Duration.zero);
     final updatedJob = result.data?.updateJobByPk;
@@ -290,6 +292,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
           id: job.id,
         ),
       ),
+      context: _addTokenToContext(idToken),
     );
     await Future<void>.delayed(Duration.zero);
     final deletedJob = result.data?.updateJobByPk;
@@ -304,6 +307,19 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       creatorId: deletedJob.creatorId,
     );
   }
+
+  Context _addTokenToContext(
+    String idToken, [
+    final Context? context,
+  ]) =>
+      (context ?? const Context()).updateEntry<HttpLinkHeaders>(
+        (entry) => HttpLinkHeaders(
+          headers: {
+            ...?entry?.headers,
+            'Authorization': 'Bearer $idToken',
+          },
+        ), // (entry ?? const HttpLinkHeaders()),
+      );
 }
 
 /// Исключение получения данных по работе

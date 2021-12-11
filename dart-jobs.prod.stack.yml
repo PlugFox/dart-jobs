@@ -90,7 +90,7 @@ services:
 #        ################################################################
 
   # Публичное API
-  graphql:
+  hasura-graphql:
     image: hasura/graphql-engine:v2.0.10
     #ports:
     #  - "8080:8080"
@@ -113,11 +113,12 @@ services:
       ## Разрешить неавторизованный логин
       #HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       ## Аутентификация по средством внутреннего сервиса проверяющего JWT Firebase
-      HASURA_GRAPHQL_AUTH_HOOK: registry
+      HASURA_GRAPHQL_AUTH_HOOK: http://jwt-validator-firebase/jwtvalidator
       HASURA_GRAPHQL_AUTH_HOOK_MODE: GET
     networks:
       - traefik-public
       - postgres
+      - dart-jobs
     # Для хелсчеков предварительно собрать свой контейнер с cURL или wget
     # https://github.com/hasura/graphql-engine/issues/1532
     #healthcheck:
@@ -180,6 +181,42 @@ services:
         traefik.http.services.hasura-service.loadbalancer.healthcheck.timeout: 15s
         traefik.http.services.hasura-service.loadbalancer.server.port: 8080
         ################################################################
+
+  # Валидатор JWT
+  jwt-validator-firebase:
+    image: registry.plugfox.dev/dart-jobs-jwt-validator-firebase
+    networks:
+      - traefik-public
+      - postgres
+      - dart-jobs
+    command:
+      - dotnet JwtValidatorFirebase.dll
+    #healthcheck:
+    #  test: curl --fail -s http://127.0.0.1:80/healthcheck || exit 1
+    #  interval: 30s
+    #  timeout: 15s
+    #  retries: 3
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        failure_action: rollback
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.role == worker
+      resources:
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+        limits:
+          cpus: '0.30'
+          memory: 512M
 
 #secrets:
 #  dart-jobs-db-username:
