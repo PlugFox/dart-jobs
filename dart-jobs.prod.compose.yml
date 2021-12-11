@@ -1,11 +1,13 @@
 version: '3.3'
 
-#services:
-#  dart-jobs-service:
-#    container_name: 'dart-jobs-service-prod'
-#    ports:
-#      - '80:80'
-#    image: registry.plugfox.dev/dart-jobs-service:prod
-#    build:
-#      context: ./
-#      dockerfile: ./dockerfiles/dart-jobs-service.dockerfile
+services:
+  dart-jobs-jwt-validator-firebase:
+    hostname: 'dart-jobs-jwt-validator-firebase'
+    container_name: 'dart-jobs-jwt-validator-firebase'
+    image: registry.plugfox.dev/dart-jobs-jwt-validator-firebase
+    restart: unless-stopped
+    ports:
+      - '888:80'
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/jwt_validator_firebase.dockerfile

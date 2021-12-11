@@ -22,16 +22,19 @@ upgrade: get
 
 build-server:
 	@echo "Build release docker images"
-	#docker-compose -f ./dart-jobs.prod.compose.yml build --no-cache --force-rm --compress --parallel
+	docker-compose -f ./dart-jobs.prod.compose.yml build --no-cache --force-rm --compress --parallel
 
 push-server:
 	@echo "Push release docker images"
-	#docker-compose -f ./dart-jobs.prod.compose.yml push
+	docker-compose -f ./dart-jobs.prod.compose.yml push
 
-run-server:
-	@echo "Run release docker images"
-	# TODO: сделать через Docker Compose
-	#docker run -d -p 9090:9090 --name dart-jobs-service-prod registry.plugfox.dev/dart-jobs-service:prod
+start-server:
+	@echo "Run local server"
+	docker-compose -f ./dart-jobs.prod.compose.yml up --detach
+
+stop-server:
+	@echo "Stop local server"
+	docker-compose -f ./dart-jobs.prod.compose.yml down
 
 redeploy-server:
 	@echo "Deploy release into docker swarm"
