@@ -72,6 +72,8 @@ dependencies:
   # UI & Widgets
   shimmer: ^2.0.0
   #google_fonts: ^2.1.0
+  #flutterfire_ui: ^0.2.0+2
+  country_list_pick: ^1.0.1+5
 
 dev_dependencies:
   flutter_test:

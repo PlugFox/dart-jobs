@@ -27,7 +27,7 @@ Map<String, dynamic> _$$_JobToJson(_$_Job instance) => <String, dynamic>{
 _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
       title: json['title'] as String? ?? '',
       company: json['company'] as String? ?? '',
-      country: json['country'] as int? ?? 0,
+      country: json['country'] as String? ?? 'XX',
       remote: json['remote'] as bool? ?? true,
       relocation: json['relocation'] == null
           ? const Relocation.impossible()

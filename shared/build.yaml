@@ -52,6 +52,9 @@ targets:
                 name: DateTime
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/bpchar.dart'
+              graphql_type: bpchar
+              dart_type: String
             - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/text.dart'
               graphql_type: _text
               dart_type:

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:country_list_pick/country_list_pick.dart' as country;
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
@@ -7,6 +8,7 @@ import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_descriptions_field.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
+import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +56,9 @@ class JobFormFieldSet extends StatelessWidget {
                   ),
 
                   /// Страна
+                  _CountryPicker(
+                    controller: formData.countryController,
+                  ),
                   //_JobSingleLineText(
                   //  context.localization.job_field_location_country,
                   //  formData.countryController,
@@ -148,6 +153,135 @@ class _JobSingleLineText extends StatelessWidget {
               textInputAction: TextInputAction.next,
               onEditingComplete: () => FocusScope.of(context).nextFocus(),
             ),
+          ),
+        ),
+      );
+}
+
+@immutable
+class _CountryPicker extends StatelessWidget {
+  const _CountryPicker({
+    required this.controller,
+    Key? key,
+  }) : super(key: key);
+
+  final JobFieldCountryController controller;
+
+  /// TODO: форкануть библиотеку
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<FormStatus>(
+        valueListenable: JobForm.formDataOf(context).status,
+        builder: (context, status, _) => Opacity(
+          opacity: status == FormStatus.processed ? 0.5 : 1,
+          child: country.CountryListPick(
+            appBar: AppBar(
+              backgroundColor: Colors.blue,
+              title: Text(context.localization.job_field_location_country),
+            ),
+
+            // if you need custome picker use this
+            pickerBuilder: (context, country.CountryCode? countryCode) {
+              final flagUri = countryCode?.flagUri;
+              return ValueListenableBuilder<Country>(
+                valueListenable: controller,
+                builder: (context, value, child) => value.isExist
+                    ? child!
+                    : Flex(
+                        direction: Axis.horizontal,
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: SizedBox.shrink(),
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Text('Unknown country'),
+                            ),
+                          ),
+                          Flexible(
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ),
+                        ],
+                      ),
+                child: Flex(
+                  direction: Axis.horizontal,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: flagUri != null
+                            ? Image.asset(
+                                flagUri,
+                                package: 'country_list_pick',
+                                width: 32,
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(countryCode?.name ?? 'Unknown country'),
+                      ),
+                    ),
+                    const Flexible(
+                      child: Icon(Icons.keyboard_arrow_down),
+                    ),
+                  ],
+                ),
+              );
+            },
+
+            countryBuilder: (context, country.CountryCode countryCode) {
+              final flagUri = countryCode.flagUri;
+              return Container(
+                height: 50,
+                color: Colors.white,
+                child: Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    leading: flagUri != null
+                        ? Image.asset(
+                            flagUri,
+                            package: 'country_list_pick',
+                            width: 30,
+                          )
+                        : const SizedBox.shrink(),
+                    title: Text(countryCode.name ?? 'Unknown country'),
+                    onTap: () {
+                      controller.value = Country.byCode(countryCode.code);
+                      Navigator.pop(context, countryCode);
+                      //_sendDataBack(context, e);
+                    },
+                  ),
+                ),
+              );
+            },
+
+            // To disable option set to false
+            theme: country.CountryTheme(
+              isShowFlag: true,
+              isShowTitle: true,
+              isShowCode: false,
+              isDownIcon: true,
+              showEnglishName: true,
+            ),
+
+            // Set default value
+            initialSelection: controller.value.isExist ? controller.value.code : null,
+
+            // Whether to allow the widget to set a custom UI overlay
+            useUiOverlay: true,
+
+            // Whether the country list should be wrapped in a SafeArea
+            useSafeArea: true,
+
+            onChanged: (countryCode) {},
           ),
         ),
       );

@@ -1,7 +1,7 @@
 mutation InsertJob(
     $title: String!,
     $company: String!,
-    $country: Int!,
+    $country: bpchar!,
     $creator_id: String!,
     $remote: Boolean!,
     $relocation: relocation!,
