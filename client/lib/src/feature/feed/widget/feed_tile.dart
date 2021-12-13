@@ -155,7 +155,7 @@ class _JobFeedTile extends FeedTile {
             text: job.data.company,
           ), // 'Subtitle (Company, Developer occupation)'
           location: _ShimmerText(
-            text: job.data.remote ? 'Remote' : '${job.data.country}',
+            text: job.data.remote ? 'Remote' : job.data.country,
           ), // 'Location'
           salary: const _ShimmerText(
             text: 'Unknown salary',
@@ -182,7 +182,7 @@ class _JobFeedTile extends FeedTile {
                   itemCategory3: job.data.relocation.name.toLowerCase(),
                   itemListName: 'jobs',
                   itemBrand: job.data.company,
-                  locationId: job.data.country.toString(),
+                  locationId: job.data.country,
                   itemName: job.data.title,
                 ),
               ],
