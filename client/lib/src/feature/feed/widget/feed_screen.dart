@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
-import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/widget/custom_scroll_view_smooth.dart';
 import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_bar.dart';
@@ -65,7 +65,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     final modalRoute = ModalRoute.of(context);
     if (modalRoute != null) {
       _routeObserver?.unsubscribe(this);
-      _routeObserver = PageRouter.modalObserverOf(context)..subscribe(this, modalRoute);
+      _routeObserver = AppRouter.modalObserverOf(context)..subscribe(this, modalRoute);
     }
   }
 

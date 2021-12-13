@@ -44,4 +44,5 @@ dev_dependencies:
 
 dependency_overrides:
   #analyzer: ^2.7.0
-  gql_exec: 0.3.0 # https://github.com/gql-dart/gql/issues/289
+  # https://github.com/gql-dart/gql/issues/289
+  gql_exec: 0.3.0

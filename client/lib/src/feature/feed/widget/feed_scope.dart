@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_escaping_inner_quotes
 
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
@@ -30,7 +30,7 @@ class FeedScope extends StatelessWidget {
   /// Получить работу удовлетворяющую условию
   static Job? jobOf(
     final BuildContext context,
-    final bool Function(Job proposal) test,
+    final bool Function(Job job) test,
   ) =>
       BlocProvider.of<FeedBLoC>(
         context,
@@ -40,9 +40,9 @@ class FeedScope extends StatelessWidget {
   /// Начать создание новой работы
   static void createJobOf(final BuildContext context) => AuthenticationScope.authenticateOr(
         context,
-        (_) => PageRouter.navigate(
+        (_) => AppRouter.navigate(
           context,
-          (configuration) => JobCreatePageConfiguration(),
+          (configuration) => const JobRouteConfiguration.create(),
         ),
       );
 

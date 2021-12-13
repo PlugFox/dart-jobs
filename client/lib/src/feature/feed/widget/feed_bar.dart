@@ -1,6 +1,6 @@
 import 'package:dart_jobs_client/src/common/constant/assets.gen.dart' as assets;
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_search_bar.dart';
@@ -73,9 +73,9 @@ class FeedBarSettings extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => IconButton(
         onPressed: () {
-          PageRouter.navigate(
+          AppRouter.navigate(
             context,
-            (final configuration) => const SettingsPageConfiguration(),
+            (final configuration) => const SettingsRouteConfiguration(),
           );
         },
         icon: const CircleAvatar(
@@ -106,9 +106,9 @@ class FeedBarAvatar extends StatelessWidget {
         onPressed: () {
           AuthenticationScope.authenticateOr(
             context,
-            (final user) => PageRouter.navigate(
+            (final user) => AppRouter.navigate(
               context,
-              (final configuration) => const ProfilePageConfiguration(),
+              (final configuration) => const ProfileRouteConfiguration(),
             ),
           );
         },

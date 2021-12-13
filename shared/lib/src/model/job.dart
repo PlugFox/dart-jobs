@@ -99,6 +99,15 @@ class Job with _$Job, Comparable<Job> {
   /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 
+  /// Создает работу по id (полезно при создании роута по идентификатору)
+  factory Job.id(int id) => Job(
+        id: id,
+        creatorId: '',
+        created: DateTime(0),
+        updated: DateTime(0),
+        data: const JobData(title: 'Empty'),
+      );
+
   /// Сортирую от новых к старым по полю [updated]
   @override
   int compareTo(Job other) => other.updated.compareTo(updated);

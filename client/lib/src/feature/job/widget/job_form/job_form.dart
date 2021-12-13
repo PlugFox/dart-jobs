@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_actions.dart';
@@ -114,7 +114,7 @@ class _JobFormState extends State<JobForm> {
         ReadJobIntent(job.data),
       );
 
-  void _onDeleted(Job job, String message) => PageRouter.goHome(context);
+  void _onDeleted(Job job, String message) => AppRouter.goHome(context);
 
   void _onError(Job job, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -126,7 +126,7 @@ class _JobFormState extends State<JobForm> {
   }
 
   void _onNotFound(Job job, String message) {
-    //PageRouter.goHome(context);
+    //AppRouter.goHome(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Not found')),
     );

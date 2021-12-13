@@ -1,6 +1,6 @@
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -166,12 +166,9 @@ class _JobFeedTile extends FeedTile {
 
           /// TODO: DateFormat
           onPressed: (final context) {
-            PageRouter.navigate(
+            AppRouter.navigate(
               context,
-              (final configuration) => JobPageConfiguration(
-                job: job,
-                edit: false,
-              ),
+              (final configuration) => JobRouteConfiguration(job.id),
             );
             RepositoryScope.of(context).analytics?.logViewItem(
               items: <AnalyticsEventItem>[

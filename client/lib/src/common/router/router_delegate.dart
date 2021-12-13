@@ -1,96 +1,122 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
-import 'package:dart_jobs_client/src/common/router/root_route.dart';
-import 'package:dart_jobs_client/src/common/router/transition_delegate.dart';
-import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
+import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
+import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
 
-class PageObserver extends RouteObserver<PageRoute<Object?>> implements NavigatorObserver {}
-
-class ModalObserver extends RouteObserver<ModalRoute<Object?>> implements NavigatorObserver {}
-
-class PageRouterDelegate extends RouterDelegate<PageConfiguration> with ChangeNotifier {
-  PageRouterDelegate({
-    final PageConfiguration initialConfiguration = const FeedPageConfiguration(),
-  })  : _currentConfiguration = initialConfiguration,
-        pageObserver = PageObserver(),
+class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeNotifier {
+  AppRouterDelegate()
+      : pageObserver = PageObserver(),
         modalObserver = ModalObserver();
 
   final PageObserver pageObserver;
   final ModalObserver modalObserver;
 
   @override
-  PageConfiguration get currentConfiguration => _currentConfiguration;
-  PageConfiguration _currentConfiguration;
+  IRouteConfiguration get currentConfiguration {
+    final configuration = _currentConfiguration;
+    if (configuration == null) {
+      throw UnsupportedError('Изначальная конфигурация не установлена');
+    }
+    return configuration;
+  }
+
+  IRouteConfiguration? _currentConfiguration;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final configuration = currentConfiguration;
-    final analytics = RepositoryScope.of(context).analytics;
-    _setBrowserTitle(context);
-    return PageRouter(
-      routerDelegate: this,
-      child: Navigator(
-        transitionDelegate:
-            platform.isWeb ? const NoAnimationTransitionDelegate() : const DefaultTransitionDelegate<void>(),
-        onUnknownRoute: _onUnknownRoute,
-        reportsRouteUpdateToEngine: true,
-        observers: <NavigatorObserver>[
-          pageObserver,
-          modalObserver,
-          if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
-        ],
-        pages: configuration.buildPages(context).toList(growable: false),
-        onPopPage: (final Route<Object?> route, final Object? result) {
-          l.i('PageRouter.onPopPage($route, $result)');
-
-          /// TODO: проверить возврат значения роута
-          if (configuration.isRoot || configuration.previous == null || route is RootRoute || !route.didPop(result)) {
-            return false;
-          }
-          setNewRoutePath(configuration.previous ?? const NotFoundPageConfiguration());
-          return true;
-        },
+    return ColoredBox(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: AppRouter(
+        routerDelegate: this,
+        child: PagesBuilder(
+          configuration: configuration,
+          builder: (context, pages, child) => Navigator(
+            transitionDelegate: const DefaultTransitionDelegate<Object?>(),
+            onUnknownRoute: _onUnknownRoute,
+            reportsRouteUpdateToEngine: true,
+            observers: <NavigatorObserver>[
+              pageObserver,
+              modalObserver,
+              //if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
+            ],
+            pages: pages,
+            onPopPage: (Route<Object?> route, Object? result) {
+              if (!route.didPop(result)) {
+                return false;
+              }
+              setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
+              return true;
+            },
+          ),
+        ),
       ),
     );
   }
 
   @override
   Future<bool> popRoute() {
-    l.i('PageRouter.popRoute()');
-    if (currentConfiguration.isRoot) return SynchronousFuture<bool>(false);
-    final navigator = pageObserver.navigator;
-    if (navigator == null) return SynchronousFuture<bool>(false);
-    return navigator.maybePop();
+    try {
+      final navigator = pageObserver.navigator;
+      if (navigator == null) return SynchronousFuture<bool>(false);
+      return navigator.maybePop().then<bool>(
+        (value) {
+          if (!value) {
+            if (platform.isIO) {
+              return false;
+              /*
+              return SystemNavigator.pop().then<bool>(
+                (value) => true,
+                onError: (Object error, StackTrace stackTrace) => false,
+              );
+              */
+            }
+            // В вебе, вместо перехода на главный экран, можно закрывать текущую активную вкладку
+            return setNewRoutePath(
+              const HomeRouteConfiguration(),
+            ).then<bool>(
+              (value) => true,
+              onError: (Object error, StackTrace stackTrace) => false,
+            );
+          }
+          return true;
+        },
+        onError: (Object error, StackTrace stackTrace) => false,
+      );
+    } on Object catch (err) {
+      l.w('RouterDelegate.popRoute: $err');
+      return SynchronousFuture(false);
+    }
   }
 
   @override
-  Future<void> setNewRoutePath(final PageConfiguration configuration) {
-    l.i('PageRouter.setNewRoutePath(${configuration.toUri()})');
+  Future<void> setNewRoutePath(IRouteConfiguration configuration) {
+    if (_currentConfiguration == configuration) {
+      // Конфигурация не изменилась
+      return SynchronousFuture<void>(null);
+    }
     _currentConfiguration = configuration;
     notifyListeners();
     return SynchronousFuture<void>(null);
   }
 
-  Route<void> _onUnknownRoute(final RouteSettings settings) => MaterialPageRoute<void>(
-        settings: settings,
-        builder: (final context) => const NotFoundScreen(),
-      );
-
-  void _setBrowserTitle(final BuildContext context) {
-    if (kIsWeb) {
-      SystemChrome.setApplicationSwitcherDescription(
-        ApplicationSwitcherDescription(
-          label: currentConfiguration.pageTitle,
-          primaryColor: Theme.of(context).primaryColor.value,
-        ),
-      );
-    }
+  @override
+  Future<void> setRestoredRoutePath(IRouteConfiguration configuration) {
+    return super.setRestoredRoutePath(configuration);
   }
+
+  @override
+  Future<void> setInitialRoutePath(IRouteConfiguration configuration) {
+    return super.setInitialRoutePath(configuration);
+  }
+
+  Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(
+        settings: settings,
+        builder: (context) => const NotFoundScreen(),
+      );
 }

@@ -61,6 +61,45 @@
       transform: translate(-50%, -50%);
       font-size: 3vw;
     }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid blue;
+      border-right: 16px solid green;
+      border-bottom: 16px solid red;
+      border-left: 16px solid pink;
+      width: 75px;
+      height: 75px;
+      animation: spin 2s linear infinite;
+      -webkit-animation: spin 2s linear infinite;
+    }
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 
   <!-- SCRIPTS -->
@@ -70,15 +109,15 @@
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
       https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-performance.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-remote-config.js"></script>
-  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>-->
-  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>-->
-  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>-->
-  <!--<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-functions.js"></script>-->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-performance.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-remote-config.js"></script>
+  <!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>-->
+  <!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-functions.js"></script>-->
 
 
   <!-- https://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file -->
@@ -119,6 +158,13 @@
   </script>
 </head>
 <body>
+  <!-- NOSCRIPT -->
+  <noscript class='noscript-center'>Your browser does not support JavaScript!</noscript>
+
+  <div class="loading">
+    <div class="loader"></div>
+  </div>
+
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->

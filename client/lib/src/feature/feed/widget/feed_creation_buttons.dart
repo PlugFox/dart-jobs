@@ -1,5 +1,5 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +32,8 @@ class FeedCreationButtons extends StatelessWidget {
                       onPressed: () {
                         AuthenticationScope.authenticateOr(
                           context,
-                          (final user) => PageRouter.navigate(context, (configuration) => JobCreatePageConfiguration()),
+                          (final user) =>
+                              AppRouter.navigate(context, (configuration) => const JobRouteConfiguration.create()),
                         );
                       },
                     ),
