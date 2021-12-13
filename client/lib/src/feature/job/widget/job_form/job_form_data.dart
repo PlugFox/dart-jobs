@@ -24,7 +24,7 @@ class JobFormData {
   final List<JobInputControllerMixin> _controllers = <JobInputControllerMixin>[];
   final JobFieldTitleController titleController = JobFieldTitleController();
   final JobFieldCompanyController companyController = JobFieldCompanyController();
-  final JobFieldCountryController countryController = JobFieldCountryController(0);
+  final JobFieldCountryController countryController = JobFieldCountryController(Countries.unknown);
   //final JobFieldAddressController addressController = JobFieldAddressController();
   final JobFieldRemoteController remoteController = JobFieldRemoteController();
   final JobFieldTagsController tagsController = JobFieldTagsController();
@@ -78,7 +78,7 @@ class JobFormData {
   JobData updateJob(JobData data) => _lastJob.value = data.copyWith(
         title: titleController.text,
         company: companyController.text,
-        country: countryController.value,
+        country: countryController.value.code,
         //address: addressController.text,
         remote: remoteController.value,
         tags: tagsController.value,
@@ -210,14 +210,14 @@ class JobFieldCompanyController extends TextEditingController
 }
 
 /// Country controller
-class JobFieldCountryController extends ValueNotifier<int> with JobInputControllerMixin<int> {
-  JobFieldCountryController(int value) : super(value);
+class JobFieldCountryController extends ValueNotifier<Country> with JobInputControllerMixin<Country> {
+  JobFieldCountryController(Country value) : super(value);
 
   @override
-  String? checkValue(int value) => null;
+  String? checkValue(Country value) => null;
 
   @override
-  void update(JobData data) => value = data.country;
+  void update(JobData data) => value = Country.byCode(data.country);
 }
 
 /*
@@ -312,7 +312,9 @@ class JobFieldContactsController extends ValueNotifier<List<String>> with JobInp
 class JobFieldDescriptionsController extends ChangeNotifier
     with JobInputControllerMixin<Description>
     implements ValueListenable<Description> {
-  JobFieldDescriptionsController();
+  JobFieldDescriptionsController() {
+    Listenable.merge([russian, english]).addListener(notifyListeners);
+  }
 
   /// Максимальное количество символов
   int get maxLength => 2600;

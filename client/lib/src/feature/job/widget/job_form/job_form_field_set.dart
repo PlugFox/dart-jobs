@@ -4,6 +4,7 @@ import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/country_picker.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_descriptions_field.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
@@ -29,7 +30,6 @@ class JobFormFieldSet extends StatelessWidget {
           children: <Positioned>[
             Positioned.fill(
               child: ListView(
-                shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 cacheExtent: MediaQuery.of(context).size.height,
                 padding: EdgeInsets.symmetric(
@@ -54,6 +54,9 @@ class JobFormFieldSet extends StatelessWidget {
                   ),
 
                   /// Страна
+                  _CountryPicker(
+                    controller: formData.countryController,
+                  ),
                   //_JobSingleLineText(
                   //  context.localization.job_field_location_country,
                   //  formData.countryController,
@@ -149,6 +152,25 @@ class _JobSingleLineText extends StatelessWidget {
               onEditingComplete: () => FocusScope.of(context).nextFocus(),
             ),
           ),
+        ),
+      );
+}
+
+@immutable
+class _CountryPicker extends StatelessWidget {
+  const _CountryPicker({
+    required this.controller,
+    Key? key,
+  }) : super(key: key);
+
+  final JobFieldCountryController controller;
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<FormStatus>(
+        valueListenable: JobForm.formDataOf(context).status,
+        builder: (context, status, _) => CountryPicker(
+          controller: controller,
+          enabled: status == FormStatus.editing,
         ),
       );
 }

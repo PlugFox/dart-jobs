@@ -345,7 +345,7 @@ class _$JobDataTearOff {
   _JobData call(
       {@JsonKey(name: 'title') String title = '',
       @JsonKey(name: 'company') String company = '',
-      @JsonKey(name: 'country') int country = 0,
+      @JsonKey(name: 'country') String country = 'XX',
       @JsonKey(name: 'remote') bool remote = true,
       @JsonKey(name: 'relocation') Relocation relocation = const Relocation.impossible(),
       @JsonKey(name: 'descriptions') Description descriptions = const Description(),
@@ -395,7 +395,7 @@ mixin _$JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  int get country => throw _privateConstructorUsedError;
+  String get country => throw _privateConstructorUsedError;
 
   /// Удаленная работа?
   /// Переключатель
@@ -455,7 +455,7 @@ abstract class $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
@@ -502,7 +502,7 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
@@ -553,7 +553,7 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
@@ -600,7 +600,7 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
@@ -643,7 +643,7 @@ class _$_JobData extends _JobData {
   const _$_JobData(
       {@JsonKey(name: 'title') this.title = '',
       @JsonKey(name: 'company') this.company = '',
-      @JsonKey(name: 'country') this.country = 0,
+      @JsonKey(name: 'country') this.country = 'XX',
       @JsonKey(name: 'remote') this.remote = true,
       @JsonKey(name: 'relocation') this.relocation = const Relocation.impossible(),
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
@@ -676,7 +676,7 @@ class _$_JobData extends _JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  final int country;
+  final String country;
   @override
 
   /// Удаленная работа?
@@ -785,7 +785,7 @@ abstract class _JobData extends JobData {
   const factory _JobData(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
       @JsonKey(name: 'descriptions') Description descriptions,
@@ -818,7 +818,7 @@ abstract class _JobData extends JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  int get country;
+  String get country;
   @override
 
   /// Удаленная работа?

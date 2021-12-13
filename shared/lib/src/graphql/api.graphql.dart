@@ -10,56 +10,10 @@ import 'package:dart_jobs_shared/model.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/employment.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/level.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/text.dart';
+import 'package:dart_jobs_shared/src/graphql/parsers/bpchar.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/relocation.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/timestamp.dart';
 part 'api.graphql.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
-  DeleteJob$MutationRoot$Job();
-
-  factory DeleteJob$MutationRoot$Job.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJob$MutationRoot$JobFromJson(json);
-
-  late int id;
-
-  @JsonKey(name: 'creator_id')
-  late String creatorId;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime created;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime updated;
-
-  @JsonKey(name: 'deletion_mark')
-  late bool deletionMark;
-
-  @override
-  List<Object?> get props => [id, creatorId, created, updated, deletionMark];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJob$MutationRoot$JobToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJob$MutationRoot extends JsonSerializable with EquatableMixin {
-  DeleteJob$MutationRoot();
-
-  factory DeleteJob$MutationRoot.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJob$MutationRootFromJson(json);
-
-  @JsonKey(name: 'update_job_by_pk')
-  DeleteJob$MutationRoot$Job? updateJobByPk;
-
-  @override
-  List<Object?> get props => [updateJobByPk];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJob$MutationRootToJson(this);
-}
 
 @JsonSerializable(explicitToJson: true)
 class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
@@ -90,7 +44,10 @@ class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
 
   late String company;
 
-  late int country;
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
 
   late bool remote;
 
@@ -172,7 +129,10 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
 
   late String company;
 
-  late int country;
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
 
   late bool remote;
 
@@ -281,7 +241,10 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
 
   late String company;
 
-  late int country;
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
 
   late bool remote;
 
@@ -390,7 +353,10 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
 
   late String company;
 
-  late int country;
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
 
   late bool remote;
 
@@ -496,20 +462,16 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
       {this.company,
       this.contacts,
       this.country,
-      this.created,
-      this.creatorId,
       this.deletionMark,
       this.employments,
       this.englishDescription,
-      this.id,
       this.levels,
       this.relocation,
       this.remote,
       this.russianDescription,
       this.skills,
       this.tags,
-      this.title,
-      this.updated});
+      this.title});
 
   factory JobSetInput.fromJson(Map<String, dynamic> json) =>
       _$JobSetInputFromJson(json);
@@ -521,15 +483,10 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
       toJson: fromDartListNullableStringToGraphQL$textNullable)
   List<String>? contacts;
 
-  int? country;
-
   @JsonKey(
-      fromJson: fromGraphQLTimestampNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLTimestampNullable)
-  DateTime? created;
-
-  @JsonKey(name: 'creator_id')
-  String? creatorId;
+      fromJson: fromGraphQLBpcharNullableToDartStringNullable,
+      toJson: fromDartStringNullableToGraphQLBpcharNullable)
+  String? country;
 
   @JsonKey(name: 'deletion_mark')
   bool? deletionMark;
@@ -541,8 +498,6 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   @JsonKey(name: 'english_description')
   String? englishDescription;
-
-  int? id;
 
   @JsonKey(
       fromJson: fromGraphQL$levelNullableToDartListNullableDeveloperLevel,
@@ -571,137 +526,24 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   String? title;
 
-  @JsonKey(
-      fromJson: fromGraphQLTimestampNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLTimestampNullable)
-  DateTime? updated;
-
   @override
   List<Object?> get props => [
         company,
         contacts,
         country,
-        created,
-        creatorId,
         deletionMark,
         employments,
         englishDescription,
-        id,
         levels,
         relocation,
         remote,
         russianDescription,
         skills,
         tags,
-        title,
-        updated
+        title
       ];
   @override
   Map<String, dynamic> toJson() => _$JobSetInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJobArguments extends JsonSerializable with EquatableMixin {
-  DeleteJobArguments({required this.id});
-
-  @override
-  factory DeleteJobArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJobArgumentsFromJson(json);
-
-  late int id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJobArgumentsToJson(this);
-}
-
-final DELETE_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'DeleteJob'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'update_job_by_pk'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'pk_columns'),
-                  value: ObjectValueNode(fields: [
-                    ObjectFieldNode(
-                        name: NameNode(value: 'id'),
-                        value: VariableNode(name: NameNode(value: 'id')))
-                  ])),
-              ArgumentNode(
-                  name: NameNode(value: '_set'),
-                  value: ObjectValueNode(fields: [
-                    ObjectFieldNode(
-                        name: NameNode(value: 'deletion_mark'),
-                        value: BooleanValueNode(value: true))
-                  ]))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FieldNode(
-                  name: NameNode(value: 'id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'creator_id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'created'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'updated'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'deletion_mark'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
-            ]))
-      ]))
-]);
-
-class DeleteJobMutation
-    extends GraphQLQuery<DeleteJob$MutationRoot, DeleteJobArguments> {
-  DeleteJobMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_JOB_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'DeleteJob';
-
-  @override
-  final DeleteJobArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteJob$MutationRoot parse(Map<String, dynamic> json) =>
-      DeleteJob$MutationRoot.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1067,7 +909,10 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
 
   late String company;
 
-  late int country;
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
 
   late String creator_id;
 
@@ -1146,7 +991,8 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: []),
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'country')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
+            type:
+                NamedTypeNode(name: NameNode(value: 'bpchar'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(

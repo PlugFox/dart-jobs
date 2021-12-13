@@ -250,6 +250,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
         variables: UpdateJobArguments(
           id: job.id,
           data: JobSetInput(
+            deletionMark: job.deletionMark,
             company: job.data.company,
             contacts: job.data.contacts,
             country: job.data.country,
@@ -286,26 +287,13 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
 
-    final result = await _client.execute(
-      DeleteJobMutation(
-        variables: DeleteJobArguments(
-          id: job.id,
-        ),
+    final result = await updateJob(
+      job: job.copyWith(
+        deletionMark: true,
       ),
-      context: _addTokenToContext(idToken),
+      idToken: idToken,
     );
-    await Future<void>.delayed(Duration.zero);
-    final deletedJob = result.data?.updateJobByPk;
-    if (deletedJob == null) {
-      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
-    }
-    return job.copyWith(
-      id: deletedJob.id,
-      updated: deletedJob.updated,
-      created: deletedJob.created,
-      deletionMark: deletedJob.deletionMark,
-      creatorId: deletedJob.creatorId,
-    );
+    return result;
   }
 
   Context _addTokenToContext(
@@ -328,4 +316,7 @@ class GraphQLJobException implements Exception {
   const GraphQLJobException(this.errors);
 
   final List<GraphQLError> errors;
+
+  @override
+  String toString() => 'Job GraphQL exception: ${errors.map<String>((e) => e.message).join(', ')}';
 }

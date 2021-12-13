@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
+import 'package:dart_jobs_shared/src/model/country.dart';
 import 'package:dart_jobs_shared/src/model/enum.dart';
 import 'package:dart_jobs_shared/util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -149,7 +150,7 @@ class JobData with _$JobData {
     /// Страна, например: Russia
     /// Идентификатор страны
     /// Выпадающее поле поиска
-    @JsonKey(name: 'country') @Default(0) final int country,
+    @JsonKey(name: 'country') @Default('XX') final String country,
 
     /// Удаленная работа?
     /// Переключатель
@@ -193,6 +194,8 @@ class JobData with _$JobData {
     /// Поле ввода
     @JsonKey(name: 'tags') @Default(<String>[]) final List<String> tags,
   }) = _JobData;
+
+  Country getCountry() => Country.byCode(country);
 
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);

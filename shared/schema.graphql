@@ -6,157 +6,6 @@ schema {
     subscription: subscription_root
 }
 
-"columns and relationships of \"country\""
-type country {
-    "Двухсимвольный код страны"
-    code: bpchar!
-    "Идентификатор страны"
-    id: Int!
-    "Приблизительная широта"
-    latitude: Float!
-    "Приблизительная долгота"
-    longitude: Float!
-    "Имя страны на английском"
-    title: String!
-}
-
-"aggregated selection of \"country\""
-type country_aggregate {
-    aggregate: country_aggregate_fields
-    nodes: [country!]!
-}
-
-"aggregate fields of \"country\""
-type country_aggregate_fields {
-    avg: country_avg_fields
-    count(columns: [country_select_column!], distinct: Boolean): Int!
-    max: country_max_fields
-    min: country_min_fields
-    stddev: country_stddev_fields
-    stddev_pop: country_stddev_pop_fields
-    stddev_samp: country_stddev_samp_fields
-    sum: country_sum_fields
-    var_pop: country_var_pop_fields
-    var_samp: country_var_samp_fields
-    variance: country_variance_fields
-}
-
-"aggregate avg on columns"
-type country_avg_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate max on columns"
-type country_max_fields {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"aggregate min on columns"
-type country_min_fields {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"response of any mutation on the table \"country\""
-type country_mutation_response {
-    "number of rows affected by the mutation"
-    affected_rows: Int!
-    "data from the rows affected by the mutation"
-    returning: [country!]!
-}
-
-"aggregate stddev on columns"
-type country_stddev_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate stddev_pop on columns"
-type country_stddev_pop_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate stddev_samp on columns"
-type country_stddev_samp_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate sum on columns"
-type country_sum_fields {
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate var_pop on columns"
-type country_var_pop_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate var_samp on columns"
-type country_var_samp_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate variance on columns"
-type country_variance_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
 """
 
 Список работ
@@ -170,7 +19,7 @@ type job {
     "Контакты для обратной связи"
     contacts: _text!
     "Страна"
-    country: Int!
+    country: bpchar!
     "Создание"
     created: timestamp!
     "Идентификатор пользователя из ID token фаербейза"
@@ -201,79 +50,6 @@ type job {
     updated: timestamp!
 }
 
-"aggregated selection of \"job\""
-type job_aggregate {
-    aggregate: job_aggregate_fields
-    nodes: [job!]!
-}
-
-"aggregate fields of \"job\""
-type job_aggregate_fields {
-    avg: job_avg_fields
-    count(columns: [job_select_column!], distinct: Boolean): Int!
-    max: job_max_fields
-    min: job_min_fields
-    stddev: job_stddev_fields
-    stddev_pop: job_stddev_pop_fields
-    stddev_samp: job_stddev_samp_fields
-    sum: job_sum_fields
-    var_pop: job_var_pop_fields
-    var_samp: job_var_samp_fields
-    variance: job_variance_fields
-}
-
-"aggregate avg on columns"
-type job_avg_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate max on columns"
-type job_max_fields {
-    "Компания"
-    company: String
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
-    "Описание на русском"
-    russian_description: String
-    "Имя вакансии"
-    title: String
-    "Последнее обновление"
-    updated: timestamp
-}
-
-"aggregate min on columns"
-type job_min_fields {
-    "Компания"
-    company: String
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
-    "Описание на русском"
-    russian_description: String
-    "Имя вакансии"
-    title: String
-    "Последнее обновление"
-    updated: timestamp
-}
-
 "response of any mutation on the table \"job\""
 type job_mutation_response {
     "number of rows affected by the mutation"
@@ -282,98 +58,8 @@ type job_mutation_response {
     returning: [job!]!
 }
 
-"aggregate stddev on columns"
-type job_stddev_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate stddev_pop on columns"
-type job_stddev_pop_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate stddev_samp on columns"
-type job_stddev_samp_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate sum on columns"
-type job_sum_fields {
-    "Страна"
-    country: Int
-    "Идентификатор элемента"
-    id: Int
-}
-
-"aggregate var_pop on columns"
-type job_var_pop_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate var_samp on columns"
-type job_var_samp_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate variance on columns"
-type job_variance_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
 "mutation root"
 type mutation_root {
-    "delete data from the table: \"country\""
-    delete_country(
-        "filter the rows which have to be deleted"
-        where: country_bool_exp!
-    ): country_mutation_response
-    "delete single row from the table: \"country\""
-    delete_country_by_pk(
-        "Идентификатор страны"
-        id: Int!
-    ): country
-    "delete data from the table: \"job\""
-    delete_job(
-        "filter the rows which have to be deleted"
-        where: job_bool_exp!
-    ): job_mutation_response
-    "delete single row from the table: \"job\""
-    delete_job_by_pk(
-        "Идентификатор элемента"
-        id: Int!
-    ): job
-    "insert data into the table: \"country\""
-    insert_country(
-        "the rows to be inserted"
-        objects: [country_insert_input!]!,
-        "on conflict condition"
-        on_conflict: country_on_conflict
-    ): country_mutation_response
-    "insert a single row into the table: \"country\""
-    insert_country_one(
-        "the row to be inserted"
-        object: country_insert_input!,
-        "on conflict condition"
-        on_conflict: country_on_conflict
-    ): country
     "insert data into the table: \"job\""
     insert_job(
         "the rows to be inserted"
@@ -388,27 +74,8 @@ type mutation_root {
         "on conflict condition"
         on_conflict: job_on_conflict
     ): job
-    "update data of the table: \"country\""
-    update_country(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: country_inc_input,
-        "sets the columns of the filtered rows to the given values"
-        _set: country_set_input,
-        "filter the rows which have to be updated"
-        where: country_bool_exp!
-    ): country_mutation_response
-    "update single row of the table: \"country\""
-    update_country_by_pk(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: country_inc_input,
-        "sets the columns of the filtered rows to the given values"
-        _set: country_set_input,
-        pk_columns: country_pk_columns_input!
-    ): country
     "update data of the table: \"job\""
     update_job(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: job_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: job_set_input,
         "filter the rows which have to be updated"
@@ -416,8 +83,6 @@ type mutation_root {
     ): job_mutation_response
     "update single row of the table: \"job\""
     update_job_by_pk(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: job_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: job_set_input,
         pk_columns: job_pk_columns_input!
@@ -425,37 +90,6 @@ type mutation_root {
 }
 
 type query_root {
-    "fetch data from the table: \"country\""
-    country(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): [country!]!
-    "fetch aggregated fields from the table: \"country\""
-    country_aggregate(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): country_aggregate!
-    "fetch data from the table: \"country\" using primary key columns"
-    country_by_pk(
-        "Идентификатор страны"
-        id: Int!
-    ): country
     "fetch data from the table: \"job\""
     job(
         "distinct select on columns"
@@ -469,19 +103,6 @@ type query_root {
         "filter the rows returned"
         where: job_bool_exp
     ): [job!]!
-    "fetch aggregated fields from the table: \"job\""
-    job_aggregate(
-        "distinct select on columns"
-        distinct_on: [job_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [job_order_by!],
-        "filter the rows returned"
-        where: job_bool_exp
-    ): job_aggregate!
     "fetch data from the table: \"job\" using primary key columns"
     job_by_pk(
         "Идентификатор элемента"
@@ -490,37 +111,6 @@ type query_root {
 }
 
 type subscription_root {
-    "fetch data from the table: \"country\""
-    country(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): [country!]!
-    "fetch aggregated fields from the table: \"country\""
-    country_aggregate(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): country_aggregate!
-    "fetch data from the table: \"country\" using primary key columns"
-    country_by_pk(
-        "Идентификатор страны"
-        id: Int!
-    ): country
     "fetch data from the table: \"job\""
     job(
         "distinct select on columns"
@@ -534,60 +124,11 @@ type subscription_root {
         "filter the rows returned"
         where: job_bool_exp
     ): [job!]!
-    "fetch aggregated fields from the table: \"job\""
-    job_aggregate(
-        "distinct select on columns"
-        distinct_on: [job_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [job_order_by!],
-        "filter the rows returned"
-        where: job_bool_exp
-    ): job_aggregate!
     "fetch data from the table: \"job\" using primary key columns"
     job_by_pk(
         "Идентификатор элемента"
         id: Int!
     ): job
-}
-
-"unique or primary key constraints on table \"country\""
-enum country_constraint {
-    "unique or primary key constraint"
-    country_code_idx
-    "unique or primary key constraint"
-    country_pk
-}
-
-"select columns of table \"country\""
-enum country_select_column {
-    "column name"
-    code
-    "column name"
-    id
-    "column name"
-    latitude
-    "column name"
-    longitude
-    "column name"
-    title
-}
-
-"update columns of table \"country\""
-enum country_update_column {
-    "column name"
-    code
-    "column name"
-    id
-    "column name"
-    latitude
-    "column name"
-    longitude
-    "column name"
-    title
 }
 
 "unique or primary key constraints on table \"job\""
@@ -643,17 +184,11 @@ enum job_update_column {
     "column name"
     country
     "column name"
-    created
-    "column name"
-    creator_id
-    "column name"
     deletion_mark
     "column name"
     employments
     "column name"
     english_description
-    "column name"
-    id
     "column name"
     levels
     "column name"
@@ -668,8 +203,6 @@ enum job_update_column {
     tags
     "column name"
     title
-    "column name"
-    updated
 }
 
 "column ordering options"
@@ -699,19 +232,6 @@ input Boolean_comparison_exp {
     _lte: Boolean
     _neq: Boolean
     _nin: [Boolean!]
-}
-
-"Boolean expression to compare columns of type \"Float\". All fields are combined with logical 'AND'."
-input Float_comparison_exp {
-    _eq: Float
-    _gt: Float
-    _gte: Float
-    _in: [Float!]
-    _is_null: Boolean
-    _lt: Float
-    _lte: Float
-    _neq: Float
-    _nin: [Float!]
 }
 
 "Boolean expression to compare columns of type \"Int\". All fields are combined with logical 'AND'."
@@ -832,78 +352,6 @@ input bpchar_comparison_exp {
     _similar: bpchar
 }
 
-"Boolean expression to filter rows from the table \"country\". All fields are combined with a logical 'AND'."
-input country_bool_exp {
-    _and: [country_bool_exp!]
-    _not: country_bool_exp
-    _or: [country_bool_exp!]
-    code: bpchar_comparison_exp
-    id: Int_comparison_exp
-    latitude: Float_comparison_exp
-    longitude: Float_comparison_exp
-    title: String_comparison_exp
-}
-
-"input type for incrementing numeric columns in table \"country\""
-input country_inc_input {
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"input type for inserting data into table \"country\""
-input country_insert_input {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"on conflict condition type for table \"country\""
-input country_on_conflict {
-    constraint: country_constraint!
-    update_columns: [country_update_column!]! = []
-    where: country_bool_exp
-}
-
-"Ordering options when selecting data from \"country\"."
-input country_order_by {
-    code: order_by
-    id: order_by
-    latitude: order_by
-    longitude: order_by
-    title: order_by
-}
-
-"primary key columns input for table: country"
-input country_pk_columns_input {
-    "Идентификатор страны"
-    id: Int!
-}
-
-"input type for updating data in table \"country\""
-input country_set_input {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
 "Boolean expression to filter rows from the table \"job\". All fields are combined with a logical 'AND'."
 input job_bool_exp {
     _and: [job_bool_exp!]
@@ -911,7 +359,7 @@ input job_bool_exp {
     _or: [job_bool_exp!]
     company: String_comparison_exp
     contacts: _text_comparison_exp
-    country: Int_comparison_exp
+    country: bpchar_comparison_exp
     created: timestamp_comparison_exp
     creator_id: String_comparison_exp
     deletion_mark: Boolean_comparison_exp
@@ -928,14 +376,6 @@ input job_bool_exp {
     updated: timestamp_comparison_exp
 }
 
-"input type for incrementing numeric columns in table \"job\""
-input job_inc_input {
-    "Страна"
-    country: Int
-    "Идентификатор элемента"
-    id: Int
-}
-
 "input type for inserting data into table \"job\""
 input job_insert_input {
     "Компания"
@@ -943,19 +383,13 @@ input job_insert_input {
     "Контакты для обратной связи"
     contacts: _text
     "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
+    country: bpchar
     "Идентификатор пользователя из ID token фаербейза"
     creator_id: String
-    "Пометка на удаление"
-    deletion_mark: Boolean
     "Трудоустройство, занятость"
     employments: _employment
     "Описание на английском"
     english_description: String
-    "Идентификатор элемента"
-    id: Int
     "Уровни разработчика"
     levels: _level
     "Релокация"
@@ -970,8 +404,6 @@ input job_insert_input {
     tags: _text
     "Имя вакансии"
     title: String
-    "Последнее обновление"
-    updated: timestamp
 }
 
 "on conflict condition type for table \"job\""
@@ -1015,19 +447,13 @@ input job_set_input {
     "Контакты для обратной связи"
     contacts: _text
     "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
+    country: bpchar
     "Пометка на удаление"
     deletion_mark: Boolean
     "Трудоустройство, занятость"
     employments: _employment
     "Описание на английском"
     english_description: String
-    "Идентификатор элемента"
-    id: Int
     "Уровни разработчика"
     levels: _level
     "Релокация"
@@ -1042,8 +468,6 @@ input job_set_input {
     tags: _text
     "Имя вакансии"
     title: String
-    "Последнее обновление"
-    updated: timestamp
 }
 
 "Boolean expression to compare columns of type \"relocation\". All fields are combined with logical 'AND'."
