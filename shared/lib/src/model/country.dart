@@ -36,6 +36,12 @@ class Country {
 
   /// Примерная долгота
   final double longitude;
+
+  @override
+  int get hashCode => id;
+
+  @override
+  bool operator ==(Object other) => identical(other, this) || (other is Country && other.id == id);
 }
 
 /// Список всех стран

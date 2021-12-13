@@ -312,7 +312,9 @@ class JobFieldContactsController extends ValueNotifier<List<String>> with JobInp
 class JobFieldDescriptionsController extends ChangeNotifier
     with JobInputControllerMixin<Description>
     implements ValueListenable<Description> {
-  JobFieldDescriptionsController();
+  JobFieldDescriptionsController() {
+    Listenable.merge([russian, english]).addListener(notifyListeners);
+  }
 
   /// Максимальное количество символов
   int get maxLength => 2600;

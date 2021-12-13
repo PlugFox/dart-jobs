@@ -36,6 +36,7 @@ class _JobDescriptionsFieldState extends State<JobDescriptionsField> with Ticker
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
+    final isRussian = context.locale == const Locale('ru');
     return SizedBox(
       height: 300,
       child: ValueListenableBuilder<String?>(
@@ -51,34 +52,58 @@ class _JobDescriptionsFieldState extends State<JobDescriptionsField> with Ticker
                 controller: _tabController,
                 labelColor: themeData.hintColor,
                 indicatorColor: themeData.indicatorColor,
-                tabs: <Widget>[
-                  Tab(
-                    text: context.localization.english,
-                  ),
-                  Tab(
-                    text: context.localization.russian,
-                  ),
-                ],
+                tabs: isRussian
+                    ? <Widget>[
+                        Tab(
+                          text: context.localization.russian,
+                        ),
+                        Tab(
+                          text: context.localization.english,
+                        ),
+                      ]
+                    : <Widget>[
+                        Tab(
+                          text: context.localization.english,
+                        ),
+                        Tab(
+                          text: context.localization.russian,
+                        ),
+                      ],
               ),
             ),
             const SizedBox(height: 5),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: <Widget>[
-                  _JobMultiLineDescription(
-                    widget.controller.english,
-                    maxLength: widget.controller.maxLength,
-                    inputFormatters: <TextInputFormatter>[
-                      _denyCyrillic,
-                    ],
-                  ),
-                  _JobMultiLineDescription(
-                    widget.controller.russian,
-                    maxLength: widget.controller.maxLength,
-                    inputFormatters: const <TextInputFormatter>[],
-                  ),
-                ],
+                children: isRussian
+                    ? <Widget>[
+                        _JobMultiLineDescription(
+                          widget.controller.russian,
+                          maxLength: widget.controller.maxLength,
+                          inputFormatters: const <TextInputFormatter>[],
+                        ),
+                        _JobMultiLineDescription(
+                          widget.controller.english,
+                          maxLength: widget.controller.maxLength,
+                          inputFormatters: <TextInputFormatter>[
+                            _denyCyrillic,
+                          ],
+                        ),
+                      ]
+                    : <Widget>[
+                        _JobMultiLineDescription(
+                          widget.controller.english,
+                          maxLength: widget.controller.maxLength,
+                          inputFormatters: <TextInputFormatter>[
+                            _denyCyrillic,
+                          ],
+                        ),
+                        _JobMultiLineDescription(
+                          widget.controller.russian,
+                          maxLength: widget.controller.maxLength,
+                          inputFormatters: const <TextInputFormatter>[],
+                        ),
+                      ],
               ),
             ),
             SizedBox(
@@ -128,6 +153,7 @@ class _JobMultiLineDescription extends StatelessWidget {
             maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
             maxLength: maxLength,
             decoration: InputDecoration(
+              hintText: context.localization.job_field_description,
               border: status != FormStatus.editing ? InputBorder.none : null,
               filled: true,
               fillColor: Theme.of(context).highlightColor,
