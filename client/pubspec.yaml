@@ -70,16 +70,16 @@ dependencies:
   google_sign_in: ^5.0.3
 
   # UI & Widgets
-  shimmer: ^2.0.0
+  #shimmer: ^2.0.0
   #google_fonts: ^2.1.0
   #flutterfire_ui: ^0.2.0+2
-  country_list_pick: ^1.0.1+5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   #integration_test:
   #  sdk: flutter
+  analyzer: ">=2.8.0 <4.0.0"
   build_runner: ^2.1.4
   build_web_compilers: ^3.2.1
   mockito: ^5.0.15
@@ -95,10 +95,10 @@ dev_dependencies:
   args: ^2.0.0
   #pigeon: ^0.3.0
 
-dependency_overrides:
+#dependency_overrides:
   #analyzer: ^2.7.0
   # https://github.com/gql-dart/gql/issues/289
-  gql_exec: 0.3.0
+  #gql_exec: 0.3.0
 
 # Flutter assets and config
 flutter:

@@ -264,16 +264,23 @@ class _$_Job extends _Job {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Job &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.creatorId, creatorId) || other.creatorId == creatorId) &&
-            (identical(other.created, created) || other.created == created) &&
-            (identical(other.updated, updated) || other.updated == updated) &&
-            (identical(other.data, data) || other.data == data) &&
-            (identical(other.deletionMark, deletionMark) || other.deletionMark == deletionMark));
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.creatorId, creatorId) &&
+            const DeepCollectionEquality().equals(other.created, created) &&
+            const DeepCollectionEquality().equals(other.updated, updated) &&
+            const DeepCollectionEquality().equals(other.data, data) &&
+            const DeepCollectionEquality().equals(other.deletionMark, deletionMark));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, creatorId, created, updated, data, deletionMark);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(creatorId),
+      const DeepCollectionEquality().hash(created),
+      const DeepCollectionEquality().hash(updated),
+      const DeepCollectionEquality().hash(data),
+      const DeepCollectionEquality().hash(deletionMark));
 
   @JsonKey(ignore: true)
   @override
@@ -743,12 +750,12 @@ class _$_JobData extends _JobData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _JobData &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.company, company) || other.company == company) &&
-            (identical(other.country, country) || other.country == country) &&
-            (identical(other.remote, remote) || other.remote == remote) &&
-            (identical(other.relocation, relocation) || other.relocation == relocation) &&
-            (identical(other.descriptions, descriptions) || other.descriptions == descriptions) &&
+            const DeepCollectionEquality().equals(other.title, title) &&
+            const DeepCollectionEquality().equals(other.company, company) &&
+            const DeepCollectionEquality().equals(other.country, country) &&
+            const DeepCollectionEquality().equals(other.remote, remote) &&
+            const DeepCollectionEquality().equals(other.relocation, relocation) &&
+            const DeepCollectionEquality().equals(other.descriptions, descriptions) &&
             const DeepCollectionEquality().equals(other.levels, levels) &&
             const DeepCollectionEquality().equals(other.skills, skills) &&
             const DeepCollectionEquality().equals(other.contacts, contacts) &&
@@ -759,12 +766,12 @@ class _$_JobData extends _JobData {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      title,
-      company,
-      country,
-      remote,
-      relocation,
-      descriptions,
+      const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(company),
+      const DeepCollectionEquality().hash(country),
+      const DeepCollectionEquality().hash(remote),
+      const DeepCollectionEquality().hash(relocation),
+      const DeepCollectionEquality().hash(descriptions),
       const DeepCollectionEquality().hash(levels),
       const DeepCollectionEquality().hash(skills),
       const DeepCollectionEquality().hash(contacts),
@@ -994,11 +1001,11 @@ class _$PaginateJobFilter extends PaginateJobFilter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is PaginateJobFilter &&
-            (identical(other.limit, limit) || other.limit == limit));
+            const DeepCollectionEquality().equals(other.limit, limit));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit);
+  int get hashCode => Object.hash(runtimeType, const DeepCollectionEquality().hash(limit));
 
   @JsonKey(ignore: true)
   @override

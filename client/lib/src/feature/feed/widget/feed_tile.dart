@@ -7,7 +7,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_info/platform_info.dart';
-import 'package:shimmer/shimmer.dart';
 
 typedef FeedTileOnPressed = void Function(BuildContext context);
 
@@ -309,12 +308,7 @@ class _ShimmerPlaceholderPlatform extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => platform.isWeb
       ? _ShimmerPlaceholder(color: Theme.of(context).hoverColor)
-      : Shimmer.fromColors(
-          enabled: true,
-          highlightColor: Colors.transparent,
-          baseColor: Theme.of(context).hoverColor,
-          child: _ShimmerPlaceholder(color: Theme.of(context).cardColor),
-        );
+      : _ShimmerPlaceholder(color: Theme.of(context).cardColor);
 }
 
 /// Плейсхолдер Скелетон/Шиммер

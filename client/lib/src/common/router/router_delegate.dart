@@ -106,14 +106,10 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
   }
 
   @override
-  Future<void> setRestoredRoutePath(IRouteConfiguration configuration) {
-    return super.setRestoredRoutePath(configuration);
-  }
+  Future<void> setRestoredRoutePath(IRouteConfiguration configuration) => super.setRestoredRoutePath(configuration);
 
   @override
-  Future<void> setInitialRoutePath(IRouteConfiguration configuration) {
-    return super.setInitialRoutePath(configuration);
-  }
+  Future<void> setInitialRoutePath(IRouteConfiguration configuration) => super.setInitialRoutePath(configuration);
 
   Route<void> _onUnknownRoute(RouteSettings settings) => MaterialPageRoute<void>(
         settings: settings,
