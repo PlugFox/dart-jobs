@@ -37,7 +37,7 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
         child: PagesBuilder(
           configuration: configuration,
           builder: (context, pages, child) => Navigator(
-            transitionDelegate: const DefaultTransitionDelegate<Object?>(),
+            transitionDelegate: const DefaultTransitionDelegate<void>(),
             onUnknownRoute: _onUnknownRoute,
             reportsRouteUpdateToEngine: true,
             observers: <NavigatorObserver>[
