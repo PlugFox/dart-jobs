@@ -3,6 +3,7 @@ import 'package:dart_jobs_client/src/feature/authentication/widget/authenticatio
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:dart_jobs_client/src/feature/settings/model/user_settings.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/platform.dart' as platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -56,6 +57,7 @@ class _SettingsScopeState extends State<SettingsScope> {
     settingsBLoC = SettingsBLoC(
       repository: RepositoryScope.of(context).settingsRepository,
     );
+    platform.changeTheme(settingsBLoC.state.settings.theme);
   }
 
   @override
@@ -82,8 +84,13 @@ class _SettingsScopeState extends State<SettingsScope> {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocBuilder<SettingsBLoC, SettingsState>(
+  Widget build(final BuildContext context) => BlocConsumer<SettingsBLoC, SettingsState>(
         bloc: settingsBLoC,
+        listenWhen: (prev, next) => prev.settings.theme != next.settings.theme,
+        listener: (context, state) {
+          // Изменить тему браузера
+          platform.changeTheme(state.settings.theme);
+        },
         buildWhen: (final prev, final next) => prev != next,
         builder: (final context, final state) => _InheritedSettings(
           state: this,
