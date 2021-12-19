@@ -18,7 +18,7 @@ class SettingsEvent with _$SettingsEvent {
   ) = _GetFromServerSettingsEvent;
 
   const factory SettingsEvent.update(
-    final AuthenticatedUser user,
+    final UserEntity user,
     final UserSettings settings,
   ) = _UpdateSettingsEvent;
 }
@@ -59,8 +59,10 @@ class SettingsBLoC extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Future<void> _update(_UpdateSettingsEvent event, Emitter<SettingsState> emit) async {
-    if (event.user.isNotAuthenticated) return;
-    l.i('Сохраним настройки для пользователя #${event.user.uid}');
+    event.user.when<void>(
+      authenticated: (user) => l.i('Сохраним настройки для пользователя #${user.uid}'),
+      notAuthenticated: () => l.i('Сохраним настройки для анонимного пользователя'),
+    );
     await _repository.update(event.user, event.settings);
     emit(SettingsState(event.settings));
     l.i('Настройки сохранены');

@@ -7,22 +7,33 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     final Key? key,
     final this.size = 60,
+    final this.openUserScreen = false,
   }) : super(key: key);
 
   /// Диаметр аватара
   final double size;
 
+  /// Открыть страничку пользователя если был не авторизован
+  /// и успешно авторизовался после нажатия?
+  final bool openUserScreen;
+
   @override
   Widget build(final BuildContext context) => IconButton(
-        onPressed: () {
-          AuthenticationScope.authenticateOr(
+        onPressed: () => AuthenticationScope.userOf(context, listen: false).when(
+          authenticated: (user) => AppRouter.navigate(
             context,
-            (final user) => AppRouter.navigate(
-              context,
-              (final configuration) => const ProfileRouteConfiguration(),
-            ),
-          );
-        },
+            (final configuration) => const ProfileRouteConfiguration(),
+          ),
+          notAuthenticated: () => openUserScreen
+              ? AuthenticationScope.authenticateOr(
+                  context,
+                  (final user) => AppRouter.navigate(
+                    context,
+                    (final configuration) => const ProfileRouteConfiguration(),
+                  ),
+                )
+              : AuthenticationScope.signInWithGoogle(context),
+        ),
         icon: CircleAvatar(
           radius: size / 2,
           child: Padding(

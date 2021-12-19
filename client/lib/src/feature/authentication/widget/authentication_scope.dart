@@ -47,6 +47,12 @@ class AuthenticationScope extends StatefulWidget {
         notAuthenticated: () => false,
       );
 
+  /// Проверить, авторизован ли текущий пользователь
+  static bool isAuthenticatedOf(final BuildContext context, {bool listen = false}) => userOf(
+        context,
+        listen: listen,
+      ).isAuthenticated;
+
   /// Получить авторизованного пользователя из контекста или null
   static AuthenticatedUser? authenticatedOrNullOf(final BuildContext context, {bool listen = false}) {
     if (listen) {

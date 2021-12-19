@@ -19,6 +19,26 @@
   "@settings": {
     "description": "Настройки"
   },
+  "settings_app_configuration": "Конфигурация приложения",
+  "@settings_app_configuration": {
+    "description": "Конфигурация приложения"
+  },
+  "theme_scheme": "Тема",
+  "@theme_scheme": {
+    "description": "Тема оформления (светлая, темная)"
+  },
+  "theme_scheme_light_mode": "Светлая",
+  "@theme_scheme_light_mode": {
+    "description": "Светлая тема оформления"
+  },
+  "theme_scheme_dark_mode": "Темная",
+  "@theme_scheme_dark_mode": {
+    "description": "Темная тема оформления"
+  },
+  "settings_app_language": "Язык",
+  "@settings_app_language": {
+    "description": "Язык приложения"
+  },
   "profile": "Профиль",
   "@profile": {
     "description": "Профиль"

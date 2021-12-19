@@ -11,20 +11,20 @@ abstract class ISettingsRepository {
   Future<UserSettings> getFromServer(final AuthenticatedUser user);
 
   /// Обновить настройки в кэше и на сервере
-  Future<void> update(final AuthenticatedUser user, final UserSettings settings);
+  Future<void> update(final UserEntity user, final UserSettings settings);
 }
 
 class SettingsRepository implements ISettingsRepository {
-  UserSettings? _settingsCache;
-  static const String _prefix = 'settings';
-  final SharedPreferences _sharedPreferences;
-  final FirebaseFirestore _firestore;
-
   SettingsRepository({
     required final SharedPreferences sharedPreferences,
     required final FirebaseFirestore firestore,
   })  : _firestore = firestore,
         _sharedPreferences = sharedPreferences;
+
+  UserSettings? _settingsCache;
+  static const String _prefix = 'settings';
+  final SharedPreferences _sharedPreferences;
+  final FirebaseFirestore _firestore;
 
   @override
   UserSettings getFromCache() => _settingsCache ??= UserSettings(
@@ -35,7 +35,7 @@ class SettingsRepository implements ISettingsRepository {
   @override
   Future<UserSettings> getFromServer(final UserEntity user) async {
     if (user is! AuthenticatedUser || user.uid.isEmpty) {
-      return Future<UserSettings>.value(UserSettings.initial);
+      return Future<UserSettings>.sync(getFromCache);
     }
     //const source = Source.serverAndCache;
     final snapshot = await _getSettingsDocumentRef(user).get(); // const GetOptions(source: source)
@@ -57,10 +57,15 @@ class SettingsRepository implements ISettingsRepository {
   }
 
   @override
-  Future<void> update(final AuthenticatedUser user, final UserSettings settings) => Future.wait<void>(
+  Future<void> update(final UserEntity user, final UserSettings settings) => Future.wait<void>(
         <Future<void>>[
           _updateLocal(settings),
-          _updateRemote(user, settings),
+          ...user.when<Iterable<Future<void>>>(
+            authenticated: (user) => <Future<void>>[
+              _updateRemote(user, settings),
+            ],
+            notAuthenticated: () => <Future<void>>[],
+          ),
         ],
       );
 

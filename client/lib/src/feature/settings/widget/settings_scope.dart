@@ -17,16 +17,12 @@ class SettingsScope extends StatefulWidget {
   static SettingsBLoC _blocOf(final BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
 
   /// Обновить настройки приложения
-  static void updateOf(final BuildContext context, {required final UserSettings settings}) {
-    final user = AuthenticationScope.userOf(context, listen: false).authenticatedOrNull;
-    if (user == null) return;
-    _blocOf(context).add(
-      SettingsEvent.update(
-        user,
-        settings,
-      ),
-    );
-  }
+  static void updateOf(final BuildContext context, {required final UserSettings settings}) => _blocOf(context).add(
+        SettingsEvent.update(
+          AuthenticationScope.userOf(context, listen: false),
+          settings,
+        ),
+      );
 
   /// Получить текущие настройки приложения
   static UserSettings settingsOf(final BuildContext context, {bool listen = true}) =>
