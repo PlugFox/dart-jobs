@@ -1,8 +1,8 @@
-import 'package:dart_jobs_client/src/common/constant/assets.gen.dart' as assets;
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
-import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
+import 'package:dart_jobs_client/src/feature/authentication/widget/user_avatar.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_search_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -27,22 +27,12 @@ class FeedBar extends StatelessWidget {
         ),
         expandedHeight: kToolbarHeight + FeedSearchBar.searchBarSize.height + 15,
         //elevation: 4,
-        leading: Center(
-          child: SizedBox.square(
-            dimension: 42,
-            child: Card(
-              color: Theme.of(context).cardColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+        leading: DrawerScope.isDrawerShown(context)
+            ? null
+            : IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: const Icon(Icons.menu),
               ),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: const assets.$AssetsImageGen().dartLogo.dartLogoToolbar.image(),
-              ),
-            ),
-          ),
-        ),
         title: Text(context.localization.title),
         actions: const <Widget>[
           /*
@@ -51,13 +41,20 @@ class FeedBar extends StatelessWidget {
             icon: Icon(Icons.settings),
           ),
           */
+          /*
+          /// Help && Bug report
+          SizedBox.square(
+            dimension: kToolbarHeight,
+            child: FeedBarSettings(),
+          ),
+          */
           SizedBox.square(
             dimension: kToolbarHeight,
             child: FeedBarSettings(),
           ),
           SizedBox.square(
             dimension: kToolbarHeight,
-            child: FeedBarAvatar(),
+            child: UserAvatar(),
           ),
           SizedBox(width: 15),
         ],
@@ -93,68 +90,4 @@ class FeedBarSettings extends StatelessWidget {
           ),
         ),
       );
-}
-
-@immutable
-class FeedBarAvatar extends StatelessWidget {
-  const FeedBarAvatar({
-    final Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(final BuildContext context) => IconButton(
-        onPressed: () {
-          AuthenticationScope.authenticateOr(
-            context,
-            (final user) => AppRouter.navigate(
-              context,
-              (final configuration) => const ProfileRouteConfiguration(),
-            ),
-          );
-        },
-        icon: const CircleAvatar(
-          radius: 30,
-          child: Padding(
-            padding: EdgeInsets.all(4),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: _UserAvatarImage(),
-              ),
-            ),
-          ),
-        ),
-      );
-}
-
-@immutable
-class _UserAvatarImage extends StatelessWidget {
-  static const double radius = 26;
-
-  const _UserAvatarImage({
-    final Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(final BuildContext context) {
-    final photoURL = AuthenticationScope.userOf(context, listen: true).when<String?>(
-      authenticated: (final user) => user.photoURL,
-      notAuthenticated: () => null,
-    );
-    return photoURL == null || photoURL.isEmpty
-        ? const Icon(Icons.person, size: radius)
-        : ClipRRect(
-            borderRadius: BorderRadius.circular(radius),
-            child: Image.network(
-              photoURL,
-              alignment: Alignment.center,
-              fit: BoxFit.scaleDown,
-              filterQuality: FilterQuality.medium,
-              width: radius * 2,
-              height: radius * 2,
-              cacheHeight: (radius * 2).truncate(),
-              cacheWidth: (radius * 2).truncate(),
-            ),
-          );
-  }
 }

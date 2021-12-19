@@ -1,23 +1,18 @@
-/// Максимальная ширина ленты
-const double feedWidth = 620; // or 540
+/// Максимальная ширина колонки с основным контентом
+const double bodyWidth = 620; // or 540
 
-/// Ширина правой колонки
-const double sideBarWidth = 320; // or 256 or 316;
+// /// Ширина правой колонки с дополнительным контентом
+//const double sidePaneWidth = 320; // or 256 or 316;
 
-/// Отступ боковых панелей от ленты
+/// Отступ боковых панелей от краев экрана, между собой и от рельсы (Drawer)
 const double sidePadding = 24;
 
-/// Минимальная ширина выдвинутого Drawer'а в роли рельсы
-const double minRailWidth = 320;
+/// Ширина выдвинутого Drawer'а в роли рельсы
+/// На планшетах, в случае выдвижения, может быть больше и достигать 400 dip
+const double railWidth = 320;
 
-/// Максимальная ширина выдвинутого Drawer'а в роли рельсы
-const double maxRailWidth = 400;
+/// Максимально возможная ширина лейаута с правой панелью, но без учета Drawer'а
+const double scaffoldWidth = sidePadding + bodyWidth + sidePadding; // + sidePaneWidth + sidePadding;
 
-/// Минимальная ширина экрана для отображения Drawer'а в роли рельсы
-const double withRail = minRailWidth + sidePadding + feedWidth + sidePadding;
-
-/// Максимально возможная ширина лейаута без учета Drawer'а
-const double maxScaffoldWidth = sidePadding + feedWidth + sidePadding + sideBarWidth + sidePadding;
-
-/// Минимальная ширина экрана необходимая для отображения ленты с правой панелью
-const double withRightPanel = minRailWidth + maxScaffoldWidth;
+/// Минимальная ширина экрана для отображения выдвинутого Drawer'а в роли рельсы
+const double scaffoldWithRail = railWidth + scaffoldWidth;

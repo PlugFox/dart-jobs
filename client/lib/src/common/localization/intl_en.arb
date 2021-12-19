@@ -43,9 +43,25 @@
   "@create_new_job": {
     "description": "Создать новую работу"
   },
+  "log_in": "Sign in",
+  "@log_in": {
+    "description": "Залогиниться"
+  },
   "log_out": "Log out",
   "@log_out": {
     "description": "Разлогиниться"
+  },
+  "licenses": "Licenses",
+  "@licenses": {
+    "description": "Лицензии"
+  },
+  "send_bug_report": "Send bug report",
+  "@send_bug_report": {
+    "description": "Сообщить о проблеме"
+  },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Избранное"
   },
   "job_field_title": "Title",
   "@job_field_title": {

@@ -5,6 +5,7 @@ import 'package:dart_jobs_client/src/feature/job/widget/job_page.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:platform_info/platform_info.dart';
 
 /// Базовый класс роута для приложения, с ним работает корневой роутер
 @immutable
@@ -73,12 +74,19 @@ abstract class AppPage<T extends Object?> extends Page<T> {
   final bool fullscreenDialog;
 
   @override
-  Route<T> createRoute(BuildContext context) => MaterialPageRoute<T>(
-        builder: builder,
-        settings: this,
-        maintainState: maintainState,
-        fullscreenDialog: fullscreenDialog,
-      );
+  Route<T> createRoute(BuildContext context) => platform.isWeb
+      ? PageRouteBuilder(
+          pageBuilder: (context, _, __) => builder(context),
+          settings: this,
+          maintainState: maintainState,
+          fullscreenDialog: fullscreenDialog,
+        )
+      : MaterialPageRoute<T>(
+          builder: builder,
+          settings: this,
+          maintainState: maintainState,
+          fullscreenDialog: fullscreenDialog,
+        );
 
   Widget builder(BuildContext context);
 }

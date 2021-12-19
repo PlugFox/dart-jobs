@@ -1,11 +1,12 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_client/src/common/widget/custom_scroll_view_smooth.dart';
 import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_bar.dart';
-import 'package:dart_jobs_client/src/feature/feed/widget/feed_creation_buttons.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_list.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_tile.dart';
@@ -17,7 +18,7 @@ class FeedScreen extends StatelessWidget {
   const FeedScreen({final Key? key}) : super(key: key);
 
   @override
-  Widget build(final BuildContext context) => const Scaffold(
+  Widget build(final BuildContext context) => const AdaptiveScaffold(
         body: _FeedScrollable(),
       );
 }
@@ -113,19 +114,36 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
         ),
         listener: (final context, final state) => _checkPagination(),
         child: CustomScrollViewSmooth(
-          physics: const ClampingScrollPhysics(),
-          scrollBehavior: const ScrollBehavior(),
+          physics: const BouncingScrollPhysics(),
+          scrollBehavior: const _FeedListScrollBehavior(),
           controller: controller,
           slivers: const <Widget>[
             /// Шапка с поиском
             FeedBar(),
 
-            /// Создание новой работы
-            FeedCreationButtons(),
+            // Вынес это в drawer:
+            // /// Создание новой работы
+            //FeedCreationButtons(),
 
             /// Лента
             FeedList(),
           ],
         ),
       );
+}
+
+class _FeedListScrollBehavior extends MaterialScrollBehavior {
+  const _FeedListScrollBehavior()
+      : super(
+          androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+        );
+
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => <PointerDeviceKind>{
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
 }

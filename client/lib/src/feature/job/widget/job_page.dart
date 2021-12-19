@@ -1,6 +1,7 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/pages.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
@@ -53,8 +54,9 @@ class _JobScreen extends StatelessWidget {
               ),
               child: BlocBuilder<JobBLoC, JobState>(
                 builder: (context, state) => state.maybeMap(
-                  orElse: () => Scaffold(
+                  orElse: () => AdaptiveScaffold(
                     appBar: AppBar(
+                      leading: const BackButton(),
                       title: Text(
                         state.job.data.title,
                         maxLines: 1,
@@ -98,8 +100,9 @@ class _JobCreateScreen extends StatelessWidget {
             child: Builder(
               builder: (context) => JobForm(
                 bloc: BlocProvider.of<JobBLoC>(context, listen: false),
-                child: Scaffold(
+                child: AdaptiveScaffold(
                   appBar: AppBar(
+                    leading: const BackButton(),
                     title: Text(
                       context.localization.create_new_job,
                       maxLines: 1,

@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart';
@@ -37,8 +38,11 @@ class _JobDescriptionsFieldState extends State<JobDescriptionsField> with Ticker
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final isRussian = context.locale == const Locale('ru');
-    return SizedBox(
-      height: 300,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: scaffoldWidth,
+        maxHeight: 300,
+      ),
       child: ValueListenableBuilder<String?>(
         valueListenable: widget.controller.error,
         builder: (context, errorText, _) => Column(

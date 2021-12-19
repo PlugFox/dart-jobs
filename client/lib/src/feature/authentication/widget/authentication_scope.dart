@@ -47,6 +47,16 @@ class AuthenticationScope extends StatefulWidget {
         notAuthenticated: () => false,
       );
 
+  /// Получить авторизованного пользователя из контекста или null
+  static AuthenticatedUser? authenticatedOrNullOf(final BuildContext context, {bool listen = false}) {
+    if (listen) {
+      return context.dependOnInheritedWidgetOfExactType<_InheritedAuthentication>()?.userEntity.authenticatedOrNull;
+    } else {
+      final inheritedWidget = context.getElementForInheritedWidgetOfExactType<_InheritedAuthentication>()?.widget;
+      return inheritedWidget is _InheritedAuthentication ? inheritedWidget.userEntity.authenticatedOrNull : null;
+    }
+  }
+
   /// Выполнить коллбэк если аутентифицированы
   /// Войти с помощью гугла если не вошли
   /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
