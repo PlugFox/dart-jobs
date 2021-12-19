@@ -5,6 +5,7 @@ class SettingsTile extends StatelessWidget {
   const SettingsTile({
     required final this.title,
     final this.leading,
+    final this.subtitle,
     final this.enabled = true,
     final this.trailing,
     final this.onTap,
@@ -12,6 +13,7 @@ class SettingsTile extends StatelessWidget {
   }) : super(key: key);
 
   final Widget? title;
+  final Widget? subtitle;
   final Widget? leading;
   final bool enabled;
   final Widget? trailing;
@@ -20,6 +22,7 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         title: title,
+        subtitle: subtitle,
         leading: leading,
         enabled: enabled,
         trailing: trailing,
