@@ -2,6 +2,7 @@
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,25 +35,30 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
       color: Theme.of(context).scaffoldBackgroundColor,
       child: AppRouter(
         routerDelegate: this,
-        child: PagesBuilder(
-          configuration: configuration,
-          builder: (context, pages, child) => Navigator(
-            transitionDelegate: const DefaultTransitionDelegate<Object?>(),
-            onUnknownRoute: _onUnknownRoute,
-            reportsRouteUpdateToEngine: true,
-            observers: <NavigatorObserver>[
-              pageObserver,
-              modalObserver,
-              //if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
-            ],
-            pages: pages,
-            onPopPage: (Route<Object?> route, Object? result) {
-              if (!route.didPop(result)) {
-                return false;
-              }
-              setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
-              return true;
-            },
+        child: DrawerScope(
+          child: PagesBuilder(
+            configuration: configuration,
+            builder: (context, pages, child) => Navigator(
+              //transitionDelegate: platform.when<TransitionDelegate<void>>(
+              //      web: () => const NoAnimationTransitionDelegate(),
+              //    ) ??
+              //    const DefaultTransitionDelegate<void>(),
+              onUnknownRoute: _onUnknownRoute,
+              reportsRouteUpdateToEngine: true,
+              observers: <NavigatorObserver>[
+                pageObserver,
+                modalObserver,
+                //if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
+              ],
+              pages: pages,
+              onPopPage: (Route<Object?> route, Object? result) {
+                if (!route.didPop(result)) {
+                  return false;
+                }
+                setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
+                return true;
+              },
+            ),
           ),
         ),
       ),

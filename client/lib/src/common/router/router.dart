@@ -1,8 +1,11 @@
 // ignore_for_file: avoid-returning-widgets
 
+import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/configuration.dart';
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/common/widget/dart_logo_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:l/l.dart';
 import 'package:meta/meta.dart';
@@ -217,6 +220,15 @@ class AppRouter extends InheritedNotifier {
       //routeSettings: routeSettings,
     );
   }
+
+  static void showLicensePageOf(BuildContext context) => showLicensePage(
+        context: navigatorOf(context)!.context,
+        applicationIcon: const DartLogoIcon(),
+        applicationName: context.localization.title,
+        applicationVersion: pubspec.version,
+        applicationLegalese: '@PlugFox',
+        useRootNavigator: true,
+      );
 }
 
 /// Управляет режимом навигации [AppRouter.navigate]

@@ -33,7 +33,7 @@ class JobFormFieldSet extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 cacheExtent: MediaQuery.of(context).size.height,
                 padding: EdgeInsets.symmetric(
-                  horizontal: math.max((MediaQuery.of(context).size.width - maxFeedWidth) / 2, 8), // 550 px - max width
+                  horizontal: math.max((MediaQuery.of(context).size.width - bodyWidth) / 2, 8), // 620 px - max width
                   vertical: 14,
                 ),
                 children: <Widget>[
@@ -92,7 +92,7 @@ class JobFormFieldSet extends StatelessWidget {
             ),
             Positioned(
               height: 50,
-              width: math.min(MediaQuery.of(context).size.width, maxFeedWidth),
+              width: math.min(MediaQuery.of(context).size.width, bodyWidth),
               bottom: 8,
               child: _BottomButtons(
                 formData: formData,

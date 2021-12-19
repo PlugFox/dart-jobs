@@ -6,12 +6,6 @@ import 'package:platform_info/platform_info.dart';
 // https://github.com/flutter/flutter/issues/83368
 @immutable
 class CustomScrollViewSmooth extends StatelessWidget {
-  final ScrollController _controller;
-  final ScrollPhysics? _physics;
-  final ScrollBehavior? _scrollBehavior;
-  final double? _cacheExtent;
-  final List<Widget> _slivers;
-
   CustomScrollViewSmooth({
     required final ScrollController controller,
     required final List<Widget> slivers,
@@ -28,6 +22,12 @@ class CustomScrollViewSmooth extends StatelessWidget {
           key: key,
         );
 
+  final ScrollController _controller;
+  final ScrollPhysics? _physics;
+  final ScrollBehavior? _scrollBehavior;
+  final double? _cacheExtent;
+  final List<Widget> _slivers;
+
   @override
   Widget build(final BuildContext context) => _CustomScrollViewSmoothWrap(
         controller: _controller,
@@ -41,7 +41,7 @@ class CustomScrollViewSmooth extends StatelessWidget {
                   PointerDeviceKind.mouse,
                   PointerDeviceKind.touch,
                   PointerDeviceKind.stylus,
-                  PointerDeviceKind.invertedStylus,
+                  PointerDeviceKind.unknown,
                 },
               ), // _scrollBehavior,
           cacheExtent: _cacheExtent,
