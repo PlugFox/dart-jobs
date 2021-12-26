@@ -9,10 +9,9 @@ targets:
       json_serializable:
         enabled: true
         generate_for:
-          exclude:
-            - test
           include:
             - lib/**
+            - test/**
         options:
           any_map: false
           checked: false
@@ -30,10 +29,9 @@ targets:
           union_key: type
           union_value_case: snake
         generate_for:
-          exclude:
-            - test
           include:
             - lib/**
+            - test/**
       #built_value_generator|built_value:
       #  enabled: true
       #  generate_for:

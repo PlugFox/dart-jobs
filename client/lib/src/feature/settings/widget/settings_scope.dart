@@ -9,11 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class SettingsScope extends StatefulWidget {
-  final Widget child;
   const SettingsScope({
     required this.child,
     final Key? key,
   }) : super(key: key);
+
+  final Widget child;
 
   static SettingsBLoC _blocOf(final BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
 

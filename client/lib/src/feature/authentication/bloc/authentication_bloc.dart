@@ -58,8 +58,6 @@ class AuthenticationState with _$AuthenticationState {
 }
 
 class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final IAuthenticationRepository _authenticationRepository;
-  StreamSubscription<void>? _authStateChangesSubscription;
 
   AuthenticationBLoC({
     required final IAuthenticationRepository authenticationRepository,
@@ -73,6 +71,9 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
     on<_SignInWithGoogleEvent>((event, emit) => _signInWithGoogle(emit));
     on<_LogOutEvent>((event, emit) => _logOut(emit));
   }
+
+  final IAuthenticationRepository _authenticationRepository;
+  StreamSubscription<void>? _authStateChangesSubscription;
 
   Future<void> _signInWithGoogle(Emitter emit) async {
     if (state.isAuthenticated) return;

@@ -7,8 +7,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     # Generated code
-    - 'lib/**.g.dart'
-    - 'lib/**.freezed.dart'
+    - '**.g.dart'
+    - '**.freezed.dart'
     - 'lib/**.graphql.dart'
     - 'lib/**.gen.dart'
     - 'lib/generated_plugin_registrant.dart'

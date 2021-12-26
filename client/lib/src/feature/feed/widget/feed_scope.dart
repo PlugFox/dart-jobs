@@ -11,11 +11,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 @immutable
 class FeedScope extends StatelessWidget {
-  final Widget child;
   const FeedScope({
     required final this.child,
     final Key? key,
   }) : super(key: key);
+
+  final Widget child;
 
   /// Запросить следующую порцию данных
   static void paginateOf(

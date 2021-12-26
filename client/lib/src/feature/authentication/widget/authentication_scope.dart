@@ -136,7 +136,33 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
   void _onStateChanged(final AuthenticationState state) => state.maybeMap<void>(
         orElse: () {},
         authenticated: (final state) {
-          _analytics?.logLogin(loginMethod: state.loginMethod);
+          final user = state.user;
+          final name = user.displayName;
+          final phone = user.phoneNumber;
+          final email = user.email;
+
+          /// TODO: добавить переменные в Sentry
+          /// экранировать FirebaseCrashlytics для игнорирования в вебе
+          /// использовать аналитику как синглтон
+          _analytics?.setUserId(id: user.uid);
+          //FirebaseCrashlytics.instance.setUserIdentifier(user.uid);
+          if (name != null) {
+            //FirebaseCrashlytics.instance.setCustomKey('name', name);
+            _analytics?.setUserProperty(name: 'name', value: name);
+          }
+          if (phone != null) {
+            //FirebaseCrashlytics.instance.setCustomKey('phone', phone);
+            _analytics?.setUserProperty(name: 'phone', value: phone);
+          }
+          if (email != null) {
+            //FirebaseCrashlytics.instance.setCustomKey('email', email);
+            _analytics?.setUserProperty(name: 'email', value: email);
+          }
+          // Логирую через секунду, чтоб успели установиться все идентификаторы
+          Future<void>.delayed(
+            const Duration(seconds: 1),
+            () => _analytics?.logLogin(loginMethod: state.loginMethod),
+          );
         },
       );
 

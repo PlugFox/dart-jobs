@@ -43,7 +43,7 @@ class _JobScreen extends StatelessWidget {
         create: (context) => JobBLoC(
           repository: RepositoryScope.of(context).jobRepository,
           job: FeedScope.jobOf(context, (j) => j.id == id) ?? Job.id(id),
-        )..add(JobEvent.fetch(id)),
+        )..add(const JobEvent.fetch()),
         child: Builder(
           builder: (context) => JobForm(
             bloc: BlocProvider.of<JobBLoC>(context, listen: false),
