@@ -99,7 +99,7 @@ class _JobEditFormState extends State<JobEditForm> {
           const SizedBox(height: 12),
 
           /// Заполнение текста на английском
-          JobDescriptionButton(
+          JobDescriptionInput(
             label: context.localization.job_field_english_description,
             controller: _englishDescriptionController,
           ),
@@ -107,7 +107,7 @@ class _JobEditFormState extends State<JobEditForm> {
           const SizedBox(height: 12),
 
           /// Заполнение текста на русском
-          JobDescriptionButton(
+          JobDescriptionInput(
             label: context.localization.job_field_russian_description,
             controller: _russianDescriptionController,
           ),

@@ -1,6 +1,11 @@
+import 'dart:math' as math;
+
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
+/// TODO: подсказывать страну по геолокации, последние выбраные
+/// TODO: на больших экранах отображать дропдаун с поиском
 @immutable
 class CountryPicker extends StatelessWidget {
   const CountryPicker({
@@ -81,6 +86,13 @@ class _CountrySearchDelegate extends SearchDelegate<Country?> {
   Widget build(BuildContext context, List<Country> countries) => ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: countries.length,
+        padding: EdgeInsets.symmetric(
+          horizontal: math.max<double>(
+            (MediaQuery.of(context).size.width - kBodyWidth) / 2,
+            8,
+          ),
+          vertical: 8,
+        ),
         itemExtent: 55,
         itemBuilder: (context, index) {
           final country = countries[index];

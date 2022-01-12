@@ -13,9 +13,7 @@ class JobEditFlow extends StatelessWidget {
     required this.user,
     required this.jobId,
     Key? key,
-  }) : super(
-          key: key ?? ValueKey<String>('${user.uid}_$jobId'),
-        );
+  }) : super(key: key ?? ValueKey<String>('${user.uid}_$jobId'));
 
   final AuthenticatedUser user;
   final int jobId;

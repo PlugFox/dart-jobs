@@ -5,9 +5,10 @@ import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// TODO: на больших экранах отображать текст филд в том же пространстве
 @immutable
-class JobDescriptionButton extends StatelessWidget {
-  const JobDescriptionButton({
+class JobDescriptionInput extends StatelessWidget {
+  const JobDescriptionInput({
     required final this.label,
     required final this.controller,
     final this.denyCyrillic = true,
