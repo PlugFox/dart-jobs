@@ -1,4 +1,4 @@
-package dev.plugfox.dart_jobs
+package dev.plugfox.dartjobs
 
 import io.flutter.embedding.android.FlutterActivity
 

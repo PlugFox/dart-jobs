@@ -5,6 +5,7 @@ import 'package:dart_jobs_client/runner_stub.dart'
     // ignore: uri_does_not_exist
     if (dart.library.html) 'package:dart_jobs_client/runner_web.dart' as runner;
 import 'package:dart_jobs_client/src/common/bloc/app_bloc_observer.dart';
+import 'package:dart_jobs_client/src/common/constant/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
@@ -32,7 +33,9 @@ void main() => l.capture<Future<void>>(
 
         // Инициализировать Firebase
         l.vvvvvv('Инициализируем Firebase');
-        await firebase_core.Firebase.initializeApp().then<void>(
+        await firebase_core.Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ).then<void>(
           (final firebaseApp) => Future.wait<void>(
             <Future<void>>[
               firebaseApp.setAutomaticDataCollectionEnabled(kReleaseMode),

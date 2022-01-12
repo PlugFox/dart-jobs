@@ -79,7 +79,7 @@ android {
 
     defaultConfig {
         // Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "dev.plugfox.dart_jobs"
+        applicationId "dev.plugfox.dartjobs"
         minSdkVersion 19
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

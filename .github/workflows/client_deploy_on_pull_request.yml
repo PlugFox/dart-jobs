@@ -1,0 +1,42 @@
+name: CLIENT / DEPLOY ON PULL REQUEST
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'release/**'
+    paths:
+      - 'lib/**.dart'
+  pull_request:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'release/**'
+    paths:
+      - 'lib/**.dart'
+  workflow_dispatch:
+
+jobs:
+  build_and_preview:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 🏗️ Build website
+        run: |
+          docker run --rm -v ${PWD}:/project --workdir /project \
+          	--user=root:root --name flutter_beta_web plugfox/flutter:beta-web \
+          	/bin/bash -c \
+          	"flutter pub get && \
+              flutter pub run build_runner build --delete-conflicting-outputs --release && \
+              flutter build web --release --no-source-maps \
+              --no-tree-shake-icons --pwa-strategy offline-first --web-renderer auto --base-href /"
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DART_JOB }}'
+          expires: 7d
+          projectId: dart-job

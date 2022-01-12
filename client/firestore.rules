@@ -1,0 +1,65 @@
+/// https://firebase.google.com/docs/firestore/security/rules-conditions
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	/// Коллекция предложений (работа и резюме)
+    match /feed/{document=**} {
+      /// Проверка на владельца документа
+      function thisIsOwner() {
+        return request.auth != null
+          && request.auth.uid != null
+          && request.auth.uid == request.resource.data.creator_id;
+      }
+      allow read;
+      allow create:
+      	if thisIsOwner();
+      allow update:
+      	if thisIsOwner()
+        && resource.data.creator_id == request.auth.uid;
+      allow delete:
+      	if request.auth != null
+        && request.auth.uid != null
+        && (resource == null
+        || resource.data == null
+        || resource.data.creator_id == null
+        || resource.data.creator_id == request.auth.uid);
+    }
+  	/// Коллекция аттрибутов работ
+    match /job_attributes/{document=**} {
+      /// Проверка на владельца документа
+      function thisIsOwner() {
+        return request.auth != null
+          && request.auth.uid != null
+          && request.auth.uid == request.resource.data.creator_id;
+      }
+      allow read;
+      allow create:
+      	if thisIsOwner()
+        && request.resource.data != null
+        && request.resource.data.parent_id != null
+        && existsAfter(/databases/$(database)/documents/feed/$(request.resource.data.parent_id));
+      allow update:
+      	if thisIsOwner()
+        && resource.data.creator_id == request.auth.uid
+        && request.resource.data != null
+        && request.resource.data.parent_id != null
+        && existsAfter(/databases/$(database)/documents/feed/$(request.resource.data.parent_id));
+      allow delete:
+      	if request.auth != null
+        && request.auth.uid != null
+        && (resource == null
+        || resource.data == null
+        || resource.data.creator_id == null
+        || resource.data.creator_id == request.auth.uid);
+    }
+    /// Коллекция приватных данных пользователей
+    match /users/{userId} {
+      match /settings/{document=*} {
+        allow read, write:
+        	if request.auth != null
+          && request.auth.uid == userId;
+      }
+      allow read;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+name: CLIENT / DEPLOY ON MERGE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 🏗️ Build website
+        run: |
+          docker run --rm -v ${PWD}:/project --workdir /project \
+          	--user=root:root --name flutter_beta_web plugfox/flutter:beta-web \
+          	/bin/bash -c \
+          	"flutter pub get && \
+              flutter pub run build_runner build --delete-conflicting-outputs --release && \
+              flutter build web --release --no-source-maps \
+              --no-tree-shake-icons --pwa-strategy offline-first --web-renderer auto --base-href /"
+
+      - name: 🔥 Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DART_JOB }}'
+          channelId: live
+          projectId: dart-job
