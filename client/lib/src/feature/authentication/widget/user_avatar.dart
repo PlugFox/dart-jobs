@@ -68,7 +68,7 @@ class _UserAvatarImage extends StatelessWidget {
       notAuthenticated: () => null,
     );
     return photoURL == null || photoURL.isEmpty
-        ? Icon(Icons.person, size: size / 2)
+        ? Icon(_kPersonIcon, size: size / 2)
         : ClipRRect(
             borderRadius: BorderRadius.circular(size / 2),
             child: Image.network(
@@ -84,3 +84,5 @@ class _UserAvatarImage extends StatelessWidget {
           );
   }
 }
+
+const IconData _kPersonIcon = Icons.person;

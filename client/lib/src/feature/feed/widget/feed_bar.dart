@@ -82,7 +82,7 @@ class FeedBarSettings extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Icon(
-                  Icons.settings,
+                  _kSettingsIcon,
                   size: 30,
                 ),
               ),
@@ -91,3 +91,5 @@ class FeedBarSettings extends StatelessWidget {
         ),
       );
 }
+
+const IconData _kSettingsIcon = Icons.settings;

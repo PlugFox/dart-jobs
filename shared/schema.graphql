@@ -6,6 +6,14 @@ schema {
     subscription: subscription_root
 }
 
+"whether this query should be cached (Hasura Cloud only)"
+directive @cached(
+    "refresh the cache entry"
+    refresh: Boolean! = false,
+    "measured in seconds"
+    ttl: Int! = 60
+) on QUERY
+
 """
 
 Список работ
@@ -32,6 +40,10 @@ type job {
     english_description: String!
     "Идентификатор элемента"
     id: Int!
+    "Содержит описание на английском"
+    is_english: Boolean!
+    "Содержит описание на русском"
+    is_russian: Boolean!
     "Уровни разработчика"
     levels: _level!
     "Релокация"
@@ -158,6 +170,10 @@ enum job_select_column {
     "column name"
     id
     "column name"
+    is_english
+    "column name"
+    is_russian
+    "column name"
     levels
     "column name"
     relocation
@@ -220,6 +236,18 @@ enum order_by {
     "in descending order, nulls last"
     desc_nulls_last
 }
+
+scalar _employment
+
+scalar _level
+
+scalar _text
+
+scalar bpchar
+
+scalar relocation
+
+scalar timestamp
 
 "Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'."
 input Boolean_comparison_exp {
@@ -366,6 +394,8 @@ input job_bool_exp {
     employments: _employment_comparison_exp
     english_description: String_comparison_exp
     id: Int_comparison_exp
+    is_english: Boolean_comparison_exp
+    is_russian: Boolean_comparison_exp
     levels: _level_comparison_exp
     relocation: relocation_comparison_exp
     remote: Boolean_comparison_exp
@@ -424,6 +454,8 @@ input job_order_by {
     employments: order_by
     english_description: order_by
     id: order_by
+    is_english: order_by
+    is_russian: order_by
     levels: order_by
     relocation: order_by
     remote: order_by
@@ -495,16 +527,3 @@ input timestamp_comparison_exp {
     _neq: timestamp
     _nin: [timestamp!]
 }
-
-
-scalar _employment
-
-scalar _level
-
-scalar _text
-
-scalar bpchar
-
-scalar relocation
-
-scalar timestamp

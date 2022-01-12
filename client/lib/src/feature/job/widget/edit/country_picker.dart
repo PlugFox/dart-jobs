@@ -1,4 +1,3 @@
-import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart' show JobFieldCountryController;
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
@@ -6,53 +5,24 @@ import 'package:flutter/material.dart';
 class CountryPicker extends StatelessWidget {
   const CountryPicker({
     required final this.controller,
-    final this.enabled = true,
     Key? key,
   }) : super(key: key);
 
-  final JobFieldCountryController controller;
-  final bool enabled;
+  final ValueNotifier<Country> controller;
 
   @override
-  Widget build(BuildContext context) => Opacity(
-        opacity: enabled ? 1 : .5,
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: Center(
-            child: SizedBox(
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: TextButton(
-                  onPressed: enabled ? () => _openSelectionPage(context) : null,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Center(
-                          child: ValueListenableBuilder<Country>(
-                            valueListenable: controller,
-                            builder: (context, value, child) => Text(
-                              value.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const SizedBox.square(
-                        dimension: 24,
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 24,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+  Widget build(BuildContext context) => SizedBox(
+        height: 50,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: TextButton(
+            onPressed: () => _openSelectionPage(context),
+            child: ValueListenableBuilder<Country>(
+              valueListenable: controller,
+              builder: (context, value, child) => Text(
+                value.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -70,6 +40,8 @@ class CountryPicker extends StatelessWidget {
         },
       );
 }
+
+const IconData _kKeyboardArrowDownIcon = Icons.keyboard_arrow_down;
 
 class _CountrySearchDelegate extends SearchDelegate<Country?> {
   _CountrySearchDelegate(this.current);
@@ -156,10 +128,12 @@ class _CountryTile extends StatelessWidget {
       ),
       trailing: selected
           ? const Icon(
-              Icons.check,
+              _kCheckIcon,
             )
           : const SizedBox.shrink(),
       onTap: onTap,
     );
   }
 }
+
+const IconData _kCheckIcon = Icons.check;

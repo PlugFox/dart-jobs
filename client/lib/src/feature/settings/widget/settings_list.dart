@@ -15,7 +15,7 @@ class SettingsList extends StatelessWidget {
   Widget build(final BuildContext context) => ListView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(
-          horizontal: math.max((MediaQuery.of(context).size.width - bodyWidth) / 2, 8), // 620 px - max width
+          horizontal: math.max((MediaQuery.of(context).size.width - kBodyWidth) / 2, 8), // 620 px - max width
           vertical: 12,
         ),
         children: <Widget>[

@@ -29,3 +29,9 @@ codegen: get
 	@flutter pub run build_runner build --delete-conflicting-outputs --release
 	@flutter pub global activate intl_utils
 	@flutter pub global run intl_utils:generate
+
+build-site:
+	@docker run --rm -it -v ${PWD}:/project --workdir /project --user=root:root --name flutter_stable_web \
+		plugfox/flutter:stable-web /bin/bash -c \
+		"cd /project/client && flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs --release && flutter build web --release --no-source-maps --pwa-strategy offline-first --web-renderer auto --base-href /"
+

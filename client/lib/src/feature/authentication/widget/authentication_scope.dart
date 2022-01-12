@@ -144,6 +144,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
           /// TODO: добавить переменные в Sentry
           /// экранировать FirebaseCrashlytics для игнорирования в вебе
           /// использовать аналитику как синглтон
+          /// сделать метод setProperty, который будет устанавливать свойство, если значение не налл
           _analytics?.setUserId(id: user.uid);
           //FirebaseCrashlytics.instance.setUserIdentifier(user.uid);
           if (name != null) {

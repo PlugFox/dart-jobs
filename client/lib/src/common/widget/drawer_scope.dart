@@ -10,7 +10,7 @@ import 'package:meta/meta.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Drawer приложения
-/// Может отображаться рельсой, над роутером, при достаточной ширине экрана [scaffoldWithRail]
+/// Может отображаться рельсой, над роутером, при достаточной ширине экрана [kScaffoldWithRail]
 /// Или же выдвигаться при необходимости, как [Drawer] от [AppMaterialContext]
 @immutable
 class DrawerScope extends StatefulWidget {
@@ -58,7 +58,7 @@ class _DrawerScopeState extends State<DrawerScope> {
     super.didChangeDependencies();
     _mediaQueryData = MediaQuery.of(context);
     final width = _mediaQueryData.size.width;
-    _showDrawer = width >= scaffoldWithRail;
+    _showDrawer = width >= kScaffoldWithRail;
   }
   //endregion
 
@@ -80,12 +80,12 @@ class _DrawerScopeState extends State<DrawerScope> {
   List<Widget> _layoutWithRail(BuildContext context) => <Widget>[
         SizedBox(
           key: const ValueKey<String>('AppRail'),
-          width: railWidth,
+          width: kRailWidth,
           child: RepaintBoundary(
             child: MediaQuery(
               data: _mediaQueryData.copyWith(
                 size: Size(
-                  railWidth,
+                  kRailWidth,
                   _mediaQueryData.size.height,
                 ),
               ),
@@ -99,7 +99,7 @@ class _DrawerScopeState extends State<DrawerScope> {
             child: MediaQuery(
               data: _mediaQueryData.copyWith(
                 size: Size(
-                  _mediaQueryData.size.width - railWidth,
+                  _mediaQueryData.size.width - kRailWidth,
                   _mediaQueryData.size.height,
                 ),
               ),

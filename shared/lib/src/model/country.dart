@@ -48,7 +48,7 @@ class Country {
 abstract class Countries {
   Countries._();
 
-  static const Country unknown = Country(id: 0, code: 'XX', title: 'Unknown', latitude: 0, longitude: 0);
+  static const Country unknown = Country(id: 0, code: 'XX', title: 'Unknown country', latitude: 0, longitude: 0);
   static const Country afghanistan = Country(id: 4, code: 'AF', title: 'Afghanistan', latitude: 33, longitude: 65);
   static const Country albania = Country(id: 8, code: 'AL', title: 'Albania', latitude: 41, longitude: 20);
   static const Country antarctica = Country(id: 10, code: 'AQ', title: 'Antarctica', latitude: -90, longitude: 0);

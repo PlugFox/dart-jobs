@@ -77,7 +77,7 @@ class JobState with _$JobState {
         processed: (_) => true,
       );
 
-  /// В ожидании событий
+  /// В ожидании событий, чтение работы
   const factory JobState.idle({
     required final Job job,
     @Default('Idle') final String message,

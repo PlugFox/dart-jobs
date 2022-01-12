@@ -103,6 +103,14 @@
   "@job_field_description": {
     "description": "Описание"
   },
+  "job_field_english_description": "Описание на английском",
+  "@job_field_english_description": {
+    "description": "Описание на английском"
+  },
+  "job_field_russian_description": "Описание на русском",
+  "@job_field_russian_description": {
+    "description": "Описание на русском"
+  },
   "job_field_salary": "Зарплатная вилка",
   "@job_field_salary": {
     "description": "Зарплатная вилка"

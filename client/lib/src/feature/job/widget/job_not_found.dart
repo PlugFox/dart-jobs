@@ -37,7 +37,7 @@ class JobNotFound extends StatelessWidget {
                   child: IconButton(
                     onPressed: () => AppRouter.goHome(context),
                     icon: Icon(
-                      Icons.home,
+                      _kHomeIcon,
                       color: Theme.of(context).primaryColor,
                     ),
                     iconSize: 48,
@@ -49,3 +49,5 @@ class JobNotFound extends StatelessWidget {
         ),
       );
 }
+
+const IconData _kHomeIcon = Icons.home;
