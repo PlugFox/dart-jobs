@@ -46,19 +46,29 @@ class CountryPicker extends StatelessWidget {
       );
 }
 
-const IconData _kKeyboardArrowDownIcon = Icons.keyboard_arrow_down;
+//const IconData _kKeyboardArrowDownIcon = Icons.keyboard_arrow_down;
 
 class _CountrySearchDelegate extends SearchDelegate<Country?> {
-  _CountrySearchDelegate(this.current);
-  final List<Country> all = Countries.values.values.toList(growable: false);
+  _CountrySearchDelegate(this.current)
+      : super(
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.search,
+        ) {
+    all
+      ..add(current)
+      ..addAll(Countries.values.values.where((e) => e.id != current.id));
+  }
+
+  final List<Country> all = <Country>[];
   final Country current;
 
   @override
-  List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () => query = '',
-        ),
+  List<Widget> buildActions(BuildContext context) => <Widget>[
+        if (query.isNotEmpty)
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () => query = '',
+          ),
       ];
 
   @override
@@ -86,13 +96,6 @@ class _CountrySearchDelegate extends SearchDelegate<Country?> {
   Widget build(BuildContext context, List<Country> countries) => ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: countries.length,
-        padding: EdgeInsets.symmetric(
-          horizontal: math.max<double>(
-            (MediaQuery.of(context).size.width - kBodyWidth) / 2,
-            8,
-          ),
-          vertical: 8,
-        ),
         itemExtent: 55,
         itemBuilder: (context, index) {
           final country = countries[index];
@@ -130,6 +133,13 @@ class _CountryTile extends StatelessWidget {
       selected: selected,
       tileColor: tileColor,
       selectedTileColor: tileColor,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: math.max<double>(
+          (MediaQuery.of(context).size.width - kBodyWidth) / 2,
+          8,
+        ),
+        vertical: 0,
+      ),
       title: Text(
         country.title,
         maxLines: 1,
@@ -140,12 +150,10 @@ class _CountryTile extends StatelessWidget {
       ),
       trailing: selected
           ? const Icon(
-              _kCheckIcon,
+              Icons.check,
             )
           : const SizedBox.shrink(),
       onTap: onTap,
     );
   }
 }
-
-const IconData _kCheckIcon = Icons.check;

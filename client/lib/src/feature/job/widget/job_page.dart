@@ -28,7 +28,7 @@ class JobPage extends AppPage<void> {
       // Если id не передано - начнем создание новой работы
       // Если пользователь аутентифицирован - подготавливаем создание новой работы из шаблона
       // Если пользователь не аутентифицирован - возвращаем на главную страницу
-      return AuthenticationScope.userOf(context).when(
+      return AuthenticationScope.userOf(context, listen: true).when(
         authenticated: (user) => BlocProvider<JobBLoC>(
           create: (context) => JobBLoC.creation(
             repository: RepositoryScope.of(context).jobRepository,
