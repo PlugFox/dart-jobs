@@ -48,7 +48,7 @@ jobs:
         run: |
           cd client
           echo Install Dependencies ; \
-            flutter pub get
+            flutter pub get \
             && flutter pub global activate intl_utils
 
       - name: 🏗️ Codegen
