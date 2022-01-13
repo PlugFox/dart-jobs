@@ -14,7 +14,7 @@ analyzer:
     - 'lib/generated_plugin_registrant.dart'
     - 'lib/pigeon.dart'
     # Firebase
-    - 'lib/src/common/constant/firebase_options.g.dart'
+    - 'lib/src/common/constant/firebase_options.dart'
     # Localization
     - 'lib/src/common/localization/intl/**'
     - 'lib/src/common/localization/l10n.dart'
