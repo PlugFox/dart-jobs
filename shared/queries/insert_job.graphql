@@ -2,11 +2,14 @@ mutation InsertJob(
     $title: String!,
     $company: String!,
     $country: bpchar!,
+    $address: String!,
     $creator_id: String!,
     $remote: Boolean!,
     $relocation: relocation!,
     $english_description: String!,
+    $is_english: Boolean!,
     $russian_description: String!,
+    $is_russian: Boolean!,
     $contacts: _text!,
     $employments: _employment!,
     $levels: _level,
@@ -19,6 +22,7 @@ mutation InsertJob(
             title: $title,
             company: $company,
             country: $country,
+            address: $address,
             remote: $remote,
             relocation: $relocation,
             employments: $employments,
@@ -27,7 +31,9 @@ mutation InsertJob(
             contacts: $contacts,
             tags: $tags
             english_description: $english_description,
-            russian_description: $russian_description
+            is_english: $is_english,
+            russian_description: $russian_description,
+            is_russian: $is_russian
         }
     ) {
         id,
@@ -38,6 +44,7 @@ mutation InsertJob(
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
@@ -46,6 +53,8 @@ mutation InsertJob(
         contacts,
         tags,
         russian_description,
-        english_description
+        is_russian,
+        english_description,
+        is_english
     }
 }

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
@@ -16,23 +17,36 @@ class CountryPicker extends StatelessWidget {
   final ValueNotifier<Country> controller;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        height: 50,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: TextButton(
-            onPressed: () => _openSelectionPage(context),
-            child: ValueListenableBuilder<Country>(
-              valueListenable: controller,
-              builder: (context, value, child) => Text(
-                value.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    return SizedBox(
+      height: 60,
+      child: GestureDetector(
+        onTap: () {
+          _openSelectionPage(context);
+          FocusScope.of(context).unfocus();
+        },
+        child: ValueListenableBuilder<Country>(
+          valueListenable: controller,
+          builder: (context, value, child) => InputDecorator(
+            isFocused: false,
+            expands: true,
+            isHovering: true,
+            decoration: InputDecoration(
+              labelText: context.localization.job_field_location_country,
+            ),
+            isEmpty: !value.isExist,
+            child: Text(
+              value.isExist ? value.title : '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: themeData.textTheme.subtitle1,
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   void _openSelectionPage(BuildContext context) => showSearch<Country?>(
         context: context,
@@ -45,8 +59,6 @@ class CountryPicker extends StatelessWidget {
         },
       );
 }
-
-//const IconData _kKeyboardArrowDownIcon = Icons.keyboard_arrow_down;
 
 class _CountrySearchDelegate extends SearchDelegate<Country?> {
   _CountrySearchDelegate(this.current)
@@ -141,7 +153,7 @@ class _CountryTile extends StatelessWidget {
         vertical: 0,
       ),
       title: Text(
-        country.title,
+        country.isExist ? country.title : context.localization.job_field_location_country_unknown,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(

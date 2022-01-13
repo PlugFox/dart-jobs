@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
@@ -34,10 +35,14 @@ class JobEditFlow extends StatelessWidget {
             appBar: AppBar(
               leading: const BackButton(),
               title: BlocBuilder<JobBLoC, JobState>(
-                builder: (context, state) => Text(
-                  state.job.data.title,
-                  maxLines: 1,
-                ),
+                builder: (context, state) {
+                  final title =
+                      state.job.data.title.isEmpty ? context.localization.create_new_job : state.job.data.title;
+                  return Text(
+                    title,
+                    maxLines: 1,
+                  );
+                },
               ),
             ),
             body: const SafeArea(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
@@ -57,8 +56,26 @@ class JobRepositoryImpl implements IJobRepository {
         //weight: 0,
         created: DateTime.now(),
         updated: DateTime.now(),
-        data: JobData(
-          title: _WorkTitleRandomizer.instance().next(),
+        data: const JobData(
+          title: '',
+          company: '',
+          address: '',
+          remote: true,
+          country: Countries.unknownCode,
+          descriptions: Description(),
+          relocation: Relocation.impossible(),
+          levels: <DeveloperLevel>[
+            DeveloperLevel.junior(),
+            DeveloperLevel.middle(),
+            DeveloperLevel.senior(),
+            DeveloperLevel.lead(),
+          ],
+          employments: <Employment>[
+            Employment.fullTime(),
+          ],
+          skills: <String>[],
+          contacts: <String>[],
+          tags: <String>[],
         ),
       );
 
@@ -113,24 +130,4 @@ class JobRepositoryImpl implements IJobRepository {
     }
     return _networkDataProvider.deleteJob(job: job, idToken: idToken);
   }
-}
-
-// ignore: unused_element
-class _WorkTitleRandomizer {
-  _WorkTitleRandomizer._();
-  static _WorkTitleRandomizer? _instance;
-  // ignore: unused_element
-  factory _WorkTitleRandomizer.instance() => _instance ??= _WorkTitleRandomizer._();
-  static const List<String> _variants = <String>[
-    'Best work ever',
-    "Let's work together",
-    'Dart developer required',
-    'Most wanted',
-    'Payment by cookies',
-    'Hiring for everyone',
-    'Dart goez fasta, brrr',
-  ];
-  final math.Random _rnd = math.Random();
-  final int _max = _variants.length - 1;
-  String next() => _variants[_rnd.nextInt(_max)];
 }

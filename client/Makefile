@@ -12,7 +12,7 @@ init:
 		-a dev.plugfox.dartjobs \
 		-p dart-job \
 		-e plugfox@gmail.com \
-		-o lib/src/common/constant/firebase_options.dart
+		-o lib/src/common/constant/firebase_options.g.dart
 
 clean:
 	@echo "Cleaning the project"

@@ -5,7 +5,7 @@ import 'package:dart_jobs_client/runner_stub.dart'
     // ignore: uri_does_not_exist
     if (dart.library.html) 'package:dart_jobs_client/runner_web.dart' as runner;
 import 'package:dart_jobs_client/src/common/bloc/app_bloc_observer.dart';
-import 'package:dart_jobs_client/src/common/constant/firebase_options.dart';
+import 'package:dart_jobs_client/src/common/constant/firebase_options.g.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;

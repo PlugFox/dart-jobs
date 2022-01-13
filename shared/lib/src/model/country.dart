@@ -48,7 +48,9 @@ class Country {
 abstract class Countries {
   Countries._();
 
-  static const Country unknown = Country(id: 0, code: 'XX', title: 'Unknown country', latitude: 0, longitude: 0);
+  static const String unknownCode = 'XX';
+
+  static const Country unknown = Country(id: 0, code: unknownCode, title: 'Unknown country', latitude: 0, longitude: 0);
   static const Country afghanistan = Country(id: 4, code: 'AF', title: 'Afghanistan', latitude: 33, longitude: 65);
   static const Country albania = Country(id: 8, code: 'AL', title: 'Albania', latitude: 41, longitude: 20);
   static const Country antarctica = Country(id: 10, code: 'AQ', title: 'Antarctica', latitude: -90, longitude: 0);
@@ -113,7 +115,7 @@ abstract class Countries {
   static const Country mayotte = Country(id: 175, code: 'YT', title: 'Mayotte', latitude: -12.8333, longitude: 45.1667);
   static const Country congo = Country(id: 178, code: 'CG', title: 'Congo', latitude: -1, longitude: 15);
   static const Country congoTheDemocraticRepublicOfThe =
-      Country(id: 180, code: 'CD', title: 'Congo, the Democratic Republic of the', latitude: 0, longitude: 25);
+      Country(id: 180, code: 'CD', title: 'Democratic Republic of the Congo', latitude: 0, longitude: 25);
   static const Country cookIslands =
       Country(id: 184, code: 'CK', title: 'Cook Islands', latitude: -21.2333, longitude: -159.7667);
   static const Country costaRica = Country(id: 188, code: 'CR', title: 'Costa Rica', latitude: 10, longitude: -84);
@@ -158,8 +160,8 @@ abstract class Countries {
   static const Country gabon = Country(id: 266, code: 'GA', title: 'Gabon', latitude: -1, longitude: 11.75);
   static const Country georgia = Country(id: 268, code: 'GE', title: 'Georgia', latitude: 42, longitude: 43.5);
   static const Country gambia = Country(id: 270, code: 'GM', title: 'Gambia', latitude: 13.4667, longitude: -16.5667);
-  static const Country palestinianTerritoryOccupied =
-      Country(id: 275, code: 'PS', title: 'Palestinian Territory, Occupied', latitude: 32, longitude: 35.25);
+  static const Country palestinianTerritory =
+      Country(id: 275, code: 'PS', title: 'Palestinian Territory', latitude: 32, longitude: 35.25);
   static const Country germany = Country(id: 276, code: 'DE', title: 'Germany', latitude: 51, longitude: 9);
   static const Country ghana = Country(id: 288, code: 'GH', title: 'Ghana', latitude: 8, longitude: -2);
   static const Country gibraltar =
@@ -187,7 +189,7 @@ abstract class Countries {
   static const Country india = Country(id: 356, code: 'IN', title: 'India', latitude: 20, longitude: 77);
   static const Country indonesia = Country(id: 360, code: 'ID', title: 'Indonesia', latitude: -5, longitude: 120);
   static const Country iranIslamicRepublicOf =
-      Country(id: 364, code: 'IR', title: 'Iran, Islamic Republic of', latitude: 32, longitude: 53);
+      Country(id: 364, code: 'IR', title: 'Islamic Republic of Iran', latitude: 32, longitude: 53);
   static const Country iraq = Country(id: 368, code: 'IQ', title: 'Iraq', latitude: 33, longitude: 44);
   static const Country ireland = Country(id: 372, code: 'IE', title: 'Ireland', latitude: 53, longitude: -8);
   static const Country israel = Country(id: 376, code: 'IL', title: 'Israel', latitude: 31.5, longitude: 34.75);
@@ -199,7 +201,7 @@ abstract class Countries {
   static const Country jordan = Country(id: 400, code: 'JO', title: 'Jordan', latitude: 31, longitude: 36);
   static const Country kenya = Country(id: 404, code: 'KE', title: 'Kenya', latitude: 1, longitude: 38);
   static const Country koreaDemocraticPeoplesRepublicOf =
-      Country(id: 408, code: 'KP', title: "Korea, Democratic People's Republic of", latitude: 40, longitude: 127);
+      Country(id: 408, code: 'KP', title: "Democratic People's Republic of Korea", latitude: 40, longitude: 127);
   static const Country southKorea = Country(id: 410, code: 'KR', title: 'South Korea', latitude: 37, longitude: 127.5);
   static const Country kuwait = Country(id: 414, code: 'KW', title: 'Kuwait', latitude: 29.3375, longitude: 47.6581);
   static const Country kyrgyzstan = Country(id: 417, code: 'KG', title: 'Kyrgyzstan', latitude: 41, longitude: 75);
@@ -231,7 +233,7 @@ abstract class Countries {
   static const Country monaco = Country(id: 492, code: 'MC', title: 'Monaco', latitude: 43.7333, longitude: 7.4);
   static const Country mongolia = Country(id: 496, code: 'MN', title: 'Mongolia', latitude: 46, longitude: 105);
   static const Country moldovaRepublicOf =
-      Country(id: 498, code: 'MD', title: 'Moldova, Republic of', latitude: 47, longitude: 29);
+      Country(id: 498, code: 'MD', title: 'Republic of Moldova', latitude: 47, longitude: 29);
   static const Country montenegro = Country(id: 499, code: 'ME', title: 'Montenegro', latitude: 42, longitude: 19);
   static const Country montserrat =
       Country(id: 500, code: 'MS', title: 'Montserrat', latitude: 16.75, longitude: -62.2);
@@ -262,7 +264,7 @@ abstract class Countries {
   static const Country unitedStatesMinorOutlyingIslands =
       Country(id: 581, code: 'UM', title: 'United States Minor Outlying Islands', latitude: 19.2833, longitude: 166.6);
   static const Country micronesiaFederatedStatesOf =
-      Country(id: 583, code: 'FM', title: 'Micronesia, Federated States of', latitude: 6.9167, longitude: 158.25);
+      Country(id: 583, code: 'FM', title: 'Federated States of Micronesia', latitude: 6.9167, longitude: 158.25);
   static const Country marshallIslands =
       Country(id: 584, code: 'MH', title: 'Marshall Islands', latitude: 9, longitude: 168);
   static const Country palau = Country(id: 585, code: 'PW', title: 'Palau', latitude: 7.5, longitude: 134.5);
@@ -353,7 +355,7 @@ abstract class Countries {
   static const Country macedoniaTheFormerYugoslavRepublicOf = Country(
     id: 807,
     code: 'MK',
-    title: 'Macedonia, the former Yugoslav Republic of',
+    title: 'the former Yugoslav Republic of Macedonia',
     latitude: 41.8333,
     longitude: 22,
   );
@@ -365,7 +367,7 @@ abstract class Countries {
   static const Country isleOfMan =
       Country(id: 833, code: 'IM', title: 'Isle of Man', latitude: 54.23, longitude: -4.55);
   static const Country tanzaniaUnitedRepublicOf =
-      Country(id: 834, code: 'TZ', title: 'Tanzania, United Republic of', latitude: -6, longitude: 35);
+      Country(id: 834, code: 'TZ', title: 'United Republic of Tanzania', latitude: -6, longitude: 35);
   static const Country unitedStates =
       Country(id: 840, code: 'US', title: 'United States', latitude: 38, longitude: -97);
   static const Country virginIslandsUS =
@@ -463,7 +465,7 @@ abstract class Countries {
     'GA': gabon,
     'GE': georgia,
     'GM': gambia,
-    'PS': palestinianTerritoryOccupied,
+    'PS': palestinianTerritory,
     'DE': germany,
     'GH': ghana,
     'GI': gibraltar,
