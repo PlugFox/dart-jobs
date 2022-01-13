@@ -3,10 +3,7 @@ name: CLIENT / CHECKOUT
 on:
   push:
     branches:
-      - 'master'
-      - 'develop'
       - 'feature/**'
-      - 'release/**'
       - 'bugfix/**'
       - 'hotfix/**'
       - 'support/**'
@@ -14,10 +11,7 @@ on:
       - 'client/lib/**.dart'
   pull_request:
     branches:
-      - 'master'
-      - 'develop'
       - 'feature/**'
-      - 'release/**'
       - 'bugfix/**'
       - 'hotfix/**'
       - 'support/**'
