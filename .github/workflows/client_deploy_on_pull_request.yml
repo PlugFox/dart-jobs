@@ -1,34 +1,29 @@
-name: CLIENT / CHECKOUT
+name: CLIENT / DEPLOY ON PULL REQUEST
+
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'master'
       - 'develop'
-      - 'feature/**'
       - 'release/**'
-      - 'bugfix/**'
-      - 'hotfix/**'
-      - 'support/**'
     paths:
-      - 'client/lib/**.dart'
+      - 'lib/**.dart'
   pull_request:
     branches:
       - 'master'
       - 'develop'
-      - 'feature/**'
       - 'release/**'
-      - 'bugfix/**'
-      - 'hotfix/**'
-      - 'support/**'
     paths:
-      - 'client/lib/**.dart'
-  workflow_dispatch:
+      - 'lib/**.dart'
+
 
 jobs:
-  check-client:
-    name: 'Checkout client'
-    timeout-minutes: 5
+  build:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    name: 'Build client'
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
       image: plugfox/flutter:beta
@@ -69,7 +64,7 @@ jobs:
               --current-package --no-fatal-infos --fatal-warnings \
               --no-preamble --write=analyze.txt
 
-      - name: 📁 Upload result
+      - name: 📁 Upload test result for job build
         uses: actions/upload-artifact@v2
         with:
           name: test
@@ -78,3 +73,44 @@ jobs:
           path: |
             client/coverage/
             client/analyze.txt
+
+      - name: 🌐 Build flutter web
+        run: |
+          flutter build web --release --no-source-maps \
+            --no-tree-shake-icons --pwa-strategy offline-first --web-renderer auto --base-href /
+
+      - name: 📁 Upload web build result
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-preview
+          retention-days: 1
+          path: |
+            client/build/web/
+            client/.firebaserc
+            client/firebase.json
+
+
+  # Deploy web client on preview channel
+  web-deploy:
+    name: 'Deploy web client on preview channel'
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 📦 Download result for web build job
+        uses: actions/download-artifact@v2
+        with:
+          name: web-preview
+          path: client
+
+      - name: 📥 Extract web artifact
+        run: |
+          cd client && ls -al
+
+      - name: 🔥 Deploy to Firebase preview channel
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DART_JOB }}'
+          expires: 7d
+          projectId: dart-job

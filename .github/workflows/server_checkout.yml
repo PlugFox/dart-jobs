@@ -27,6 +27,7 @@ on:
 
 jobs:
   check-server:
+    name: 'Checkout server'
     runs-on: ubuntu-latest
     container:
       image: google/dart:beta
