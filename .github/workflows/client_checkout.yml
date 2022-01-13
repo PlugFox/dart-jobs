@@ -27,21 +27,54 @@ on:
 
 jobs:
   check-client:
+    name: 'Checkout client'
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     container:
       image: plugfox/flutter:beta
       options: --user root
     steps:
-      - uses: actions/checkout@v2
-      - name: 🔎 Checkout source code
+      - name: 🚂 Get latest code
+        uses: actions/checkout@v2
+
+      - name: 🚃 Cache pub modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pub-modules
+        with:
+          path: |
+            $PWD/.pub_cache/
+          key: ${{ runner.os }}-dart
+
+      - name: 🗄️ Export pub cache directory
+        run: export PUB_CACHE=$PWD/.pub_cache/
+
+      - name: 🚚 Get dependencies
         run: |
           cd client
           echo Install Dependencies ; \
             flutter pub get
-          echo Codegeneration ; \
+            && flutter pub global activate intl_utils
+
+      - name: 🏗️ Codegen
+        run: |
+          echo Codegeneration && localization ; \
             flutter pub run build_runner build --delete-conflicting-outputs --release ; \
             flutter pub global run intl_utils:generate
-          echo Check format ; \
-            dart format --set-exit-if-changed -l 120 -o none lib
+
+      - name: ✔️ Check sources with analyzer
+        run: |
           echo Check analyzer ; \
-            flutter analyze --fatal-infos --fatal-warnings lib
+            flutter analyze --no-pub --current-package --congratulate \
+              --current-package --no-fatal-infos --fatal-warnings \
+              --no-preamble --write=analyze.txt
+
+      - name: 📁 Upload result
+        uses: actions/upload-artifact@v2
+        with:
+          name: test
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            client/coverage/
+            client/analyze.txt
