@@ -3,10 +3,7 @@ name: CLIENT / CHECKOUT
 on:
   push:
     branches:
-      - 'master'
-      - 'develop'
       - 'feature/**'
-      - 'release/**'
       - 'bugfix/**'
       - 'hotfix/**'
       - 'support/**'
@@ -14,10 +11,7 @@ on:
       - 'client/lib/**.dart'
   pull_request:
     branches:
-      - 'master'
-      - 'develop'
       - 'feature/**'
-      - 'release/**'
       - 'bugfix/**'
       - 'hotfix/**'
       - 'support/**'
@@ -33,6 +27,8 @@ jobs:
     container:
       image: plugfox/flutter:beta
       options: --user root
+    env:
+      working-directory: ./client
     steps:
       - name: 🚂 Get latest code
         uses: actions/checkout@v2
@@ -50,24 +46,23 @@ jobs:
         run: export PUB_CACHE=$PWD/.pub_cache/
 
       - name: 🚚 Get dependencies
+        working-directory: ${{ env.working-directory }}
         run: |
-          cd client
-          echo Install Dependencies ; \
-            flutter pub get
+          flutter pub get \
             && flutter pub global activate intl_utils
 
       - name: 🏗️ Codegen
+        working-directory: ${{ env.working-directory }}
         run: |
-          echo Codegeneration && localization ; \
-            flutter pub run build_runner build --delete-conflicting-outputs --release ; \
-            flutter pub global run intl_utils:generate
+          flutter pub run build_runner build --delete-conflicting-outputs --release ; \
+          flutter pub global run intl_utils:generate
 
       - name: ✔️ Check sources with analyzer
+        working-directory: ${{ env.working-directory }}
         run: |
-          echo Check analyzer ; \
-            flutter analyze --no-pub --current-package --congratulate \
-              --current-package --no-fatal-infos --fatal-warnings \
-              --no-preamble --write=analyze.txt
+          flutter analyze --no-pub --current-package --congratulate \
+            --current-package --no-fatal-infos --fatal-warnings \
+            --no-preamble --write=analyze.txt
 
       - name: 📁 Upload result
         uses: actions/upload-artifact@v2
@@ -76,5 +71,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
           path: |
-            client/coverage/
             client/analyze.txt
