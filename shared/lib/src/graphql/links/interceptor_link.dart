@@ -1,9 +1,14 @@
 import 'dart:async';
 
-import 'package:graphql/client.dart' hide JsonSerializable;
+import 'package:gql/ast.dart';
+import 'package:gql_exec/gql_exec.dart';
+import 'package:gql_link/gql_link.dart';
+//import 'package:graphql/client.dart' hide JsonSerializable;
 import 'package:l/l.dart';
 
-export 'package:graphql/client.dart' hide JsonSerializable;
+//export 'package:graphql/client.dart' hide JsonSerializable;
+export 'package:gql_exec/gql_exec.dart';
+export 'package:gql_link/gql_link.dart';
 
 /// Линк позволяющий отдельно перехватывать запросы и ответы
 abstract class InterceptorLink extends Link {
@@ -67,4 +72,22 @@ abstract class InterceptorLink extends Link {
 
   /// Содержит запрос и ответ (если существуют)
   void onDone(Request request, Response? response) {}
+}
+
+extension WithType on Request {
+  OperationType get type {
+    final definitions = operation.document.definitions.whereType<OperationDefinitionNode>().toList();
+    if (operation.operationName != null) {
+      definitions.removeWhere(
+        (node) => node.name!.value != operation.operationName,
+      );
+    }
+    // TODO differentiate error types, add exception
+    assert(definitions.length == 1);
+    return definitions.first.type;
+  }
+
+  bool get isQuery => type == OperationType.query;
+  bool get isMutation => type == OperationType.mutation;
+  bool get isSubscription => type == OperationType.subscription;
 }

@@ -175,13 +175,15 @@ class AppDrawer extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    onTap: () => AuthenticationScope.authenticateOr(
-                      context,
-                      (_) => AppRouter.navigate(
+                    onTap: () {
+                      final router = AppRouter.of(context);
+                      AuthenticationScope.authenticateOr(
                         context,
-                        (configuration) => const ProfileRouteConfiguration(),
-                      ),
-                    ),
+                        (_) => router.router.setNewRoutePath(
+                          const ProfileRouteConfiguration(),
+                        ),
+                      );
+                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.settings),
@@ -203,11 +205,11 @@ class AppDrawer extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
+                      final router = AppRouter.of(context);
                       AuthenticationScope.authenticateOr(
                         context,
-                        (final user) => AppRouter.navigate(
-                          context,
-                          (configuration) => const JobRouteConfiguration.create(),
+                        (final user) => router.router.setNewRoutePath(
+                          const JobRouteConfiguration.create(),
                         ),
                       );
                     },

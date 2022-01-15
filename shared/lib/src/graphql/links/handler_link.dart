@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:graphql/client.dart';
+import 'package:dart_jobs_shared/src/graphql/exceptions.dart';
+import 'package:gql_exec/gql_exec.dart';
+import 'package:gql_link/gql_link.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
+
+typedef HttpResponseDecoder = FutureOr<Map<String, dynamic>?> Function(http.Response httpResponse);
 
 /// Handler link implementation
 ///
@@ -53,7 +58,9 @@ class HandlerLink extends Link with _MultipartProcessor {
     Request request, [
     NextLink? forward,
   ]) async* {
-    final httpResponse = await _executeRequest(request);
+    final httpRequest = _prepareRequest(request);
+
+    final httpResponse = await _executeRequest(httpRequest);
 
     final response = await _parseHttpResponse(httpResponse);
 
@@ -68,13 +75,12 @@ class HandlerLink extends Link with _MultipartProcessor {
       response: response.response,
       data: response.data,
       errors: response.errors,
-      context: _updateResponseContext(response, httpResponse),
+      context: _updateResponseContext(request, httpRequest, response, httpResponse),
     );
   }
 
   /// Выполнить HTTP запрос
-  Future<http.Response> _executeRequest(Request request) async {
-    final httpRequest = _prepareRequest(request);
+  Future<http.Response> _executeRequest(http.BaseRequest httpRequest) async {
     try {
       //httpRequest.url;
       //httpRequest.method;
@@ -193,11 +199,13 @@ class HandlerLink extends Link with _MultipartProcessor {
   }
 
   Context _updateResponseContext(
+    Request request,
+    http.BaseRequest httpRequest,
     Response response,
     http.Response httpResponse,
   ) {
     try {
-      return response.context
+      final context = response.context
           .withEntry(
             HttpLinkResponseContext(
               statusCode: httpResponse.statusCode,
@@ -209,6 +217,14 @@ class HandlerLink extends Link with _MultipartProcessor {
               httpResponse,
             ),
           );
+      if (httpRequest is http.Request) {
+        return context.withEntry<HttpRequestContext>(
+          HttpRequestContext(
+            httpRequest,
+          ),
+        );
+      }
+      return context;
     } on Object catch (e) {
       throw ContextWriteException(
         originalException: e,
@@ -301,10 +317,24 @@ mixin _MultipartProcessor {
   }
 }
 
-class HttpResponseContext extends ContextEntry {
-  final http.Response response;
+class HttpRequestContext extends ContextEntry {
+  const HttpRequestContext(this.request);
 
+  final http.Request request;
+
+  @override
+  List<Object?> get fieldsForEquality => [
+        request.contentLength,
+        request.body,
+        request.headers,
+        request.bodyBytes,
+      ];
+}
+
+class HttpResponseContext extends ContextEntry {
   const HttpResponseContext(this.response);
+
+  final http.Response response;
 
   @override
   List<Object?> get fieldsForEquality => [
@@ -334,4 +364,43 @@ class WrongContentTypeException implements UnsupportedError {
   final String contentType;
 
   final String body;
+}
+
+/// HTTP link headers
+@immutable
+class HttpLinkHeaders extends ContextEntry {
+  const HttpLinkHeaders({
+    this.headers = const {},
+  });
+
+  /// Headers to be added to the request.
+  ///
+  /// May overrides Apollo Client awareness headers.
+  final Map<String, String> headers;
+
+  @override
+  List<Object> get fieldsForEquality => [
+        headers,
+      ];
+}
+
+/// HTTP link Response Context
+@immutable
+class HttpLinkResponseContext extends ContextEntry {
+  const HttpLinkResponseContext({
+    required this.statusCode,
+    required this.headers,
+  });
+
+  /// HTTP status code of the response
+  final int statusCode;
+
+  /// HTTP response headers
+  final Map<String, String> headers;
+
+  @override
+  List<Object> get fieldsForEquality => [
+        statusCode,
+        headers,
+      ];
 }

@@ -24,15 +24,19 @@ class UserAvatar extends StatelessWidget {
             context,
             (final configuration) => const ProfileRouteConfiguration(),
           ),
-          notAuthenticated: () => openUserScreen
-              ? AuthenticationScope.authenticateOr(
-                  context,
-                  (final user) => AppRouter.navigate(
-                    context,
-                    (final configuration) => const ProfileRouteConfiguration(),
-                  ),
-                )
-              : AuthenticationScope.signInWithGoogle(context),
+          notAuthenticated: () {
+            if (openUserScreen) {
+              final router = AppRouter.of(context).router;
+              AuthenticationScope.authenticateOr(
+                context,
+                (final user) => router.setNewRoutePath(
+                  const ProfileRouteConfiguration(),
+                ),
+              );
+            } else {
+              AuthenticationScope.signInWithGoogle(context);
+            }
+          },
         ),
         icon: CircleAvatar(
           radius: size / 2,

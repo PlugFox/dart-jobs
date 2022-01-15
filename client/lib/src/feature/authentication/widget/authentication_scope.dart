@@ -66,6 +66,8 @@ class AuthenticationScope extends StatefulWidget {
   /// Выполнить коллбэк если аутентифицированы
   /// Войти с помощью гугла если не вошли
   /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
+  /// !!! Внимание, внутри коллбэка нельзя использовать контекст и любые зависимости,
+  ///   которые перестанут быть актуальными к этому моменту !!!
   static void authenticateOr(
     final BuildContext context,
     final void Function(AuthenticatedUser user) callback,

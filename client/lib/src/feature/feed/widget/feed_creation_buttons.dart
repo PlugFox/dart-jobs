@@ -30,10 +30,12 @@ class FeedCreationButtons extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () {
+                        final router = AppRouter.of(context).router;
                         AuthenticationScope.authenticateOr(
                           context,
-                          (final user) =>
-                              AppRouter.navigate(context, (configuration) => const JobRouteConfiguration.create()),
+                          (final user) => router.setNewRoutePath(
+                            const JobRouteConfiguration.create(),
+                          ),
                         );
                       },
                     ),

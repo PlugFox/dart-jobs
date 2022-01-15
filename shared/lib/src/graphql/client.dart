@@ -4,8 +4,6 @@ import 'package:gql_link/gql_link.dart' show Link;
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:meta/meta.dart' show immutable;
 
-export 'package:gql_http_link/gql_http_link.dart';
-
 @immutable
 class GQLClient {
   const GQLClient(final Link link) : _link = link;

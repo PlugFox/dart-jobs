@@ -39,13 +39,15 @@ class FeedScope extends StatelessWidget {
       ).state.list.firstWhereOrNull(test);
 
   /// Начать создание новой работы
-  static void createJobOf(final BuildContext context) => AuthenticationScope.authenticateOr(
-        context,
-        (_) => AppRouter.navigate(
-          context,
-          (configuration) => const JobRouteConfiguration.create(),
-        ),
-      );
+  static void createJobOf(final BuildContext context) {
+    final router = AppRouter.of(context).router;
+    AuthenticationScope.authenticateOr(
+      context,
+      (_) => router.setNewRoutePath(
+        const JobRouteConfiguration.create(),
+      ),
+    );
+  }
 
   @override
   Widget build(final BuildContext context) => BlocProvider<FeedBLoC>(

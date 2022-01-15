@@ -16,7 +16,6 @@ import 'package:flutter/foundation.dart' show FlutterError, kReleaseMode;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l/l.dart';
-import 'package:platform_info/platform_info.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:stack_trace/stack_trace.dart' as st;
 
@@ -41,12 +40,8 @@ void _wrapSentry(AppRunner appRunner) => runZonedGuarded<Future<void>>(
             ..maxBreadcrumbs = 100
             ..attachStacktrace = true
             ..tracesSampleRate = 1
-            ..debug = platform.when<bool>(
-                  debug: () => true,
-                  release: () => false,
-                  profile: () => true,
-                ) ??
-                false,
+            ..debug = false,
+          //..debug = platform.when<bool>(debug: () => true, release: () => false, profile: () => true) ?? false,
         );
         _loggerToSentryBreadcrumb();
         appRunner();

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_jobs_shared/src/graphql/links/handler_link.dart';
 import 'package:dart_jobs_shared/src/graphql/links/interceptor_link.dart';
 
 /// Линк отвечающий за установку метаданных в заголовки запросов GraphQL
