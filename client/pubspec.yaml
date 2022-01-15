@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.1.0+1634411913
 
 environment:
-  sdk: ">=2.15.0-178.1.beta"
-  flutter: ">=2.7.0-3.1.pre"
+  sdk: ">=2.15.1"
+  flutter: ">=2.8.1"
 
 dependencies:
   flutter:
@@ -18,35 +18,31 @@ dependencies:
 
   # Annotation & Code-generation
   meta: ^1.7.0
-  #built_value: ^8.1.2
   json_annotation: ^4.3.0
   freezed_annotation: ^1.0.0
-  #protobuf: ^2.0.0
 
   # State manager & Inversion of Control
-  #fox_flutter_bloc: ^0.1.0
-  flutter_bloc: ^8.0.0
+  bloc: ^8.0.2
+  flutter_bloc: ^8.0.1
   bloc_concurrency: ^0.2.0
-
-  # Network
-  #grpc: ^3.0.2
-  dio: ^4.0.1
-  #retrofit: ^2.2.0
 
   # Storage and SQL
   shared_preferences: ^2.0.5
 
   # Firebase
-  firebase_core: ^1.1.1
-  firebase_analytics: ^9.0.3
-  firebase_auth: ^3.1.0
-  cloud_firestore: ^3.1.1
-  firebase_crashlytics: ^2.0.3
-  firebase_performance: ^0.8.0+2
-  firebase_remote_config: ^1.0.0-dev.3
+  firebase_core: ^1.11.0
+  firebase_analytics: ^9.0.5
+  firebase_auth: ^3.3.5
+  cloud_firestore: ^3.1.6
+  firebase_crashlytics: ^2.4.5
+  firebase_performance: ^0.8.0+4
+  firebase_remote_config: ^1.0.4
   #firebase_messaging: ^10.0.8
 
   # Utility & Helpers
+  stack_trace: ^1.10.0
+  sentry_flutter: ^6.3.0-beta.1
+  sentry: ^6.3.0-beta.1
   platform_info: ^3.1.0
   l: ^3.0.1
   url_launcher: ^6.0.3
@@ -66,11 +62,9 @@ dependencies:
   rxdart: ^0.27.0
 
   # Authentication
-  sign_button: ^2.0.0 # Кнопки аутентификации
   google_sign_in: ^5.0.3
 
   # UI & Widgets
-  #shimmer: ^2.0.0
   #google_fonts: ^2.1.0
   #flutterfire_ui: ^0.2.0+2
 

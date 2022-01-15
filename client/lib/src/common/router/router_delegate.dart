@@ -1,13 +1,16 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
+import 'package:dart_jobs_client/src/common/router/analytics_navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:l/l.dart';
 import 'package:platform_info/platform_info.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeNotifier {
   AppRouterDelegate()
@@ -30,6 +33,7 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
 
   @override
   Widget build(BuildContext context) {
+    final analytics = RepositoryScope.of(context).analytics;
     final configuration = currentConfiguration;
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -48,7 +52,8 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
               observers: <NavigatorObserver>[
                 pageObserver,
                 modalObserver,
-                //if (analytics != null) FirebaseAnalyticsObserver(analytics: analytics),
+                if (analytics != null) AnalyticsNavigatorObserver(analytics: analytics),
+                SentryNavigatorObserver(),
               ],
               pages: pages,
               onPopPage: (Route<Object?> route, Object? result) {

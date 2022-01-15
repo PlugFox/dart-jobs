@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Unit tests" type="FlutterTestConfigType" factoryName="Flutter Test" singleton="false">
-    <option name="testFile" value="$PROJECT_DIR$/test/unit_test.dart" />
-    <option name="useRegexp" value="false" />
-    <option name="additionalArgs" value="" />
-    <method v="2" />
-  </configuration>
-</component>

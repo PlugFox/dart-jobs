@@ -12,6 +12,7 @@ query GetJob(
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
@@ -20,6 +21,8 @@ query GetJob(
         contacts,
         tags,
         russian_description,
-        english_description
+        is_russian,
+        english_description,
+        is_english
     }
 }

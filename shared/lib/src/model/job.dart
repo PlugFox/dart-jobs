@@ -159,7 +159,7 @@ class JobData with _$JobData {
     /// Страна, например: Russia
     /// Идентификатор страны
     /// Выпадающее поле поиска
-    @JsonKey(name: 'country') @Default('XX') final String country,
+    @JsonKey(name: 'country') @Default(Countries.unknownCode) final String country,
 
     /// Удаленная работа?
     /// Переключатель
@@ -169,10 +169,10 @@ class JobData with _$JobData {
     /// Выбор
     @JsonKey(name: 'relocation') @Default(Relocation.impossible()) final Relocation relocation,
 
-    // /// Местоположение, например: Moscow
-    // /// Максимальная длина - 256 символов
-    // /// Поле ввода
-    // @JsonKey(name: 'address') @Default('') final String address,
+    /// Местоположение, например: Moscow
+    /// Максимальная длина - 256 символов
+    /// Поле ввода
+    @JsonKey(name: 'address') @Default('') final String address,
 
     /// Описания на различных языках
     /// Ключ - локаль, например "en" или "ru"

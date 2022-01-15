@@ -352,9 +352,10 @@ class _$JobDataTearOff {
   _JobData call(
       {@JsonKey(name: 'title') String title = '',
       @JsonKey(name: 'company') String company = '',
-      @JsonKey(name: 'country') String country = 'XX',
+      @JsonKey(name: 'country') String country = Countries.unknownCode,
       @JsonKey(name: 'remote') bool remote = true,
       @JsonKey(name: 'relocation') Relocation relocation = const Relocation.impossible(),
+      @JsonKey(name: 'address') String address = '',
       @JsonKey(name: 'descriptions') Description descriptions = const Description(),
       @JsonKey(name: 'levels') List<DeveloperLevel> levels = const <DeveloperLevel>[],
       @JsonKey(name: 'skills') List<String> skills = const <String>[],
@@ -367,6 +368,7 @@ class _$JobDataTearOff {
       country: country,
       remote: remote,
       relocation: relocation,
+      address: address,
       descriptions: descriptions,
       levels: levels,
       skills: skills,
@@ -412,10 +414,14 @@ mixin _$JobData {
   /// Возможность переезда
   /// Выбор
   @JsonKey(name: 'relocation')
-  Relocation get relocation => throw _privateConstructorUsedError; // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  Relocation get relocation => throw _privateConstructorUsedError;
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  String get address => throw _privateConstructorUsedError;
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -465,6 +471,7 @@ abstract class $JobDataCopyWith<$Res> {
       @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -490,6 +497,7 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
     Object? country = freezed,
     Object? remote = freezed,
     Object? relocation = freezed,
+    Object? address = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
@@ -518,6 +526,10 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
               as Relocation,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -563,6 +575,7 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
       @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -588,6 +601,7 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
     Object? country = freezed,
     Object? remote = freezed,
     Object? relocation = freezed,
+    Object? address = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
@@ -616,6 +630,10 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
               as Relocation,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -650,9 +668,10 @@ class _$_JobData extends _JobData {
   const _$_JobData(
       {@JsonKey(name: 'title') this.title = '',
       @JsonKey(name: 'company') this.company = '',
-      @JsonKey(name: 'country') this.country = 'XX',
+      @JsonKey(name: 'country') this.country = Countries.unknownCode,
       @JsonKey(name: 'remote') this.remote = true,
       @JsonKey(name: 'relocation') this.relocation = const Relocation.impossible(),
+      @JsonKey(name: 'address') this.address = '',
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
       @JsonKey(name: 'levels') this.levels = const <DeveloperLevel>[],
       @JsonKey(name: 'skills') this.skills = const <String>[],
@@ -696,10 +715,15 @@ class _$_JobData extends _JobData {
   /// Выбор
   @JsonKey(name: 'relocation')
   final Relocation relocation;
-  @override // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  @override
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  final String address;
+  @override
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -742,7 +766,7 @@ class _$_JobData extends _JobData {
 
   @override
   String toString() {
-    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, relocation: $relocation, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employments: $employments, tags: $tags)';
+    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, relocation: $relocation, address: $address, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employments: $employments, tags: $tags)';
   }
 
   @override
@@ -755,6 +779,7 @@ class _$_JobData extends _JobData {
             const DeepCollectionEquality().equals(other.country, country) &&
             const DeepCollectionEquality().equals(other.remote, remote) &&
             const DeepCollectionEquality().equals(other.relocation, relocation) &&
+            const DeepCollectionEquality().equals(other.address, address) &&
             const DeepCollectionEquality().equals(other.descriptions, descriptions) &&
             const DeepCollectionEquality().equals(other.levels, levels) &&
             const DeepCollectionEquality().equals(other.skills, skills) &&
@@ -771,6 +796,7 @@ class _$_JobData extends _JobData {
       const DeepCollectionEquality().hash(country),
       const DeepCollectionEquality().hash(remote),
       const DeepCollectionEquality().hash(relocation),
+      const DeepCollectionEquality().hash(address),
       const DeepCollectionEquality().hash(descriptions),
       const DeepCollectionEquality().hash(levels),
       const DeepCollectionEquality().hash(skills),
@@ -795,6 +821,7 @@ abstract class _JobData extends JobData {
       @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -838,10 +865,15 @@ abstract class _JobData extends JobData {
   /// Выбор
   @JsonKey(name: 'relocation')
   Relocation get relocation;
-  @override // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  @override
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  String get address;
+  @override
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения

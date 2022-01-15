@@ -49,6 +49,8 @@ class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartStringToGraphQLBpchar)
   late String country;
 
+  late String address;
+
   late bool remote;
 
   @JsonKey(
@@ -66,6 +68,12 @@ class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
+  @JsonKey(name: 'is_english')
+  late bool isEnglish;
+
+  @JsonKey(name: 'is_russian')
+  late bool isRussian;
+
   @override
   List<Object?> get props => [
         id,
@@ -76,10 +84,13 @@ class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
-        levels
+        levels,
+        isEnglish,
+        isRussian
       ];
   @override
   Map<String, dynamic> toJson() => _$FetchRecent$QueryRoot$JobToJson(this);
@@ -134,6 +145,8 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartStringToGraphQLBpchar)
   late String country;
 
+  late String address;
+
   late bool remote;
 
   @JsonKey(
@@ -169,8 +182,14 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'russian_description')
   late String russianDescription;
 
+  @JsonKey(name: 'is_russian')
+  late bool isRussian;
+
   @JsonKey(name: 'english_description')
   late String englishDescription;
+
+  @JsonKey(name: 'is_english')
+  late bool isEnglish;
 
   @override
   List<Object?> get props => [
@@ -182,6 +201,7 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
@@ -190,7 +210,9 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         contacts,
         tags,
         russianDescription,
-        englishDescription
+        isRussian,
+        englishDescription,
+        isEnglish
       ];
   @override
   Map<String, dynamic> toJson() => _$GetJob$QueryRoot$JobToJson(this);
@@ -246,6 +268,8 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartStringToGraphQLBpchar)
   late String country;
 
+  late String address;
+
   late bool remote;
 
   @JsonKey(
@@ -281,8 +305,14 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'russian_description')
   late String russianDescription;
 
+  @JsonKey(name: 'is_russian')
+  late bool isRussian;
+
   @JsonKey(name: 'english_description')
   late String englishDescription;
+
+  @JsonKey(name: 'is_english')
+  late bool isEnglish;
 
   @override
   List<Object?> get props => [
@@ -294,6 +324,7 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
@@ -302,7 +333,9 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
         contacts,
         tags,
         russianDescription,
-        englishDescription
+        isRussian,
+        englishDescription,
+        isEnglish
       ];
   @override
   Map<String, dynamic> toJson() => _$InsertJob$MutationRoot$JobToJson(this);
@@ -358,6 +391,8 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartStringToGraphQLBpchar)
   late String country;
 
+  late String address;
+
   late bool remote;
 
   @JsonKey(
@@ -375,6 +410,12 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
+  @JsonKey(name: 'is_english')
+  late bool isEnglish;
+
+  @JsonKey(name: 'is_russian')
+  late bool isRussian;
+
   @override
   List<Object?> get props => [
         id,
@@ -385,10 +426,13 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
-        levels
+        levels,
+        isEnglish,
+        isRussian
       ];
   @override
   Map<String, dynamic> toJson() => _$Paginate$QueryRoot$JobToJson(this);
@@ -459,12 +503,15 @@ class UpdateJob$MutationRoot extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class JobSetInput extends JsonSerializable with EquatableMixin {
   JobSetInput(
-      {this.company,
+      {this.address,
+      this.company,
       this.contacts,
       this.country,
       this.deletionMark,
       this.employments,
       this.englishDescription,
+      this.isEnglish,
+      this.isRussian,
       this.levels,
       this.relocation,
       this.remote,
@@ -475,6 +522,8 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   factory JobSetInput.fromJson(Map<String, dynamic> json) =>
       _$JobSetInputFromJson(json);
+
+  String? address;
 
   String? company;
 
@@ -498,6 +547,12 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   @JsonKey(name: 'english_description')
   String? englishDescription;
+
+  @JsonKey(name: 'is_english')
+  bool? isEnglish;
+
+  @JsonKey(name: 'is_russian')
+  bool? isRussian;
 
   @JsonKey(
       fromJson: fromGraphQL$levelNullableToDartListNullableDeveloperLevel,
@@ -528,12 +583,15 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [
+        address,
         company,
         contacts,
         country,
         deletionMark,
         employments,
         englishDescription,
+        isEnglish,
+        isRussian,
         levels,
         relocation,
         remote,
@@ -673,6 +731,12 @@ final FETCH_RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'remote'),
                   alias: null,
                   arguments: [],
@@ -692,6 +756,18 @@ final FETCH_RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'levels'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_english'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_russian'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -808,6 +884,12 @@ final GET_JOB_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'remote'),
                   alias: null,
                   arguments: [],
@@ -856,7 +938,19 @@ final GET_JOB_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'is_russian'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'english_description'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_english'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -890,11 +984,14 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
       {required this.title,
       required this.company,
       required this.country,
+      required this.address,
       required this.creator_id,
       required this.remote,
       required this.relocation,
       required this.english_description,
+      required this.is_english,
       required this.russian_description,
+      required this.is_russian,
       required this.contacts,
       required this.employments,
       this.levels,
@@ -914,6 +1011,8 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
       toJson: fromDartStringToGraphQLBpchar)
   late String country;
 
+  late String address;
+
   late String creator_id;
 
   late bool remote;
@@ -925,7 +1024,11 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
 
   late String english_description;
 
+  late bool is_english;
+
   late String russian_description;
+
+  late bool is_russian;
 
   @JsonKey(
       fromJson: fromGraphQL$textToDartListString,
@@ -957,11 +1060,14 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
         title,
         company,
         country,
+        address,
         creator_id,
         remote,
         relocation,
         english_description,
+        is_english,
         russian_description,
+        is_russian,
         contacts,
         employments,
         levels,
@@ -996,6 +1102,12 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'address')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'creator_id')),
             type:
                 NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
@@ -1021,10 +1133,22 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'is_english')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
             variable:
                 VariableNode(name: NameNode(value: 'russian_description')),
             type:
                 NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'is_russian')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
@@ -1081,6 +1205,9 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'country'),
                         value: VariableNode(name: NameNode(value: 'country'))),
                     ObjectFieldNode(
+                        name: NameNode(value: 'address'),
+                        value: VariableNode(name: NameNode(value: 'address'))),
+                    ObjectFieldNode(
                         name: NameNode(value: 'remote'),
                         value: VariableNode(name: NameNode(value: 'remote'))),
                     ObjectFieldNode(
@@ -1108,9 +1235,17 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         value: VariableNode(
                             name: NameNode(value: 'english_description'))),
                     ObjectFieldNode(
+                        name: NameNode(value: 'is_english'),
+                        value:
+                            VariableNode(name: NameNode(value: 'is_english'))),
+                    ObjectFieldNode(
                         name: NameNode(value: 'russian_description'),
                         value: VariableNode(
-                            name: NameNode(value: 'russian_description')))
+                            name: NameNode(value: 'russian_description'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'is_russian'),
+                        value:
+                            VariableNode(name: NameNode(value: 'is_russian')))
                   ]))
             ],
             directives: [],
@@ -1164,6 +1299,12 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'remote'),
                   alias: null,
                   arguments: [],
@@ -1212,7 +1353,19 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'is_russian'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'english_description'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_english'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -1368,6 +1521,12 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
                   name: NameNode(value: 'remote'),
                   alias: null,
                   arguments: [],
@@ -1387,6 +1546,18 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'levels'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_english'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_russian'),
                   alias: null,
                   arguments: [],
                   directives: [],

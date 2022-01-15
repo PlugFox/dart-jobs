@@ -1,5 +1,5 @@
 /// Неймспейс для всех ключей в SharedPreference
-const String storageNamespace = 'dev.plugfox.dart_jobs.flutter';
+const String storageNamespace = 'dev.plugfox.dartjobs.flutter';
 
 /// Ключи по которым сохраняем текущую версию приложения
 const String versionMajorKey = '$storageNamespace.version_major';

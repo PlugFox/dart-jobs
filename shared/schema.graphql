@@ -6,6 +6,14 @@ schema {
     subscription: subscription_root
 }
 
+"whether this query should be cached (Hasura Cloud only)"
+directive @cached(
+    "refresh the cache entry"
+    refresh: Boolean! = false,
+    "measured in seconds"
+    ttl: Int! = 60
+) on QUERY
+
 """
 
 Список работ
@@ -14,6 +22,8 @@ schema {
 columns and relationships of "job"
 """
 type job {
+    "Местоположение, например: Moscow"
+    address: String!
     "Компания"
     company: String!
     "Контакты для обратной связи"
@@ -32,6 +42,10 @@ type job {
     english_description: String!
     "Идентификатор элемента"
     id: Int!
+    "Содержит описание на английском"
+    is_english: Boolean!
+    "Содержит описание на русском"
+    is_russian: Boolean!
     "Уровни разработчика"
     levels: _level!
     "Релокация"
@@ -140,6 +154,8 @@ enum job_constraint {
 "select columns of table \"job\""
 enum job_select_column {
     "column name"
+    address
+    "column name"
     company
     "column name"
     contacts
@@ -157,6 +173,10 @@ enum job_select_column {
     english_description
     "column name"
     id
+    "column name"
+    is_english
+    "column name"
+    is_russian
     "column name"
     levels
     "column name"
@@ -178,6 +198,8 @@ enum job_select_column {
 "update columns of table \"job\""
 enum job_update_column {
     "column name"
+    address
+    "column name"
     company
     "column name"
     contacts
@@ -189,6 +211,10 @@ enum job_update_column {
     employments
     "column name"
     english_description
+    "column name"
+    is_english
+    "column name"
+    is_russian
     "column name"
     levels
     "column name"
@@ -220,6 +246,18 @@ enum order_by {
     "in descending order, nulls last"
     desc_nulls_last
 }
+
+scalar _employment
+
+scalar _level
+
+scalar _text
+
+scalar bpchar
+
+scalar relocation
+
+scalar timestamp
 
 "Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'."
 input Boolean_comparison_exp {
@@ -357,6 +395,7 @@ input job_bool_exp {
     _and: [job_bool_exp!]
     _not: job_bool_exp
     _or: [job_bool_exp!]
+    address: String_comparison_exp
     company: String_comparison_exp
     contacts: _text_comparison_exp
     country: bpchar_comparison_exp
@@ -366,6 +405,8 @@ input job_bool_exp {
     employments: _employment_comparison_exp
     english_description: String_comparison_exp
     id: Int_comparison_exp
+    is_english: Boolean_comparison_exp
+    is_russian: Boolean_comparison_exp
     levels: _level_comparison_exp
     relocation: relocation_comparison_exp
     remote: Boolean_comparison_exp
@@ -378,6 +419,8 @@ input job_bool_exp {
 
 "input type for inserting data into table \"job\""
 input job_insert_input {
+    "Местоположение, например: Moscow"
+    address: String
     "Компания"
     company: String
     "Контакты для обратной связи"
@@ -390,6 +433,10 @@ input job_insert_input {
     employments: _employment
     "Описание на английском"
     english_description: String
+    "Содержит описание на английском"
+    is_english: Boolean
+    "Содержит описание на русском"
+    is_russian: Boolean
     "Уровни разработчика"
     levels: _level
     "Релокация"
@@ -415,6 +462,7 @@ input job_on_conflict {
 
 "Ordering options when selecting data from \"job\"."
 input job_order_by {
+    address: order_by
     company: order_by
     contacts: order_by
     country: order_by
@@ -424,6 +472,8 @@ input job_order_by {
     employments: order_by
     english_description: order_by
     id: order_by
+    is_english: order_by
+    is_russian: order_by
     levels: order_by
     relocation: order_by
     remote: order_by
@@ -442,6 +492,8 @@ input job_pk_columns_input {
 
 "input type for updating data in table \"job\""
 input job_set_input {
+    "Местоположение, например: Moscow"
+    address: String
     "Компания"
     company: String
     "Контакты для обратной связи"
@@ -454,6 +506,10 @@ input job_set_input {
     employments: _employment
     "Описание на английском"
     english_description: String
+    "Содержит описание на английском"
+    is_english: Boolean
+    "Содержит описание на русском"
+    is_russian: Boolean
     "Уровни разработчика"
     levels: _level
     "Релокация"
@@ -495,16 +551,3 @@ input timestamp_comparison_exp {
     _neq: timestamp
     _nin: [timestamp!]
 }
-
-
-scalar _employment
-
-scalar _level
-
-scalar _text
-
-scalar bpchar
-
-scalar relocation
-
-scalar timestamp

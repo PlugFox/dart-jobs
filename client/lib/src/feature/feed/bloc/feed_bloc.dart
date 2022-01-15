@@ -179,7 +179,6 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       emit(event.successful(state: state));
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object catch (err) {
       l.e('Произошла ошибка при запросе последних элементов ленты: $err');
@@ -237,7 +236,6 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       );
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object catch (err) {
       l.e('Произошла ошибка при обновлении ленты: $err');

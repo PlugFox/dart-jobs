@@ -1,63 +1,62 @@
-import 'package:dart_jobs_client/src/feature/job/widget/job_form/job_form_data.dart' show JobFieldCountryController;
+import 'dart:math' as math;
+
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 
+/// TODO: подсказывать страну по геолокации, последние выбраные
+/// TODO: на больших экранах отображать дропдаун с поиском
 @immutable
 class CountryPicker extends StatelessWidget {
   const CountryPicker({
     required final this.controller,
-    final this.enabled = true,
+    required final this.error,
     Key? key,
   }) : super(key: key);
 
-  final JobFieldCountryController controller;
-  final bool enabled;
+  final ValueNotifier<Country> controller;
+  final ValueNotifier<String?> error;
 
   @override
-  Widget build(BuildContext context) => Opacity(
-        opacity: enabled ? 1 : .5,
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: Center(
-            child: SizedBox(
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: TextButton(
-                  onPressed: enabled ? () => _openSelectionPage(context) : null,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Center(
-                          child: ValueListenableBuilder<Country>(
-                            valueListenable: controller,
-                            builder: (context, value, child) => Text(
-                              value.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      const SizedBox.square(
-                        dimension: 24,
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 24,
-                        ),
-                      ),
-                    ],
-                  ),
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    return Align(
+      alignment: Alignment.topLeft,
+      child: GestureDetector(
+        onTap: () {
+          _openSelectionPage(context);
+          FocusScope.of(context).unfocus();
+        },
+        child: ValueListenableBuilder<Country>(
+          valueListenable: controller,
+          builder: (context, value, child) => ValueListenableBuilder<String?>(
+            valueListenable: error,
+            builder: (context, errorText, child) => SizedBox(
+              height: errorText == null ? 60 : 80,
+              child: InputDecorator(
+                isFocused: false,
+                expands: true,
+                isHovering: true,
+                decoration: InputDecoration(
+                  labelText: context.localization.job_field_location_country,
+                  errorText: errorText,
                 ),
+                isEmpty: !value.isExist,
+                child: child,
               ),
+            ),
+            child: Text(
+              value.isExist ? value.title : '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: themeData.textTheme.subtitle1,
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   void _openSelectionPage(BuildContext context) => showSearch<Country?>(
         context: context,
@@ -72,16 +71,26 @@ class CountryPicker extends StatelessWidget {
 }
 
 class _CountrySearchDelegate extends SearchDelegate<Country?> {
-  _CountrySearchDelegate(this.current);
-  final List<Country> all = Countries.values.values.toList(growable: false);
+  _CountrySearchDelegate(this.current)
+      : super(
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.search,
+        ) {
+    all
+      ..add(current)
+      ..addAll(Countries.values.values.where((e) => e.id != current.id));
+  }
+
+  final List<Country> all = <Country>[];
   final Country current;
 
   @override
-  List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () => query = '',
-        ),
+  List<Widget> buildActions(BuildContext context) => <Widget>[
+        if (query.isNotEmpty)
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () => query = '',
+          ),
       ];
 
   @override
@@ -146,8 +155,15 @@ class _CountryTile extends StatelessWidget {
       selected: selected,
       tileColor: tileColor,
       selectedTileColor: tileColor,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: math.max<double>(
+          (MediaQuery.of(context).size.width - kBodyWidth) / 2,
+          8,
+        ),
+        vertical: 0,
+      ),
       title: Text(
-        country.title,
+        country.isExist ? country.title : context.localization.job_field_location_country_unknown,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(

@@ -77,7 +77,7 @@ class JobState with _$JobState {
         processed: (_) => true,
       );
 
-  /// В ожидании событий
+  /// В ожидании событий, чтение работы
   const factory JobState.idle({
     required final Job job,
     @Default('Idle') final String message,
@@ -160,7 +160,6 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
       emit(event.notFound(state: state));
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object {
       emit(event.error(state: state, message: 'Unsupported error'));
@@ -171,15 +170,16 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   }
 
   Future<void> _create(_CreateJobEvent event, Emitter<JobState> emit) async {
+    Job? newJob;
     try {
-      emit(event.inProgress(state: state));
-      final job = await _repository.createJob(jobData: event.data).timeout(const Duration(seconds: 10));
+      newJob = state.job.copyWith(data: event.data);
+      emit(event.inProgress(state: state.copyWith(job: newJob)));
+      final job = await _repository.createJob(jobData: newJob.data).timeout(const Duration(seconds: 5));
       emit(event.saved(state: state, job: job));
     } on NotFoundException {
       emit(event.notFound(state: state));
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object {
       emit(event.error(state: state, message: 'Unsupported error'));
@@ -192,18 +192,17 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
   Future<void> _update(_UpdateJobEvent event, Emitter<JobState> emit) async {
     Job? newJob;
     try {
-      emit(event.inProgress(state: state));
       newJob = state.job.copyWith(data: event.data);
       if (newJob.hasNotID) {
         throw const FormatException('Job has not exist');
       }
-      newJob = await _repository.updateJob(job: newJob).timeout(const Duration(seconds: 10));
+      emit(event.inProgress(state: state.copyWith(job: newJob)));
+      newJob = await _repository.updateJob(job: newJob).timeout(const Duration(seconds: 5));
       emit(event.saved(state: state, job: newJob));
     } on NotFoundException {
       emit(event.notFound(state: state));
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object {
       emit(event.error(state: state, message: 'Unsupported error'));
@@ -215,18 +214,17 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
 
   Future<void> _delete(_DeleteJobEvent event, Emitter<JobState> emit) async {
     try {
-      emit(event.inProgress(state: state));
       var deletedJob = state.job;
       if (deletedJob.hasNotID) {
         throw const FormatException('Job has not exist');
       }
+      emit(event.inProgress(state: state));
       deletedJob = await _repository.deleteJob(job: deletedJob).timeout(const Duration(seconds: 10));
       emit(event.deleted(state: state, job: deletedJob));
     } on NotFoundException {
       emit(event.notFound(state: state));
     } on GraphQLJobException {
       emit(event.error(state: state, message: 'Network exception'));
-      await Future<void>.delayed(const Duration(seconds: 5));
       rethrow;
     } on Object {
       emit(event.error(state: state, message: 'Unsupported error'));

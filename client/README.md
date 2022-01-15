@@ -90,5 +90,5 @@ firebase deploy --only hosting --project "dart-job" -m "<Описание руч
 
 ### Сбор аналитики с помощью adb и top
 
-`adb shell top -m 50 | grep dev.plugfox.dart-jobs`  
+`adb shell top -m 50 | grep dev.plugfox.dartjobs`  
   

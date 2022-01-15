@@ -11,6 +11,22 @@
   "@no": {
     "description": "Нет"
   },
+  "save": "Сохранить",
+  "@save": {
+    "description": "Сохранить"
+  },
+  "optional": "Не обязательно",
+  "@optional": {
+    "description": "Не обязательно"
+  },
+  "selected": "Выбрано",
+  "@selected": {
+    "description": "Выбрано"
+  },
+  "next": "Далее",
+  "@next": {
+    "description": "Далее"
+  },
   "title": "Dart Jobs",
   "@title": {
     "description": "Заголовок приложения"
@@ -83,9 +99,9 @@
   "@favorite": {
     "description": "Избранное"
   },
-  "job_field_title": "Заголовок",
+  "job_field_title": "Заголовок работы",
   "@job_field_title": {
-    "description": "Заголовок"
+    "description": "Заголовок работы"
   },
   "job_field_company_title": "Название компании",
   "@job_field_company_title": {
@@ -95,6 +111,10 @@
   "@job_field_location_country": {
     "description": "Страна"
   },
+  "job_field_location_country_unknown": "Страна не выбрана",
+  "@job_field_location_country_unknown": {
+    "description": "Страна не выбрана"
+  },
   "job_field_location_address": "Адрес",
   "@job_field_location_address": {
     "description": "Адрес"
@@ -102,6 +122,18 @@
   "job_field_description": "Описание",
   "@job_field_description": {
     "description": "Описание"
+  },
+  "job_field_english_description": "Описание на английском",
+  "@job_field_english_description": {
+    "description": "Описание на английском"
+  },
+  "job_field_russian_description": "Описание на русском",
+  "@job_field_russian_description": {
+    "description": "Описание на русском"
+  },
+  "job_working_conditions": "Условия работы",
+  "@job_working_conditions": {
+    "description": "Условия работы"
   },
   "job_field_salary": "Зарплатная вилка",
   "@job_field_salary": {
@@ -131,6 +163,14 @@
   "@developer_level": {
     "description": "Уровень разработчика"
   },
+  "developer_level_any": "Любая квалификация",
+  "@developer_level_any": {
+    "description": "Любая квалификация"
+  },
+  "developer_level_none": "Квалификация не выбрана",
+  "@developer_level_none": {
+    "description": "Квалификация не выбрана"
+  },
   "developer_level_intern": "Стажёр",
   "@developer_level_intern": {
     "description": "Уровень разработчика - Стажёр"
@@ -155,9 +195,29 @@
   "@developer_level_unknown": {
     "description": "Уровень разработчика - Не указан"
   },
+  "job_field_remote": "Удаленная работа",
+  "@job_field_remote": {
+    "description": "Удаленная работа"
+  },
+  "job_field_office": "Работа в офисе",
+  "@job_field_office": {
+    "description": "Работа в офисе"
+  },
   "job_field_relocation": "Возможность релокации",
   "@job_field_relocation": {
     "description": "Возможность релокации"
+  },
+  "job_field_relocation_impossible": "Переезд невозможен",
+  "@job_field_relocation_impossible": {
+    "description": "Переезд невозможен"
+  },
+  "job_field_relocation_possible": "Переезд возможен",
+  "@job_field_relocation_possible": {
+    "description": "Переезд возможен"
+  },
+  "job_field_relocation_required": "Требуется переезд",
+  "@job_field_relocation_required": {
+    "description": "Требуется переезд"
   },
   "job_field_tags": "Тэги",
   "@job_field_tags": {
@@ -183,7 +243,11 @@
   "@job_type": {
     "description": "Вид работы"
   },
-  "job_type_unknown": "Не указан",
+  "job_type_any": "Любое",
+  "@job_type_any": {
+    "description": "Любое трудоустройство"
+  },
+  "job_type_unknown": "Не указано",
   "@job_type_unknown": {
     "description": "Вид работы - Неизвестный / Не указан (Unknown)"
   },
@@ -210,5 +274,57 @@
   "job_type_collaboration": "Поиск команды или сотрудничество",
   "@job_type_collaboration": {
     "description": "Вид работы - Поиск команды или сотрудничество (Team search or collaboration)"
+  },
+  "job_button_reset": "Сбросить изменения",
+  "@job_button_reset": {
+    "description": "Сбросить изменения"
+  },
+  "job_button_create": "Создать работу",
+  "@job_button_create": {
+    "description": "Создать работу"
+  },
+  "job_button_update": "Обновить работу",
+  "@job_button_update": {
+    "description": "Обновить работу"
+  },
+  "job_button_preview": "Предварительный просмотр",
+  "@job_button_preview": {
+    "description": "Предварительный просмотр"
+  },
+  "job_button_bump": "Поднять в поисковой выдаче",
+  "@job_button_bump": {
+    "description": "Поднять в выдаче"
+  },
+  "job_button_delete": "Удалить работу",
+  "@job_button_delete": {
+    "description": "Удалить работу"
+  },
+  "job_form_error": "Ошибка заполнения формы",
+  "@job_form_error": {
+    "description": "Ошибка заполнения формы"
+  },
+  "job_form_error_title": "Заголовок работы не заполнен",
+  "@job_form_error_title": {
+    "description": "Заголовок работы не заполнен"
+  },
+  "job_form_error_company": "Название компании не заполнено",
+  "@job_form_error_company": {
+    "description": "Название компании не заполнено"
+  },
+  "job_form_error_country": "Страна не выбрана",
+  "@job_form_error_country": {
+    "description": "Страна не выбрана"
+  },
+  "job_form_error_description": "Описание должно быть заполнено хотя бы на одном языке",
+  "@job_form_error_description": {
+    "description": "Описание должно быть заполнено хотя бы на одном языке"
+  },
+  "job_form_error_levels": "Желаемый уровень разработчика не выбран",
+  "@job_form_error_levels": {
+    "description": "Желаемый уровень разработчика не выбран"
+  },
+  "job_form_error_employments": "Вид работы / контракта не выбран",
+  "@job_form_error_employments": {
+    "description": "Вид работы / контракта не выбран"
   }
 }

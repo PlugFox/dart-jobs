@@ -78,6 +78,11 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
               relocation: e.relocation,
               employments: e.employments,
               levels: e.levels,
+              address: e.address,
+              descriptions: Description.fromLanguages(
+                english: e.isEnglish ? 'English' : '',
+                russian: e.isRussian ? 'Russian' : '',
+              ),
             ),
           ),
         )
@@ -125,6 +130,11 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
               relocation: e.relocation,
               employments: e.employments,
               levels: e.levels,
+              address: e.address,
+              descriptions: Description.fromLanguages(
+                english: e.isEnglish ? 'English' : '',
+                russian: e.isRussian ? 'Russian' : '',
+              ),
             ),
           ),
         )
@@ -145,6 +155,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }
 
   @override
+  // ignore: long-method
   Future<Job> createJob({
     required JobData jobData,
     required String idToken,
@@ -157,11 +168,14 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
           title: jobData.title,
           company: jobData.company,
           country: jobData.country,
+          address: jobData.address,
           creator_id: creatorId,
           remote: jobData.remote,
           relocation: jobData.relocation,
           english_description: jobData.englishDescription,
+          is_english: jobData.englishDescription.isNotEmpty,
           russian_description: jobData.russianDescription,
+          is_russian: jobData.russianDescription.isNotEmpty,
           contacts: jobData.contacts,
           employments: jobData.employments,
           levels: jobData.levels,
@@ -186,6 +200,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
         title: job.title,
         company: job.company,
         country: job.country,
+        address: job.address,
         remote: job.remote,
         relocation: job.relocation,
         employments: job.employments,
@@ -226,6 +241,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
         title: job.title,
         company: job.company,
         country: job.country,
+        address: job.address,
         remote: job.remote,
         relocation: job.relocation,
         employments: job.employments,
@@ -254,12 +270,15 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
             company: job.data.company,
             contacts: job.data.contacts,
             country: job.data.country,
+            address: job.data.address,
             employments: job.data.employments,
             englishDescription: job.data.englishDescription,
+            isEnglish: job.data.englishDescription.isNotEmpty,
             levels: job.data.levels,
             relocation: job.data.relocation,
             remote: job.data.remote,
             russianDescription: job.data.russianDescription,
+            isRussian: job.data.russianDescription.isNotEmpty,
             skills: job.data.skills,
             tags: job.data.tags,
             title: job.data.title,

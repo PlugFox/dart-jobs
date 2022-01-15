@@ -24,15 +24,19 @@ class UserAvatar extends StatelessWidget {
             context,
             (final configuration) => const ProfileRouteConfiguration(),
           ),
-          notAuthenticated: () => openUserScreen
-              ? AuthenticationScope.authenticateOr(
-                  context,
-                  (final user) => AppRouter.navigate(
-                    context,
-                    (final configuration) => const ProfileRouteConfiguration(),
-                  ),
-                )
-              : AuthenticationScope.signInWithGoogle(context),
+          notAuthenticated: () {
+            if (openUserScreen) {
+              final router = AppRouter.of(context).router;
+              AuthenticationScope.authenticateOr(
+                context,
+                (final user) => router.setNewRoutePath(
+                  const ProfileRouteConfiguration(),
+                ),
+              );
+            } else {
+              AuthenticationScope.signInWithGoogle(context);
+            }
+          },
         ),
         icon: CircleAvatar(
           radius: size / 2,
@@ -68,7 +72,7 @@ class _UserAvatarImage extends StatelessWidget {
       notAuthenticated: () => null,
     );
     return photoURL == null || photoURL.isEmpty
-        ? Icon(Icons.person, size: size / 2)
+        ? Icon(_kPersonIcon, size: size / 2)
         : ClipRRect(
             borderRadius: BorderRadius.circular(size / 2),
             child: Image.network(
@@ -84,3 +88,5 @@ class _UserAvatarImage extends StatelessWidget {
           );
   }
 }
+
+const IconData _kPersonIcon = Icons.person;

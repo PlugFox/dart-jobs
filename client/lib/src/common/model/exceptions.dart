@@ -7,20 +7,24 @@ abstract class Throwable implements Exception {
   StackTrace get stackTrace;
 }
 
+/// Не важные, предсказуемые исключения
+/// Например "такого элемента не существует" или "отсутсвует интернет"
+abstract class MinorException implements Throwable {}
+
 /// Исключение приложения
 @immutable
 abstract class AppException implements Throwable {
+  const AppException(
+    this.stackTrace, [
+    final this.message,
+  ]);
+
   /// Исходный стектрейс
   @override
   final StackTrace stackTrace;
 
   /// Сообщение об ошибки или исходная ошибка строкой
   final String? message;
-
-  const AppException(
-    this.stackTrace, [
-    final this.message,
-  ]);
 
   @override
   String toString() {
@@ -30,7 +34,7 @@ abstract class AppException implements Throwable {
 }
 
 /// Не найдено
-class NotFoundException extends AppException {
+class NotFoundException extends AppException implements MinorException {
   const NotFoundException(
     StackTrace stackTrace, [
     final String? message,
@@ -47,7 +51,7 @@ class NotFoundException extends AppException {
 }
 
 /// Не авторизован
-class NotAuthorized extends AppException {
+class NotAuthorized extends AppException implements MinorException {
   const NotAuthorized(
     StackTrace stackTrace, [
     final String? message,

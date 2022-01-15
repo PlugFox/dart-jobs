@@ -18,7 +18,7 @@ abstract class FeedTile extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => _preferredSize;
   static const Size _preferredSize = Size(
-    bodyWidth,
+    kBodyWidth,
     180,
   );
 

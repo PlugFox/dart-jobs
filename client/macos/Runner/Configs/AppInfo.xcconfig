@@ -8,7 +8,7 @@
 PRODUCT_NAME = dart_jobs
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.plugfox.dartJobs
+PRODUCT_BUNDLE_IDENTIFIER = dev.plugfox.dartjobs
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2021 dev.plugfox. All rights reserved.

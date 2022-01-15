@@ -27,9 +27,12 @@ query FetchRecent(
         title,
         company,
         country,
+        address,
         remote,
         relocation,
         employments,
-        levels
+        levels,
+        is_english,
+        is_russian
     }
 }
