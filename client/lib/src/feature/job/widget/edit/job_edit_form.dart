@@ -3,18 +3,20 @@ import 'dart:math' as math;
 
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/country_picker.dart';
-import 'package:dart_jobs_client/src/feature/job/widget/edit/job_description_field.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/edit/job_description_input.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_edit_buttons.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_employments_input.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_levels_input.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_relocation_input.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_remote_input.dart';
-import 'package:dart_jobs_client/src/feature/job/widget/edit/job_singleline_text_field.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/edit/job_single_line_input.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l/l.dart';
 
 @immutable
 class JobEditForm extends StatefulWidget {
@@ -39,19 +41,25 @@ class _JobEditFormState extends State<JobEditForm> {
   /// TODO: добавить контроллеры ошибок формы
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocus = FocusNode();
+  final ValueNotifier<String?> _titleError = ValueNotifier<String?>(null);
   final TextEditingController _companyController = TextEditingController();
   final FocusNode _companyFocus = FocusNode();
+  final ValueNotifier<String?> _companyError = ValueNotifier<String?>(null);
   final ValueNotifier<Country> _countryController = ValueNotifier<Country>(Countries.unknown);
+  final ValueNotifier<String?> _countryError = ValueNotifier<String?>(null);
   final TextEditingController _addressController = TextEditingController();
   final FocusNode _addressFocus = FocusNode();
   final ValueNotifier<bool> _remoteController = ValueNotifier<bool>(true);
   final TextEditingController _englishDescriptionController = TextEditingController();
   final TextEditingController _russianDescriptionController = TextEditingController();
+  final ValueNotifier<String?> _descriptionError = ValueNotifier<String?>(null);
   final ValueNotifier<List<DeveloperLevel>> _levelsController = ValueNotifier<List<DeveloperLevel>>(<DeveloperLevel>[]);
+  final ValueNotifier<String?> _levelsError = ValueNotifier<String?>(null);
   final ValueNotifier<List<String>> _skillsController = ValueNotifier<List<String>>(<String>[]);
   final ValueNotifier<Relocation> _relocationController = ValueNotifier<Relocation>(const Relocation.possible());
   final ValueNotifier<List<String>> _contactsController = ValueNotifier<List<String>>(<String>[]);
   final ValueNotifier<List<Employment>> _employmentsController = ValueNotifier<List<Employment>>(<Employment>[]);
+  final ValueNotifier<String?> _employmentsError = ValueNotifier<String?>(null);
   final ValueNotifier<List<String>> _tagsController = ValueNotifier<List<String>>(<String>[]);
 
   //region Lifecycle
@@ -66,46 +74,76 @@ class _JobEditFormState extends State<JobEditForm> {
   void _onStateChanged(JobState state) {
     final jobData = state.job.data;
     _titleController.text = jobData.title;
+    _titleError.value = null;
     _companyController.text = jobData.company;
+    _companyError.value = null;
     _countryController.value = Country.byCode(jobData.country);
+    _countryError.value = null;
     _addressController.text = jobData.address;
     _remoteController.value = jobData.remote;
     _englishDescriptionController.text = jobData.englishDescription;
     _russianDescriptionController.text = jobData.russianDescription;
+    _descriptionError.value = null;
     _levelsController.value = List<DeveloperLevel>.of(jobData.levels);
+    _levelsError.value = null;
     _skillsController.value = List<String>.of(jobData.skills);
     _relocationController.value = jobData.relocation;
     _contactsController.value = List<String>.of(jobData.contacts);
     _employmentsController.value = List<Employment>.of(jobData.employments);
+    _employmentsError.value = null;
     _tagsController.value = List<String>.of(jobData.tags);
   }
 
+  // ignore: long-method
   JobData? getJobDataOrNull() {
+    try {
+      FocusScope.of(context).unfocus();
+    } on Object catch (error, stackTrace) {
+      l.w(error, stackTrace);
+    }
     final errors = <String>[];
     final localization = context.localization;
     if (_titleController.text.isEmpty) {
-      if (errors.isEmpty) {
-        _titleFocus.requestFocus();
-      }
+      //if (errors.isEmpty) {
+      //  _titleFocus.requestFocus();
+      //}
       errors.add(localization.job_form_error_title);
+      _titleError.value = localization.job_form_error_title;
+    } else {
+      _titleError.value = null;
     }
     if (_companyController.text.isEmpty) {
-      if (errors.isEmpty) {
-        _companyFocus.requestFocus();
-      }
+      //if (errors.isEmpty) {
+      //  _companyFocus.requestFocus();
+      //}
       errors.add(localization.job_form_error_company);
+      _companyError.value = localization.job_form_error_company;
+    } else {
+      _companyError.value = null;
     }
     if (_countryController.value == Countries.unknown) {
       errors.add(localization.job_form_error_country);
+      _countryError.value = localization.job_form_error_country;
+    } else {
+      _countryError.value = null;
     }
     if (_englishDescriptionController.text.isEmpty && _russianDescriptionController.text.isEmpty) {
       errors.add(localization.job_form_error_description);
+      _descriptionError.value = localization.job_form_error_description;
+    } else {
+      _descriptionError.value = null;
     }
     if (_levelsController.value.isEmpty) {
       errors.add(localization.job_form_error_levels);
+      _levelsError.value = localization.job_form_error_levels;
+    } else {
+      _levelsError.value = null;
     }
     if (_employmentsController.value.isEmpty) {
       errors.add(localization.job_form_error_employments);
+      _employmentsError.value = localization.job_form_error_employments;
+    } else {
+      _employmentsError.value = null;
     }
     if (errors.isNotEmpty) {
       _showSnackBarError(errors);
@@ -138,46 +176,8 @@ class _JobEditFormState extends State<JobEditForm> {
     //ScaffoldFeatureController? controller;
     //controller =
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        //action: length > 1
-        //    ? SnackBarAction(
-        //        label: '${context.localization.next} ($length)',
-        //        textColor: Colors.white,
-        //        onPressed: () {
-        //          controller?.close();
-        //          _showSnackBarError(errors.sublist(1));
-        //        },
-        //      )
-        //    : null,
-        backgroundColor: Colors.redAccent,
-        content: SizedBox(
-          height: 48,
-          child: Center(
-            child: Text(
-              error,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-        duration: const Duration(milliseconds: 6000),
-        margin: EdgeInsets.symmetric(
-          horizontal: math.max<double>(
-            (MediaQuery.of(context).size.width - kBodyWidth) / 2 + 4,
-            12,
-          ),
-          vertical: 16,
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-        ),
+      ErrorSnackBar(
+        error: error,
       ),
     );
   }
@@ -187,19 +187,25 @@ class _JobEditFormState extends State<JobEditForm> {
     _subscription?.cancel();
     _titleController.dispose();
     _titleFocus.dispose();
+    _titleError.dispose();
     _companyController.dispose();
     _companyFocus.dispose();
+    _companyError.dispose();
     _countryController.dispose();
+    _countryError.dispose();
     _addressController.dispose();
     _addressFocus.dispose();
     _remoteController.dispose();
     _englishDescriptionController.dispose();
     _russianDescriptionController.dispose();
+    _descriptionError.dispose();
     _levelsController.dispose();
+    _levelsError.dispose();
     _skillsController.dispose();
     _relocationController.dispose();
     _contactsController.dispose();
     _employmentsController.dispose();
+    _employmentsError.dispose();
     _tagsController.dispose();
     super.dispose();
   }
@@ -218,26 +224,28 @@ class _JobEditFormState extends State<JobEditForm> {
       buttons: const JobEditButtons(),
       fields: <Widget>[
         /// Заголовок
-        JobSingleLineTextField(
+        JobSingleLineInput(
           key: const ValueKey<String>('title'),
           label: '${localization.job_field_title}${ru ? ' (на английском)' : ''}',
           hint: 'Flutter/Dart Developer', // _WorkTitleRandomizer.instance().next(),
           controller: _titleController,
           focusNode: _titleFocus,
+          error: _titleError,
         ),
 
         /// Название компании
-        JobSingleLineTextField(
+        JobSingleLineInput(
           key: const ValueKey<String>('company_title'),
           label: localization.job_field_company_title,
           hint: 'Google',
           controller: _companyController,
           focusNode: _companyFocus,
+          error: _companyError,
           denyCyrillic: false,
         ),
 
         /// Местоположение
-        JobSingleLineTextField(
+        JobSingleLineInput(
           key: const ValueKey<String>('address'),
           label: '${localization.job_field_location_address} ($optional)',
           hint: 'California, USA',
@@ -251,6 +259,7 @@ class _JobEditFormState extends State<JobEditForm> {
         /// Страна
         CountryPicker(
           controller: _countryController,
+          error: _countryError,
         ),
 
         /// Удаленная работа
@@ -261,11 +270,13 @@ class _JobEditFormState extends State<JobEditForm> {
         /// Ожидаемый уровень разработчика
         JobLevelsInput(
           controller: _levelsController,
+          error: _levelsError,
         ),
 
         /// Возможное трудоустройство
         JobEmploymentsInput(
           controller: _employmentsController,
+          error: _employmentsError,
         ),
 
         /// Возможность релокации
@@ -275,16 +286,20 @@ class _JobEditFormState extends State<JobEditForm> {
 
         /// Заполнение текста на английском
         JobDescriptionInput(
+          key: const ValueKey<String>('english_description'),
           title: localization.job_field_english_description,
           label: '${localization.job_field_english_description} ($optional)',
           controller: _englishDescriptionController,
+          error: _descriptionError,
         ),
 
         /// Заполнение текста на русском
         JobDescriptionInput(
+          key: const ValueKey<String>('russian_description'),
           title: localization.job_field_russian_description,
           label: '${localization.job_field_russian_description} ($optional)',
           controller: _russianDescriptionController,
+          error: _descriptionError,
           denyCyrillic: false,
         ),
 

@@ -62,7 +62,7 @@ android {
         }
     }
 
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,7 +81,7 @@ android {
         // Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "dev.plugfox.dartjobs"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

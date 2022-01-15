@@ -1,6 +1,7 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
+import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_edit_form.dart';
@@ -34,7 +35,15 @@ class JobEditFlow extends StatelessWidget {
           orElse: () => AdaptiveScaffold(
             appBar: AppBar(
               leading: const BackButton(),
-              title: BlocBuilder<JobBLoC, JobState>(
+              title: BlocConsumer<JobBLoC, JobState>(
+                listener: (context, state) => state.maybeMap<void>(
+                  orElse: () {},
+                  error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+                    ErrorSnackBar(
+                      error: state.message,
+                    ),
+                  ),
+                ),
                 builder: (context, state) {
                   final title =
                       state.job.data.title.isEmpty ? context.localization.create_new_job : state.job.data.title;

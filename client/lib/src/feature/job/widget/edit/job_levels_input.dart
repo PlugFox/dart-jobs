@@ -12,10 +12,12 @@ import 'package:flutter/material.dart';
 class JobLevelsInput extends StatefulWidget {
   const JobLevelsInput({
     required final this.controller,
+    required final this.error,
     Key? key,
   }) : super(key: key);
 
   final ValueNotifier<List<DeveloperLevel>> controller;
+  final ValueNotifier<String?> error;
 
   @override
   State<JobLevelsInput> createState() => _JobLevelsInputState();
@@ -27,8 +29,8 @@ class _JobLevelsInputState extends State<JobLevelsInput> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return SizedBox(
-      height: 60,
+    return Align(
+      alignment: Alignment.topLeft,
       child: GestureDetector(
         onTap: () {
           JobBottomSheet.show(
@@ -45,14 +47,22 @@ class _JobLevelsInputState extends State<JobLevelsInput> {
         },
         child: ValueListenableBuilder<List<DeveloperLevel>>(
           valueListenable: widget.controller,
-          builder: (context, value, _) => InputDecorator(
-            isFocused: _focus,
-            expands: true,
-            isHovering: true,
-            decoration: InputDecoration(
-              labelText: context.localization.job_field_developer_level,
+          builder: (context, value, _) => ValueListenableBuilder<String?>(
+            valueListenable: widget.error,
+            builder: (context, errorText, child) => SizedBox(
+              height: errorText == null ? 60 : 80,
+              child: InputDecorator(
+                isFocused: _focus,
+                expands: true,
+                isHovering: true,
+                decoration: InputDecoration(
+                  labelText: context.localization.job_field_developer_level,
+                  errorText: errorText,
+                ),
+                isEmpty: value.isEmpty,
+                child: child,
+              ),
             ),
-            isEmpty: value.isEmpty,
             child: Text(
               _levelRepresentation(context, value),
               maxLines: 1,

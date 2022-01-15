@@ -11,16 +11,18 @@ import 'package:flutter/material.dart';
 class CountryPicker extends StatelessWidget {
   const CountryPicker({
     required final this.controller,
+    required final this.error,
     Key? key,
   }) : super(key: key);
 
   final ValueNotifier<Country> controller;
+  final ValueNotifier<String?> error;
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return SizedBox(
-      height: 60,
+    return Align(
+      alignment: Alignment.topLeft,
       child: GestureDetector(
         onTap: () {
           _openSelectionPage(context);
@@ -28,14 +30,22 @@ class CountryPicker extends StatelessWidget {
         },
         child: ValueListenableBuilder<Country>(
           valueListenable: controller,
-          builder: (context, value, child) => InputDecorator(
-            isFocused: false,
-            expands: true,
-            isHovering: true,
-            decoration: InputDecoration(
-              labelText: context.localization.job_field_location_country,
+          builder: (context, value, child) => ValueListenableBuilder<String?>(
+            valueListenable: error,
+            builder: (context, errorText, child) => SizedBox(
+              height: errorText == null ? 60 : 80,
+              child: InputDecorator(
+                isFocused: false,
+                expands: true,
+                isHovering: true,
+                decoration: InputDecoration(
+                  labelText: context.localization.job_field_location_country,
+                  errorText: errorText,
+                ),
+                isEmpty: !value.isExist,
+                child: child,
+              ),
             ),
-            isEmpty: !value.isExist,
             child: Text(
               value.isExist ? value.title : '',
               maxLines: 1,

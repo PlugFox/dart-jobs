@@ -12,6 +12,7 @@ class JobDescriptionInput extends StatefulWidget {
     required final this.title,
     required final this.label,
     required final this.controller,
+    required final this.error,
     final this.denyCyrillic = true,
     Key? key,
   }) : super(key: key);
@@ -19,6 +20,7 @@ class JobDescriptionInput extends StatefulWidget {
   final String title;
   final String label;
   final TextEditingController controller;
+  final ValueNotifier<String?> error;
   final bool denyCyrillic;
 
   @override
@@ -31,40 +33,45 @@ class _JobDescriptionInputState extends State<JobDescriptionInput> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return SizedBox(
-      height: 60,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context, rootNavigator: false)
-              .push<void>(
-                _JobDescriptionPageRoute(
-                  widget.title,
-                  widget.controller,
-                  denyCyrillic: widget.denyCyrillic,
-                ),
-              )
-              .then<void>(
-                (_) => setState(() => _focus = false),
-              );
-          FocusScope.of(context).unfocus();
-          setState(() => _focus = true);
-        },
-        child: ValueListenableBuilder<TextEditingValue>(
-          valueListenable: widget.controller,
-          builder: (context, value, child) => InputDecorator(
-            isFocused: _focus,
-            expands: true,
-            isHovering: true,
-            decoration: InputDecoration(
-              labelText: widget.label,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context, rootNavigator: false)
+            .push<void>(
+              _JobDescriptionPageRoute(
+                widget.title,
+                widget.controller,
+                denyCyrillic: widget.denyCyrillic,
+              ),
+            )
+            .then<void>(
+              (_) => setState(() => _focus = false),
+            );
+        FocusScope.of(context).unfocus();
+        setState(() => _focus = true);
+      },
+      child: ValueListenableBuilder<TextEditingValue>(
+        valueListenable: widget.controller,
+        builder: (context, value, child) => ValueListenableBuilder<String?>(
+          valueListenable: widget.error,
+          builder: (context, errorText, child) => SizedBox(
+            height: errorText == null ? 60 : 80,
+            child: InputDecorator(
+              isFocused: _focus,
+              expands: true,
+              isHovering: true,
+              decoration: InputDecoration(
+                labelText: widget.label,
+                errorText: errorText,
+              ),
+              isEmpty: value.text.isEmpty,
+              child: child,
             ),
-            isEmpty: value.text.isEmpty,
-            child: Text(
-              value.text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: themeData.textTheme.subtitle1,
-            ),
+          ),
+          child: Text(
+            value.text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: themeData.textTheme.subtitle1,
           ),
         ),
       ),

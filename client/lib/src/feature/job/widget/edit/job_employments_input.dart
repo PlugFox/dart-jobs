@@ -12,10 +12,12 @@ import 'package:flutter/material.dart';
 class JobEmploymentsInput extends StatefulWidget {
   const JobEmploymentsInput({
     required final this.controller,
+    required final this.error,
     Key? key,
   }) : super(key: key);
 
   final ValueNotifier<List<Employment>> controller;
+  final ValueNotifier<String?> error;
 
   @override
   State<JobEmploymentsInput> createState() => _JobEmploymentsInputState();
@@ -27,8 +29,8 @@ class _JobEmploymentsInputState extends State<JobEmploymentsInput> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return SizedBox(
-      height: 60,
+    return Align(
+      alignment: Alignment.topLeft,
       child: GestureDetector(
         onTap: () {
           JobBottomSheet.show(
@@ -45,14 +47,22 @@ class _JobEmploymentsInputState extends State<JobEmploymentsInput> {
         },
         child: ValueListenableBuilder<List<Employment>>(
           valueListenable: widget.controller,
-          builder: (context, value, child) => InputDecorator(
-            isFocused: _focus,
-            expands: true,
-            isHovering: true,
-            decoration: InputDecoration(
-              labelText: context.localization.job_field_contract_type,
+          builder: (context, value, child) => ValueListenableBuilder<String?>(
+            valueListenable: widget.error,
+            builder: (context, errorText, child) => SizedBox(
+              height: errorText == null ? 60 : 80,
+              child: InputDecorator(
+                isFocused: _focus,
+                expands: true,
+                isHovering: true,
+                decoration: InputDecoration(
+                  labelText: context.localization.job_field_contract_type,
+                  errorText: errorText,
+                ),
+                isEmpty: value.isEmpty,
+                child: child,
+              ),
             ),
-            isEmpty: value.isEmpty,
             child: Text(
               _employmentRepresentation(context, value),
               maxLines: 1,

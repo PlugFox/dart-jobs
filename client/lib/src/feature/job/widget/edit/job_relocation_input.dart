@@ -29,35 +29,38 @@ class _JobRelocationInputState extends State<JobRelocationInput> {
     final themeData = Theme.of(context);
     return SizedBox(
       height: 60,
-      child: GestureDetector(
-        onTap: () {
-          JobBottomSheet.show(
-            context: context,
-            height: 56 * 3,
-            child: _RelocationBottomSheet(
-              controller: widget.controller,
-            ),
-          ).then<void>(
-            (_) => setState(() => _focus = false),
-          );
-          FocusScope.of(context).unfocus();
-          setState(() => _focus = true);
-        },
-        child: ValueListenableBuilder<Relocation>(
-          valueListenable: widget.controller,
-          builder: (context, value, child) => InputDecorator(
-            isFocused: _focus,
-            expands: true,
-            isHovering: true,
-            decoration: InputDecoration(
-              labelText: context.localization.job_field_relocation,
-            ),
-            isEmpty: false,
-            child: Text(
-              _relocationRepresentation(context, value),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: themeData.textTheme.subtitle1,
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: GestureDetector(
+          onTap: () {
+            JobBottomSheet.show(
+              context: context,
+              height: 56 * 3,
+              child: _RelocationBottomSheet(
+                controller: widget.controller,
+              ),
+            ).then<void>(
+              (_) => setState(() => _focus = false),
+            );
+            FocusScope.of(context).unfocus();
+            setState(() => _focus = true);
+          },
+          child: ValueListenableBuilder<Relocation>(
+            valueListenable: widget.controller,
+            builder: (context, value, child) => InputDecorator(
+              isFocused: _focus,
+              expands: true,
+              isHovering: true,
+              decoration: InputDecoration(
+                labelText: context.localization.job_field_relocation,
+              ),
+              isEmpty: false,
+              child: Text(
+                _relocationRepresentation(context, value),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: themeData.textTheme.subtitle1,
+              ),
             ),
           ),
         ),
