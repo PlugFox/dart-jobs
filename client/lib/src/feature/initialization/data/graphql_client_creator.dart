@@ -1,8 +1,6 @@
 import 'package:dart_jobs_client/src/common/constant/environment.dart';
 import 'package:dart_jobs_client/src/common/utils/error_util.dart';
-import 'package:dart_jobs_client/src/common/utils/performance_link.dart';
 import 'package:dart_jobs_shared/graphql.dart';
-import 'package:firebase_performance/firebase_performance.dart';
 
 abstract class GraphQLClientCreator {
   GraphQLClientCreator._();
@@ -24,8 +22,9 @@ abstract class GraphQLClientCreator {
     links.add(dedupeLink);
 
     /// Performance link
-    final performanceLink = PerformanceLink(performance: FirebasePerformance.instance);
-    links.add(performanceLink);
+    /// https://github.com/FirebaseExtended/flutterfire/issues/6140
+    //final performanceLink = PerformanceLink(performance: FirebasePerformance.instance);
+    //links.add(performanceLink);
 
     /// Metadata link
     final metadataLink = MetadataLink(metadata: <String, String>{});

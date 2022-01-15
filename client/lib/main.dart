@@ -34,7 +34,7 @@ void _wrapSentry(AppRunner appRunner) => runZonedGuarded<Future<void>>(
       () async {
         await SentryFlutter.init(
           (options) => options
-            ..dsn = 'https://101aa5b6dfd047ea830b4fa6ee2def6b@sentry.plugfox.dev/1'
+            ..dsn = 'https://eb1d8e1345ab4892aebbf4af76bb714a@sentry.plugfox.dev/1'
             ..release = pubspec.version
             ..environment = environment
             ..maxBreadcrumbs = 100

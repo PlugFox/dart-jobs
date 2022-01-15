@@ -43,10 +43,10 @@ class ExceptionLink extends InterceptorLink {
     }
 
     final operationType = getOperationType();
-    final operation = request.operation.operationName ?? 'graphql_$operationType';
+    final operation = request.operation.operationName ?? operationType;
     final transaction = Sentry.startTransaction(
-      'graphql_request',
       operation,
+      'graphql',
       description: 'GraphQL request: "$operation"',
       bindToScope: true,
       autoFinishAfter: const Duration(seconds: 120),

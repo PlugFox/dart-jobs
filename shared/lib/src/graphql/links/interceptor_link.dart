@@ -83,7 +83,7 @@ extension WithType on Request {
       );
     }
     // TODO differentiate error types, add exception
-    assert(definitions.length == 1);
+    assert(definitions.length == 1, 'definitions = 1');
     return definitions.first.type;
   }
 
