@@ -21,6 +21,12 @@ class JobPage extends AppPage<void> {
         );
 
   @override
+  bool canUpdate(Page<Object?> other) {
+    if (other is! JobPage) return false;
+    return other.name == name && other.arguments == arguments;
+  }
+
+  @override
   Widget builder(BuildContext context) {
     final arg = arguments;
     final id = arg is String ? int.tryParse(arg) : null;
@@ -72,7 +78,6 @@ class _JobScreen extends StatelessWidget {
             );
           }
 
-          /// TODO: Hero анимация
           return BlocBuilder<JobBLoC, JobState>(
             builder: (context, state) => JobView(
               job: state.job,

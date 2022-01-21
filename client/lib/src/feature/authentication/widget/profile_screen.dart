@@ -28,6 +28,7 @@ class _ProfileBody extends StatefulWidget {
   State<_ProfileBody> createState() => _ProfileBodyState();
 }
 
+/// TODO: Hero анимация для аватара
 class _ProfileBodyState extends State<_ProfileBody> {
   @override
   Widget build(final BuildContext context) => const ProfileWidget();
