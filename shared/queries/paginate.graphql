@@ -1,6 +1,7 @@
 query Paginate(
     $before: timestamp!,
-    $limit: Int! = 100
+    $limit: Int! = 100,
+    $exclude: [Int!]!
 ) {
     job(
         where: {
@@ -9,6 +10,9 @@ query Paginate(
             },
             deletion_mark: {
                 _eq: false
+            },
+            id: {
+                _nin: $exclude
             }
         },
         order_by: [

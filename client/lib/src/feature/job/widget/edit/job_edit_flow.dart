@@ -3,11 +3,13 @@ import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_edit_form.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:l/l.dart';
 
 @immutable
 class JobEditFlow extends StatelessWidget {
@@ -23,6 +25,17 @@ class JobEditFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocConsumer<JobBLoC, JobState>(
         listener: (context, state) {
+          state.maybeMap<void>(
+            orElse: () {},
+            deleted: (_) {
+              l.i('Работа была удалена на экране редактирования работы - запрашиваем обновление списка');
+              FeedScope.fetchRecentOf(context);
+            },
+            saved: (_) {
+              l.i('Работа была сохранена на экране редактирования работы - запрашиваем обновление списка');
+              FeedScope.fetchRecentOf(context);
+            },
+          );
           if (state.job.creatorId != user.uid) {
             AppRouter.goHome(context);
           }

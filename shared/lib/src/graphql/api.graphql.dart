@@ -606,7 +606,8 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
 @JsonSerializable(explicitToJson: true)
 class FetchRecentArguments extends JsonSerializable with EquatableMixin {
-  FetchRecentArguments({required this.after, required this.limit});
+  FetchRecentArguments(
+      {required this.after, required this.limit, required this.exclude});
 
   @override
   factory FetchRecentArguments.fromJson(Map<String, dynamic> json) =>
@@ -619,8 +620,10 @@ class FetchRecentArguments extends JsonSerializable with EquatableMixin {
 
   late int limit;
 
+  late List<int> exclude;
+
   @override
-  List<Object?> get props => [after, limit];
+  List<Object?> get props => [after, limit, exclude];
   @override
   Map<String, dynamic> toJson() => _$FetchRecentArgumentsToJson(this);
 }
@@ -640,6 +643,14 @@ final FETCH_RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
             variable: VariableNode(name: NameNode(value: 'limit')),
             type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
             defaultValue: DefaultValueNode(value: IntValueNode(value: '100')),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'exclude')),
+            type: ListTypeNode(
+                type: NamedTypeNode(
+                    name: NameNode(value: 'Int'), isNonNull: true),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
@@ -665,6 +676,14 @@ final FETCH_RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
                           ObjectFieldNode(
                               name: NameNode(value: '_eq'),
                               value: BooleanValueNode(value: false))
+                        ])),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'id'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: '_nin'),
+                              value: VariableNode(
+                                  name: NameNode(value: 'exclude')))
                         ]))
                   ])),
               ArgumentNode(
@@ -1396,7 +1415,8 @@ class InsertJobMutation
 
 @JsonSerializable(explicitToJson: true)
 class PaginateArguments extends JsonSerializable with EquatableMixin {
-  PaginateArguments({required this.before, required this.limit});
+  PaginateArguments(
+      {required this.before, required this.limit, required this.exclude});
 
   @override
   factory PaginateArguments.fromJson(Map<String, dynamic> json) =>
@@ -1409,8 +1429,10 @@ class PaginateArguments extends JsonSerializable with EquatableMixin {
 
   late int limit;
 
+  late List<int> exclude;
+
   @override
-  List<Object?> get props => [before, limit];
+  List<Object?> get props => [before, limit, exclude];
   @override
   Map<String, dynamic> toJson() => _$PaginateArgumentsToJson(this);
 }
@@ -1430,6 +1452,14 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
             variable: VariableNode(name: NameNode(value: 'limit')),
             type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
             defaultValue: DefaultValueNode(value: IntValueNode(value: '100')),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'exclude')),
+            type: ListTypeNode(
+                type: NamedTypeNode(
+                    name: NameNode(value: 'Int'), isNonNull: true),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
@@ -1455,6 +1485,14 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
                           ObjectFieldNode(
                               name: NameNode(value: '_eq'),
                               value: BooleanValueNode(value: false))
+                        ])),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'id'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: '_nin'),
+                              value: VariableNode(
+                                  name: NameNode(value: 'exclude')))
                         ]))
                   ])),
               ArgumentNode(

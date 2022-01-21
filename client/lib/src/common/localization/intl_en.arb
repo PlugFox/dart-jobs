@@ -334,5 +334,21 @@
   "job_form_error_employments": "Type of work / contract not selected",
   "@job_form_error_employments": {
     "description": "Вид работы / контракта не выбран"
+  },
+  "job_form_edit_countdown_available": "Editing will be available via",
+  "@job_form_edit_countdown_available": {
+    "description": "Редактирование доступно через"
+  },
+  "job_form_edit_countdown_hours": "hours",
+  "@job_form_edit_countdown_hours": {
+    "description": "часов"
+  },
+  "job_form_edit_countdown_minutes": "minutes",
+  "@job_form_edit_countdown_minutes": {
+    "description": "минут"
+  },
+  "job_form_edit_countdown_seconds": "seconds",
+  "@job_form_edit_countdown_seconds": {
+    "description": "секунд"
   }
 }

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/utils/locale_util.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
@@ -64,15 +63,11 @@ class _JobContent extends StatelessWidget {
         bottom: 80,
       ),
       children: <Widget>[
-        /// Created
-        //Text(job.created.toIso8601String()),
-
-        /// Updated
-        //Text(job.updated.toIso8601String()),
-
         /// ID
         //Text(job.id.toString()),
-        Text(LocaleUtil.dateToString(context, job.updated)),
+
+        /// Updated
+        //Text(LocaleUtil.dateToString(context, job.updated)),
 
         /// Основные данные
         _JobViewHeader(

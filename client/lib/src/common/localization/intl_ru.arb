@@ -334,5 +334,21 @@
   "job_form_error_employments": "Вид работы / контракта не выбран",
   "@job_form_error_employments": {
     "description": "Вид работы / контракта не выбран"
+  },
+  "job_form_edit_countdown_available": "Сохранение станет доступно через",
+  "@job_form_edit_countdown_available": {
+    "description": "Сохранение станет доступно через"
+  },
+  "job_form_edit_countdown_hours": "часов",
+  "@job_form_edit_countdown_hours": {
+    "description": "часов"
+  },
+  "job_form_edit_countdown_minutes": "минут",
+  "@job_form_edit_countdown_minutes": {
+    "description": "минут"
+  },
+  "job_form_edit_countdown_seconds": "секунд",
+  "@job_form_edit_countdown_seconds": {
+    "description": "секунд"
   }
 }

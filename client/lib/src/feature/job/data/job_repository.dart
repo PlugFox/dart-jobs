@@ -12,9 +12,11 @@ abstract class IJobRepository {
 
   /// Запросить новейшие
   /// Получение последних записей по указаной фильтрации
+  /// exclude - список идентификаторов не включаемых в выборку
   Future<JobsChunk> getRecent({
     required final DateTime updatedAfter,
     required final JobFilter filter,
+    final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -22,6 +24,7 @@ abstract class IJobRepository {
   Future<JobsChunk> paginate({
     required final DateTime updatedBefore,
     required final JobFilter filter,
+    final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -83,20 +86,24 @@ class JobRepositoryImpl implements IJobRepository {
   Future<JobsChunk> getRecent({
     required DateTime updatedAfter,
     required JobFilter filter,
+    final List<int> exclude = const <int>[],
   }) =>
       _networkDataProvider.getRecent(
         updatedAfter: updatedAfter,
         filter: filter,
+        exclude: exclude,
       );
 
   @override
   Future<JobsChunk> paginate({
     required DateTime updatedBefore,
     required JobFilter filter,
+    final List<int> exclude = const <int>[],
   }) =>
       _networkDataProvider.paginate(
         updatedBefore: updatedBefore,
         filter: filter,
+        exclude: exclude,
       );
 
   @override

@@ -18,15 +18,23 @@ class FeedScope extends StatelessWidget {
 
   final Widget child;
 
+  /// Запросить обновление
+  static void fetchRecentOf(final BuildContext context) => BlocProvider.of<FeedBLoC>(
+        context,
+        listen: false,
+      )..add(const FeedEvent.fetchRecent());
+
   /// Запросить следующую порцию данных
-  static void paginateOf(
-    final BuildContext context, {
-    required final int count,
-  }) =>
-      BlocProvider.of<FeedBLoC>(
+  static void paginateOf(final BuildContext context) => BlocProvider.of<FeedBLoC>(
         context,
         listen: false,
       )..add(const FeedEvent.paginate());
+
+  /// Установить фильтр
+  static void setFilterOf(final BuildContext context, JobFilter jobFilter) => BlocProvider.of<FeedBLoC>(
+        context,
+        listen: false,
+      )..add(FeedEvent.setFilter(jobFilter));
 
   /// Получить работу удовлетворяющую условию
   static Job? jobOf(

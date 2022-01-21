@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
@@ -9,7 +8,6 @@ import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_bar.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_list.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
-import 'package:dart_jobs_client/src/feature/feed/widget/feed_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l/l.dart';
@@ -72,10 +70,9 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
 
   @override
   void didPopNext() {
-    /// TODO: можно будет закомментировать после того как сделаю подписку на изменение списка
-    /// а также при состоянии "сохранено" буду отправлять Action Intent для запроса обновления списка
+    /// TODO: не позволять слишком уж часто обновлять список
     // При возвращении на страницу запрашиваем обновление списка
-    context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
+    //context.read<FeedBLoC>().add(const FeedEvent.fetchRecent());
   }
 
   @override
@@ -104,8 +101,10 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     }
     if (_scrollController.position.pixels < triggerFetchMoreSize) return;
     // Загрузить еще контента на 5 экранов в высоту
-    l.v6('Загрузить еще контента на 5 экранов в высоту');
-    FeedScope.paginateOf(context, count: math.max(math.min((screenHeight * 5) ~/ FeedTile.height, 100), 25));
+    l.v6('Достигаем конца страницы - загрузить еще работ');
+    //l.v6('Загрузить еще контента на 5 экранов в высоту');
+    // count: math.max(math.min((screenHeight * 5) ~/ FeedTile.height, 100), 25)
+    FeedScope.paginateOf(context);
   }
 
   @override

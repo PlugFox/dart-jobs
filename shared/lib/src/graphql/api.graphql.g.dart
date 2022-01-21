@@ -339,6 +339,7 @@ FetchRecentArguments _$FetchRecentArgumentsFromJson(
     FetchRecentArguments(
       after: fromGraphQLTimestampToDartDateTime(json['after'] as String),
       limit: json['limit'] as int,
+      exclude: (json['exclude'] as List<dynamic>).map((e) => e as int).toList(),
     );
 
 Map<String, dynamic> _$FetchRecentArgumentsToJson(
@@ -346,6 +347,7 @@ Map<String, dynamic> _$FetchRecentArgumentsToJson(
     <String, dynamic>{
       'after': fromDartDateTimeToGraphQLTimestamp(instance.after),
       'limit': instance.limit,
+      'exclude': instance.exclude,
     };
 
 GetJobArguments _$GetJobArgumentsFromJson(Map<String, dynamic> json) =>
@@ -408,12 +410,14 @@ PaginateArguments _$PaginateArgumentsFromJson(Map<String, dynamic> json) =>
     PaginateArguments(
       before: fromGraphQLTimestampToDartDateTime(json['before'] as String),
       limit: json['limit'] as int,
+      exclude: (json['exclude'] as List<dynamic>).map((e) => e as int).toList(),
     );
 
 Map<String, dynamic> _$PaginateArgumentsToJson(PaginateArguments instance) =>
     <String, dynamic>{
       'before': fromDartDateTimeToGraphQLTimestamp(instance.before),
       'limit': instance.limit,
+      'exclude': instance.exclude,
     };
 
 UpdateJobArguments _$UpdateJobArgumentsFromJson(Map<String, dynamic> json) =>

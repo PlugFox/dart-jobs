@@ -59,7 +59,7 @@ class FeedState with _$FeedState {
   const factory FeedState.fetchingRecent({
     required final JobFilter filter,
     required final List<Job> list,
-    @Default(false) final bool endOfList,
+    required final bool endOfList,
     @Default('Fetching recent') final String message,
   }) = _FetchingLatestFeedState;
 
@@ -71,7 +71,7 @@ class FeedState with _$FeedState {
   const factory FeedState.pagination({
     required final JobFilter filter,
     required final List<Job> list,
-    @Default(false) final bool endOfList,
+    required final bool endOfList,
     @Default('Pagination') final String message,
   }) = _PaginationFeedState;
 
@@ -81,8 +81,8 @@ class FeedState with _$FeedState {
   /// [endOfList] - достигнут конец списка и более старых элементов больше не будет
   const factory FeedState.idle({
     required final JobFilter filter,
-    @Default(<Job>[]) final List<Job> list,
-    @Default(false) final bool endOfList,
+    required final List<Job> list,
+    required final bool endOfList,
     @Default('Idle') final String message,
   }) = _IdleFeedState;
 
@@ -90,7 +90,7 @@ class FeedState with _$FeedState {
   const factory FeedState.successful({
     required final JobFilter filter,
     required final List<Job> list,
-    @Default(false) final bool endOfList,
+    required final bool endOfList,
     @Default('Successful') final String message,
   }) = _SuccessfulFeedState;
 
@@ -113,7 +113,11 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
   final IJobRepository _repository;
   FeedBLoC({
     required final IJobRepository repository,
-    final FeedState initialState = const FeedState.idle(filter: JobFilter()),
+    final FeedState initialState = const FeedState.idle(
+      filter: JobFilter(),
+      endOfList: false,
+      list: <Job>[],
+    ),
   })  : _repository = repository,
         super(initialState) {
     /// TODO: подписка на уведомления с сервера о новых элементах
@@ -141,6 +145,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     );
   }
 
+  // ignore: long-method
   Future<void> _fetchRecent(_FetchRecentFeedEvent event, Emitter<FeedState> emit) async {
     try {
       emit(event.inProgress(state: state));
@@ -148,18 +153,33 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       JobsChunk chunk;
       do {
         final updatedAfter = state.list.firstOrNull?.updated ?? DateTime.now().subtract(const Duration(days: 1));
+        final exclude = <int>[];
+        for (final job in state.list) {
+          if (!job.updated.isAtSameMomentAs(updatedAfter)) break;
+          exclude.add(job.id);
+        }
         chunk = await _repository
             .getRecent(
               updatedAfter: updatedAfter,
               filter: state.filter,
+              exclude: exclude,
             )
             .timeout(const Duration(seconds: 15));
 
-        // Список обновленных (их нужно исключить из предидущего состояния)
+        if (chunk.isEmpty) {
+          break;
+        }
+
+        // Список обновленных (их нужно исключить из пред идущего состояния)
         // тк они будут перемещены в начало ленты
         final idsForExclusion = List<int>.of(
           chunk
-              .where((e) => e.deletionMark || e.updated != e.created || e.updated == updatedAfter)
+              .where(
+                (e) =>
+                    e.deletionMark ||
+                    !e.updated.isAtSameMomentAs(e.created) ||
+                    e.updated.isAtSameMomentAs(updatedAfter),
+              )
               .map<int>((e) => e.id),
         );
         await Future<void>.delayed(Duration.zero);
@@ -174,7 +194,11 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
             );
 
         emit(event.inProgress(state: state, list: list));
-      } while (!chunk.endOfList);
+
+        // Считаю что это конец списка и больше не запрашиваю,
+        // если количество полученных меньше чем половина запрошенных
+        // этот допуск нужен для того, чтоб исключить "ошибочные записи"
+      } while (chunk.length > state.filter.limit ~/ 2);
       _lastFetchRecent = DateTime.now();
 
       emit(event.successful(state: state));
@@ -195,6 +219,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     }
   }
 
+  // ignore: long-method
   Future<void> _paginate(_PaginateFeedEvent event, Emitter<FeedState> emit) async {
     if (state.endOfList) {
       return;
@@ -208,15 +233,38 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       );
 
       final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
+      final exclude = <int>[];
+      for (final job in state.list.reversed) {
+        if (!job.updated.isAtSameMomentAs(updatedBefore)) break;
+        exclude.add(job.id);
+      }
       final chunk = await _repository
           .paginate(
             updatedBefore: updatedBefore,
             filter: state.filter,
+            exclude: exclude,
           )
           .timeout(const Duration(seconds: 15));
 
+      // break if empty
+      if (chunk.isEmpty) {
+        emit(
+          event.successful(
+            state: state,
+            endOfList: true,
+          ),
+        );
+        return;
+      }
+
       // Список более старых (если updatedBefore совпадает с updated исключаю из предидущего состояния эти id)
-      final idsForExclusion = List<int>.of(chunk.where((e) => e.updated == updatedBefore).map<int>((e) => e.id));
+      final idsForExclusion = List<int>.of(
+        chunk
+            .where(
+              (e) => e.updated.isAtSameMomentAs(updatedBefore),
+            )
+            .map<int>((e) => e.id),
+      );
       await Future<void>.delayed(Duration.zero);
 
       // Исключаю из исходной коллекции обновленные и удаленные
@@ -262,7 +310,10 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     // Если исходный список пуст - нечего проверять
     if (state.list.isEmpty) return;
     // Если список на исключение пуст - возвращаем исходную коллекцию
-    if (idsForExclusion.isEmpty) yield* Stream<Job>.fromIterable(state.list);
+    if (idsForExclusion.isEmpty) {
+      yield* Stream<Job>.fromIterable(state.list);
+      return;
+    }
     // Список идентификаторов на исключение
     final ids = List<int>.of(idsForExclusion);
     final sw = Stopwatch()..start();

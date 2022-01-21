@@ -10,6 +10,7 @@ abstract class IJobNetworkDataProvider {
   Future<JobsChunk> getRecent({
     required final DateTime updatedAfter,
     required final JobFilter filter,
+    required final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -17,6 +18,7 @@ abstract class IJobNetworkDataProvider {
   Future<JobsChunk> paginate({
     required final DateTime updatedBefore,
     required final JobFilter filter,
+    required final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -52,12 +54,17 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }) : _client = client;
 
   @override
-  Future<JobsChunk> getRecent({required DateTime updatedAfter, required JobFilter filter}) async {
+  Future<JobsChunk> getRecent({
+    required DateTime updatedAfter,
+    required JobFilter filter,
+    required final List<int> exclude,
+  }) async {
     final result = await _client.execute(
       FetchRecentQuery(
         variables: FetchRecentArguments(
           after: updatedAfter,
           limit: filter.limit,
+          exclude: exclude,
         ),
       ),
     );
@@ -103,12 +110,17 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }
 
   @override
-  Future<JobsChunk> paginate({required DateTime updatedBefore, required JobFilter filter}) async {
+  Future<JobsChunk> paginate({
+    required DateTime updatedBefore,
+    required JobFilter filter,
+    required final List<int> exclude,
+  }) async {
     final result = await _client.execute(
       PaginateQuery(
         variables: PaginateArguments(
           before: updatedBefore,
           limit: filter.limit,
+          exclude: exclude,
         ),
       ),
     );
@@ -150,7 +162,9 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
 
     return JobsChunk(
       jobs: jobs,
-      endOfList: jobs.isEmpty,
+      // Считаю что это конец списка, если количество полученных меньше чем половина запрошенных
+      // этот допуск нужен для того, чтоб исключить "ошибочные записи"
+      endOfList: jobs.length < filter.limit ~/ 2,
     );
   }
 

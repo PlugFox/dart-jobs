@@ -59,15 +59,31 @@ class _PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) => BlocBuilder<JobBLoC, JobState>(
         builder: (context, state) => state.maybeMap<Widget>(
           orElse: () => const SizedBox.shrink(),
-          idle: (state) => state.job.hasID
-              ? ElevatedButton(
-                  onPressed: () => _update(context),
-                  child: Text(context.localization.job_button_update),
-                )
-              : ElevatedButton(
-                  onPressed: () => _create(context),
-                  child: Text(context.localization.job_button_create),
-                ),
+          processed: (state) => ElevatedButton(
+            onPressed: null,
+            child: Text(context.localization.job_button_update),
+          ),
+          idle: (state) {
+            if (state.job.hasNotID) {
+              return ElevatedButton(
+                onPressed: () => _create(context),
+                child: Text(context.localization.job_button_create),
+              );
+            }
+            final allow = DateTime.now().difference(state.job.updated).inDays.abs() > 1;
+            if (allow) {
+              return ElevatedButton(
+                onPressed: () => _update(context),
+                child: Text(context.localization.job_button_update),
+              );
+            }
+            return ElevatedButton(
+              onPressed: null,
+              child: _AllowedCountdown(
+                updated: state.job.updated,
+              ),
+            );
+          },
         ),
       );
 
@@ -192,4 +208,46 @@ class _ButtonsBottomSheet extends StatelessWidget {
       ],
     );
   }
+}
+
+@immutable
+class _AllowedCountdown extends StatefulWidget {
+  const _AllowedCountdown({
+    required final this.updated,
+    Key? key,
+  }) : super(key: key);
+
+  final DateTime updated;
+
+  @override
+  State<_AllowedCountdown> createState() => _AllowedCountdownState();
+}
+
+class _AllowedCountdownState extends State<_AllowedCountdown> {
+  final Stream<void> _ticker = Stream<void>.periodic(const Duration(seconds: 1));
+
+  String get _countdown {
+    final now = DateTime.now();
+    final countdown = widget.updated.add(const Duration(days: 1)).difference(now);
+    if (countdown.inHours > 0) {
+      return '${countdown.inHours} ${context.localization.job_form_edit_countdown_hours}';
+    } else if (countdown.inMinutes > 0) {
+      return '${countdown.inMinutes} ${context.localization.job_form_edit_countdown_minutes}';
+    } else {
+      return '${countdown.inSeconds} ${context.localization.job_form_edit_countdown_seconds}';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => StreamBuilder(
+        initialData: null,
+        stream: _ticker,
+        builder: (context, snapshot) => Text(
+          '${context.localization.job_form_edit_countdown_available}\n'
+          '$_countdown',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+        ),
+      );
 }
