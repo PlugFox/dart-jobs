@@ -279,7 +279,7 @@ class _JobEditFormState extends State<JobEditForm> {
           error: _employmentsError,
         ),
 
-        /// Возможность релокации
+        /// Возможность ре локации
         JobRelocationInput(
           controller: _relocationController,
         ),

@@ -156,6 +156,7 @@ class AppRouter extends InheritedNotifier {
   static Future<T?> push<T extends Object?>(
     BuildContext context,
     WidgetBuilder builder, {
+    String? name,
     Object? arguments,
   }) {
     l.i('Перейдем на новый анонимный роут');
@@ -163,6 +164,7 @@ class AppRouter extends InheritedNotifier {
           MaterialPageRoute<T>(
             builder: builder,
             settings: RouteSettings(
+              name: name,
               arguments: arguments,
             ),
           ),

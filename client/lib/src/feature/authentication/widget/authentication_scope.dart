@@ -138,7 +138,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
   void _onStateChanged(final AuthenticationState state) => state.maybeMap<void>(
         orElse: () {},
         authenticated: (final state) {
-          final user = state.user;
+          //final user = state.user;
           Future<void>.delayed(
             const Duration(seconds: 1),
             () => _analytics?.logLogin(loginMethod: state.loginMethod),

@@ -1,5 +1,9 @@
 {
   "@@locale": "ru",
+  "language_code": "ru",
+  "@language_code": {
+    "description": "Код языка"
+  },
   "current_language": "Русский",
   "russian": "Русский",
   "english": "Английский",
@@ -119,9 +123,9 @@
   "@job_field_location_address": {
     "description": "Адрес"
   },
-  "job_field_description": "Описание",
+  "job_field_description": "Описание работы",
   "@job_field_description": {
-    "description": "Описание"
+    "description": "Описание работы"
   },
   "job_field_english_description": "Описание на английском",
   "@job_field_english_description": {
@@ -202,6 +206,10 @@
   "job_field_office": "Работа в офисе",
   "@job_field_office": {
     "description": "Работа в офисе"
+  },
+  "job_field_location": "Месторасположение работы",
+  "@job_field_location": {
+    "description": "Месторасположение работы"
   },
   "job_field_relocation": "Возможность релокации",
   "@job_field_relocation": {

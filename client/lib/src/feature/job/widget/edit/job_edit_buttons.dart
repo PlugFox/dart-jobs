@@ -2,9 +2,11 @@ import 'dart:math' as math;
 
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_bottom_sheet.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_edit_form.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/view/job_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -103,6 +105,18 @@ class _SecondaryButton extends StatelessWidget {
               Navigator.pop(context);
               FocusScope.of(context).unfocus();
             },
+            view: () {
+              FocusScope.of(context).unfocus();
+              final jobData = JobEditForm.getJobDataOrNull(context);
+              if (jobData == null) {
+                return;
+              }
+              final job = BlocProvider.of<JobBLoC>(context).state.job.copyWith(data: jobData);
+              AppRouter.push(
+                context,
+                (context) => JobView(job: job),
+              );
+            },
           ),
         ),
         style: ButtonStyle(
@@ -124,10 +138,12 @@ class _SecondaryButton extends StatelessWidget {
 class _ButtonsBottomSheet extends StatelessWidget {
   const _ButtonsBottomSheet({
     required final this.reset,
+    required final this.view,
     Key? key,
   }) : super(key: key);
 
   final VoidCallback reset;
+  final VoidCallback view;
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +169,9 @@ class _ButtonsBottomSheet extends StatelessWidget {
         /// Предварительный просмотр
         ListTile(
           contentPadding: contentPadding,
-          enabled: false,
+          enabled: true,
           title: Text(context.localization.job_button_preview),
-          onTap: null,
+          onTap: view,
         ),
 
         /// Поднять в выдаче
