@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_shared/model.dart';
@@ -46,9 +47,8 @@ class FeedState with _$FeedState {
 
   /// Выполняется запрос
   bool get isProcessed => maybeMap<bool>(
-        orElse: () => false,
-        pagination: (_) => true,
-        fetchingRecent: (_) => true,
+        orElse: () => true,
+        idle: (_) => false,
       );
 
   /// Выполняется обработка/загрузка ленты старых записей
@@ -132,11 +132,12 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
       },
     );
     on<FeedEvent>(
-      (event, emit) => event.map<void>(
+      (event, emit) => event.map<Future<void>>(
         fetchRecent: (event) => _fetchRecent(event, emit),
         paginate: (event) => _paginate(event, emit),
         setFilter: (event) => _setFilter(event, emit),
       ),
+      transformer: bloc_concurrency.sequential<FeedEvent>(),
     );
   }
 
@@ -253,7 +254,8 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
     }
   }
 
-  void _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) => emit(event.setNewFilter(state: state));
+  Future<void> _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) =>
+      Future<void>(() => emit(event.setNewFilter(state: state)));
 
   /// Исключаю из исходной коллекции элементы
   Stream<Job> _reducedStateList(List<int> idsForExclusion) async* {
@@ -362,7 +364,7 @@ mixin _PaginationStateEmitter on FeedEvent {
     final bool? endOfList,
     final String? message,
   }) =>
-      FeedState.fetchingRecent(
+      FeedState.pagination(
         filter: state.filter,
         list: list ?? state.list,
         endOfList: endOfList ?? state.endOfList,

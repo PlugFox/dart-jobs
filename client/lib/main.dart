@@ -41,7 +41,6 @@ void _wrapSentry(AppRunner appRunner) => runZonedGuarded<Future<void>>(
             ..attachStacktrace = true
             ..tracesSampleRate = 1
             ..debug = false,
-          //..debug = platform.when<bool>(debug: () => true, release: () => false, profile: () => true) ?? false,
         );
         _loggerToSentryBreadcrumb();
         appRunner();

@@ -24,7 +24,7 @@ format:
 	@dart format -l 120 --fix .
 
 get:
-	@echo "Geting dependencies"
+	@echo "Getting dependencies"
 	@flutter pub get
 
 upgrade: get

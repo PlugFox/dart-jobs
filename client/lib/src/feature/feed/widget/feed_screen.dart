@@ -37,7 +37,7 @@ class _FeedScrollable extends StatefulWidget {
 class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   // ignore: close_sinks
   FeedBLoC? _bloc;
-  final ScrollController controller = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   // ignore: prefer_final_fields
   double _screenHeight = 0;
   ModalObserver? _routeObserver;
@@ -46,7 +46,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   @override
   void initState() {
     super.initState();
-    controller.addListener(_checkPagination);
+    _scrollController.addListener(_checkPagination);
     _bloc = BlocProvider.of<FeedBLoC>(context, listen: false)..add(const FeedEvent.paginate());
   }
 
@@ -81,7 +81,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   @override
   void dispose() {
     _routeObserver?.unsubscribe(this);
-    controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
   //endregion
@@ -90,19 +90,21 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   /// При изменении высоты экрана
   /// При окончании загрузки очередной порции
   void _checkPagination() {
-    if (_bloc?.state.isProcessed ?? false) {
-      // Блок уже в состоянии "запроса" - игнорируем проверку на запрос очередной порции
+    final state = _bloc?.state;
+    if (state == null || state.isProcessed || state.endOfList) {
+      // Блок уже в состоянии "запроса" или конец списка достигнут - игнорируем проверку на запрос очередной порции
       return;
     }
     final screenHeight = _screenHeight;
     var triggerFetchMoreSize = .0;
     try {
-      triggerFetchMoreSize = controller.position.maxScrollExtent - screenHeight;
+      triggerFetchMoreSize = _scrollController.position.maxScrollExtent - screenHeight;
     } on Object catch (err) {
       l.w('Не могу высчитать triggerFetchMoreSize: $err');
     }
-    if (controller.position.pixels < triggerFetchMoreSize) return;
+    if (_scrollController.position.pixels < triggerFetchMoreSize) return;
     // Загрузить еще контента на 5 экранов в высоту
+    l.v6('Загрузить еще контента на 5 экранов в высоту');
     FeedScope.paginateOf(context, count: math.max(math.min((screenHeight * 5) ~/ FeedTile.height, 100), 25));
   }
 
@@ -116,7 +118,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
         child: CustomScrollViewSmooth(
           physics: const BouncingScrollPhysics(),
           scrollBehavior: const _FeedListScrollBehavior(),
-          controller: controller,
+          controller: _scrollController,
           slivers: const <Widget>[
             /// Шапка с поиском
             FeedBar(),
