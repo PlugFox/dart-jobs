@@ -6,6 +6,7 @@ import 'package:dart_jobs_client/src/feature/initialization/widget/repository_sc
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/edit/job_edit_flow.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_not_found.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/view/job_view.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,8 +73,10 @@ class _JobScreen extends StatelessWidget {
           }
 
           /// TODO: Hero анимация
-          return const Placeholder(
-            color: Colors.red,
+          return BlocBuilder<JobBLoC, JobState>(
+            builder: (context, state) => JobView(
+              job: state.job,
+            ),
           );
         },
       );
