@@ -37,7 +37,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
       color: Colors.blue,
       theme: themeData,
       onGenerateTitle: (final context) => context.localization.title,
-      restorationScopeId: 'router',
+      restorationScopeId: 'app',
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
       routeInformationProvider: _routeInformationProvider,

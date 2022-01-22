@@ -1,7 +1,7 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.1.0+1634411913
+version: 0.4.0-alfa+1642847244
 
 environment:
   sdk: ">=2.15.1"
@@ -88,6 +88,7 @@ dev_dependencies:
   flutter_gen_runner: ^4.0.1
   args: ^2.0.0
   #pigeon: ^0.3.0
+  pub_semver: ^2.1.0
 
 #dependency_overrides:
   #analyzer: ^2.7.0

@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
 
+import 'package:pub_semver/pub_semver.dart' as semver;
+
 final io.File pubspecSource = io.File('pubspec.yaml');
 final io.File pubspecNew = io.File('pubspec.yaml.tmp');
 final io.File versionEnv = io.File('version.env');
 
+// ignore: long-method
 void main() => runZonedGuarded<void>(
       () async {
         await prepare();
@@ -21,12 +24,21 @@ void main() => runZonedGuarded<void>(
               .transform<String>(const LineSplitter())
               .asyncMap<String>((final line) async {
                 if (notFound & line.startsWith('version:')) {
-                  final buildName = line.substring(8).split('+').first.trim(); // 1.2.3
-                  final buildNumber = DateTime.now().millisecondsSinceEpoch ~/ 1000; // 4
-                  final version = '$buildName+$buildNumber'; // 1.2.3+4
+                  // https://ihateregex.io/expr/semver/
+                  final source = semver.Version.parse(line.substring(8).trim());
+                  final buildName = '${source.major}.${source.minor}.${source.patch}';
+                  final buildNumber = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+                  final preRelease = source.preRelease.join('-');
+                  final version = '$buildName${preRelease.isEmpty ? '' : '-$preRelease'}+$buildNumber'; // 1.2.3+4-alfa
                   io.stdout.writeln('Version: $version');
                   await versionEnv.writeAsString(
-                    'VERSION=$version\r\nBUILD_NAME=$buildName\r\nBUILD_NUMBER=$buildNumber',
+                    'VERSION=$version\r\n'
+                    'VERSION_MAJOR=${source.major}\r\n'
+                    'VERSION_MINOR=${source.minor}\r\n'
+                    'VERSION_PATCH=${source.patch}\r\n'
+                    'VERSION_BUILD_NAME=$buildName\r\n'
+                    'VERSION_PRE_RELEASE=$preRelease\r\n'
+                    'VERSION_BUILD_NUMBER=$buildNumber\r\n',
                   );
                   notFound = false;
 

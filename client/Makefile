@@ -40,6 +40,7 @@ outdated:
 
 codegen: get
 	@echo "Running codegeneration"
+	@dart .\tools\set_version.dart
 	@flutter pub run build_runner build --delete-conflicting-outputs --release
 	@flutter pub global activate intl_utils
 	@flutter pub global run intl_utils:generate
