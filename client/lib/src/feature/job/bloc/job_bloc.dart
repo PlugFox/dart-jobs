@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
@@ -137,6 +138,7 @@ class JobBLoC extends Bloc<JobEvent, JobState> {
         update: (event) => _update(event, emit),
         delete: (event) => _delete(event, emit),
       ),
+      transformer: bloc_concurrency.sequential(),
     );
   }
 

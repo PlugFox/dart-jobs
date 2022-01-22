@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
+import 'package:dart_jobs_client/src/common/bloc/bloc_set_state_mixin.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -57,8 +59,8 @@ class AuthenticationState with _$AuthenticationState {
       );
 }
 
-class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> {
-
+class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState>
+    with SetStateMixin<AuthenticationState> {
   AuthenticationBLoC({
     required final IAuthenticationRepository authenticationRepository,
     final AuthenticationState? initialState,
@@ -66,10 +68,15 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
         super(initialState ?? AuthenticationState.fromUser(authenticationRepository.currentUser)) {
     _authStateChangesSubscription = authenticationRepository.authStateChanges
         .map<AuthenticationState>(AuthenticationState.fromUser)
-        // ignore: invalid_use_of_visible_for_testing_member
-        .listen(emit, cancelOnError: false);
-    on<_SignInWithGoogleEvent>((event, emit) => _signInWithGoogle(emit));
-    on<_LogOutEvent>((event, emit) => _logOut(emit));
+        .listen(setState, cancelOnError: false);
+    on<_SignInWithGoogleEvent>(
+      (event, emit) => _signInWithGoogle(emit),
+      transformer: bloc_concurrency.droppable(),
+    );
+    on<_LogOutEvent>(
+      (event, emit) => _logOut(emit),
+      transformer: bloc_concurrency.droppable(),
+    );
   }
 
   final IAuthenticationRepository _authenticationRepository;
