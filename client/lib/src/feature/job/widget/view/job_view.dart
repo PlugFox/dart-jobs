@@ -176,7 +176,7 @@ class _JobViewHeader extends StatelessWidget {
         );
 
     if (employments.length == 1) return representation(employments.first);
-    return employments.map<String>(representation).join(', ');
+    return employments.map<String>(representation).join(' \u2022 ');
   }
 
   String _levelRepresentation(BuildContext context) {
@@ -195,7 +195,7 @@ class _JobViewHeader extends StatelessWidget {
     if (levels.length == 1) return representation(levels.first);
     levels.sort((a, b) => a.value.compareTo(b.value));
     if (levels.length < 5) {
-      return levels.map<String>(representation).join(', ');
+      return levels.map<String>(representation).join(' \u2022 ');
     }
     return '${representation(levels.first)} - ${representation(levels.last)}';
   }
