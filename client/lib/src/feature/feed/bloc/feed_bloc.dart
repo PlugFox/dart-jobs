@@ -276,6 +276,8 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
             ],
           );
 
+      await Future<void>.delayed(const Duration(seconds: 10));
+
       emit(
         event.successful(
           state: state,

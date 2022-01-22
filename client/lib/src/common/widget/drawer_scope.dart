@@ -165,16 +165,14 @@ class AppDrawer extends StatelessWidget {
             const _DrawerHeader(),
             Expanded(
               child: ListView(
+                padding: EdgeInsets.zero,
                 physics: const BouncingScrollPhysics(),
-                itemExtent: 48,
+                itemExtent: 56,
                 children: <Widget>[
-                  ListTile(
-                    leading: const Icon(Icons.account_circle),
-                    title: Text(
-                      context.localization.profile,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  _DrawerTile(
+                    icon: Icons.account_circle,
+                    title: context.localization.profile,
+                    shouldBeDisabled: (location) => location.endsWith('profile'),
                     onTap: () {
                       final router = AppRouter.of(context);
                       AuthenticationScope.authenticateOr(
@@ -185,25 +183,19 @@ class AppDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: Text(
-                      context.localization.settings,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  _DrawerTile(
+                    icon: Icons.settings,
+                    title: context.localization.settings,
+                    shouldBeDisabled: (location) => location.endsWith('settings'),
                     onTap: () => AppRouter.navigate(
                       context,
                       (configuration) => const SettingsRouteConfiguration(),
                     ),
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.create),
-                    title: Text(
-                      context.localization.create_new_job,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  _DrawerTile(
+                    icon: Icons.create,
+                    title: context.localization.create_new_job,
+                    shouldBeDisabled: (location) => location.endsWith('job'),
                     onTap: () {
                       final router = AppRouter.of(context);
                       AuthenticationScope.authenticateOr(
@@ -214,37 +206,21 @@ class AppDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  Opacity(
-                    opacity: .5,
-                    child: ListTile(
-                      leading: const Icon(Icons.favorite),
-                      title: Text(
-                        context.localization.favorite,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: null,
-                    ),
+                  // Избранные
+                  _DrawerTile(
+                    icon: Icons.favorite,
+                    title: context.localization.favorite,
+                    onTap: null,
                   ),
-                  Opacity(
-                    opacity: .5,
-                    child: ListTile(
-                      leading: const Icon(Icons.bug_report),
-                      title: Text(
-                        context.localization.send_bug_report,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: null,
-                    ),
+                  // Отправить баг репорт
+                  _DrawerTile(
+                    icon: Icons.bug_report,
+                    title: context.localization.send_bug_report,
+                    onTap: null,
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.info),
-                    title: Text(
-                      context.localization.licenses,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  _DrawerTile(
+                    icon: Icons.info,
+                    title: context.localization.licenses,
                     onTap: () => AppRouter.showLicensePageOf(context),
                   ),
                   const LoginOrLogoutTile(),
@@ -291,6 +267,45 @@ class AppDrawer extends StatelessWidget {
           ],
         ),
       );
+}
+
+class _DrawerTile extends StatelessWidget {
+  const _DrawerTile({
+    required final this.icon,
+    required final this.title,
+    required final this.onTap,
+    final this.shouldBeDisabled,
+    Key? key,
+  }) : super(key: key);
+
+  final IconData icon;
+  final String title;
+  final VoidCallback? onTap;
+  final bool Function(String location)? shouldBeDisabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final router = AppRouter.routerOf(context);
+    return AnimatedBuilder(
+      animation: router,
+      builder: (context, child) {
+        final isDisabled = (shouldBeDisabled?.call(router.currentConfiguration.location) ?? false) || onTap == null;
+        return Opacity(
+          opacity: isDisabled ? .5 : 1,
+          child: ListTile(
+            leading: Icon(icon),
+            title: child,
+            onTap: isDisabled ? null : onTap,
+          ),
+        );
+      },
+      child: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
 }
 
 @immutable

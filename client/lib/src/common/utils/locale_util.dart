@@ -1,4 +1,5 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
@@ -14,7 +15,8 @@ abstract class LocaleUtil {
     final dt = dateTime.toLocal();
     final now = DateTime.now();
     if (dt.day == now.day) {
-      return (_dateFormat['${languageCode}_hms'] ??= DateFormat.Hms()).format(dt);
+      // (_dateFormat['${languageCode}_hms'] ??= DateFormat.Hms()).format(dt)
+      return TimeOfDay.fromDateTime(dateTime).format(context);
     }
     return (_dateFormat['${languageCode}_yMMMMd'] ??= DateFormat.yMMMMd()).format(dt);
   }
