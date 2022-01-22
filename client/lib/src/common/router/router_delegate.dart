@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_mixin, avoid_types_on_closure_parameters
+import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
 import 'package:dart_jobs_client/src/common/router/analytics_navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
@@ -42,29 +43,33 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
         child: DrawerScope(
           child: PagesBuilder(
             configuration: configuration,
-            builder: (context, pages, child) => Navigator(
-              /// TODO: возможность отключать анимации через настройки
-              /// не только для транзишенов роутов, но и целиком для MaterialApp
-              //transitionDelegate: platform.when<TransitionDelegate<void>>(
-              //      web: () => const NoAnimationTransitionDelegate(),
-              //    ) ??
-              //    const DefaultTransitionDelegate<void>(),
-              onUnknownRoute: _onUnknownRoute,
-              reportsRouteUpdateToEngine: true,
-              observers: <NavigatorObserver>[
-                pageObserver,
-                modalObserver,
-                if (analytics != null) AnalyticsNavigatorObserver(analytics: analytics),
-                SentryNavigatorObserver(),
-              ],
-              pages: pages,
-              onPopPage: (Route<Object?> route, Object? result) {
-                if (!route.didPop(result)) {
-                  return false;
-                }
-                setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
-                return true;
-              },
+            builder: (context, pages, child) => Banner(
+              message: '${pubspec.major}.${pubspec.minor}.${pubspec.patch}-alfa',
+              location: BannerLocation.topEnd,
+              child: Navigator(
+                /// TODO: возможность отключать анимации через настройки
+                /// не только для транзишенов роутов, но и целиком для MaterialApp
+                //transitionDelegate: platform.when<TransitionDelegate<void>>(
+                //      web: () => const NoAnimationTransitionDelegate(),
+                //    ) ??
+                //    const DefaultTransitionDelegate<void>(),
+                onUnknownRoute: _onUnknownRoute,
+                reportsRouteUpdateToEngine: true,
+                observers: <NavigatorObserver>[
+                  pageObserver,
+                  modalObserver,
+                  if (analytics != null) AnalyticsNavigatorObserver(analytics: analytics),
+                  SentryNavigatorObserver(),
+                ],
+                pages: pages,
+                onPopPage: (Route<Object?> route, Object? result) {
+                  if (!route.didPop(result)) {
+                    return false;
+                  }
+                  setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
+                  return true;
+                },
+              ),
             ),
           ),
         ),

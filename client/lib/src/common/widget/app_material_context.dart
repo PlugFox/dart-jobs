@@ -35,6 +35,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
     final themeData = SettingsScope.themeOf(context);
     return MaterialApp.router(
       color: Colors.blue,
+      debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateTitle: (final context) => context.localization.title,
       restorationScopeId: 'app',

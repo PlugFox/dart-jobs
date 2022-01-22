@@ -1,7 +1,7 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.4.0-alfa+1642847244
+version: 0.4.0+1642864585
 
 environment:
   sdk: ">=2.15.1"
