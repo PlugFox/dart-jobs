@@ -242,7 +242,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     await Future<void>.delayed(Duration.zero);
     final job = result.data?.jobByPk;
-    if (job == null) {
+    if (result.hasErrors || job == null) {
       throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
     }
     return Job(

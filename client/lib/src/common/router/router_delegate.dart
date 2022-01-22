@@ -43,6 +43,8 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
           child: PagesBuilder(
             configuration: configuration,
             builder: (context, pages, child) => Navigator(
+              /// TODO: возможность отключать анимации через настройки
+              /// не только для транзишенов роутов, но и целиком для MaterialApp
               //transitionDelegate: platform.when<TransitionDelegate<void>>(
               //      web: () => const NoAnimationTransitionDelegate(),
               //    ) ??
