@@ -275,9 +275,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> {
               ...chunk.where((e) => !e.deletionMark),
             ],
           );
-
-      await Future<void>.delayed(const Duration(seconds: 10));
-
+      //await Future<void>.delayed(const Duration(seconds: 10));
       emit(
         event.successful(
           state: state,

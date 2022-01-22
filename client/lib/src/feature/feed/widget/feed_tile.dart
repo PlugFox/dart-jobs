@@ -66,87 +66,15 @@ class _JobFeedTile extends FeedTile {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-    return Center(
-      child: SizedBox.fromSize(
-        size: FeedTile._preferredSize,
-        child: Card(
-          color: themeData.cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 1,
-          child: InkWell(
-            onTap: () => _onTap(context),
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 8,
-                top: 10,
-                right: 8,
-                bottom: 6,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          // Title (Job title)
-                          _FeedTitle(job.data.title),
-                          // Company
-                          _FeedText(job.data.company),
-                          // County, Address
-                          _FeedText('${Country.byCode(job.data.country).title} '),
-                          // Location
-                          _FeedText(_locationRepresentation(context)),
-                          // Level
-                          _FeedText(_levelRepresentation(context)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Divider
-                  const Divider(
-                    height: 12,
-                    thickness: 1,
-                  ),
-                  // Status bar
-                  SizedBox(
-                    height: 12,
-                    child: DefaultTextStyle(
-                      style: themeData.textTheme.overline!.copyWith(
-                        fontSize: 10,
-                        height: 1,
-                        color: themeData.hintColor,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          const SizedBox(width: 8),
-                          _FeedTileFooterDate(job.updated),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => _JobFeedTileContent(
+        onTap: () => _onTap(context),
+        title: _FeedTitle(job.data.title),
+        company: _FeedText(job.data.company),
+        country: _FeedText(Country.byCode(job.data.country).title),
+        location: _FeedText(_locationRepresentation(context)),
+        level: _FeedText(_levelRepresentation(context)),
+        updated: _FeedTileFooterDate(job.updated),
+      );
 
   String _locationRepresentation(BuildContext context) =>
       '${job.data.remote ? context.localization.job_field_remote : context.localization.job_field_office} '
@@ -186,7 +114,15 @@ class _LoadingFeedTile extends FeedTile {
   }) : super._(key: key);
 
   @override
-  Widget build(BuildContext context) => const Placeholder();
+  Widget build(BuildContext context) => const _JobFeedTileContent(
+        onTap: null,
+        title: _FeedTitle.skeleton(),
+        company: _FeedText.skeleton(),
+        country: _FeedText.skeleton(),
+        location: _FeedText.skeleton(),
+        level: _FeedText.skeleton(),
+        updated: _FeedTileFooterDate.skeleton(),
+      );
 }
 
 @immutable
@@ -222,6 +158,114 @@ class _FeedTitle extends StatelessWidget {
                 ),
               ),
       );
+}
+
+@immutable
+class _JobFeedTileContent extends StatelessWidget {
+  const _JobFeedTileContent({
+    required final this.title,
+    required final this.company,
+    required final this.country,
+    required final this.location,
+    required final this.level,
+    required final this.updated,
+    final this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  final VoidCallback? onTap;
+  final Widget title;
+  final Widget company;
+  final Widget country;
+  final Widget location;
+  final Widget level;
+  final Widget updated;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    return Center(
+      child: SizedBox.fromSize(
+        size: FeedTile._preferredSize,
+        child: Opacity(
+          opacity: onTap == null ? .5 : 1,
+          child: Card(
+            color: themeData.cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 1,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  top: 10,
+                  right: 8,
+                  bottom: 6,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            // Title (Job title)
+                            title,
+                            // Company
+                            company,
+                            // County, Address
+                            country,
+                            // Location
+                            location,
+                            // Level
+                            level,
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Divider
+                    const Divider(
+                      height: 12,
+                      thickness: 1,
+                    ),
+                    // Status bar
+                    SizedBox(
+                      height: 12,
+                      child: DefaultTextStyle(
+                        style: themeData.textTheme.overline!.copyWith(
+                          fontSize: 10,
+                          height: 1,
+                          color: themeData.hintColor,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            const SizedBox(width: 8),
+                            updated,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 @immutable
