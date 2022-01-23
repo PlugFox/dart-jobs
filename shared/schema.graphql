@@ -122,6 +122,36 @@ type query_root {
         "Идентификатор элемента"
         id: Int!
     ): job
+    "execute function \"job_paginate\" which returns \"job\""
+    job_paginate(
+        "input parameters for function \"job_paginate\""
+        args: job_paginate_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "execute function \"job_recent\" which returns \"job\""
+    job_recent(
+        "input parameters for function \"job_recent\""
+        args: job_recent_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
 }
 
 type subscription_root {
@@ -143,6 +173,36 @@ type subscription_root {
         "Идентификатор элемента"
         id: Int!
     ): job
+    "execute function \"job_paginate\" which returns \"job\""
+    job_paginate(
+        "input parameters for function \"job_paginate\""
+        args: job_paginate_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "execute function \"job_recent\" which returns \"job\""
+    job_recent(
+        "input parameters for function \"job_recent\""
+        args: job_recent_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
 }
 
 "unique or primary key constraints on table \"job\""
@@ -249,11 +309,17 @@ enum order_by {
 
 scalar _employment
 
+scalar _int4
+
 scalar _level
 
 scalar _text
 
 scalar bpchar
+
+scalar employment
+
+scalar level
 
 scalar relocation
 
@@ -484,10 +550,32 @@ input job_order_by {
     updated: order_by
 }
 
+input job_paginate_args {
+    filter_before: timestamp
+    filter_country: String
+    filter_employment: employment
+    filter_exclude: _int4
+    filter_level: level
+    filter_limit: Int
+    filter_relocation: relocation
+    filter_remote: Boolean
+}
+
 "primary key columns input for table: job"
 input job_pk_columns_input {
     "Идентификатор элемента"
     id: Int!
+}
+
+input job_recent_args {
+    filter_after: timestamp
+    filter_country: String
+    filter_employment: employment
+    filter_exclude: _int4
+    filter_level: level
+    filter_limit: Int
+    filter_relocation: relocation
+    filter_remote: Boolean
 }
 
 "input type for updating data in table \"job\""
