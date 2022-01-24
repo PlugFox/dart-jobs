@@ -82,5 +82,5 @@ class SettingsRepository implements ISettingsRepository {
   }
 
   Future<void> _updateRemote(final AuthenticatedUser user, final UserSettings settings) =>
-      _getSettingsDocumentRef(user).set(settings.toJson());
+      _getSettingsDocumentRef(user).set(settings.toJson(), SetOptions(merge: false));
 }

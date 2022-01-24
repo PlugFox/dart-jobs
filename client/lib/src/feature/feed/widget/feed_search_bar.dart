@@ -1,6 +1,9 @@
+import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_filter_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class FeedSearchBar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,20 +19,23 @@ class FeedSearchBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(final BuildContext context) => SizedBox.fromSize(
         size: searchBarSize,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
           child: Center(
             child: FocusScope(
-              child: Row(
+              child: SizedBox(height: kToolbarHeight - 8, child: _FilterButton()),
+              /*
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: const <Widget>[
+                  Expanded(child: SizedBox(height: kToolbarHeight - 8, child: _FilterButton())),
                   SizedBox.square(dimension: kToolbarHeight - 8, child: _FilterButton()),
-                  SizedBox(width: 3),
                   Expanded(child: _SearchBar()),
                   SizedBox(width: 3),
                   SizedBox.square(dimension: kToolbarHeight - 8, child: _SearchButton()),
                 ],
               ),
+              */
             ),
           ),
         ),
@@ -43,43 +49,84 @@ class _FilterButton extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => OutlinedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          AppRouter.showBottomSheet(
-            context: context,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return OutlinedButton(
+      onPressed: () {
+        FocusScope.of(context).unfocus();
+        AppRouter.showBottomSheet(
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(10),
+            ),
+          ),
+          builder: (_) => const FeedFilterBottomSheet(),
+        );
+        //Navigator.of(context, rootNavigator: false).push<void>(FeedFilterPageRoute());
+      },
+      style: OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(3),
+            topRight: Radius.circular(9),
+            bottomRight: Radius.circular(3),
+            bottomLeft: Radius.circular(9),
+          ),
+        ),
+        alignment: Alignment.center,
+        primary: theme.splashColor,
+        //padding: EdgeInsets.zero,
+        //fixedSize: Size(double.infinity, kToolbarHeight - 8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          SizedBox.square(
+            dimension: 28,
+            child: Icon(
+              Icons.filter_alt,
+              size: 28,
+              color: theme.primaryIconTheme.color,
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                context.localization.filter,
+                style: theme.primaryTextTheme.button?.copyWith(
+                  fontSize: 18,
+                  letterSpacing: 1.5,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            builder: (_) => const FeedFilterBottomSheet(),
-          );
-          //Navigator.of(context, rootNavigator: false).push<void>(FeedFilterPageRoute());
-        },
-        style: OutlinedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(8),
-              right: Radius.circular(3),
+          ),
+          SizedBox.square(
+            dimension: 28,
+            child: CircleAvatar(
+              child: BlocBuilder<FeedBLoC, FeedState>(
+                buildWhen: (prev, next) => !next.isProcessed,
+                builder: (context, state) => Text(
+                  state.filter.count.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.center,
+                  style: theme.primaryTextTheme.button?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ),
-          alignment: Alignment.center,
-          primary: Theme.of(context).splashColor,
-          padding: EdgeInsets.zero,
-          fixedSize: const Size.square(kToolbarHeight - 8),
-        ),
-        child: SizedBox.square(
-          dimension: 24,
-          child: Icon(
-            Icons.filter_alt,
-            size: 24,
-            color: Theme.of(context).primaryIconTheme.color,
-          ),
-        ),
-      );
+        ],
+      ),
+    );
+  }
 }
 
+/*
 @immutable
 class _SearchBar extends StatelessWidget {
   const _SearchBar({
@@ -162,3 +209,4 @@ class _SearchButton extends StatelessWidget {
         ),
       );
 }
+*/

@@ -107,6 +107,10 @@
   "@favorite": {
     "description": "Избранное"
   },
+  "filter": "Filter",
+  "@filter": {
+    "description": "Отбор"
+  },
   "job_field_title": "Job Title",
   "@job_field_title": {
     "description": "Заголовок работы"

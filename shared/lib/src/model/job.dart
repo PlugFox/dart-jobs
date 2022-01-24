@@ -340,4 +340,15 @@ class JobFilter with _$JobFilter {
         'employment': employment,
         'relocation': relocation,
       };
+
+  /// Количество включенных фильтров
+  int get count {
+    var i = 0;
+    remote.nullOr((_) => i++);
+    country.nullOr((_) => i++);
+    level.nullOr((_) => i++);
+    employment.nullOr((_) => i++);
+    relocation.nullOr((_) => i++);
+    return i;
+  }
 }
