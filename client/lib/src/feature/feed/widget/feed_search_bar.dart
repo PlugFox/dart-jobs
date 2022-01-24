@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
@@ -23,7 +24,7 @@ class FeedSearchBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
           child: Center(
             child: FocusScope(
-              child: SizedBox(height: kToolbarHeight - 8, child: _FilterButton()),
+              child: SizedBox(height: kToolbarHeight - 8, width: kBodyWidth, child: _FilterButton()),
               /*
               Row(
                 mainAxisSize: MainAxisSize.min,
