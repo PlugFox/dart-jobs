@@ -393,9 +393,8 @@ PaginateArguments _$PaginateArgumentsFromJson(Map<String, dynamic> json) =>
       exclude: fromGraphQL$int4ToDartListint(json['exclude'] as Object),
       remote: json['remote'] as bool?,
       country: json['country'] as String?,
-      level: json['level'] == null
-          ? null
-          : DeveloperLevel.fromJson(json['level'] as Map<String, dynamic>),
+      level: fromGraphQLLevelNullableToDartDeveloperLevelNullable(
+          json['level'] as String?),
       employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
           json['employment'] as String?),
       relocation: fromGraphQLRelocationNullableToDartRelocationNullable(
@@ -436,9 +435,8 @@ RecentArguments _$RecentArgumentsFromJson(Map<String, dynamic> json) =>
       exclude: fromGraphQL$int4ToDartListint(json['exclude'] as Object),
       remote: json['remote'] as bool?,
       country: json['country'] as String?,
-      level: json['level'] == null
-          ? null
-          : DeveloperLevel.fromJson(json['level'] as Map<String, dynamic>),
+      level: fromGraphQLLevelNullableToDartDeveloperLevelNullable(
+          json['level'] as String?),
       employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
           json['employment'] as String?),
       relocation: fromGraphQLRelocationNullableToDartRelocationNullable(
