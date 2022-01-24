@@ -21,7 +21,7 @@ class JobRemoteInput extends StatelessWidget {
             builder: (context, value, child) => LayoutBuilder(
               builder: (context, constraints) => ToggleButtons(
                 constraints: BoxConstraints(
-                  minWidth: math.min(constraints.maxWidth, 150),
+                  minWidth: math.min(constraints.maxWidth / 3, 150),
                   minHeight: 45,
                   maxHeight: 45,
                 ),

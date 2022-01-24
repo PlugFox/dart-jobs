@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IJobRepository {
   /// Получить новую, пустую работу с идентификатором текущего пользователя
@@ -40,17 +43,36 @@ abstract class IJobRepository {
 
   /// Удалить работу по идентификатору
   Future<Job> deleteJob({required final Job job});
+
+  /// Запомнить фильтр
+  Future<void> saveFilter(JobFilter filter);
+
+  /// Восстановить фильтр
+  Future<JobFilter> restoreFilter();
+
+  /// Последний сохранненый фильтр
+  JobFilter get filter;
 }
 
 class JobRepositoryImpl implements IJobRepository {
-  final IJobNetworkDataProvider _networkDataProvider;
-  final FirebaseAuth _firebaseAuth;
-
   JobRepositoryImpl({
     required final IJobNetworkDataProvider networkDataProvider,
     required final FirebaseAuth firebaseAuth,
+    required final FirebaseFirestore firestore,
+    required final SharedPreferences sharedPreferences,
   })  : _networkDataProvider = networkDataProvider,
-        _firebaseAuth = firebaseAuth;
+        _firebaseAuth = firebaseAuth,
+        _firestore = firestore,
+        _sharedPreferences = sharedPreferences;
+
+  final IJobNetworkDataProvider _networkDataProvider;
+  final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore;
+  final SharedPreferences _sharedPreferences;
+
+  @override
+  JobFilter get filter => _filter;
+  JobFilter _filter = const JobFilter();
 
   @override
   Job getNewJobTemplate() => Job(
@@ -136,5 +158,40 @@ class JobRepositoryImpl implements IJobRepository {
       throw NotAuthorized(StackTrace.current, 'Token not received');
     }
     return _networkDataProvider.deleteJob(job: job, idToken: idToken);
+  }
+
+  @override
+  Future<JobFilter> restoreFilter() async {
+    final user = _firebaseAuth.currentUser;
+    JobFilter? filter;
+    if (user != null) {
+      final doc = _firestore.collection('users').doc(user.uid).collection('feed').doc('filter');
+      final snapshot = await doc.get();
+      final json = snapshot.data();
+      if (json != null) {
+        filter = JobFilter.fromJson(json);
+      }
+    }
+    if (filter == null) {
+      final jsonRaw = _sharedPreferences.getString('feed.filter');
+      if (jsonRaw != null) {
+        final json = jsonDecode(jsonRaw) as Map<String, Object?>;
+        filter = JobFilter.fromJson(json);
+      }
+    }
+    return _filter = filter ?? const JobFilter();
+  }
+
+  @override
+  Future<void> saveFilter(JobFilter filter) async {
+    _filter = filter;
+    final user = _firebaseAuth.currentUser;
+    final json = filter.toJson();
+    if (user != null) {
+      final doc = _firestore.collection('users').doc(user.uid).collection('feed').doc('filter');
+      await doc.set(json, SetOptions(merge: false));
+    }
+    final jsonRaw = jsonEncode(json);
+    await _sharedPreferences.setString('feed.filter', jsonRaw);
   }
 }

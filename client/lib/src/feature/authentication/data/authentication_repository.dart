@@ -33,9 +33,10 @@ class AuthenticationRepository implements IAuthenticationRepository {
       //_firebaseAuth.currentUser?.getIdToken();
       l.vvvv('Начат процесс аутентификации в гугле');
       return platform.when<Future<UserEntity>>(
-        io: _signInWithGoogleIO,
-        orElse: _signInWithGoogleWeb,
-      )!;
+            io: _signInWithGoogleIO,
+            orElse: _signInWithGoogleWeb,
+          ) ??
+          Future<UserEntity>.value(const UserEntity.notAuthenticated());
     } on Object catch (e) {
       l.w('Произошла ошибка аутентификации в гугле: ${e.toString()}');
       rethrow;

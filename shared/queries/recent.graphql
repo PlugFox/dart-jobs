@@ -1,5 +1,5 @@
-query Paginate(
-    $before: timestamp!,
+query Recent(
+    $after: timestamp!,
     $exclude: _int4!,
     $remote: Boolean,
     $country: String,
@@ -8,9 +8,9 @@ query Paginate(
     $relocation: Boolean,
     $limit: Int! = 100
 ) {
-    job_paginate(
+    job_recent(
         args: {
-            filter_before: $before,
+            filter_after: $after,
             filter_limit: $limit,
             filter_exclude: $exclude,
             filter_remote: $remote,

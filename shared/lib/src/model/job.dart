@@ -312,12 +312,43 @@ class JobFilter with _$JobFilter {
     /// Ожидаемое количество
     /// Если не указано - 100
     @JsonKey(name: 'limit') @Default(100) final int limit,
+
+    /// Удаленная работа?
+    @JsonKey(name: 'remote') @Default(null) final bool? remote,
+
+    /// Страна
+    @JsonKey(name: 'country') @Default(null) final String? country,
+
+    /// Уровни разработчика
+    @JsonKey(name: 'level') @Default(null) final DeveloperLevel? level,
+
+    /// Трудоустройство
+    @JsonKey(name: 'employment') @Default(null) final Employment? employment,
+
+    /// Возможность релокации
+    @JsonKey(name: 'relocation') @Default(null) final bool? relocation,
   }) = PaginateJobFilter;
 
   /// Generate Class from Map<String, Object?>
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
 
-  Map<String, Object> toQueryParameters() => <String, Object>{
+  Map<String, Object?> toQueryParameters() => <String, Object?>{
         'limit': math.min(limit, 100),
+        'remote': remote,
+        'country': country,
+        'level': level,
+        'employment': employment,
+        'relocation': relocation,
       };
+
+  /// Количество включенных фильтров
+  int get count {
+    var i = 0;
+    remote.nullOr((_) => i++);
+    country.nullOr((_) => i++);
+    level.nullOr((_) => i++);
+    employment.nullOr((_) => i++);
+    relocation.nullOr((_) => i++);
+    return i;
+  }
 }

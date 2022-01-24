@@ -5,6 +5,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:dart_jobs_client/src/common/bloc/bloc_set_state_mixin.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
@@ -90,8 +91,16 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState>
       l.vvvvvv('Запросим у репозитория аутентификации аутентификацию в гугле');
       final user = await _authenticationRepository.signInWithGoogle();
       emit(AuthenticationState.fromUser(user));
-    } on Object {
-      l.w('Во время аутентификации в гугле произошла ошибка');
+    } on FirebaseAuthException catch (error, stackTrace) {
+      emit(const AuthenticationState.notAuthenticated());
+      if (error.code == 'popup-closed-by-user') {
+        l.d('Пользователь закрыл окно аутентификации');
+        return;
+      }
+      l.w('Во время аутентификации в гугле произошла ошибка Firebase: $error', stackTrace);
+      rethrow;
+    } on Object catch (error, stackTrace) {
+      l.w('Во время аутентификации в гугле произошла ошибка: $error', stackTrace);
       emit(const AuthenticationState.notAuthenticated());
       rethrow;
     }

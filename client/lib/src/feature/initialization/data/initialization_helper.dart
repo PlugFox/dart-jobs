@@ -116,14 +116,20 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
       ),
-  'Create a job repository': (final progress) => progress.copyWith(
-        newJobRepository: JobRepositoryImpl(
-          firebaseAuth: FirebaseAuth.instance,
-          networkDataProvider: JobNetworkDataProviderImpl(
-            client: progress.gqlClient!,
-          ),
-        ),
+  'Create a job repository': (final progress) async {
+    final repository = JobRepositoryImpl(
+      firebaseAuth: FirebaseAuth.instance,
+      firestore: progress.firebaseFirestore!,
+      sharedPreferences: progress.sharedPreferences!,
+      networkDataProvider: JobNetworkDataProviderImpl(
+        client: progress.gqlClient!,
       ),
+    );
+    await repository.restoreFilter();
+    return progress.copyWith(
+      newJobRepository: repository,
+    );
+  },
   'Get current settings': (final progress) async {
     final repository = SettingsRepository(
       sharedPreferences: progress.sharedPreferences!,

@@ -18,6 +18,14 @@ class FeedBar extends StatelessWidget {
         floating: true,
         snap: false,
         toolbarHeight: kToolbarHeight,
+        //shape: const RoundedRectangleBorder(
+        //  borderRadius: BorderRadius.vertical(
+        //    top: Radius.zero,
+        //    bottom: Radius.circular(8),
+        //  ),
+        //),
+        //forceElevated: true,
+        //elevation: 2,
         collapsedHeight: ScreenUtil.screenSizeOf(context).maybeWhen<double?>(
           small: () => kToolbarHeight + 15,
           medium: () => kToolbarHeight + 15,

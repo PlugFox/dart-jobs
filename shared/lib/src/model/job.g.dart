@@ -65,8 +65,18 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) => <String, dynamic>
 
 _$PaginateJobFilter _$$PaginateJobFilterFromJson(Map<String, dynamic> json) => _$PaginateJobFilter(
       limit: json['limit'] as int? ?? 100,
+      remote: json['remote'] as bool? ?? null,
+      country: json['country'] as String? ?? null,
+      level: json['level'] == null ? null : DeveloperLevel.fromJson(json['level'] as Map<String, dynamic>),
+      employment: json['employment'] == null ? null : Employment.fromJson(json['employment'] as Map<String, dynamic>),
+      relocation: json['relocation'] as bool? ?? null,
     );
 
 Map<String, dynamic> _$$PaginateJobFilterToJson(_$PaginateJobFilter instance) => <String, dynamic>{
       'limit': instance.limit,
+      'remote': instance.remote,
+      'country': instance.country,
+      'level': instance.level?.toJson(),
+      'employment': instance.employment?.toJson(),
+      'relocation': instance.relocation,
     };

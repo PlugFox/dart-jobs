@@ -60,16 +60,21 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     required final List<int> exclude,
   }) async {
     final result = await _client.execute(
-      FetchRecentQuery(
-        variables: FetchRecentArguments(
+      RecentQuery(
+        variables: RecentArguments(
           after: updatedAfter,
-          limit: filter.limit,
           exclude: exclude,
+          remote: filter.remote,
+          level: filter.level,
+          relocation: filter.relocation,
+          country: filter.country,
+          employment: filter.employment,
+          limit: filter.limit,
         ),
       ),
     );
     await Future<void>.delayed(Duration.zero);
-    final jobs = result.data?.job
+    final jobs = result.data?.jobRecent
         .map<Job>(
           (e) => Job(
             creatorId: e.creatorId,
@@ -119,14 +124,19 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       PaginateQuery(
         variables: PaginateArguments(
           before: updatedBefore,
-          limit: filter.limit,
           exclude: exclude,
+          remote: filter.remote,
+          level: filter.level,
+          relocation: filter.relocation,
+          country: filter.country,
+          employment: filter.employment,
+          limit: filter.limit,
         ),
       ),
     );
 
     await Future<void>.delayed(Duration.zero);
-    final jobs = result.data?.job
+    final jobs = result.data?.jobPaginate
         .map<Job>(
           (e) => Job(
             creatorId: e.creatorId,

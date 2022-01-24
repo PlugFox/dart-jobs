@@ -8,108 +8,13 @@ import 'package:gql/ast.dart';
 import 'package:dart_jobs_shared/util.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/employment.dart';
+import 'package:dart_jobs_shared/src/graphql/parsers/int_array.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/level.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/text.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/bpchar.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/relocation.dart';
 import 'package:dart_jobs_shared/src/graphql/parsers/timestamp.dart';
 part 'api.graphql.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-class FetchRecent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
-  FetchRecent$QueryRoot$Job();
-
-  factory FetchRecent$QueryRoot$Job.fromJson(Map<String, dynamic> json) =>
-      _$FetchRecent$QueryRoot$JobFromJson(json);
-
-  late int id;
-
-  @JsonKey(name: 'creator_id')
-  late String creatorId;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime created;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime updated;
-
-  @JsonKey(name: 'deletion_mark')
-  late bool deletionMark;
-
-  late String title;
-
-  late String company;
-
-  @JsonKey(
-      fromJson: fromGraphQLBpcharToDartString,
-      toJson: fromDartStringToGraphQLBpchar)
-  late String country;
-
-  late String address;
-
-  late bool remote;
-
-  @JsonKey(
-      fromJson: fromGraphQLRelocationToDartRelocation,
-      toJson: fromDartRelocationToGraphQLRelocation)
-  late Relocation relocation;
-
-  @JsonKey(
-      fromJson: fromGraphQL$employmentToDartListEmployment,
-      toJson: fromDartListEmploymentToGraphQL$employment)
-  late List<Employment> employments;
-
-  @JsonKey(
-      fromJson: fromGraphQL$levelToDartListDeveloperLevel,
-      toJson: fromDartListDeveloperLevelToGraphQL$level)
-  late List<DeveloperLevel> levels;
-
-  @JsonKey(name: 'is_english')
-  late bool isEnglish;
-
-  @JsonKey(name: 'is_russian')
-  late bool isRussian;
-
-  @override
-  List<Object?> get props => [
-        id,
-        creatorId,
-        created,
-        updated,
-        deletionMark,
-        title,
-        company,
-        country,
-        address,
-        remote,
-        relocation,
-        employments,
-        levels,
-        isEnglish,
-        isRussian
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$FetchRecent$QueryRoot$JobToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class FetchRecent$QueryRoot extends JsonSerializable with EquatableMixin {
-  FetchRecent$QueryRoot();
-
-  factory FetchRecent$QueryRoot.fromJson(Map<String, dynamic> json) =>
-      _$FetchRecent$QueryRootFromJson(json);
-
-  late List<FetchRecent$QueryRoot$Job> job;
-
-  @override
-  List<Object?> get props => [job];
-  @override
-  Map<String, dynamic> toJson() => _$FetchRecent$QueryRootToJson(this);
-}
 
 @JsonSerializable(explicitToJson: true)
 class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
@@ -445,10 +350,11 @@ class Paginate$QueryRoot extends JsonSerializable with EquatableMixin {
   factory Paginate$QueryRoot.fromJson(Map<String, dynamic> json) =>
       _$Paginate$QueryRootFromJson(json);
 
-  late List<Paginate$QueryRoot$Job> job;
+  @JsonKey(name: 'job_paginate')
+  late List<Paginate$QueryRoot$Job> jobPaginate;
 
   @override
-  List<Object?> get props => [job];
+  List<Object?> get props => [jobPaginate];
   @override
   Map<String, dynamic> toJson() => _$Paginate$QueryRootToJson(this);
 }
@@ -605,214 +511,100 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class FetchRecentArguments extends JsonSerializable with EquatableMixin {
-  FetchRecentArguments(
-      {required this.after, required this.limit, required this.exclude});
+class Recent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
+  Recent$QueryRoot$Job();
 
-  @override
-  factory FetchRecentArguments.fromJson(Map<String, dynamic> json) =>
-      _$FetchRecentArgumentsFromJson(json);
+  factory Recent$QueryRoot$Job.fromJson(Map<String, dynamic> json) =>
+      _$Recent$QueryRoot$JobFromJson(json);
+
+  late int id;
+
+  @JsonKey(name: 'creator_id')
+  late String creatorId;
 
   @JsonKey(
       fromJson: fromGraphQLTimestampToDartDateTime,
       toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime after;
+  late DateTime created;
 
-  late int limit;
+  @JsonKey(
+      fromJson: fromGraphQLTimestampToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLTimestamp)
+  late DateTime updated;
 
-  late List<int> exclude;
+  @JsonKey(name: 'deletion_mark')
+  late bool deletionMark;
+
+  late String title;
+
+  late String company;
+
+  @JsonKey(
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String country;
+
+  late String address;
+
+  late bool remote;
+
+  @JsonKey(
+      fromJson: fromGraphQLRelocationToDartRelocation,
+      toJson: fromDartRelocationToGraphQLRelocation)
+  late Relocation relocation;
+
+  @JsonKey(
+      fromJson: fromGraphQL$employmentToDartListEmployment,
+      toJson: fromDartListEmploymentToGraphQL$employment)
+  late List<Employment> employments;
+
+  @JsonKey(
+      fromJson: fromGraphQL$levelToDartListDeveloperLevel,
+      toJson: fromDartListDeveloperLevelToGraphQL$level)
+  late List<DeveloperLevel> levels;
+
+  @JsonKey(name: 'is_english')
+  late bool isEnglish;
+
+  @JsonKey(name: 'is_russian')
+  late bool isRussian;
 
   @override
-  List<Object?> get props => [after, limit, exclude];
+  List<Object?> get props => [
+        id,
+        creatorId,
+        created,
+        updated,
+        deletionMark,
+        title,
+        company,
+        country,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels,
+        isEnglish,
+        isRussian
+      ];
   @override
-  Map<String, dynamic> toJson() => _$FetchRecentArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$Recent$QueryRoot$JobToJson(this);
 }
 
-final FETCH_RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'FetchRecent'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'after')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'timestamp'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'limit')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: IntValueNode(value: '100')),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'exclude')),
-            type: ListTypeNode(
-                type: NamedTypeNode(
-                    name: NameNode(value: 'Int'), isNonNull: true),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'job'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'where'),
-                  value: ObjectValueNode(fields: [
-                    ObjectFieldNode(
-                        name: NameNode(value: 'updated'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_gt'),
-                              value:
-                                  VariableNode(name: NameNode(value: 'after')))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'deletion_mark'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_eq'),
-                              value: BooleanValueNode(value: false))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'id'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_nin'),
-                              value: VariableNode(
-                                  name: NameNode(value: 'exclude')))
-                        ]))
-                  ])),
-              ArgumentNode(
-                  name: NameNode(value: 'order_by'),
-                  value: ListValueNode(values: [
-                    ObjectValueNode(fields: [
-                      ObjectFieldNode(
-                          name: NameNode(value: 'updated'),
-                          value: EnumValueNode(name: NameNode(value: 'asc')))
-                    ])
-                  ])),
-              ArgumentNode(
-                  name: NameNode(value: 'limit'),
-                  value: VariableNode(name: NameNode(value: 'limit')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FieldNode(
-                  name: NameNode(value: 'id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'creator_id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'created'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'updated'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'deletion_mark'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'title'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'company'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'country'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'address'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'remote'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'relocation'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'employments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'levels'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_russian'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
-            ]))
-      ]))
-]);
+@JsonSerializable(explicitToJson: true)
+class Recent$QueryRoot extends JsonSerializable with EquatableMixin {
+  Recent$QueryRoot();
 
-class FetchRecentQuery
-    extends GraphQLQuery<FetchRecent$QueryRoot, FetchRecentArguments> {
-  FetchRecentQuery({required this.variables});
+  factory Recent$QueryRoot.fromJson(Map<String, dynamic> json) =>
+      _$Recent$QueryRootFromJson(json);
+
+  @JsonKey(name: 'job_recent')
+  late List<Recent$QueryRoot$Job> jobRecent;
 
   @override
-  final DocumentNode document = FETCH_RECENT_QUERY_DOCUMENT;
-
+  List<Object?> get props => [jobRecent];
   @override
-  final String operationName = 'FetchRecent';
-
-  @override
-  final FetchRecentArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  FetchRecent$QueryRoot parse(Map<String, dynamic> json) =>
-      FetchRecent$QueryRoot.fromJson(json);
+  Map<String, dynamic> toJson() => _$Recent$QueryRootToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1416,7 +1208,14 @@ class InsertJobMutation
 @JsonSerializable(explicitToJson: true)
 class PaginateArguments extends JsonSerializable with EquatableMixin {
   PaginateArguments(
-      {required this.before, required this.limit, required this.exclude});
+      {required this.before,
+      required this.exclude,
+      this.remote,
+      this.country,
+      this.level,
+      this.employment,
+      this.relocation,
+      required this.limit});
 
   @override
   factory PaginateArguments.fromJson(Map<String, dynamic> json) =>
@@ -1427,12 +1226,32 @@ class PaginateArguments extends JsonSerializable with EquatableMixin {
       toJson: fromDartDateTimeToGraphQLTimestamp)
   late DateTime before;
 
-  late int limit;
-
+  @JsonKey(
+      fromJson: fromGraphQL$int4ToDartListint,
+      toJson: fromDartListintToGraphQL$int4)
   late List<int> exclude;
 
+  final bool? remote;
+
+  final String? country;
+
+  @JsonKey(
+      fromJson: fromGraphQLLevelNullableToDartDeveloperLevelNullable,
+      toJson: fromDartDeveloperLevelNullableToGraphQLLevelNullable)
+  final DeveloperLevel? level;
+
+  @JsonKey(
+      fromJson: fromGraphQLEmploymentNullableToDartEmploymentNullable,
+      toJson: fromDartEmploymentNullableToGraphQLEmploymentNullable)
+  final Employment? employment;
+
+  final bool? relocation;
+
+  late int limit;
+
   @override
-  List<Object?> get props => [before, limit, exclude];
+  List<Object?> get props =>
+      [before, exclude, remote, country, level, employment, relocation, limit];
   @override
   Map<String, dynamic> toJson() => _$PaginateArgumentsToJson(this);
 }
@@ -1449,64 +1268,83 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'exclude')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_int4'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'remote')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'country')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'String'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'level')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'level'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'employment')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'employment'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'relocation')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'limit')),
             type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
             defaultValue: DefaultValueNode(value: IntValueNode(value: '100')),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'exclude')),
-            type: ListTypeNode(
-                type: NamedTypeNode(
-                    name: NameNode(value: 'Int'), isNonNull: true),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'job'),
+            name: NameNode(value: 'job_paginate'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'where'),
+                  name: NameNode(value: 'args'),
                   value: ObjectValueNode(fields: [
                     ObjectFieldNode(
-                        name: NameNode(value: 'updated'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_lt'),
-                              value:
-                                  VariableNode(name: NameNode(value: 'before')))
-                        ])),
+                        name: NameNode(value: 'filter_before'),
+                        value: VariableNode(name: NameNode(value: 'before'))),
                     ObjectFieldNode(
-                        name: NameNode(value: 'deletion_mark'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_eq'),
-                              value: BooleanValueNode(value: false))
-                        ])),
+                        name: NameNode(value: 'filter_limit'),
+                        value: VariableNode(name: NameNode(value: 'limit'))),
                     ObjectFieldNode(
-                        name: NameNode(value: 'id'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: '_nin'),
-                              value: VariableNode(
-                                  name: NameNode(value: 'exclude')))
-                        ]))
-                  ])),
-              ArgumentNode(
-                  name: NameNode(value: 'order_by'),
-                  value: ListValueNode(values: [
-                    ObjectValueNode(fields: [
-                      ObjectFieldNode(
-                          name: NameNode(value: 'updated'),
-                          value: EnumValueNode(name: NameNode(value: 'desc')))
-                    ])
-                  ])),
-              ArgumentNode(
-                  name: NameNode(value: 'limit'),
-                  value: VariableNode(name: NameNode(value: 'limit')))
+                        name: NameNode(value: 'filter_exclude'),
+                        value: VariableNode(name: NameNode(value: 'exclude'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_remote'),
+                        value: VariableNode(name: NameNode(value: 'remote'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_country'),
+                        value: VariableNode(name: NameNode(value: 'country'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_level'),
+                        value: VariableNode(name: NameNode(value: 'level'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_employment'),
+                        value:
+                            VariableNode(name: NameNode(value: 'employment'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_relocation'),
+                        value:
+                            VariableNode(name: NameNode(value: 'relocation')))
+                  ]))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
@@ -1730,4 +1568,260 @@ class UpdateJobMutation
   @override
   UpdateJob$MutationRoot parse(Map<String, dynamic> json) =>
       UpdateJob$MutationRoot.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class RecentArguments extends JsonSerializable with EquatableMixin {
+  RecentArguments(
+      {required this.after,
+      required this.exclude,
+      this.remote,
+      this.country,
+      this.level,
+      this.employment,
+      this.relocation,
+      required this.limit});
+
+  @override
+  factory RecentArguments.fromJson(Map<String, dynamic> json) =>
+      _$RecentArgumentsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLTimestampToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLTimestamp)
+  late DateTime after;
+
+  @JsonKey(
+      fromJson: fromGraphQL$int4ToDartListint,
+      toJson: fromDartListintToGraphQL$int4)
+  late List<int> exclude;
+
+  final bool? remote;
+
+  final String? country;
+
+  @JsonKey(
+      fromJson: fromGraphQLLevelNullableToDartDeveloperLevelNullable,
+      toJson: fromDartDeveloperLevelNullableToGraphQLLevelNullable)
+  final DeveloperLevel? level;
+
+  @JsonKey(
+      fromJson: fromGraphQLEmploymentNullableToDartEmploymentNullable,
+      toJson: fromDartEmploymentNullableToGraphQLEmploymentNullable)
+  final Employment? employment;
+
+  final bool? relocation;
+
+  late int limit;
+
+  @override
+  List<Object?> get props =>
+      [after, exclude, remote, country, level, employment, relocation, limit];
+  @override
+  Map<String, dynamic> toJson() => _$RecentArgumentsToJson(this);
+}
+
+final RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'Recent'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'after')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'timestamp'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'exclude')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_int4'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'remote')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'country')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'String'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'level')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'level'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'employment')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'employment'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'relocation')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'limit')),
+            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: IntValueNode(value: '100')),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'job_recent'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'args'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_after'),
+                        value: VariableNode(name: NameNode(value: 'after'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_limit'),
+                        value: VariableNode(name: NameNode(value: 'limit'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_exclude'),
+                        value: VariableNode(name: NameNode(value: 'exclude'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_remote'),
+                        value: VariableNode(name: NameNode(value: 'remote'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_country'),
+                        value: VariableNode(name: NameNode(value: 'country'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_level'),
+                        value: VariableNode(name: NameNode(value: 'level'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_employment'),
+                        value:
+                            VariableNode(name: NameNode(value: 'employment'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'filter_relocation'),
+                        value:
+                            VariableNode(name: NameNode(value: 'relocation')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'creator_id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'created'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'updated'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'deletion_mark'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'title'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'company'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'country'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'remote'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'relocation'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'employments'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'levels'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_english'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'is_russian'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null)
+            ]))
+      ]))
+]);
+
+class RecentQuery extends GraphQLQuery<Recent$QueryRoot, RecentArguments> {
+  RecentQuery({required this.variables});
+
+  @override
+  final DocumentNode document = RECENT_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'Recent';
+
+  @override
+  final RecentArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  Recent$QueryRoot parse(Map<String, dynamic> json) =>
+      Recent$QueryRoot.fromJson(json);
 }

@@ -15,6 +15,10 @@
   "@no": {
     "description": "Нет"
   },
+  "none": "No matter",
+  "@none": {
+    "description": "Не важно"
+  },
   "save": "Save",
   "@save": {
     "description": "Save"
@@ -102,6 +106,10 @@
   "favorite": "Favorite",
   "@favorite": {
     "description": "Избранное"
+  },
+  "filter": "Filter",
+  "@filter": {
+    "description": "Отбор"
   },
   "job_field_title": "Job Title",
   "@job_field_title": {
@@ -279,9 +287,9 @@
   "@job_type_open_source": {
     "description": "Вид работы - Участие в опенсорс проекте (Open source project)"
   },
-  "job_type_collaboration": "Team search or collaboration",
+  "job_type_collaboration": "Team search",
   "@job_type_collaboration": {
-    "description": "Вид работы - Поиск команды или сотрудничество (Team search or collaboration)"
+    "description": "Вид работы - Поиск команды (Team search)"
   },
   "job_button_reset": "Reset changes",
   "@job_button_reset": {

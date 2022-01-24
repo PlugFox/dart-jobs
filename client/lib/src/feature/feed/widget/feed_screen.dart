@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
@@ -39,6 +40,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   // ignore: prefer_final_fields
   double _screenHeight = 0;
   ModalObserver? _routeObserver;
+  Timer? _checkTimer;
 
   //region Lifecycle
   @override
@@ -46,6 +48,10 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
     super.initState();
     _scrollController.addListener(_checkPagination);
     _bloc = BlocProvider.of<FeedBLoC>(context, listen: false)..add(const FeedEvent.paginate());
+    _checkTimer = Timer.periodic(
+      const Duration(seconds: 15),
+      (_) => _checkPagination(),
+    );
   }
 
   @override
@@ -79,6 +85,7 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
   void dispose() {
     _routeObserver?.unsubscribe(this);
     _scrollController.dispose();
+    _checkTimer?.cancel();
     super.dispose();
   }
   //endregion

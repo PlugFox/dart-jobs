@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
+import 'package:dart_jobs_client/src/common/utils/error_util.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_shared/model.dart';
@@ -110,13 +111,16 @@ class FeedState with _$FeedState {
 class FeedBLoC extends Bloc<FeedEvent, FeedState> with _CombineMixin {
   FeedBLoC({
     required final IJobRepository repository,
-    final FeedState initialState = const FeedState.idle(
-      filter: JobFilter(),
-      endOfList: false,
-      list: <Job>[],
-    ),
+    final FeedState? initialState,
   })  : _repository = repository,
-        super(initialState) {
+        super(
+          initialState ??
+              FeedState.idle(
+                filter: repository.filter,
+                endOfList: false,
+                list: <Job>[],
+              ),
+        ) {
     _timer = Timer.periodic(
       const Duration(minutes: 15),
       (_) {
@@ -230,8 +234,19 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> with _CombineMixin {
     }
   }
 
-  Future<void> _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) =>
-      Future<void>(() => emit(event.setNewFilter(state: state)));
+  Future<void> _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) async {
+    emit(event.setNewFilter(state: state));
+    add(const FeedEvent.paginate());
+    // ignore: unawaited_futures
+    Future<void>(
+      () => _repository.saveFilter(event.newFilter),
+    ).catchError(
+      (Object error, StackTrace stackTrace) {
+        l.w('Ошибка обновления фильтра в кэше: $error', stackTrace);
+        ErrorUtil.logError(error, stackTrace: stackTrace, hint: 'Ошибка обновления фильтра в кэше');
+      },
+    );
+  }
 
   @override
   Future<void> close() {
