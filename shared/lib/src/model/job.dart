@@ -326,7 +326,7 @@ class JobFilter with _$JobFilter {
     @JsonKey(name: 'employment') @Default(null) final Employment? employment,
 
     /// Возможность релокации
-    @JsonKey(name: 'relocation') @Default(null) final Relocation? relocation,
+    @JsonKey(name: 'relocation') @Default(null) final bool? relocation,
   }) = PaginateJobFilter;
 
   /// Generate Class from Map<String, Object?>

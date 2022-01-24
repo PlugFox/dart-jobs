@@ -84,7 +84,12 @@ class _JobDescriptionPageRoute extends PageRoute<void> {
     this.title,
     this.textEditingController, {
     final this.denyCyrillic = true,
-  });
+  }) : super(
+          settings: const RouteSettings(
+            name: 'job_description_input',
+            arguments: null,
+          ),
+        );
 
   final String title;
   final TextEditingController textEditingController;

@@ -932,7 +932,7 @@ class _$JobFilterTearOff {
       @JsonKey(name: 'country') String? country = null,
       @JsonKey(name: 'level') DeveloperLevel? level = null,
       @JsonKey(name: 'employment') Employment? employment = null,
-      @JsonKey(name: 'relocation') Relocation? relocation = null}) {
+      @JsonKey(name: 'relocation') bool? relocation = null}) {
     return PaginateJobFilter(
       limit: limit,
       remote: remote,
@@ -976,7 +976,7 @@ mixin _$JobFilter {
 
   /// Возможность релокации
   @JsonKey(name: 'relocation')
-  Relocation? get relocation => throw _privateConstructorUsedError;
+  bool? get relocation => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -992,11 +992,10 @@ abstract class $JobFilterCopyWith<$Res> {
       @JsonKey(name: 'country') String? country,
       @JsonKey(name: 'level') DeveloperLevel? level,
       @JsonKey(name: 'employment') Employment? employment,
-      @JsonKey(name: 'relocation') Relocation? relocation});
+      @JsonKey(name: 'relocation') bool? relocation});
 
   $DeveloperLevelCopyWith<$Res>? get level;
   $EmploymentCopyWith<$Res>? get employment;
-  $RelocationCopyWith<$Res>? get relocation;
 }
 
 /// @nodoc
@@ -1040,7 +1039,7 @@ class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
       relocation: relocation == freezed
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
-              as Relocation?,
+              as bool?,
     ));
   }
 
@@ -1065,17 +1064,6 @@ class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
       return _then(_value.copyWith(employment: value));
     });
   }
-
-  @override
-  $RelocationCopyWith<$Res>? get relocation {
-    if (_value.relocation == null) {
-      return null;
-    }
-
-    return $RelocationCopyWith<$Res>(_value.relocation!, (value) {
-      return _then(_value.copyWith(relocation: value));
-    });
-  }
 }
 
 /// @nodoc
@@ -1089,14 +1077,12 @@ abstract class $PaginateJobFilterCopyWith<$Res> implements $JobFilterCopyWith<$R
       @JsonKey(name: 'country') String? country,
       @JsonKey(name: 'level') DeveloperLevel? level,
       @JsonKey(name: 'employment') Employment? employment,
-      @JsonKey(name: 'relocation') Relocation? relocation});
+      @JsonKey(name: 'relocation') bool? relocation});
 
   @override
   $DeveloperLevelCopyWith<$Res>? get level;
   @override
   $EmploymentCopyWith<$Res>? get employment;
-  @override
-  $RelocationCopyWith<$Res>? get relocation;
 }
 
 /// @nodoc
@@ -1141,7 +1127,7 @@ class _$PaginateJobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res
       relocation: relocation == freezed
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
-              as Relocation?,
+              as bool?,
     ));
   }
 }
@@ -1190,7 +1176,7 @@ class _$PaginateJobFilter extends PaginateJobFilter {
 
   /// Возможность релокации
   @JsonKey(name: 'relocation')
-  final Relocation? relocation;
+  final bool? relocation;
 
   @override
   String toString() {
@@ -1238,7 +1224,7 @@ abstract class PaginateJobFilter extends JobFilter {
       @JsonKey(name: 'country') String? country,
       @JsonKey(name: 'level') DeveloperLevel? level,
       @JsonKey(name: 'employment') Employment? employment,
-      @JsonKey(name: 'relocation') Relocation? relocation}) = _$PaginateJobFilter;
+      @JsonKey(name: 'relocation') bool? relocation}) = _$PaginateJobFilter;
   const PaginateJobFilter._() : super._();
 
   factory PaginateJobFilter.fromJson(Map<String, dynamic> json) = _$PaginateJobFilter.fromJson;
@@ -1273,7 +1259,7 @@ abstract class PaginateJobFilter extends JobFilter {
 
   /// Возможность релокации
   @JsonKey(name: 'relocation')
-  Relocation? get relocation;
+  bool? get relocation;
   @override
   @JsonKey(ignore: true)
   $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith => throw _privateConstructorUsedError;

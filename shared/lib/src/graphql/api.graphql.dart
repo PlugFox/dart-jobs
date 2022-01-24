@@ -1245,10 +1245,7 @@ class PaginateArguments extends JsonSerializable with EquatableMixin {
       toJson: fromDartEmploymentNullableToGraphQLEmploymentNullable)
   final Employment? employment;
 
-  @JsonKey(
-      fromJson: fromGraphQLRelocationNullableToDartRelocationNullable,
-      toJson: fromDartRelocationNullableToGraphQLRelocationNullable)
-  final Relocation? relocation;
+  final bool? relocation;
 
   late int limit;
 
@@ -1303,7 +1300,7 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'relocation')),
             type: NamedTypeNode(
-                name: NameNode(value: 'relocation'), isNonNull: false),
+                name: NameNode(value: 'Boolean'), isNonNull: false),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
@@ -1613,10 +1610,7 @@ class RecentArguments extends JsonSerializable with EquatableMixin {
       toJson: fromDartEmploymentNullableToGraphQLEmploymentNullable)
   final Employment? employment;
 
-  @JsonKey(
-      fromJson: fromGraphQLRelocationNullableToDartRelocationNullable,
-      toJson: fromDartRelocationNullableToGraphQLRelocationNullable)
-  final Relocation? relocation;
+  final bool? relocation;
 
   late int limit;
 
@@ -1671,7 +1665,7 @@ final RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'relocation')),
             type: NamedTypeNode(
-                name: NameNode(value: 'relocation'), isNonNull: false),
+                name: NameNode(value: 'Boolean'), isNonNull: false),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(

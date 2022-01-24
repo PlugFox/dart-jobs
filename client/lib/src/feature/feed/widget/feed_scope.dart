@@ -31,10 +31,17 @@ class FeedScope extends StatelessWidget {
       )..add(const FeedEvent.paginate());
 
   /// Установить фильтр
-  static void setFilterOf(final BuildContext context, JobFilter jobFilter) => BlocProvider.of<FeedBLoC>(
-        context,
-        listen: false,
-      )..add(FeedEvent.setFilter(jobFilter));
+  static void setFilterOf(final BuildContext context, JobFilter Function(JobFilter filter) updateFilter) {
+    final bloc = BlocProvider.of<FeedBLoC>(
+      context,
+      listen: false,
+    );
+    bloc.add(
+      FeedEvent.setFilter(
+        updateFilter(bloc.state.filter),
+      ),
+    );
+  }
 
   /// Получить работу удовлетворяющую условию
   static Job? jobOf(

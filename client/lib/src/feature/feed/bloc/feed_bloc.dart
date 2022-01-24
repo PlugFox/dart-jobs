@@ -111,6 +111,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> with _CombineMixin {
   FeedBLoC({
     required final IJobRepository repository,
     final FeedState initialState = const FeedState.idle(
+      /// TODO: восстанавливать фильтр из кэша
       filter: JobFilter(),
       endOfList: false,
       list: <Job>[],
@@ -230,8 +231,14 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> with _CombineMixin {
     }
   }
 
-  Future<void> _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) =>
-      Future<void>(() => emit(event.setNewFilter(state: state)));
+  Future<void> _setFilter(_SetFilterFeedEvent event, Emitter<FeedState> emit) async {
+    emit(event.setNewFilter(state: state));
+    add(const FeedEvent.paginate());
+    // ignore: unawaited_futures
+    Future<void>(() {
+      /// TODO: сохранить фильтр в кэш
+    });
+  }
 
   @override
   Future<void> close() {

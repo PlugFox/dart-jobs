@@ -397,8 +397,7 @@ PaginateArguments _$PaginateArgumentsFromJson(Map<String, dynamic> json) =>
           json['level'] as String?),
       employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
           json['employment'] as String?),
-      relocation: fromGraphQLRelocationNullableToDartRelocationNullable(
-          json['relocation'] as String?),
+      relocation: json['relocation'] as bool?,
       limit: json['limit'] as int,
     );
 
@@ -412,8 +411,7 @@ Map<String, dynamic> _$PaginateArgumentsToJson(PaginateArguments instance) =>
           fromDartDeveloperLevelNullableToGraphQLLevelNullable(instance.level),
       'employment': fromDartEmploymentNullableToGraphQLEmploymentNullable(
           instance.employment),
-      'relocation': fromDartRelocationNullableToGraphQLRelocationNullable(
-          instance.relocation),
+      'relocation': instance.relocation,
       'limit': instance.limit,
     };
 
@@ -439,8 +437,7 @@ RecentArguments _$RecentArgumentsFromJson(Map<String, dynamic> json) =>
           json['level'] as String?),
       employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
           json['employment'] as String?),
-      relocation: fromGraphQLRelocationNullableToDartRelocationNullable(
-          json['relocation'] as String?),
+      relocation: json['relocation'] as bool?,
       limit: json['limit'] as int,
     );
 
@@ -454,7 +451,6 @@ Map<String, dynamic> _$RecentArgumentsToJson(RecentArguments instance) =>
           fromDartDeveloperLevelNullableToGraphQLLevelNullable(instance.level),
       'employment': fromDartEmploymentNullableToGraphQLEmploymentNullable(
           instance.employment),
-      'relocation': fromDartRelocationNullableToGraphQLRelocationNullable(
-          instance.relocation),
+      'relocation': instance.relocation,
       'limit': instance.limit,
     };

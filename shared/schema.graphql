@@ -557,7 +557,7 @@ input job_paginate_args {
     filter_exclude: _int4
     filter_level: level
     filter_limit: Int
-    filter_relocation: relocation
+    filter_relocation: Boolean
     filter_remote: Boolean
 }
 
@@ -574,7 +574,7 @@ input job_recent_args {
     filter_exclude: _int4
     filter_level: level
     filter_limit: Int
-    filter_relocation: relocation
+    filter_relocation: Boolean
     filter_remote: Boolean
 }
 

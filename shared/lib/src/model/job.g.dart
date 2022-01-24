@@ -69,7 +69,7 @@ _$PaginateJobFilter _$$PaginateJobFilterFromJson(Map<String, dynamic> json) => _
       country: json['country'] as String? ?? null,
       level: json['level'] == null ? null : DeveloperLevel.fromJson(json['level'] as Map<String, dynamic>),
       employment: json['employment'] == null ? null : Employment.fromJson(json['employment'] as Map<String, dynamic>),
-      relocation: json['relocation'] == null ? null : Relocation.fromJson(json['relocation'] as Map<String, dynamic>),
+      relocation: json['relocation'] as bool? ?? null,
     );
 
 Map<String, dynamic> _$$PaginateJobFilterToJson(_$PaginateJobFilter instance) => <String, dynamic>{
@@ -78,5 +78,5 @@ Map<String, dynamic> _$$PaginateJobFilterToJson(_$PaginateJobFilter instance) =>
       'country': instance.country,
       'level': instance.level?.toJson(),
       'employment': instance.employment?.toJson(),
-      'relocation': instance.relocation?.toJson(),
+      'relocation': instance.relocation,
     };

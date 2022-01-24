@@ -5,7 +5,7 @@ query Paginate(
     $country: String,
     $level: level,
     $employment: employment,
-    $relocation: relocation,
+    $relocation: Boolean,
     $limit: Int! = 100
 ) {
     job_paginate(
