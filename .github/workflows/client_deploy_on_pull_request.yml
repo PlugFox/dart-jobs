@@ -121,3 +121,5 @@ jobs:
           projectId: dart-job
           target: dart-job
           entryPoint: ${{ env.working-directory }}
+          target: dart-job
+          entryPoint: ${{ env.working-directory }}
