@@ -27,13 +27,11 @@ query Recent(
         deletion_mark,
         title,
         company,
-        country,
+        country_code,
         address,
         remote,
         relocation,
         employments,
-        levels,
-        is_english,
-        is_russian
+        levels
     }
 }

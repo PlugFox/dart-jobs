@@ -7,6 +7,62 @@ part of 'api.graphql.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+GetJob$QueryRoot$Job$JobDescriptionEnglish
+    _$GetJob$QueryRoot$Job$JobDescriptionEnglishFromJson(
+            Map<String, dynamic> json) =>
+        GetJob$QueryRoot$Job$JobDescriptionEnglish()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$GetJob$QueryRoot$Job$JobDescriptionEnglishToJson(
+        GetJob$QueryRoot$Job$JobDescriptionEnglish instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+GetJob$QueryRoot$Job$JobDescriptionRussian
+    _$GetJob$QueryRoot$Job$JobDescriptionRussianFromJson(
+            Map<String, dynamic> json) =>
+        GetJob$QueryRoot$Job$JobDescriptionRussian()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$GetJob$QueryRoot$Job$JobDescriptionRussianToJson(
+        GetJob$QueryRoot$Job$JobDescriptionRussian instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+GetJob$QueryRoot$Job$JobSkills _$GetJob$QueryRoot$Job$JobSkillsFromJson(
+        Map<String, dynamic> json) =>
+    GetJob$QueryRoot$Job$JobSkills()
+      ..skills = fromGraphQL$textToDartListString(json['skills'] as Object);
+
+Map<String, dynamic> _$GetJob$QueryRoot$Job$JobSkillsToJson(
+        GetJob$QueryRoot$Job$JobSkills instance) =>
+    <String, dynamic>{
+      'skills': fromDartListStringToGraphQL$text(instance.skills),
+    };
+
+GetJob$QueryRoot$Job$JobContacts _$GetJob$QueryRoot$Job$JobContactsFromJson(
+        Map<String, dynamic> json) =>
+    GetJob$QueryRoot$Job$JobContacts()
+      ..contacts = fromGraphQL$textToDartListString(json['contacts'] as Object);
+
+Map<String, dynamic> _$GetJob$QueryRoot$Job$JobContactsToJson(
+        GetJob$QueryRoot$Job$JobContacts instance) =>
+    <String, dynamic>{
+      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
+    };
+
+GetJob$QueryRoot$Job$JobTags _$GetJob$QueryRoot$Job$JobTagsFromJson(
+        Map<String, dynamic> json) =>
+    GetJob$QueryRoot$Job$JobTags()..tag = json['tag'] as String;
+
+Map<String, dynamic> _$GetJob$QueryRoot$Job$JobTagsToJson(
+        GetJob$QueryRoot$Job$JobTags instance) =>
+    <String, dynamic>{
+      'tag': instance.tag,
+    };
+
 GetJob$QueryRoot$Job _$GetJob$QueryRoot$JobFromJson(
         Map<String, dynamic> json) =>
     GetJob$QueryRoot$Job()
@@ -17,7 +73,8 @@ GetJob$QueryRoot$Job _$GetJob$QueryRoot$JobFromJson(
       ..deletionMark = json['deletion_mark'] as bool
       ..title = json['title'] as String
       ..company = json['company'] as String
-      ..country = fromGraphQLBpcharToDartString(json['country'] as String)
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
       ..address = json['address'] as String
       ..remote = json['remote'] as bool
       ..relocation =
@@ -26,13 +83,26 @@ GetJob$QueryRoot$Job _$GetJob$QueryRoot$JobFromJson(
           json['employments'] as Object)
       ..levels =
           fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object)
-      ..skills = fromGraphQL$textToDartListString(json['skills'] as Object)
-      ..contacts = fromGraphQL$textToDartListString(json['contacts'] as Object)
-      ..tags = fromGraphQL$textToDartListString(json['tags'] as Object)
-      ..russianDescription = json['russian_description'] as String
-      ..isRussian = json['is_russian'] as bool
-      ..englishDescription = json['english_description'] as String
-      ..isEnglish = json['is_english'] as bool;
+      ..descriptionEnglish = json['description_english'] == null
+          ? null
+          : GetJob$QueryRoot$Job$JobDescriptionEnglish.fromJson(
+              json['description_english'] as Map<String, dynamic>)
+      ..descriptionRussian = json['description_russian'] == null
+          ? null
+          : GetJob$QueryRoot$Job$JobDescriptionRussian.fromJson(
+              json['description_russian'] as Map<String, dynamic>)
+      ..jobSkills = json['job_skills'] == null
+          ? null
+          : GetJob$QueryRoot$Job$JobSkills.fromJson(
+              json['job_skills'] as Map<String, dynamic>)
+      ..jobContacts = json['job_contacts'] == null
+          ? null
+          : GetJob$QueryRoot$Job$JobContacts.fromJson(
+              json['job_contacts'] as Map<String, dynamic>)
+      ..jobTags = (json['job_tags'] as List<dynamic>)
+          .map((e) =>
+              GetJob$QueryRoot$Job$JobTags.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$GetJob$QueryRoot$JobToJson(
         GetJob$QueryRoot$Job instance) =>
@@ -44,20 +114,18 @@ Map<String, dynamic> _$GetJob$QueryRoot$JobToJson(
       'deletion_mark': instance.deletionMark,
       'title': instance.title,
       'company': instance.company,
-      'country': fromDartStringToGraphQLBpchar(instance.country),
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
       'address': instance.address,
       'remote': instance.remote,
       'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
       'employments':
           fromDartListEmploymentToGraphQL$employment(instance.employments),
       'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
-      'skills': fromDartListStringToGraphQL$text(instance.skills),
-      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
-      'tags': fromDartListStringToGraphQL$text(instance.tags),
-      'russian_description': instance.russianDescription,
-      'is_russian': instance.isRussian,
-      'english_description': instance.englishDescription,
-      'is_english': instance.isEnglish,
+      'description_english': instance.descriptionEnglish?.toJson(),
+      'description_russian': instance.descriptionRussian?.toJson(),
+      'job_skills': instance.jobSkills?.toJson(),
+      'job_contacts': instance.jobContacts?.toJson(),
+      'job_tags': instance.jobTags.map((e) => e.toJson()).toList(),
     };
 
 GetJob$QueryRoot _$GetJob$QueryRootFromJson(Map<String, dynamic> json) =>
@@ -72,6 +140,64 @@ Map<String, dynamic> _$GetJob$QueryRootToJson(GetJob$QueryRoot instance) =>
       'job_by_pk': instance.jobByPk?.toJson(),
     };
 
+InsertJob$MutationRoot$Job$JobDescriptionEnglish
+    _$InsertJob$MutationRoot$Job$JobDescriptionEnglishFromJson(
+            Map<String, dynamic> json) =>
+        InsertJob$MutationRoot$Job$JobDescriptionEnglish()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$InsertJob$MutationRoot$Job$JobDescriptionEnglishToJson(
+        InsertJob$MutationRoot$Job$JobDescriptionEnglish instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+InsertJob$MutationRoot$Job$JobDescriptionRussian
+    _$InsertJob$MutationRoot$Job$JobDescriptionRussianFromJson(
+            Map<String, dynamic> json) =>
+        InsertJob$MutationRoot$Job$JobDescriptionRussian()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$InsertJob$MutationRoot$Job$JobDescriptionRussianToJson(
+        InsertJob$MutationRoot$Job$JobDescriptionRussian instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+InsertJob$MutationRoot$Job$JobSkills
+    _$InsertJob$MutationRoot$Job$JobSkillsFromJson(Map<String, dynamic> json) =>
+        InsertJob$MutationRoot$Job$JobSkills()
+          ..skills = fromGraphQL$textToDartListString(json['skills'] as Object);
+
+Map<String, dynamic> _$InsertJob$MutationRoot$Job$JobSkillsToJson(
+        InsertJob$MutationRoot$Job$JobSkills instance) =>
+    <String, dynamic>{
+      'skills': fromDartListStringToGraphQL$text(instance.skills),
+    };
+
+InsertJob$MutationRoot$Job$JobContacts
+    _$InsertJob$MutationRoot$Job$JobContactsFromJson(
+            Map<String, dynamic> json) =>
+        InsertJob$MutationRoot$Job$JobContacts()
+          ..contacts =
+              fromGraphQL$textToDartListString(json['contacts'] as Object);
+
+Map<String, dynamic> _$InsertJob$MutationRoot$Job$JobContactsToJson(
+        InsertJob$MutationRoot$Job$JobContacts instance) =>
+    <String, dynamic>{
+      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
+    };
+
+InsertJob$MutationRoot$Job$JobTags _$InsertJob$MutationRoot$Job$JobTagsFromJson(
+        Map<String, dynamic> json) =>
+    InsertJob$MutationRoot$Job$JobTags()..tag = json['tag'] as String;
+
+Map<String, dynamic> _$InsertJob$MutationRoot$Job$JobTagsToJson(
+        InsertJob$MutationRoot$Job$JobTags instance) =>
+    <String, dynamic>{
+      'tag': instance.tag,
+    };
+
 InsertJob$MutationRoot$Job _$InsertJob$MutationRoot$JobFromJson(
         Map<String, dynamic> json) =>
     InsertJob$MutationRoot$Job()
@@ -82,7 +208,8 @@ InsertJob$MutationRoot$Job _$InsertJob$MutationRoot$JobFromJson(
       ..deletionMark = json['deletion_mark'] as bool
       ..title = json['title'] as String
       ..company = json['company'] as String
-      ..country = fromGraphQLBpcharToDartString(json['country'] as String)
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
       ..address = json['address'] as String
       ..remote = json['remote'] as bool
       ..relocation =
@@ -91,13 +218,26 @@ InsertJob$MutationRoot$Job _$InsertJob$MutationRoot$JobFromJson(
           json['employments'] as Object)
       ..levels =
           fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object)
-      ..skills = fromGraphQL$textToDartListString(json['skills'] as Object)
-      ..contacts = fromGraphQL$textToDartListString(json['contacts'] as Object)
-      ..tags = fromGraphQL$textToDartListString(json['tags'] as Object)
-      ..russianDescription = json['russian_description'] as String
-      ..isRussian = json['is_russian'] as bool
-      ..englishDescription = json['english_description'] as String
-      ..isEnglish = json['is_english'] as bool;
+      ..descriptionEnglish = json['description_english'] == null
+          ? null
+          : InsertJob$MutationRoot$Job$JobDescriptionEnglish.fromJson(
+              json['description_english'] as Map<String, dynamic>)
+      ..descriptionRussian = json['description_russian'] == null
+          ? null
+          : InsertJob$MutationRoot$Job$JobDescriptionRussian.fromJson(
+              json['description_russian'] as Map<String, dynamic>)
+      ..jobSkills = json['job_skills'] == null
+          ? null
+          : InsertJob$MutationRoot$Job$JobSkills.fromJson(
+              json['job_skills'] as Map<String, dynamic>)
+      ..jobContacts = json['job_contacts'] == null
+          ? null
+          : InsertJob$MutationRoot$Job$JobContacts.fromJson(
+              json['job_contacts'] as Map<String, dynamic>)
+      ..jobTags = (json['job_tags'] as List<dynamic>)
+          .map((e) => InsertJob$MutationRoot$Job$JobTags.fromJson(
+              e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$InsertJob$MutationRoot$JobToJson(
         InsertJob$MutationRoot$Job instance) =>
@@ -109,20 +249,18 @@ Map<String, dynamic> _$InsertJob$MutationRoot$JobToJson(
       'deletion_mark': instance.deletionMark,
       'title': instance.title,
       'company': instance.company,
-      'country': fromDartStringToGraphQLBpchar(instance.country),
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
       'address': instance.address,
       'remote': instance.remote,
       'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
       'employments':
           fromDartListEmploymentToGraphQL$employment(instance.employments),
       'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
-      'skills': fromDartListStringToGraphQL$text(instance.skills),
-      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
-      'tags': fromDartListStringToGraphQL$text(instance.tags),
-      'russian_description': instance.russianDescription,
-      'is_russian': instance.isRussian,
-      'english_description': instance.englishDescription,
-      'is_english': instance.isEnglish,
+      'description_english': instance.descriptionEnglish?.toJson(),
+      'description_russian': instance.descriptionRussian?.toJson(),
+      'job_skills': instance.jobSkills?.toJson(),
+      'job_contacts': instance.jobContacts?.toJson(),
+      'job_tags': instance.jobTags.map((e) => e.toJson()).toList(),
     };
 
 InsertJob$MutationRoot _$InsertJob$MutationRootFromJson(
@@ -149,7 +287,8 @@ Paginate$QueryRoot$Job _$Paginate$QueryRoot$JobFromJson(
       ..deletionMark = json['deletion_mark'] as bool
       ..title = json['title'] as String
       ..company = json['company'] as String
-      ..country = fromGraphQLBpcharToDartString(json['country'] as String)
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
       ..address = json['address'] as String
       ..remote = json['remote'] as bool
       ..relocation =
@@ -157,9 +296,7 @@ Paginate$QueryRoot$Job _$Paginate$QueryRoot$JobFromJson(
       ..employments = fromGraphQL$employmentToDartListEmployment(
           json['employments'] as Object)
       ..levels =
-          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object)
-      ..isEnglish = json['is_english'] as bool
-      ..isRussian = json['is_russian'] as bool;
+          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
 
 Map<String, dynamic> _$Paginate$QueryRoot$JobToJson(
         Paginate$QueryRoot$Job instance) =>
@@ -171,15 +308,13 @@ Map<String, dynamic> _$Paginate$QueryRoot$JobToJson(
       'deletion_mark': instance.deletionMark,
       'title': instance.title,
       'company': instance.company,
-      'country': fromDartStringToGraphQLBpchar(instance.country),
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
       'address': instance.address,
       'remote': instance.remote,
       'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
       'employments':
           fromDartListEmploymentToGraphQL$employment(instance.employments),
       'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
-      'is_english': instance.isEnglish,
-      'is_russian': instance.isRussian,
     };
 
 Paginate$QueryRoot _$Paginate$QueryRootFromJson(Map<String, dynamic> json) =>
@@ -201,7 +336,19 @@ UpdateJob$MutationRoot$Job _$UpdateJob$MutationRoot$JobFromJson(
       ..creatorId = json['creator_id'] as String
       ..created = fromGraphQLTimestampToDartDateTime(json['created'] as String)
       ..updated = fromGraphQLTimestampToDartDateTime(json['updated'] as String)
-      ..deletionMark = json['deletion_mark'] as bool;
+      ..deletionMark = json['deletion_mark'] as bool
+      ..title = json['title'] as String
+      ..company = json['company'] as String
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
+      ..address = json['address'] as String
+      ..remote = json['remote'] as bool
+      ..relocation =
+          fromGraphQLRelocationToDartRelocation(json['relocation'] as String)
+      ..employments = fromGraphQL$employmentToDartListEmployment(
+          json['employments'] as Object)
+      ..levels =
+          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
 
 Map<String, dynamic> _$UpdateJob$MutationRoot$JobToJson(
         UpdateJob$MutationRoot$Job instance) =>
@@ -211,6 +358,89 @@ Map<String, dynamic> _$UpdateJob$MutationRoot$JobToJson(
       'created': fromDartDateTimeToGraphQLTimestamp(instance.created),
       'updated': fromDartDateTimeToGraphQLTimestamp(instance.updated),
       'deletion_mark': instance.deletionMark,
+      'title': instance.title,
+      'company': instance.company,
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
+      'address': instance.address,
+      'remote': instance.remote,
+      'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
+      'employments':
+          fromDartListEmploymentToGraphQL$employment(instance.employments),
+      'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
+    };
+
+UpdateJob$MutationRoot$JobDescriptionEnglish
+    _$UpdateJob$MutationRoot$JobDescriptionEnglishFromJson(
+            Map<String, dynamic> json) =>
+        UpdateJob$MutationRoot$JobDescriptionEnglish()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$UpdateJob$MutationRoot$JobDescriptionEnglishToJson(
+        UpdateJob$MutationRoot$JobDescriptionEnglish instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+UpdateJob$MutationRoot$JobDescriptionRussian
+    _$UpdateJob$MutationRoot$JobDescriptionRussianFromJson(
+            Map<String, dynamic> json) =>
+        UpdateJob$MutationRoot$JobDescriptionRussian()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$UpdateJob$MutationRoot$JobDescriptionRussianToJson(
+        UpdateJob$MutationRoot$JobDescriptionRussian instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+UpdateJob$MutationRoot$JobContacts _$UpdateJob$MutationRoot$JobContactsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateJob$MutationRoot$JobContacts()
+      ..contacts = fromGraphQL$textToDartListString(json['contacts'] as Object);
+
+Map<String, dynamic> _$UpdateJob$MutationRoot$JobContactsToJson(
+        UpdateJob$MutationRoot$JobContacts instance) =>
+    <String, dynamic>{
+      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
+    };
+
+UpdateJob$MutationRoot$JobSkills _$UpdateJob$MutationRoot$JobSkillsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateJob$MutationRoot$JobSkills()
+      ..skills = fromGraphQL$textToDartListString(json['skills'] as Object);
+
+Map<String, dynamic> _$UpdateJob$MutationRoot$JobSkillsToJson(
+        UpdateJob$MutationRoot$JobSkills instance) =>
+    <String, dynamic>{
+      'skills': fromDartListStringToGraphQL$text(instance.skills),
+    };
+
+UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags
+    _$UpdateJob$MutationRoot$JobTagsMutationResponse$JobTagsFromJson(
+            Map<String, dynamic> json) =>
+        UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags()
+          ..tag = json['tag'] as String;
+
+Map<String, dynamic>
+    _$UpdateJob$MutationRoot$JobTagsMutationResponse$JobTagsToJson(
+            UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags instance) =>
+        <String, dynamic>{
+          'tag': instance.tag,
+        };
+
+UpdateJob$MutationRoot$JobTagsMutationResponse
+    _$UpdateJob$MutationRoot$JobTagsMutationResponseFromJson(
+            Map<String, dynamic> json) =>
+        UpdateJob$MutationRoot$JobTagsMutationResponse()
+          ..returning = (json['returning'] as List<dynamic>)
+              .map((e) => UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags
+                  .fromJson(e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UpdateJob$MutationRoot$JobTagsMutationResponseToJson(
+        UpdateJob$MutationRoot$JobTagsMutationResponse instance) =>
+    <String, dynamic>{
+      'returning': instance.returning.map((e) => e.toJson()).toList(),
     };
 
 UpdateJob$MutationRoot _$UpdateJob$MutationRootFromJson(
@@ -219,35 +449,58 @@ UpdateJob$MutationRoot _$UpdateJob$MutationRootFromJson(
       ..updateJobByPk = json['update_job_by_pk'] == null
           ? null
           : UpdateJob$MutationRoot$Job.fromJson(
-              json['update_job_by_pk'] as Map<String, dynamic>);
+              json['update_job_by_pk'] as Map<String, dynamic>)
+      ..updateJobDescriptionEnglishByPk =
+          json['update_job_description_english_by_pk'] == null
+              ? null
+              : UpdateJob$MutationRoot$JobDescriptionEnglish.fromJson(
+                  json['update_job_description_english_by_pk']
+                      as Map<String, dynamic>)
+      ..updateJobDescriptionRussianByPk =
+          json['update_job_description_russian_by_pk'] == null
+              ? null
+              : UpdateJob$MutationRoot$JobDescriptionRussian.fromJson(
+                  json['update_job_description_russian_by_pk']
+                      as Map<String, dynamic>)
+      ..updateJobContactsByPk = json['update_job_contacts_by_pk'] == null
+          ? null
+          : UpdateJob$MutationRoot$JobContacts.fromJson(
+              json['update_job_contacts_by_pk'] as Map<String, dynamic>)
+      ..updateJobSkillsByPk = json['update_job_skills_by_pk'] == null
+          ? null
+          : UpdateJob$MutationRoot$JobSkills.fromJson(
+              json['update_job_skills_by_pk'] as Map<String, dynamic>)
+      ..updateJobTags = json['update_job_tags'] == null
+          ? null
+          : UpdateJob$MutationRoot$JobTagsMutationResponse.fromJson(
+              json['update_job_tags'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$UpdateJob$MutationRootToJson(
         UpdateJob$MutationRoot instance) =>
     <String, dynamic>{
       'update_job_by_pk': instance.updateJobByPk?.toJson(),
+      'update_job_description_english_by_pk':
+          instance.updateJobDescriptionEnglishByPk?.toJson(),
+      'update_job_description_russian_by_pk':
+          instance.updateJobDescriptionRussianByPk?.toJson(),
+      'update_job_contacts_by_pk': instance.updateJobContactsByPk?.toJson(),
+      'update_job_skills_by_pk': instance.updateJobSkillsByPk?.toJson(),
+      'update_job_tags': instance.updateJobTags?.toJson(),
     };
 
 JobSetInput _$JobSetInputFromJson(Map<String, dynamic> json) => JobSetInput(
       address: json['address'] as String?,
       company: json['company'] as String?,
-      contacts:
-          fromGraphQL$textNullableToDartListNullableString(json['contacts']),
-      country: fromGraphQLBpcharNullableToDartStringNullable(
-          json['country'] as String?),
+      countryCode: fromGraphQLBpcharNullableToDartStringNullable(
+          json['country_code'] as String?),
       deletionMark: json['deletion_mark'] as bool?,
       employments: fromGraphQL$employmentNullableToDartListNullableEmployment(
           json['employments']),
-      englishDescription: json['english_description'] as String?,
-      isEnglish: json['is_english'] as bool?,
-      isRussian: json['is_russian'] as bool?,
       levels: fromGraphQL$levelNullableToDartListNullableDeveloperLevel(
           json['levels']),
       relocation: fromGraphQLRelocationNullableToDartRelocationNullable(
           json['relocation'] as String?),
       remote: json['remote'] as bool?,
-      russianDescription: json['russian_description'] as String?,
-      skills: fromGraphQL$textNullableToDartListNullableString(json['skills']),
-      tags: fromGraphQL$textNullableToDartListNullableString(json['tags']),
       title: json['title'] as String?,
     );
 
@@ -255,25 +508,16 @@ Map<String, dynamic> _$JobSetInputToJson(JobSetInput instance) =>
     <String, dynamic>{
       'address': instance.address,
       'company': instance.company,
-      'contacts':
-          fromDartListNullableStringToGraphQL$textNullable(instance.contacts),
-      'country':
-          fromDartStringNullableToGraphQLBpcharNullable(instance.country),
+      'country_code':
+          fromDartStringNullableToGraphQLBpcharNullable(instance.countryCode),
       'deletion_mark': instance.deletionMark,
       'employments': fromDartListNullableEmploymentToGraphQL$employmentNullable(
           instance.employments),
-      'english_description': instance.englishDescription,
-      'is_english': instance.isEnglish,
-      'is_russian': instance.isRussian,
       'levels': fromDartListNullableDeveloperLevelToGraphQL$levelNullable(
           instance.levels),
       'relocation': fromDartRelocationNullableToGraphQLRelocationNullable(
           instance.relocation),
       'remote': instance.remote,
-      'russian_description': instance.russianDescription,
-      'skills':
-          fromDartListNullableStringToGraphQL$textNullable(instance.skills),
-      'tags': fromDartListNullableStringToGraphQL$textNullable(instance.tags),
       'title': instance.title,
     };
 
@@ -287,7 +531,8 @@ Recent$QueryRoot$Job _$Recent$QueryRoot$JobFromJson(
       ..deletionMark = json['deletion_mark'] as bool
       ..title = json['title'] as String
       ..company = json['company'] as String
-      ..country = fromGraphQLBpcharToDartString(json['country'] as String)
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
       ..address = json['address'] as String
       ..remote = json['remote'] as bool
       ..relocation =
@@ -295,9 +540,7 @@ Recent$QueryRoot$Job _$Recent$QueryRoot$JobFromJson(
       ..employments = fromGraphQL$employmentToDartListEmployment(
           json['employments'] as Object)
       ..levels =
-          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object)
-      ..isEnglish = json['is_english'] as bool
-      ..isRussian = json['is_russian'] as bool;
+          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
 
 Map<String, dynamic> _$Recent$QueryRoot$JobToJson(
         Recent$QueryRoot$Job instance) =>
@@ -309,15 +552,13 @@ Map<String, dynamic> _$Recent$QueryRoot$JobToJson(
       'deletion_mark': instance.deletionMark,
       'title': instance.title,
       'company': instance.company,
-      'country': fromDartStringToGraphQLBpchar(instance.country),
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
       'address': instance.address,
       'remote': instance.remote,
       'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
       'employments':
           fromDartListEmploymentToGraphQL$employment(instance.employments),
       'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
-      'is_english': instance.isEnglish,
-      'is_russian': instance.isRussian,
     };
 
 Recent$QueryRoot _$Recent$QueryRootFromJson(Map<String, dynamic> json) =>
@@ -345,38 +586,32 @@ InsertJobArguments _$InsertJobArgumentsFromJson(Map<String, dynamic> json) =>
     InsertJobArguments(
       title: json['title'] as String,
       company: json['company'] as String,
-      country: fromGraphQLBpcharToDartString(json['country'] as String),
+      country_code:
+          fromGraphQLBpcharToDartString(json['country_code'] as String),
       address: json['address'] as String,
-      creator_id: json['creator_id'] as String,
       remote: json['remote'] as bool,
       relocation:
           fromGraphQLRelocationToDartRelocation(json['relocation'] as String),
       english_description: json['english_description'] as String,
-      is_english: json['is_english'] as bool,
       russian_description: json['russian_description'] as String,
-      is_russian: json['is_russian'] as bool,
       contacts: fromGraphQL$textToDartListString(json['contacts'] as Object),
       employments: fromGraphQL$employmentToDartListEmployment(
           json['employments'] as Object),
       levels: fromGraphQL$levelNullableToDartListNullableDeveloperLevel(
           json['levels']),
       skills: fromGraphQL$textNullableToDartListNullableString(json['skills']),
-      tags: fromGraphQL$textNullableToDartListNullableString(json['tags']),
     );
 
 Map<String, dynamic> _$InsertJobArgumentsToJson(InsertJobArguments instance) =>
     <String, dynamic>{
       'title': instance.title,
       'company': instance.company,
-      'country': fromDartStringToGraphQLBpchar(instance.country),
+      'country_code': fromDartStringToGraphQLBpchar(instance.country_code),
       'address': instance.address,
-      'creator_id': instance.creator_id,
       'remote': instance.remote,
       'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
       'english_description': instance.english_description,
-      'is_english': instance.is_english,
       'russian_description': instance.russian_description,
-      'is_russian': instance.is_russian,
       'contacts': fromDartListStringToGraphQL$text(instance.contacts),
       'employments':
           fromDartListEmploymentToGraphQL$employment(instance.employments),
@@ -384,7 +619,6 @@ Map<String, dynamic> _$InsertJobArgumentsToJson(InsertJobArguments instance) =>
           instance.levels),
       'skills':
           fromDartListNullableStringToGraphQL$textNullable(instance.skills),
-      'tags': fromDartListNullableStringToGraphQL$textNullable(instance.tags),
     };
 
 PaginateArguments _$PaginateArgumentsFromJson(Map<String, dynamic> json) =>
@@ -419,12 +653,23 @@ UpdateJobArguments _$UpdateJobArgumentsFromJson(Map<String, dynamic> json) =>
     UpdateJobArguments(
       id: json['id'] as int,
       data: JobSetInput.fromJson(json['data'] as Map<String, dynamic>),
+      description_english: json['description_english'] as String,
+      description_russian: json['description_russian'] as String,
+      contacts:
+          fromGraphQL$textNullableToDartListNullableString(json['contacts']),
+      skills: fromGraphQL$textNullableToDartListNullableString(json['skills']),
     );
 
 Map<String, dynamic> _$UpdateJobArgumentsToJson(UpdateJobArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
       'data': instance.data.toJson(),
+      'description_english': instance.description_english,
+      'description_russian': instance.description_russian,
+      'contacts':
+          fromDartListNullableStringToGraphQL$textNullable(instance.contacts),
+      'skills':
+          fromDartListNullableStringToGraphQL$textNullable(instance.skills),
     };
 
 RecentArguments _$RecentArgumentsFromJson(Map<String, dynamic> json) =>

@@ -17,6 +17,98 @@ import 'package:dart_jobs_shared/src/graphql/parsers/timestamp.dart';
 part 'api.graphql.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+class GetJob$QueryRoot$Job$JobDescriptionEnglish extends JsonSerializable
+    with EquatableMixin {
+  GetJob$QueryRoot$Job$JobDescriptionEnglish();
+
+  factory GetJob$QueryRoot$Job$JobDescriptionEnglish.fromJson(
+          Map<String, dynamic> json) =>
+      _$GetJob$QueryRoot$Job$JobDescriptionEnglishFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$GetJob$QueryRoot$Job$JobDescriptionEnglishToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetJob$QueryRoot$Job$JobDescriptionRussian extends JsonSerializable
+    with EquatableMixin {
+  GetJob$QueryRoot$Job$JobDescriptionRussian();
+
+  factory GetJob$QueryRoot$Job$JobDescriptionRussian.fromJson(
+          Map<String, dynamic> json) =>
+      _$GetJob$QueryRoot$Job$JobDescriptionRussianFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$GetJob$QueryRoot$Job$JobDescriptionRussianToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetJob$QueryRoot$Job$JobSkills extends JsonSerializable
+    with EquatableMixin {
+  GetJob$QueryRoot$Job$JobSkills();
+
+  factory GetJob$QueryRoot$Job$JobSkills.fromJson(Map<String, dynamic> json) =>
+      _$GetJob$QueryRoot$Job$JobSkillsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> skills;
+
+  @override
+  List<Object?> get props => [skills];
+  @override
+  Map<String, dynamic> toJson() => _$GetJob$QueryRoot$Job$JobSkillsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetJob$QueryRoot$Job$JobContacts extends JsonSerializable
+    with EquatableMixin {
+  GetJob$QueryRoot$Job$JobContacts();
+
+  factory GetJob$QueryRoot$Job$JobContacts.fromJson(
+          Map<String, dynamic> json) =>
+      _$GetJob$QueryRoot$Job$JobContactsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> contacts;
+
+  @override
+  List<Object?> get props => [contacts];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$GetJob$QueryRoot$Job$JobContactsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetJob$QueryRoot$Job$JobTags extends JsonSerializable
+    with EquatableMixin {
+  GetJob$QueryRoot$Job$JobTags();
+
+  factory GetJob$QueryRoot$Job$JobTags.fromJson(Map<String, dynamic> json) =>
+      _$GetJob$QueryRoot$Job$JobTagsFromJson(json);
+
+  late String tag;
+
+  @override
+  List<Object?> get props => [tag];
+  @override
+  Map<String, dynamic> toJson() => _$GetJob$QueryRoot$Job$JobTagsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   GetJob$QueryRoot$Job();
 
@@ -46,9 +138,10 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   late String company;
 
   @JsonKey(
+      name: 'country_code',
       fromJson: fromGraphQLBpcharToDartString,
       toJson: fromDartStringToGraphQLBpchar)
-  late String country;
+  late String countryCode;
 
   late String address;
 
@@ -69,32 +162,20 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> skills;
+  @JsonKey(name: 'description_english')
+  GetJob$QueryRoot$Job$JobDescriptionEnglish? descriptionEnglish;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> contacts;
+  @JsonKey(name: 'description_russian')
+  GetJob$QueryRoot$Job$JobDescriptionRussian? descriptionRussian;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> tags;
+  @JsonKey(name: 'job_skills')
+  GetJob$QueryRoot$Job$JobSkills? jobSkills;
 
-  @JsonKey(name: 'russian_description')
-  late String russianDescription;
+  @JsonKey(name: 'job_contacts')
+  GetJob$QueryRoot$Job$JobContacts? jobContacts;
 
-  @JsonKey(name: 'is_russian')
-  late bool isRussian;
-
-  @JsonKey(name: 'english_description')
-  late String englishDescription;
-
-  @JsonKey(name: 'is_english')
-  late bool isEnglish;
+  @JsonKey(name: 'job_tags')
+  late List<GetJob$QueryRoot$Job$JobTags> jobTags;
 
   @override
   List<Object?> get props => [
@@ -105,19 +186,17 @@ class GetJob$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         deletionMark,
         title,
         company,
-        country,
+        countryCode,
         address,
         remote,
         relocation,
         employments,
         levels,
-        skills,
-        contacts,
-        tags,
-        russianDescription,
-        isRussian,
-        englishDescription,
-        isEnglish
+        descriptionEnglish,
+        descriptionRussian,
+        jobSkills,
+        jobContacts,
+        jobTags
       ];
   @override
   Map<String, dynamic> toJson() => _$GetJob$QueryRoot$JobToJson(this);
@@ -137,6 +216,102 @@ class GetJob$QueryRoot extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [jobByPk];
   @override
   Map<String, dynamic> toJson() => _$GetJob$QueryRootToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class InsertJob$MutationRoot$Job$JobDescriptionEnglish extends JsonSerializable
+    with EquatableMixin {
+  InsertJob$MutationRoot$Job$JobDescriptionEnglish();
+
+  factory InsertJob$MutationRoot$Job$JobDescriptionEnglish.fromJson(
+          Map<String, dynamic> json) =>
+      _$InsertJob$MutationRoot$Job$JobDescriptionEnglishFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$InsertJob$MutationRoot$Job$JobDescriptionEnglishToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class InsertJob$MutationRoot$Job$JobDescriptionRussian extends JsonSerializable
+    with EquatableMixin {
+  InsertJob$MutationRoot$Job$JobDescriptionRussian();
+
+  factory InsertJob$MutationRoot$Job$JobDescriptionRussian.fromJson(
+          Map<String, dynamic> json) =>
+      _$InsertJob$MutationRoot$Job$JobDescriptionRussianFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$InsertJob$MutationRoot$Job$JobDescriptionRussianToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class InsertJob$MutationRoot$Job$JobSkills extends JsonSerializable
+    with EquatableMixin {
+  InsertJob$MutationRoot$Job$JobSkills();
+
+  factory InsertJob$MutationRoot$Job$JobSkills.fromJson(
+          Map<String, dynamic> json) =>
+      _$InsertJob$MutationRoot$Job$JobSkillsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> skills;
+
+  @override
+  List<Object?> get props => [skills];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$InsertJob$MutationRoot$Job$JobSkillsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class InsertJob$MutationRoot$Job$JobContacts extends JsonSerializable
+    with EquatableMixin {
+  InsertJob$MutationRoot$Job$JobContacts();
+
+  factory InsertJob$MutationRoot$Job$JobContacts.fromJson(
+          Map<String, dynamic> json) =>
+      _$InsertJob$MutationRoot$Job$JobContactsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> contacts;
+
+  @override
+  List<Object?> get props => [contacts];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$InsertJob$MutationRoot$Job$JobContactsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class InsertJob$MutationRoot$Job$JobTags extends JsonSerializable
+    with EquatableMixin {
+  InsertJob$MutationRoot$Job$JobTags();
+
+  factory InsertJob$MutationRoot$Job$JobTags.fromJson(
+          Map<String, dynamic> json) =>
+      _$InsertJob$MutationRoot$Job$JobTagsFromJson(json);
+
+  late String tag;
+
+  @override
+  List<Object?> get props => [tag];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$InsertJob$MutationRoot$Job$JobTagsToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -169,9 +344,10 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
   late String company;
 
   @JsonKey(
+      name: 'country_code',
       fromJson: fromGraphQLBpcharToDartString,
       toJson: fromDartStringToGraphQLBpchar)
-  late String country;
+  late String countryCode;
 
   late String address;
 
@@ -192,32 +368,20 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> skills;
+  @JsonKey(name: 'description_english')
+  InsertJob$MutationRoot$Job$JobDescriptionEnglish? descriptionEnglish;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> contacts;
+  @JsonKey(name: 'description_russian')
+  InsertJob$MutationRoot$Job$JobDescriptionRussian? descriptionRussian;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> tags;
+  @JsonKey(name: 'job_skills')
+  InsertJob$MutationRoot$Job$JobSkills? jobSkills;
 
-  @JsonKey(name: 'russian_description')
-  late String russianDescription;
+  @JsonKey(name: 'job_contacts')
+  InsertJob$MutationRoot$Job$JobContacts? jobContacts;
 
-  @JsonKey(name: 'is_russian')
-  late bool isRussian;
-
-  @JsonKey(name: 'english_description')
-  late String englishDescription;
-
-  @JsonKey(name: 'is_english')
-  late bool isEnglish;
+  @JsonKey(name: 'job_tags')
+  late List<InsertJob$MutationRoot$Job$JobTags> jobTags;
 
   @override
   List<Object?> get props => [
@@ -228,19 +392,17 @@ class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
         deletionMark,
         title,
         company,
-        country,
+        countryCode,
         address,
         remote,
         relocation,
         employments,
         levels,
-        skills,
-        contacts,
-        tags,
-        russianDescription,
-        isRussian,
-        englishDescription,
-        isEnglish
+        descriptionEnglish,
+        descriptionRussian,
+        jobSkills,
+        jobContacts,
+        jobTags
       ];
   @override
   Map<String, dynamic> toJson() => _$InsertJob$MutationRoot$JobToJson(this);
@@ -292,9 +454,10 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   late String company;
 
   @JsonKey(
+      name: 'country_code',
       fromJson: fromGraphQLBpcharToDartString,
       toJson: fromDartStringToGraphQLBpchar)
-  late String country;
+  late String countryCode;
 
   late String address;
 
@@ -315,12 +478,6 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
-  @JsonKey(name: 'is_english')
-  late bool isEnglish;
-
-  @JsonKey(name: 'is_russian')
-  late bool isRussian;
-
   @override
   List<Object?> get props => [
         id,
@@ -330,14 +487,12 @@ class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         deletionMark,
         title,
         company,
-        country,
+        countryCode,
         address,
         remote,
         relocation,
         employments,
-        levels,
-        isEnglish,
-        isRussian
+        levels
       ];
   @override
   Map<String, dynamic> toJson() => _$Paginate$QueryRoot$JobToJson(this);
@@ -384,10 +539,167 @@ class UpdateJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'deletion_mark')
   late bool deletionMark;
 
+  late String title;
+
+  late String company;
+
+  @JsonKey(
+      name: 'country_code',
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String countryCode;
+
+  late String address;
+
+  late bool remote;
+
+  @JsonKey(
+      fromJson: fromGraphQLRelocationToDartRelocation,
+      toJson: fromDartRelocationToGraphQLRelocation)
+  late Relocation relocation;
+
+  @JsonKey(
+      fromJson: fromGraphQL$employmentToDartListEmployment,
+      toJson: fromDartListEmploymentToGraphQL$employment)
+  late List<Employment> employments;
+
+  @JsonKey(
+      fromJson: fromGraphQL$levelToDartListDeveloperLevel,
+      toJson: fromDartListDeveloperLevelToGraphQL$level)
+  late List<DeveloperLevel> levels;
+
   @override
-  List<Object?> get props => [id, creatorId, created, updated, deletionMark];
+  List<Object?> get props => [
+        id,
+        creatorId,
+        created,
+        updated,
+        deletionMark,
+        title,
+        company,
+        countryCode,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels
+      ];
   @override
   Map<String, dynamic> toJson() => _$UpdateJob$MutationRoot$JobToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobDescriptionEnglish extends JsonSerializable
+    with EquatableMixin {
+  UpdateJob$MutationRoot$JobDescriptionEnglish();
+
+  factory UpdateJob$MutationRoot$JobDescriptionEnglish.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobDescriptionEnglishFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobDescriptionEnglishToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobDescriptionRussian extends JsonSerializable
+    with EquatableMixin {
+  UpdateJob$MutationRoot$JobDescriptionRussian();
+
+  factory UpdateJob$MutationRoot$JobDescriptionRussian.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobDescriptionRussianFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobDescriptionRussianToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobContacts extends JsonSerializable
+    with EquatableMixin {
+  UpdateJob$MutationRoot$JobContacts();
+
+  factory UpdateJob$MutationRoot$JobContacts.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobContactsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> contacts;
+
+  @override
+  List<Object?> get props => [contacts];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobContactsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobSkills extends JsonSerializable
+    with EquatableMixin {
+  UpdateJob$MutationRoot$JobSkills();
+
+  factory UpdateJob$MutationRoot$JobSkills.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobSkillsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> skills;
+
+  @override
+  List<Object?> get props => [skills];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobSkillsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags
+    extends JsonSerializable with EquatableMixin {
+  UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags();
+
+  factory UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobTagsMutationResponse$JobTagsFromJson(json);
+
+  late String tag;
+
+  @override
+  List<Object?> get props => [tag];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobTagsMutationResponse$JobTagsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJob$MutationRoot$JobTagsMutationResponse extends JsonSerializable
+    with EquatableMixin {
+  UpdateJob$MutationRoot$JobTagsMutationResponse();
+
+  factory UpdateJob$MutationRoot$JobTagsMutationResponse.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateJob$MutationRoot$JobTagsMutationResponseFromJson(json);
+
+  late List<UpdateJob$MutationRoot$JobTagsMutationResponse$JobTags> returning;
+
+  @override
+  List<Object?> get props => [returning];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateJob$MutationRoot$JobTagsMutationResponseToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -400,8 +712,30 @@ class UpdateJob$MutationRoot extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'update_job_by_pk')
   UpdateJob$MutationRoot$Job? updateJobByPk;
 
+  @JsonKey(name: 'update_job_description_english_by_pk')
+  UpdateJob$MutationRoot$JobDescriptionEnglish? updateJobDescriptionEnglishByPk;
+
+  @JsonKey(name: 'update_job_description_russian_by_pk')
+  UpdateJob$MutationRoot$JobDescriptionRussian? updateJobDescriptionRussianByPk;
+
+  @JsonKey(name: 'update_job_contacts_by_pk')
+  UpdateJob$MutationRoot$JobContacts? updateJobContactsByPk;
+
+  @JsonKey(name: 'update_job_skills_by_pk')
+  UpdateJob$MutationRoot$JobSkills? updateJobSkillsByPk;
+
+  @JsonKey(name: 'update_job_tags')
+  UpdateJob$MutationRoot$JobTagsMutationResponse? updateJobTags;
+
   @override
-  List<Object?> get props => [updateJobByPk];
+  List<Object?> get props => [
+        updateJobByPk,
+        updateJobDescriptionEnglishByPk,
+        updateJobDescriptionRussianByPk,
+        updateJobContactsByPk,
+        updateJobSkillsByPk,
+        updateJobTags
+      ];
   @override
   Map<String, dynamic> toJson() => _$UpdateJob$MutationRootToJson(this);
 }
@@ -411,19 +745,12 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
   JobSetInput(
       {this.address,
       this.company,
-      this.contacts,
-      this.country,
+      this.countryCode,
       this.deletionMark,
       this.employments,
-      this.englishDescription,
-      this.isEnglish,
-      this.isRussian,
       this.levels,
       this.relocation,
       this.remote,
-      this.russianDescription,
-      this.skills,
-      this.tags,
       this.title});
 
   factory JobSetInput.fromJson(Map<String, dynamic> json) =>
@@ -434,14 +761,10 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
   String? company;
 
   @JsonKey(
-      fromJson: fromGraphQL$textNullableToDartListNullableString,
-      toJson: fromDartListNullableStringToGraphQL$textNullable)
-  List<String>? contacts;
-
-  @JsonKey(
+      name: 'country_code',
       fromJson: fromGraphQLBpcharNullableToDartStringNullable,
       toJson: fromDartStringNullableToGraphQLBpcharNullable)
-  String? country;
+  String? countryCode;
 
   @JsonKey(name: 'deletion_mark')
   bool? deletionMark;
@@ -450,15 +773,6 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
       fromJson: fromGraphQL$employmentNullableToDartListNullableEmployment,
       toJson: fromDartListNullableEmploymentToGraphQL$employmentNullable)
   List<Employment>? employments;
-
-  @JsonKey(name: 'english_description')
-  String? englishDescription;
-
-  @JsonKey(name: 'is_english')
-  bool? isEnglish;
-
-  @JsonKey(name: 'is_russian')
-  bool? isRussian;
 
   @JsonKey(
       fromJson: fromGraphQL$levelNullableToDartListNullableDeveloperLevel,
@@ -472,38 +786,18 @@ class JobSetInput extends JsonSerializable with EquatableMixin {
 
   bool? remote;
 
-  @JsonKey(name: 'russian_description')
-  String? russianDescription;
-
-  @JsonKey(
-      fromJson: fromGraphQL$textNullableToDartListNullableString,
-      toJson: fromDartListNullableStringToGraphQL$textNullable)
-  List<String>? skills;
-
-  @JsonKey(
-      fromJson: fromGraphQL$textNullableToDartListNullableString,
-      toJson: fromDartListNullableStringToGraphQL$textNullable)
-  List<String>? tags;
-
   String? title;
 
   @override
   List<Object?> get props => [
         address,
         company,
-        contacts,
-        country,
+        countryCode,
         deletionMark,
         employments,
-        englishDescription,
-        isEnglish,
-        isRussian,
         levels,
         relocation,
         remote,
-        russianDescription,
-        skills,
-        tags,
         title
       ];
   @override
@@ -540,9 +834,10 @@ class Recent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   late String company;
 
   @JsonKey(
+      name: 'country_code',
       fromJson: fromGraphQLBpcharToDartString,
       toJson: fromDartStringToGraphQLBpchar)
-  late String country;
+  late String countryCode;
 
   late String address;
 
@@ -563,12 +858,6 @@ class Recent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
-  @JsonKey(name: 'is_english')
-  late bool isEnglish;
-
-  @JsonKey(name: 'is_russian')
-  late bool isRussian;
-
   @override
   List<Object?> get props => [
         id,
@@ -578,14 +867,12 @@ class Recent$QueryRoot$Job extends JsonSerializable with EquatableMixin {
         deletionMark,
         title,
         company,
-        country,
+        countryCode,
         address,
         remote,
         relocation,
         employments,
-        levels,
-        isEnglish,
-        isRussian
+        levels
       ];
   @override
   Map<String, dynamic> toJson() => _$Recent$QueryRoot$JobToJson(this);
@@ -689,7 +976,7 @@ final GET_JOB_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'country'),
+                  name: NameNode(value: 'country_code'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -725,47 +1012,70 @@ final GET_JOB_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'skills'),
+                  name: NameNode(value: 'description_english'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'contacts'),
+                  name: NameNode(value: 'description_russian'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'tags'),
+                  name: NameNode(value: 'job_skills'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'skills'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'russian_description'),
+                  name: NameNode(value: 'job_contacts'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'contacts'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'is_russian'),
+                  name: NameNode(value: 'job_tags'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'english_description'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'tag'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ]))
             ]))
       ]))
 ]);
@@ -794,20 +1104,16 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
   InsertJobArguments(
       {required this.title,
       required this.company,
-      required this.country,
+      required this.country_code,
       required this.address,
-      required this.creator_id,
       required this.remote,
       required this.relocation,
       required this.english_description,
-      required this.is_english,
       required this.russian_description,
-      required this.is_russian,
       required this.contacts,
       required this.employments,
       this.levels,
-      this.skills,
-      this.tags});
+      this.skills});
 
   @override
   factory InsertJobArguments.fromJson(Map<String, dynamic> json) =>
@@ -820,11 +1126,9 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
   @JsonKey(
       fromJson: fromGraphQLBpcharToDartString,
       toJson: fromDartStringToGraphQLBpchar)
-  late String country;
+  late String country_code;
 
   late String address;
-
-  late String creator_id;
 
   late bool remote;
 
@@ -835,11 +1139,7 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
 
   late String english_description;
 
-  late bool is_english;
-
   late String russian_description;
-
-  late bool is_russian;
 
   @JsonKey(
       fromJson: fromGraphQL$textToDartListString,
@@ -861,29 +1161,20 @@ class InsertJobArguments extends JsonSerializable with EquatableMixin {
       toJson: fromDartListNullableStringToGraphQL$textNullable)
   final List<String>? skills;
 
-  @JsonKey(
-      fromJson: fromGraphQL$textNullableToDartListNullableString,
-      toJson: fromDartListNullableStringToGraphQL$textNullable)
-  final List<String>? tags;
-
   @override
   List<Object?> get props => [
         title,
         company,
-        country,
+        country_code,
         address,
-        creator_id,
         remote,
         relocation,
         english_description,
-        is_english,
         russian_description,
-        is_russian,
         contacts,
         employments,
         levels,
-        skills,
-        tags
+        skills
       ];
   @override
   Map<String, dynamic> toJson() => _$InsertJobArgumentsToJson(this);
@@ -907,19 +1198,13 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'country')),
+            variable: VariableNode(name: NameNode(value: 'country_code')),
             type:
                 NamedTypeNode(name: NameNode(value: 'bpchar'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'address')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'creator_id')),
             type:
                 NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
@@ -944,22 +1229,10 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'is_english')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'Boolean'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
             variable:
                 VariableNode(name: NameNode(value: 'russian_description')),
             type:
                 NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'is_russian')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'Boolean'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: []),
         VariableDefinitionNode(
@@ -985,12 +1258,6 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             type:
                 NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
             defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'tags')),
-            type:
-                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
-            defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
@@ -1003,18 +1270,15 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   name: NameNode(value: 'object'),
                   value: ObjectValueNode(fields: [
                     ObjectFieldNode(
-                        name: NameNode(value: 'creator_id'),
-                        value:
-                            VariableNode(name: NameNode(value: 'creator_id'))),
-                    ObjectFieldNode(
                         name: NameNode(value: 'title'),
                         value: VariableNode(name: NameNode(value: 'title'))),
                     ObjectFieldNode(
                         name: NameNode(value: 'company'),
                         value: VariableNode(name: NameNode(value: 'company'))),
                     ObjectFieldNode(
-                        name: NameNode(value: 'country'),
-                        value: VariableNode(name: NameNode(value: 'country'))),
+                        name: NameNode(value: 'country_code'),
+                        value: VariableNode(
+                            name: NameNode(value: 'country_code'))),
                     ObjectFieldNode(
                         name: NameNode(value: 'address'),
                         value: VariableNode(name: NameNode(value: 'address'))),
@@ -1033,30 +1297,69 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'levels'),
                         value: VariableNode(name: NameNode(value: 'levels'))),
                     ObjectFieldNode(
-                        name: NameNode(value: 'skills'),
-                        value: VariableNode(name: NameNode(value: 'skills'))),
+                        name: NameNode(value: 'description_english'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: 'data'),
+                              value: ObjectValueNode(fields: [
+                                ObjectFieldNode(
+                                    name: NameNode(value: 'description'),
+                                    value: VariableNode(
+                                        name: NameNode(
+                                            value: 'english_description')))
+                              ]))
+                        ])),
                     ObjectFieldNode(
-                        name: NameNode(value: 'contacts'),
-                        value: VariableNode(name: NameNode(value: 'contacts'))),
+                        name: NameNode(value: 'description_russian'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: 'data'),
+                              value: ObjectValueNode(fields: [
+                                ObjectFieldNode(
+                                    name: NameNode(value: 'description'),
+                                    value: VariableNode(
+                                        name: NameNode(
+                                            value: 'russian_description')))
+                              ]))
+                        ])),
                     ObjectFieldNode(
-                        name: NameNode(value: 'tags'),
-                        value: VariableNode(name: NameNode(value: 'tags'))),
+                        name: NameNode(value: 'job_skills'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: 'data'),
+                              value: ObjectValueNode(fields: [
+                                ObjectFieldNode(
+                                    name: NameNode(value: 'skills'),
+                                    value: VariableNode(
+                                        name: NameNode(value: 'skills')))
+                              ]))
+                        ])),
                     ObjectFieldNode(
-                        name: NameNode(value: 'english_description'),
-                        value: VariableNode(
-                            name: NameNode(value: 'english_description'))),
+                        name: NameNode(value: 'job_contacts'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: 'data'),
+                              value: ObjectValueNode(fields: [
+                                ObjectFieldNode(
+                                    name: NameNode(value: 'contacts'),
+                                    value: VariableNode(
+                                        name: NameNode(value: 'contacts')))
+                              ]))
+                        ])),
                     ObjectFieldNode(
-                        name: NameNode(value: 'is_english'),
-                        value:
-                            VariableNode(name: NameNode(value: 'is_english'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'russian_description'),
-                        value: VariableNode(
-                            name: NameNode(value: 'russian_description'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'is_russian'),
-                        value:
-                            VariableNode(name: NameNode(value: 'is_russian')))
+                        name: NameNode(value: 'job_tags'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: 'data'),
+                              value: ListValueNode(values: [
+                                ObjectValueNode(fields: [
+                                  ObjectFieldNode(
+                                      name: NameNode(value: 'tag'),
+                                      value: StringValueNode(
+                                          value: '', isBlock: false))
+                                ])
+                              ]))
+                        ]))
                   ]))
             ],
             directives: [],
@@ -1104,7 +1407,7 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'country'),
+                  name: NameNode(value: 'country_code'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -1140,47 +1443,70 @@ final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'skills'),
+                  name: NameNode(value: 'description_english'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'contacts'),
+                  name: NameNode(value: 'description_russian'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'tags'),
+                  name: NameNode(value: 'job_skills'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'skills'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'russian_description'),
+                  name: NameNode(value: 'job_contacts'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'contacts'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
               FieldNode(
-                  name: NameNode(value: 'is_russian'),
+                  name: NameNode(value: 'job_tags'),
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'english_description'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'tag'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ]))
             ]))
       ]))
 ]);
@@ -1391,7 +1717,7 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'country'),
+                  name: NameNode(value: 'country_code'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -1425,18 +1751,6 @@ final PAGINATE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_russian'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
                   selectionSet: null)
             ]))
       ]))
@@ -1464,7 +1778,13 @@ class PaginateQuery
 
 @JsonSerializable(explicitToJson: true)
 class UpdateJobArguments extends JsonSerializable with EquatableMixin {
-  UpdateJobArguments({required this.id, required this.data});
+  UpdateJobArguments(
+      {required this.id,
+      required this.data,
+      required this.description_english,
+      required this.description_russian,
+      this.contacts,
+      this.skills});
 
   @override
   factory UpdateJobArguments.fromJson(Map<String, dynamic> json) =>
@@ -1474,8 +1794,23 @@ class UpdateJobArguments extends JsonSerializable with EquatableMixin {
 
   late JobSetInput data;
 
+  late String description_english;
+
+  late String description_russian;
+
+  @JsonKey(
+      fromJson: fromGraphQL$textNullableToDartListNullableString,
+      toJson: fromDartListNullableStringToGraphQL$textNullable)
+  final List<String>? contacts;
+
+  @JsonKey(
+      fromJson: fromGraphQL$textNullableToDartListNullableString,
+      toJson: fromDartListNullableStringToGraphQL$textNullable)
+  final List<String>? skills;
+
   @override
-  List<Object?> get props => [id, data];
+  List<Object?> get props =>
+      [id, data, description_english, description_russian, contacts, skills];
   @override
   Map<String, dynamic> toJson() => _$UpdateJobArgumentsToJson(this);
 }
@@ -1494,6 +1829,32 @@ final UPDATE_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
                 name: NameNode(value: 'job_set_input'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable:
+                VariableNode(name: NameNode(value: 'description_english')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable:
+                VariableNode(name: NameNode(value: 'description_russian')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'contacts')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'skills')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
@@ -1545,7 +1906,208 @@ final UPDATE_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   alias: null,
                   arguments: [],
                   directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'title'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'company'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'country_code'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'remote'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'relocation'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'employments'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'levels'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
                   selectionSet: null)
+            ])),
+        FieldNode(
+            name: NameNode(value: 'update_job_description_english_by_pk'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'pk_columns'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'job_id'),
+                        value: VariableNode(name: NameNode(value: 'id')))
+                  ])),
+              ArgumentNode(
+                  name: NameNode(value: '_set'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'description'),
+                        value: VariableNode(
+                            name: NameNode(value: 'description_english')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'description'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null)
+            ])),
+        FieldNode(
+            name: NameNode(value: 'update_job_description_russian_by_pk'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'pk_columns'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'job_id'),
+                        value: VariableNode(name: NameNode(value: 'id')))
+                  ])),
+              ArgumentNode(
+                  name: NameNode(value: '_set'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'description'),
+                        value: VariableNode(
+                            name: NameNode(value: 'description_russian')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'description'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null)
+            ])),
+        FieldNode(
+            name: NameNode(value: 'update_job_contacts_by_pk'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'pk_columns'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'job_id'),
+                        value: VariableNode(name: NameNode(value: 'id')))
+                  ])),
+              ArgumentNode(
+                  name: NameNode(value: '_set'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'contacts'),
+                        value: VariableNode(name: NameNode(value: 'contacts')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'contacts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null)
+            ])),
+        FieldNode(
+            name: NameNode(value: 'update_job_skills_by_pk'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'pk_columns'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'job_id'),
+                        value: VariableNode(name: NameNode(value: 'id')))
+                  ])),
+              ArgumentNode(
+                  name: NameNode(value: '_set'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'skills'),
+                        value: VariableNode(name: NameNode(value: 'skills')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'skills'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null)
+            ])),
+        FieldNode(
+            name: NameNode(value: 'update_job_tags'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'where'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'job_id'),
+                        value: ObjectValueNode(fields: [
+                          ObjectFieldNode(
+                              name: NameNode(value: '_eq'),
+                              value: VariableNode(name: NameNode(value: 'id')))
+                        ]))
+                  ])),
+              ArgumentNode(
+                  name: NameNode(value: '_set'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'tag'),
+                        value: StringValueNode(value: '', isBlock: false))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'returning'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'tag'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ]))
             ]))
       ]))
 ]);
@@ -1756,7 +2318,7 @@ final RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: null),
               FieldNode(
-                  name: NameNode(value: 'country'),
+                  name: NameNode(value: 'country_code'),
                   alias: null,
                   arguments: [],
                   directives: [],
@@ -1787,18 +2349,6 @@ final RECENT_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'levels'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'is_russian'),
                   alias: null,
                   arguments: [],
                   directives: [],

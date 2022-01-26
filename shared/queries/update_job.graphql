@@ -1,6 +1,10 @@
 mutation UpdateJob(
     $id: Int!,
-    $data: job_set_input!
+    $data: job_set_input!,
+    $description_english: String!,
+    $description_russian: String!,
+    $contacts: _text,
+    $skills: _text
 ) {
     update_job_by_pk(
         pk_columns: {
@@ -12,6 +16,63 @@ mutation UpdateJob(
         creator_id,
         created,
         updated,
-        deletion_mark
+        deletion_mark,
+        title,
+        company,
+        country_code,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels
+    }
+    update_job_description_english_by_pk(
+        pk_columns: {
+            job_id: $id
+        },
+        _set: {
+            description: $description_english
+        }) {
+        description
+    }
+    update_job_description_russian_by_pk(
+        pk_columns: {
+            job_id: $id
+        },
+        _set: {
+            description: $description_russian
+        }) {
+        description
+    }
+    update_job_contacts_by_pk(
+        pk_columns: {
+            job_id: $id
+        },
+        _set: {
+            contacts: $contacts
+        }) {
+        contacts
+    }
+    update_job_skills_by_pk(
+        pk_columns: {
+            job_id: $id
+        },
+        _set: {
+            skills: $skills
+        }) {
+        skills
+    }
+    update_job_tags(
+        where: {
+            job_id: {
+                _eq: $id
+            }
+        },
+        _set: {
+            tag: ""
+        }) {
+        returning {
+            tag
+        }
     }
 }
