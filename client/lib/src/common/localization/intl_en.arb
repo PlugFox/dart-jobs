@@ -35,6 +35,18 @@
   "@next": {
     "description": "Далее"
   },
+  "filter_button_search": "Искать",
+  "@filter_button_search": {
+    "description": "Применить фильтр"
+  },
+  "filter_button_reset": "Сбросить",
+  "@filter_button_reset": {
+    "description": "Сбросить поиск"
+  },
+  "filter_button_back": "Отменить",
+  "@filter_button_back": {
+    "description": "Отменить поиск"
+  },
   "title": "Dart Jobs",
   "@title": {
     "description": "Заголовок приложения"
