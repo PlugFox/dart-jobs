@@ -15,7 +15,7 @@ abstract class LocaleUtil {
     final now = DateTime.now();
     if (dt.day == now.day) {
       // (_dateFormat['${languageCode}_hms'] ??= DateFormat.Hms()).format(dt)
-      return TimeOfDay.fromDateTime(dateTime).format(context);
+      return TimeOfDay.fromDateTime(dt).format(context);
     }
     return (_dateFormat['${languageCode}_yMMMMd'] ??= DateFormat.yMMMMd()).format(dt);
   }
