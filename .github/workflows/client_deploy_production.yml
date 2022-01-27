@@ -15,7 +15,8 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
-      image: plugfox/flutter:stable-web
+      #image: plugfox/flutter:stable-web
+      image: plugfox/flutter:beta-web
       options: --user root
     env:
       working-directory: ./client
