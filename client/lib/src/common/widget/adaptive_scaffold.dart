@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:platform_info/platform_info.dart';
 
 @immutable
 class AdaptiveScaffold extends StatefulWidget {
@@ -10,6 +11,7 @@ class AdaptiveScaffold extends StatefulWidget {
     required final this.body,
     final this.appBar,
     final this.maintainBottomViewPadding = false,
+    final this.isRootPage = false,
     Key? key,
   }) : super(key: key);
 
@@ -18,6 +20,9 @@ class AdaptiveScaffold extends StatefulWidget {
 
   /// Предполагается, что основная колонка будет шириной 620 dip
   final Widget body;
+
+  /// Это корневая страница
+  final bool isRootPage;
 
   // /// Боковая панель справа от тела, шириной 320 dip
   // final Widget? panel;
@@ -70,7 +75,12 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
         state: this,
         child: Scaffold(
           appBar: widget.appBar,
-          drawer: DrawerScope.isDrawerShown(context)
+          drawer: (!widget.isRootPage &&
+                      platform.operatingSystem.maybeWhen<bool>(
+                        orElse: () => false,
+                        iOS: () => true,
+                      )) ||
+                  DrawerScope.isDrawerShown(context)
               ? null
               : const _DrawerCloser(
                   child: AppDrawer(),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
@@ -123,7 +122,6 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
         listener: (final context, final state) => _checkPagination(),
         child: CustomScrollViewSmooth(
           physics: const BouncingScrollPhysics(),
-          scrollBehavior: const _FeedListScrollBehavior(),
           controller: _scrollController,
           slivers: const <Widget>[
             /// Шапка с поиском
@@ -138,20 +136,4 @@ class _FeedScrollableState extends State<_FeedScrollable> with RouteAware {
           ],
         ),
       );
-}
-
-class _FeedListScrollBehavior extends MaterialScrollBehavior {
-  const _FeedListScrollBehavior()
-      : super(
-          androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-        );
-
-  // Override behavior methods and getters like dragDevices
-  @override
-  Set<PointerDeviceKind> get dragDevices => <PointerDeviceKind>{
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.stylus,
-        PointerDeviceKind.unknown,
-      };
 }
