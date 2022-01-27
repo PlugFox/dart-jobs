@@ -219,212 +219,6 @@ class GetJob$QueryRoot extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job$JobDescriptionEnglish extends JsonSerializable
-    with EquatableMixin {
-  InsertJob$MutationRoot$Job$JobDescriptionEnglish();
-
-  factory InsertJob$MutationRoot$Job$JobDescriptionEnglish.fromJson(
-          Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$Job$JobDescriptionEnglishFromJson(json);
-
-  late String description;
-
-  @override
-  List<Object?> get props => [description];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$InsertJob$MutationRoot$Job$JobDescriptionEnglishToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job$JobDescriptionRussian extends JsonSerializable
-    with EquatableMixin {
-  InsertJob$MutationRoot$Job$JobDescriptionRussian();
-
-  factory InsertJob$MutationRoot$Job$JobDescriptionRussian.fromJson(
-          Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$Job$JobDescriptionRussianFromJson(json);
-
-  late String description;
-
-  @override
-  List<Object?> get props => [description];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$InsertJob$MutationRoot$Job$JobDescriptionRussianToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job$JobSkills extends JsonSerializable
-    with EquatableMixin {
-  InsertJob$MutationRoot$Job$JobSkills();
-
-  factory InsertJob$MutationRoot$Job$JobSkills.fromJson(
-          Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$Job$JobSkillsFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> skills;
-
-  @override
-  List<Object?> get props => [skills];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$InsertJob$MutationRoot$Job$JobSkillsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job$JobContacts extends JsonSerializable
-    with EquatableMixin {
-  InsertJob$MutationRoot$Job$JobContacts();
-
-  factory InsertJob$MutationRoot$Job$JobContacts.fromJson(
-          Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$Job$JobContactsFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> contacts;
-
-  @override
-  List<Object?> get props => [contacts];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$InsertJob$MutationRoot$Job$JobContactsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job$JobTags extends JsonSerializable
-    with EquatableMixin {
-  InsertJob$MutationRoot$Job$JobTags();
-
-  factory InsertJob$MutationRoot$Job$JobTags.fromJson(
-          Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$Job$JobTagsFromJson(json);
-
-  late String tag;
-
-  @override
-  List<Object?> get props => [tag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$InsertJob$MutationRoot$Job$JobTagsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
-  InsertJob$MutationRoot$Job();
-
-  factory InsertJob$MutationRoot$Job.fromJson(Map<String, dynamic> json) =>
-      _$InsertJob$MutationRoot$JobFromJson(json);
-
-  late int id;
-
-  @JsonKey(name: 'creator_id')
-  late String creatorId;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime created;
-
-  @JsonKey(
-      fromJson: fromGraphQLTimestampToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLTimestamp)
-  late DateTime updated;
-
-  @JsonKey(name: 'deletion_mark')
-  late bool deletionMark;
-
-  late String title;
-
-  late String company;
-
-  @JsonKey(
-      name: 'country_code',
-      fromJson: fromGraphQLBpcharToDartString,
-      toJson: fromDartStringToGraphQLBpchar)
-  late String countryCode;
-
-  late String address;
-
-  late bool remote;
-
-  @JsonKey(
-      fromJson: fromGraphQLRelocationToDartRelocation,
-      toJson: fromDartRelocationToGraphQLRelocation)
-  late Relocation relocation;
-
-  @JsonKey(
-      fromJson: fromGraphQL$employmentToDartListEmployment,
-      toJson: fromDartListEmploymentToGraphQL$employment)
-  late List<Employment> employments;
-
-  @JsonKey(
-      fromJson: fromGraphQL$levelToDartListDeveloperLevel,
-      toJson: fromDartListDeveloperLevelToGraphQL$level)
-  late List<DeveloperLevel> levels;
-
-  @JsonKey(name: 'description_english')
-  InsertJob$MutationRoot$Job$JobDescriptionEnglish? descriptionEnglish;
-
-  @JsonKey(name: 'description_russian')
-  InsertJob$MutationRoot$Job$JobDescriptionRussian? descriptionRussian;
-
-  @JsonKey(name: 'job_skills')
-  InsertJob$MutationRoot$Job$JobSkills? jobSkills;
-
-  @JsonKey(name: 'job_contacts')
-  InsertJob$MutationRoot$Job$JobContacts? jobContacts;
-
-  @JsonKey(name: 'job_tags')
-  late List<InsertJob$MutationRoot$Job$JobTags> jobTags;
-
-  @override
-  List<Object?> get props => [
-        id,
-        creatorId,
-        created,
-        updated,
-        deletionMark,
-        title,
-        company,
-        countryCode,
-        address,
-        remote,
-        relocation,
-        employments,
-        levels,
-        descriptionEnglish,
-        descriptionRussian,
-        jobSkills,
-        jobContacts,
-        jobTags
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$InsertJob$MutationRoot$JobToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJob$MutationRoot extends JsonSerializable with EquatableMixin {
-  InsertJob$MutationRoot();
-
-  factory InsertJob$MutationRoot.fromJson(Map<String, dynamic> json) =>
-      _$InsertJob$MutationRootFromJson(json);
-
-  @JsonKey(name: 'insert_job_one')
-  InsertJob$MutationRoot$Job? insertJobOne;
-
-  @override
-  List<Object?> get props => [insertJobOne];
-  @override
-  Map<String, dynamic> toJson() => _$InsertJob$MutationRootToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class Paginate$QueryRoot$Job extends JsonSerializable with EquatableMixin {
   Paginate$QueryRoot$Job();
 
@@ -1121,6 +915,212 @@ class DeleteJob$MutationRoot extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job$JobDescriptionEnglish extends JsonSerializable
+    with EquatableMixin {
+  CreateJob$MutationRoot$Job$JobDescriptionEnglish();
+
+  factory CreateJob$MutationRoot$Job$JobDescriptionEnglish.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$Job$JobDescriptionEnglishFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateJob$MutationRoot$Job$JobDescriptionEnglishToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job$JobDescriptionRussian extends JsonSerializable
+    with EquatableMixin {
+  CreateJob$MutationRoot$Job$JobDescriptionRussian();
+
+  factory CreateJob$MutationRoot$Job$JobDescriptionRussian.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$Job$JobDescriptionRussianFromJson(json);
+
+  late String description;
+
+  @override
+  List<Object?> get props => [description];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateJob$MutationRoot$Job$JobDescriptionRussianToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job$JobSkills extends JsonSerializable
+    with EquatableMixin {
+  CreateJob$MutationRoot$Job$JobSkills();
+
+  factory CreateJob$MutationRoot$Job$JobSkills.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$Job$JobSkillsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> skills;
+
+  @override
+  List<Object?> get props => [skills];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateJob$MutationRoot$Job$JobSkillsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job$JobContacts extends JsonSerializable
+    with EquatableMixin {
+  CreateJob$MutationRoot$Job$JobContacts();
+
+  factory CreateJob$MutationRoot$Job$JobContacts.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$Job$JobContactsFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> contacts;
+
+  @override
+  List<Object?> get props => [contacts];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateJob$MutationRoot$Job$JobContactsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job$JobTags extends JsonSerializable
+    with EquatableMixin {
+  CreateJob$MutationRoot$Job$JobTags();
+
+  factory CreateJob$MutationRoot$Job$JobTags.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$Job$JobTagsFromJson(json);
+
+  late String tag;
+
+  @override
+  List<Object?> get props => [tag];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateJob$MutationRoot$Job$JobTagsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
+  CreateJob$MutationRoot$Job();
+
+  factory CreateJob$MutationRoot$Job.fromJson(Map<String, dynamic> json) =>
+      _$CreateJob$MutationRoot$JobFromJson(json);
+
+  late int id;
+
+  @JsonKey(name: 'creator_id')
+  late String creatorId;
+
+  @JsonKey(
+      fromJson: fromGraphQLTimestampToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLTimestamp)
+  late DateTime created;
+
+  @JsonKey(
+      fromJson: fromGraphQLTimestampToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLTimestamp)
+  late DateTime updated;
+
+  @JsonKey(name: 'deletion_mark')
+  late bool deletionMark;
+
+  late String title;
+
+  late String company;
+
+  @JsonKey(
+      name: 'country_code',
+      fromJson: fromGraphQLBpcharToDartString,
+      toJson: fromDartStringToGraphQLBpchar)
+  late String countryCode;
+
+  late String address;
+
+  late bool remote;
+
+  @JsonKey(
+      fromJson: fromGraphQLRelocationToDartRelocation,
+      toJson: fromDartRelocationToGraphQLRelocation)
+  late Relocation relocation;
+
+  @JsonKey(
+      fromJson: fromGraphQL$employmentToDartListEmployment,
+      toJson: fromDartListEmploymentToGraphQL$employment)
+  late List<Employment> employments;
+
+  @JsonKey(
+      fromJson: fromGraphQL$levelToDartListDeveloperLevel,
+      toJson: fromDartListDeveloperLevelToGraphQL$level)
+  late List<DeveloperLevel> levels;
+
+  @JsonKey(name: 'description_english')
+  CreateJob$MutationRoot$Job$JobDescriptionEnglish? descriptionEnglish;
+
+  @JsonKey(name: 'description_russian')
+  CreateJob$MutationRoot$Job$JobDescriptionRussian? descriptionRussian;
+
+  @JsonKey(name: 'job_skills')
+  CreateJob$MutationRoot$Job$JobSkills? jobSkills;
+
+  @JsonKey(name: 'job_contacts')
+  CreateJob$MutationRoot$Job$JobContacts? jobContacts;
+
+  @JsonKey(name: 'job_tags')
+  late List<CreateJob$MutationRoot$Job$JobTags> jobTags;
+
+  @override
+  List<Object?> get props => [
+        id,
+        creatorId,
+        created,
+        updated,
+        deletionMark,
+        title,
+        company,
+        countryCode,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels,
+        descriptionEnglish,
+        descriptionRussian,
+        jobSkills,
+        jobContacts,
+        jobTags
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJob$MutationRoot$JobToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJob$MutationRoot extends JsonSerializable with EquatableMixin {
+  CreateJob$MutationRoot();
+
+  factory CreateJob$MutationRoot.fromJson(Map<String, dynamic> json) =>
+      _$CreateJob$MutationRootFromJson(json);
+
+  @JsonKey(name: 'job_create')
+  late List<CreateJob$MutationRoot$Job> jobCreate;
+
+  @override
+  List<Object?> get props => [jobCreate];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJob$MutationRootToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class GetJobArguments extends JsonSerializable with EquatableMixin {
   GetJobArguments({required this.id});
 
@@ -1323,438 +1323,6 @@ class GetJobQuery extends GraphQLQuery<GetJob$QueryRoot, GetJobArguments> {
   @override
   GetJob$QueryRoot parse(Map<String, dynamic> json) =>
       GetJob$QueryRoot.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class InsertJobArguments extends JsonSerializable with EquatableMixin {
-  InsertJobArguments(
-      {required this.title,
-      required this.company,
-      required this.country_code,
-      required this.address,
-      required this.remote,
-      required this.relocation,
-      required this.english_description,
-      required this.russian_description,
-      required this.contacts,
-      required this.employments,
-      this.levels,
-      this.skills});
-
-  @override
-  factory InsertJobArguments.fromJson(Map<String, dynamic> json) =>
-      _$InsertJobArgumentsFromJson(json);
-
-  late String title;
-
-  late String company;
-
-  @JsonKey(
-      fromJson: fromGraphQLBpcharToDartString,
-      toJson: fromDartStringToGraphQLBpchar)
-  late String country_code;
-
-  late String address;
-
-  late bool remote;
-
-  @JsonKey(
-      fromJson: fromGraphQLRelocationToDartRelocation,
-      toJson: fromDartRelocationToGraphQLRelocation)
-  late Relocation relocation;
-
-  late String english_description;
-
-  late String russian_description;
-
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> contacts;
-
-  @JsonKey(
-      fromJson: fromGraphQL$employmentToDartListEmployment,
-      toJson: fromDartListEmploymentToGraphQL$employment)
-  late List<Employment> employments;
-
-  @JsonKey(
-      fromJson: fromGraphQL$levelNullableToDartListNullableDeveloperLevel,
-      toJson: fromDartListNullableDeveloperLevelToGraphQL$levelNullable)
-  final List<DeveloperLevel>? levels;
-
-  @JsonKey(
-      fromJson: fromGraphQL$textNullableToDartListNullableString,
-      toJson: fromDartListNullableStringToGraphQL$textNullable)
-  final List<String>? skills;
-
-  @override
-  List<Object?> get props => [
-        title,
-        company,
-        country_code,
-        address,
-        remote,
-        relocation,
-        english_description,
-        russian_description,
-        contacts,
-        employments,
-        levels,
-        skills
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$InsertJobArgumentsToJson(this);
-}
-
-final INSERT_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'InsertJob'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'title')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'company')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'country_code')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'bpchar'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'address')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'remote')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'Boolean'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'relocation')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'relocation'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable:
-                VariableNode(name: NameNode(value: 'english_description')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable:
-                VariableNode(name: NameNode(value: 'russian_description')),
-            type:
-                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'contacts')),
-            type:
-                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'employments')),
-            type: NamedTypeNode(
-                name: NameNode(value: '_employment'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'levels')),
-            type: NamedTypeNode(
-                name: NameNode(value: '_level'), isNonNull: false),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'skills')),
-            type:
-                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'insert_job_one'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'object'),
-                  value: ObjectValueNode(fields: [
-                    ObjectFieldNode(
-                        name: NameNode(value: 'title'),
-                        value: VariableNode(name: NameNode(value: 'title'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'company'),
-                        value: VariableNode(name: NameNode(value: 'company'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'country_code'),
-                        value: VariableNode(
-                            name: NameNode(value: 'country_code'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'address'),
-                        value: VariableNode(name: NameNode(value: 'address'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'remote'),
-                        value: VariableNode(name: NameNode(value: 'remote'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'relocation'),
-                        value:
-                            VariableNode(name: NameNode(value: 'relocation'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'employments'),
-                        value:
-                            VariableNode(name: NameNode(value: 'employments'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'levels'),
-                        value: VariableNode(name: NameNode(value: 'levels'))),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'description_english'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: 'data'),
-                              value: ObjectValueNode(fields: [
-                                ObjectFieldNode(
-                                    name: NameNode(value: 'description'),
-                                    value: VariableNode(
-                                        name: NameNode(
-                                            value: 'english_description')))
-                              ]))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'description_russian'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: 'data'),
-                              value: ObjectValueNode(fields: [
-                                ObjectFieldNode(
-                                    name: NameNode(value: 'description'),
-                                    value: VariableNode(
-                                        name: NameNode(
-                                            value: 'russian_description')))
-                              ]))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'job_skills'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: 'data'),
-                              value: ObjectValueNode(fields: [
-                                ObjectFieldNode(
-                                    name: NameNode(value: 'skills'),
-                                    value: VariableNode(
-                                        name: NameNode(value: 'skills')))
-                              ]))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'job_contacts'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: 'data'),
-                              value: ObjectValueNode(fields: [
-                                ObjectFieldNode(
-                                    name: NameNode(value: 'contacts'),
-                                    value: VariableNode(
-                                        name: NameNode(value: 'contacts')))
-                              ]))
-                        ])),
-                    ObjectFieldNode(
-                        name: NameNode(value: 'job_tags'),
-                        value: ObjectValueNode(fields: [
-                          ObjectFieldNode(
-                              name: NameNode(value: 'data'),
-                              value: ListValueNode(values: [
-                                ObjectValueNode(fields: [
-                                  ObjectFieldNode(
-                                      name: NameNode(value: 'tag'),
-                                      value: StringValueNode(
-                                          value: '', isBlock: false))
-                                ])
-                              ]))
-                        ]))
-                  ]))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FieldNode(
-                  name: NameNode(value: 'id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'creator_id'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'created'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'updated'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'deletion_mark'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'title'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'company'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'country_code'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'address'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'remote'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'relocation'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'employments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'levels'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'description_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'description'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'description_russian'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'description'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_skills'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'skills'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_contacts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'contacts'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_tags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'tag'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ]))
-            ]))
-      ]))
-]);
-
-class InsertJobMutation
-    extends GraphQLQuery<InsertJob$MutationRoot, InsertJobArguments> {
-  InsertJobMutation({required this.variables});
-
-  @override
-  final DocumentNode document = INSERT_JOB_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'InsertJob';
-
-  @override
-  final InsertJobArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  InsertJob$MutationRoot parse(Map<String, dynamic> json) =>
-      InsertJob$MutationRoot.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2912,4 +2480,383 @@ class DeleteJobMutation
   @override
   DeleteJob$MutationRoot parse(Map<String, dynamic> json) =>
       DeleteJob$MutationRoot.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJobArguments extends JsonSerializable with EquatableMixin {
+  CreateJobArguments(
+      {required this.title,
+      required this.company,
+      required this.country_code,
+      required this.address,
+      required this.remote,
+      required this.relocation,
+      required this.english_description,
+      required this.russian_description,
+      required this.contacts,
+      required this.employments,
+      this.levels,
+      this.skills});
+
+  @override
+  factory CreateJobArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateJobArgumentsFromJson(json);
+
+  late String title;
+
+  late String company;
+
+  late String country_code;
+
+  late String address;
+
+  late bool remote;
+
+  @JsonKey(
+      fromJson: fromGraphQLRelocationToDartRelocation,
+      toJson: fromDartRelocationToGraphQLRelocation)
+  late Relocation relocation;
+
+  late String english_description;
+
+  late String russian_description;
+
+  @JsonKey(
+      fromJson: fromGraphQL$textToDartListString,
+      toJson: fromDartListStringToGraphQL$text)
+  late List<String> contacts;
+
+  @JsonKey(
+      fromJson: fromGraphQL$employmentToDartListEmployment,
+      toJson: fromDartListEmploymentToGraphQL$employment)
+  late List<Employment> employments;
+
+  @JsonKey(
+      fromJson: fromGraphQL$levelNullableToDartListNullableDeveloperLevel,
+      toJson: fromDartListNullableDeveloperLevelToGraphQL$levelNullable)
+  final List<DeveloperLevel>? levels;
+
+  @JsonKey(
+      fromJson: fromGraphQL$textNullableToDartListNullableString,
+      toJson: fromDartListNullableStringToGraphQL$textNullable)
+  final List<String>? skills;
+
+  @override
+  List<Object?> get props => [
+        title,
+        company,
+        country_code,
+        address,
+        remote,
+        relocation,
+        english_description,
+        russian_description,
+        contacts,
+        employments,
+        levels,
+        skills
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJobArgumentsToJson(this);
+}
+
+final CREATE_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'CreateJob'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'title')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'company')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'country_code')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'address')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'remote')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'Boolean'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'relocation')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'relocation'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable:
+                VariableNode(name: NameNode(value: 'english_description')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable:
+                VariableNode(name: NameNode(value: 'russian_description')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'contacts')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'employments')),
+            type: NamedTypeNode(
+                name: NameNode(value: '_employment'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'levels')),
+            type: NamedTypeNode(
+                name: NameNode(value: '_level'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'skills')),
+            type:
+                NamedTypeNode(name: NameNode(value: '_text'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'job_create'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'args'),
+                  value: ObjectValueNode(fields: [
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_title'),
+                        value: VariableNode(name: NameNode(value: 'title'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_company'),
+                        value: VariableNode(name: NameNode(value: 'company'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_country_code'),
+                        value: VariableNode(
+                            name: NameNode(value: 'country_code'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_address'),
+                        value: VariableNode(name: NameNode(value: 'address'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_remote'),
+                        value: VariableNode(name: NameNode(value: 'remote'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_relocation'),
+                        value:
+                            VariableNode(name: NameNode(value: 'relocation'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_employments'),
+                        value:
+                            VariableNode(name: NameNode(value: 'employments'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_levels'),
+                        value: VariableNode(name: NameNode(value: 'levels'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_english_description'),
+                        value: VariableNode(
+                            name: NameNode(value: 'english_description'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_russian_description'),
+                        value: VariableNode(
+                            name: NameNode(value: 'russian_description'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_skills'),
+                        value: VariableNode(name: NameNode(value: 'skills'))),
+                    ObjectFieldNode(
+                        name: NameNode(value: 'new_contacts'),
+                        value: VariableNode(name: NameNode(value: 'contacts')))
+                  ]))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'creator_id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'created'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'updated'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'deletion_mark'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'title'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'company'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'country_code'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'address'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'remote'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'relocation'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'employments'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'levels'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'description_english'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'description_russian'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'description'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'job_skills'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'skills'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'job_contacts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'contacts'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'job_tags'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'tag'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
+                  ]))
+            ]))
+      ]))
+]);
+
+class CreateJobMutation
+    extends GraphQLQuery<CreateJob$MutationRoot, CreateJobArguments> {
+  CreateJobMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_JOB_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'CreateJob';
+
+  @override
+  final CreateJobArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateJob$MutationRoot parse(Map<String, dynamic> json) =>
+      CreateJob$MutationRoot.fromJson(json);
 }
