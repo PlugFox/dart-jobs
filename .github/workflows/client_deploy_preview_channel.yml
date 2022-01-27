@@ -21,7 +21,7 @@ on:
 
 jobs:
   build:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    #if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     name: 'Build client'
     timeout-minutes: 15
     runs-on: ubuntu-latest
