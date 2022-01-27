@@ -10,6 +10,7 @@ abstract class IJobNetworkDataProvider {
   Future<JobsChunk> getRecent({
     required final DateTime updatedAfter,
     required final JobFilter filter,
+    required final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -17,6 +18,7 @@ abstract class IJobNetworkDataProvider {
   Future<JobsChunk> paginate({
     required final DateTime updatedBefore,
     required final JobFilter filter,
+    required final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -52,17 +54,27 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }) : _client = client;
 
   @override
-  Future<JobsChunk> getRecent({required DateTime updatedAfter, required JobFilter filter}) async {
+  Future<JobsChunk> getRecent({
+    required DateTime updatedAfter,
+    required JobFilter filter,
+    required final List<int> exclude,
+  }) async {
     final result = await _client.execute(
-      FetchRecentQuery(
-        variables: FetchRecentArguments(
+      RecentQuery(
+        variables: RecentArguments(
           after: updatedAfter,
+          exclude: exclude,
+          remote: filter.remote,
+          level: filter.level,
+          relocation: filter.relocation,
+          country: filter.country,
+          employment: filter.employment,
           limit: filter.limit,
         ),
       ),
     );
     await Future<void>.delayed(Duration.zero);
-    final jobs = result.data?.job
+    final jobs = result.data?.jobRecent
         .map<Job>(
           (e) => Job(
             creatorId: e.creatorId,
@@ -73,11 +85,12 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
             data: JobData(
               title: e.title,
               company: e.company,
-              country: e.country,
+              country: e.countryCode,
               remote: e.remote,
               relocation: e.relocation,
               employments: e.employments,
               levels: e.levels,
+              address: e.address,
             ),
           ),
         )
@@ -98,18 +111,28 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }
 
   @override
-  Future<JobsChunk> paginate({required DateTime updatedBefore, required JobFilter filter}) async {
+  Future<JobsChunk> paginate({
+    required DateTime updatedBefore,
+    required JobFilter filter,
+    required final List<int> exclude,
+  }) async {
     final result = await _client.execute(
       PaginateQuery(
         variables: PaginateArguments(
           before: updatedBefore,
+          exclude: exclude,
+          remote: filter.remote,
+          level: filter.level,
+          relocation: filter.relocation,
+          country: filter.country,
+          employment: filter.employment,
           limit: filter.limit,
         ),
       ),
     );
 
     await Future<void>.delayed(Duration.zero);
-    final jobs = result.data?.job
+    final jobs = result.data?.jobPaginate
         .map<Job>(
           (e) => Job(
             creatorId: e.creatorId,
@@ -120,11 +143,12 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
             data: JobData(
               title: e.title,
               company: e.company,
-              country: e.country,
+              country: e.countryCode,
               remote: e.remote,
               relocation: e.relocation,
               employments: e.employments,
               levels: e.levels,
+              address: e.address,
             ),
           ),
         )
@@ -140,11 +164,14 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
 
     return JobsChunk(
       jobs: jobs,
-      endOfList: jobs.isEmpty,
+      // Считаю что это конец списка, если количество полученных меньше чем половина запрошенных
+      // этот допуск нужен для того, чтоб исключить "ошибочные записи"
+      endOfList: jobs.length < filter.limit ~/ 2,
     );
   }
 
   @override
+  // ignore: long-method
   Future<Job> createJob({
     required JobData jobData,
     required String idToken,
@@ -156,8 +183,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
         variables: InsertJobArguments(
           title: jobData.title,
           company: jobData.company,
-          country: jobData.country,
-          creator_id: creatorId,
+          country_code: jobData.country,
+          address: jobData.address,
           remote: jobData.remote,
           relocation: jobData.relocation,
           english_description: jobData.englishDescription,
@@ -166,7 +193,6 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
           employments: jobData.employments,
           levels: jobData.levels,
           skills: jobData.skills,
-          tags: jobData.tags,
         ),
       ),
       context: _addTokenToContext(idToken),
@@ -185,17 +211,17 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       data: JobData(
         title: job.title,
         company: job.company,
-        country: job.country,
+        country: job.countryCode,
+        address: job.address,
         remote: job.remote,
         relocation: job.relocation,
         employments: job.employments,
         levels: job.levels,
-        tags: job.tags,
-        skills: job.skills,
-        contacts: job.contacts,
+        skills: job.jobSkills?.skills ?? const <String>[],
+        contacts: job.jobContacts?.contacts ?? const <String>[],
         descriptions: Description.fromLanguages(
-          english: job.englishDescription,
-          russian: job.russianDescription,
+          english: job.descriptionEnglish?.description ?? '',
+          russian: job.descriptionRussian?.description ?? '',
         ),
       ),
     );
@@ -213,7 +239,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
     );
     await Future<void>.delayed(Duration.zero);
     final job = result.data?.jobByPk;
-    if (job == null) {
+    if (result.hasErrors || job == null) {
       throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
     }
     return Job(
@@ -225,17 +251,18 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       data: JobData(
         title: job.title,
         company: job.company,
-        country: job.country,
+        country: job.countryCode,
+        address: job.address,
         remote: job.remote,
         relocation: job.relocation,
         employments: job.employments,
         levels: job.levels,
-        tags: job.tags,
-        skills: job.skills,
-        contacts: job.contacts,
+        tags: job.jobTags.map<String>((e) => e.tag).toList(growable: false),
+        skills: job.jobSkills?.skills ?? const <String>[],
+        contacts: job.jobContacts?.contacts ?? const <String>[],
         descriptions: Description.fromLanguages(
-          english: job.englishDescription,
-          russian: job.russianDescription,
+          english: job.descriptionEnglish?.description ?? '',
+          russian: job.descriptionRussian?.description ?? '',
         ),
       ),
     );
@@ -250,19 +277,20 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
         variables: UpdateJobArguments(
           id: job.id,
           data: JobSetInput(
+            deletionMark: job.deletionMark,
             company: job.data.company,
-            contacts: job.data.contacts,
-            country: job.data.country,
+            countryCode: job.data.country,
+            address: job.data.address,
             employments: job.data.employments,
-            englishDescription: job.data.englishDescription,
             levels: job.data.levels,
             relocation: job.data.relocation,
             remote: job.data.remote,
-            russianDescription: job.data.russianDescription,
-            skills: job.data.skills,
-            tags: job.data.tags,
             title: job.data.title,
           ),
+          description_english: job.data.englishDescription,
+          description_russian: job.data.russianDescription,
+          skills: job.data.skills,
+          contacts: job.data.contacts,
         ),
       ),
       context: _addTokenToContext(idToken),
@@ -285,7 +313,6 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   Future<Job> deleteJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
-
     final result = await _client.execute(
       DeleteJobMutation(
         variables: DeleteJobArguments(
@@ -328,4 +355,7 @@ class GraphQLJobException implements Exception {
   const GraphQLJobException(this.errors);
 
   final List<GraphQLError> errors;
+
+  @override
+  String toString() => 'Job GraphQL exception: ${errors.map<String>((e) => e.message).join(', ')}';
 }

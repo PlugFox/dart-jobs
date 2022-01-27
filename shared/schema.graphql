@@ -6,7 +6,21 @@ schema {
     subscription: subscription_root
 }
 
-"columns and relationships of \"country\""
+"whether this query should be cached (Hasura Cloud only)"
+directive @cached(
+    "refresh the cache entry"
+    refresh: Boolean! = false,
+    "measured in seconds"
+    ttl: Int! = 60
+) on QUERY
+
+"""
+
+Список стран
+
+
+columns and relationships of "country"
+"""
 type country {
     "Двухсимвольный код страны"
     code: bpchar!
@@ -20,143 +34,6 @@ type country {
     title: String!
 }
 
-"aggregated selection of \"country\""
-type country_aggregate {
-    aggregate: country_aggregate_fields
-    nodes: [country!]!
-}
-
-"aggregate fields of \"country\""
-type country_aggregate_fields {
-    avg: country_avg_fields
-    count(columns: [country_select_column!], distinct: Boolean): Int!
-    max: country_max_fields
-    min: country_min_fields
-    stddev: country_stddev_fields
-    stddev_pop: country_stddev_pop_fields
-    stddev_samp: country_stddev_samp_fields
-    sum: country_sum_fields
-    var_pop: country_var_pop_fields
-    var_samp: country_var_samp_fields
-    variance: country_variance_fields
-}
-
-"aggregate avg on columns"
-type country_avg_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate max on columns"
-type country_max_fields {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"aggregate min on columns"
-type country_min_fields {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"response of any mutation on the table \"country\""
-type country_mutation_response {
-    "number of rows affected by the mutation"
-    affected_rows: Int!
-    "data from the rows affected by the mutation"
-    returning: [country!]!
-}
-
-"aggregate stddev on columns"
-type country_stddev_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate stddev_pop on columns"
-type country_stddev_pop_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate stddev_samp on columns"
-type country_stddev_samp_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate sum on columns"
-type country_sum_fields {
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate var_pop on columns"
-type country_var_pop_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate var_samp on columns"
-type country_var_samp_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"aggregate variance on columns"
-type country_variance_fields {
-    "Идентификатор страны"
-    id: Float
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
 """
 
 Список работ
@@ -165,113 +42,109 @@ type country_variance_fields {
 columns and relationships of "job"
 """
 type job {
+    "Местоположение, например: Moscow"
+    address: String!
     "Компания"
     company: String!
-    "Контакты для обратной связи"
-    contacts: _text!
-    "Страна"
-    country: Int!
+    "An object relationship"
+    country: country
+    "Код страны"
+    country_code: bpchar!
     "Создание"
     created: timestamp!
     "Идентификатор пользователя из ID token фаербейза"
     creator_id: String!
     "Пометка на удаление"
     deletion_mark: Boolean!
+    "An object relationship"
+    description_english: job_description_english
+    "An object relationship"
+    description_russian: job_description_russian
     "Трудоустройство, занятость"
     employments: _employment!
-    "Описание на английском"
-    english_description: String!
     "Идентификатор элемента"
     id: Int!
+    "An object relationship"
+    job_contacts: job_contacts
+    "An object relationship"
+    job_skills: job_skills
+    "An array relationship"
+    job_tags(
+        "distinct select on columns"
+        distinct_on: [job_tags_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_tags_order_by!],
+        "filter the rows returned"
+        where: job_tags_bool_exp
+    ): [job_tags!]!
     "Уровни разработчика"
     levels: _level!
     "Релокация"
     relocation: relocation!
     "Удаленная"
     remote: Boolean!
-    "Описание на русском"
-    russian_description: String!
-    "Навыки (Skills)"
-    skills: _text!
-    "Тэги"
-    tags: _text!
     "Имя вакансии"
     title: String!
     "Последнее обновление"
     updated: timestamp!
 }
 
-"aggregated selection of \"job\""
-type job_aggregate {
-    aggregate: job_aggregate_fields
-    nodes: [job!]!
+"columns and relationships of \"job_contacts\""
+type job_contacts {
+    "Контакты для обратной связи"
+    contacts: _text!
+    "An object relationship"
+    job: job!
+    "Идентификатор работы"
+    job_id: Int!
 }
 
-"aggregate fields of \"job\""
-type job_aggregate_fields {
-    avg: job_avg_fields
-    count(columns: [job_select_column!], distinct: Boolean): Int!
-    max: job_max_fields
-    min: job_min_fields
-    stddev: job_stddev_fields
-    stddev_pop: job_stddev_pop_fields
-    stddev_samp: job_stddev_samp_fields
-    sum: job_sum_fields
-    var_pop: job_var_pop_fields
-    var_samp: job_var_samp_fields
-    variance: job_variance_fields
+"response of any mutation on the table \"job_contacts\""
+type job_contacts_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job_contacts!]!
 }
 
-"aggregate avg on columns"
-type job_avg_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
+"columns and relationships of \"job_description_english\""
+type job_description_english {
+    "Описание"
+    description: String!
+    "An object relationship"
+    job: job!
+    "Идентификатор работы"
+    job_id: Int!
 }
 
-"aggregate max on columns"
-type job_max_fields {
-    "Компания"
-    company: String
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
-    "Описание на русском"
-    russian_description: String
-    "Имя вакансии"
-    title: String
-    "Последнее обновление"
-    updated: timestamp
+"response of any mutation on the table \"job_description_english\""
+type job_description_english_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job_description_english!]!
 }
 
-"aggregate min on columns"
-type job_min_fields {
-    "Компания"
-    company: String
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
-    "Описание на русском"
-    russian_description: String
-    "Имя вакансии"
-    title: String
-    "Последнее обновление"
-    updated: timestamp
+"columns and relationships of \"job_description_russian\""
+type job_description_russian {
+    "Описание"
+    description: String!
+    "An object relationship"
+    job: job!
+    "Идентификатор работы"
+    job_id: Int!
+}
+
+"response of any mutation on the table \"job_description_russian\""
+type job_description_russian_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job_description_russian!]!
 }
 
 "response of any mutation on the table \"job\""
@@ -282,98 +155,44 @@ type job_mutation_response {
     returning: [job!]!
 }
 
-"aggregate stddev on columns"
-type job_stddev_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
+"columns and relationships of \"job_skills\""
+type job_skills {
+    "An object relationship"
+    job: job!
+    "Идентификатор работы"
+    job_id: Int!
+    "Навыки (Skills)"
+    skills: _text!
 }
 
-"aggregate stddev_pop on columns"
-type job_stddev_pop_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
+"response of any mutation on the table \"job_skills\""
+type job_skills_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job_skills!]!
 }
 
-"aggregate stddev_samp on columns"
-type job_stddev_samp_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
+"columns and relationships of \"job_tags\""
+type job_tags {
+    "An object relationship"
+    job: job!
+    "Идентификатор работы"
+    job_id: Int!
+    "Тэг"
+    tag: String!
 }
 
-"aggregate sum on columns"
-type job_sum_fields {
-    "Страна"
-    country: Int
-    "Идентификатор элемента"
-    id: Int
-}
-
-"aggregate var_pop on columns"
-type job_var_pop_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate var_samp on columns"
-type job_var_samp_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
-}
-
-"aggregate variance on columns"
-type job_variance_fields {
-    "Страна"
-    country: Float
-    "Идентификатор элемента"
-    id: Float
+"response of any mutation on the table \"job_tags\""
+type job_tags_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [job_tags!]!
 }
 
 "mutation root"
 type mutation_root {
-    "delete data from the table: \"country\""
-    delete_country(
-        "filter the rows which have to be deleted"
-        where: country_bool_exp!
-    ): country_mutation_response
-    "delete single row from the table: \"country\""
-    delete_country_by_pk(
-        "Идентификатор страны"
-        id: Int!
-    ): country
-    "delete data from the table: \"job\""
-    delete_job(
-        "filter the rows which have to be deleted"
-        where: job_bool_exp!
-    ): job_mutation_response
-    "delete single row from the table: \"job\""
-    delete_job_by_pk(
-        "Идентификатор элемента"
-        id: Int!
-    ): job
-    "insert data into the table: \"country\""
-    insert_country(
-        "the rows to be inserted"
-        objects: [country_insert_input!]!,
-        "on conflict condition"
-        on_conflict: country_on_conflict
-    ): country_mutation_response
-    "insert a single row into the table: \"country\""
-    insert_country_one(
-        "the row to be inserted"
-        object: country_insert_input!,
-        "on conflict condition"
-        on_conflict: country_on_conflict
-    ): country
     "insert data into the table: \"job\""
     insert_job(
         "the rows to be inserted"
@@ -381,6 +200,48 @@ type mutation_root {
         "on conflict condition"
         on_conflict: job_on_conflict
     ): job_mutation_response
+    "insert data into the table: \"job_contacts\""
+    insert_job_contacts(
+        "the rows to be inserted"
+        objects: [job_contacts_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_contacts_on_conflict
+    ): job_contacts_mutation_response
+    "insert a single row into the table: \"job_contacts\""
+    insert_job_contacts_one(
+        "the row to be inserted"
+        object: job_contacts_insert_input!,
+        "on conflict condition"
+        on_conflict: job_contacts_on_conflict
+    ): job_contacts
+    "insert data into the table: \"job_description_english\""
+    insert_job_description_english(
+        "the rows to be inserted"
+        objects: [job_description_english_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_description_english_on_conflict
+    ): job_description_english_mutation_response
+    "insert a single row into the table: \"job_description_english\""
+    insert_job_description_english_one(
+        "the row to be inserted"
+        object: job_description_english_insert_input!,
+        "on conflict condition"
+        on_conflict: job_description_english_on_conflict
+    ): job_description_english
+    "insert data into the table: \"job_description_russian\""
+    insert_job_description_russian(
+        "the rows to be inserted"
+        objects: [job_description_russian_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_description_russian_on_conflict
+    ): job_description_russian_mutation_response
+    "insert a single row into the table: \"job_description_russian\""
+    insert_job_description_russian_one(
+        "the row to be inserted"
+        object: job_description_russian_insert_input!,
+        "on conflict condition"
+        on_conflict: job_description_russian_on_conflict
+    ): job_description_russian
     "insert a single row into the table: \"job\""
     insert_job_one(
         "the row to be inserted"
@@ -388,27 +249,36 @@ type mutation_root {
         "on conflict condition"
         on_conflict: job_on_conflict
     ): job
-    "update data of the table: \"country\""
-    update_country(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: country_inc_input,
-        "sets the columns of the filtered rows to the given values"
-        _set: country_set_input,
-        "filter the rows which have to be updated"
-        where: country_bool_exp!
-    ): country_mutation_response
-    "update single row of the table: \"country\""
-    update_country_by_pk(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: country_inc_input,
-        "sets the columns of the filtered rows to the given values"
-        _set: country_set_input,
-        pk_columns: country_pk_columns_input!
-    ): country
+    "insert data into the table: \"job_skills\""
+    insert_job_skills(
+        "the rows to be inserted"
+        objects: [job_skills_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_skills_on_conflict
+    ): job_skills_mutation_response
+    "insert a single row into the table: \"job_skills\""
+    insert_job_skills_one(
+        "the row to be inserted"
+        object: job_skills_insert_input!,
+        "on conflict condition"
+        on_conflict: job_skills_on_conflict
+    ): job_skills
+    "insert data into the table: \"job_tags\""
+    insert_job_tags(
+        "the rows to be inserted"
+        objects: [job_tags_insert_input!]!,
+        "on conflict condition"
+        on_conflict: job_tags_on_conflict
+    ): job_tags_mutation_response
+    "insert a single row into the table: \"job_tags\""
+    insert_job_tags_one(
+        "the row to be inserted"
+        object: job_tags_insert_input!,
+        "on conflict condition"
+        on_conflict: job_tags_on_conflict
+    ): job_tags
     "update data of the table: \"job\""
     update_job(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: job_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: job_set_input,
         "filter the rows which have to be updated"
@@ -416,12 +286,87 @@ type mutation_root {
     ): job_mutation_response
     "update single row of the table: \"job\""
     update_job_by_pk(
-        "increments the numeric columns with given value of the filtered values"
-        _inc: job_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: job_set_input,
         pk_columns: job_pk_columns_input!
     ): job
+    "update data of the table: \"job_contacts\""
+    update_job_contacts(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_contacts_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_contacts_set_input,
+        "filter the rows which have to be updated"
+        where: job_contacts_bool_exp!
+    ): job_contacts_mutation_response
+    "update single row of the table: \"job_contacts\""
+    update_job_contacts_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_contacts_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_contacts_set_input,
+        pk_columns: job_contacts_pk_columns_input!
+    ): job_contacts
+    "update data of the table: \"job_description_english\""
+    update_job_description_english(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_description_english_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_description_english_set_input,
+        "filter the rows which have to be updated"
+        where: job_description_english_bool_exp!
+    ): job_description_english_mutation_response
+    "update single row of the table: \"job_description_english\""
+    update_job_description_english_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_description_english_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_description_english_set_input,
+        pk_columns: job_description_english_pk_columns_input!
+    ): job_description_english
+    "update data of the table: \"job_description_russian\""
+    update_job_description_russian(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_description_russian_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_description_russian_set_input,
+        "filter the rows which have to be updated"
+        where: job_description_russian_bool_exp!
+    ): job_description_russian_mutation_response
+    "update single row of the table: \"job_description_russian\""
+    update_job_description_russian_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_description_russian_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_description_russian_set_input,
+        pk_columns: job_description_russian_pk_columns_input!
+    ): job_description_russian
+    "update data of the table: \"job_skills\""
+    update_job_skills(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_skills_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_skills_set_input,
+        "filter the rows which have to be updated"
+        where: job_skills_bool_exp!
+    ): job_skills_mutation_response
+    "update single row of the table: \"job_skills\""
+    update_job_skills_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_skills_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_skills_set_input,
+        pk_columns: job_skills_pk_columns_input!
+    ): job_skills
+    "update data of the table: \"job_tags\""
+    update_job_tags(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: job_tags_inc_input,
+        "sets the columns of the filtered rows to the given values"
+        _set: job_tags_set_input,
+        "filter the rows which have to be updated"
+        where: job_tags_bool_exp!
+    ): job_tags_mutation_response
 }
 
 type query_root {
@@ -438,19 +383,6 @@ type query_root {
         "filter the rows returned"
         where: country_bool_exp
     ): [country!]!
-    "fetch aggregated fields from the table: \"country\""
-    country_aggregate(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): country_aggregate!
     "fetch data from the table: \"country\" using primary key columns"
     country_by_pk(
         "Идентификатор страны"
@@ -469,8 +401,69 @@ type query_root {
         "filter the rows returned"
         where: job_bool_exp
     ): [job!]!
-    "fetch aggregated fields from the table: \"job\""
-    job_aggregate(
+    "fetch data from the table: \"job\" using primary key columns"
+    job_by_pk(
+        "Идентификатор элемента"
+        id: Int!
+    ): job
+    "fetch data from the table: \"job_contacts\""
+    job_contacts(
+        "distinct select on columns"
+        distinct_on: [job_contacts_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_contacts_order_by!],
+        "filter the rows returned"
+        where: job_contacts_bool_exp
+    ): [job_contacts!]!
+    "fetch data from the table: \"job_contacts\" using primary key columns"
+    job_contacts_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_contacts
+    "fetch data from the table: \"job_description_english\""
+    job_description_english(
+        "distinct select on columns"
+        distinct_on: [job_description_english_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_description_english_order_by!],
+        "filter the rows returned"
+        where: job_description_english_bool_exp
+    ): [job_description_english!]!
+    "fetch data from the table: \"job_description_english\" using primary key columns"
+    job_description_english_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_description_english
+    "fetch data from the table: \"job_description_russian\""
+    job_description_russian(
+        "distinct select on columns"
+        distinct_on: [job_description_russian_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_description_russian_order_by!],
+        "filter the rows returned"
+        where: job_description_russian_bool_exp
+    ): [job_description_russian!]!
+    "fetch data from the table: \"job_description_russian\" using primary key columns"
+    job_description_russian_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_description_russian
+    "execute function \"job_paginate\" which returns \"job\""
+    job_paginate(
+        "input parameters for function \"job_paginate\""
+        args: job_paginate_args!,
         "distinct select on columns"
         distinct_on: [job_select_column!],
         "limit the number of rows returned"
@@ -481,12 +474,53 @@ type query_root {
         order_by: [job_order_by!],
         "filter the rows returned"
         where: job_bool_exp
-    ): job_aggregate!
-    "fetch data from the table: \"job\" using primary key columns"
-    job_by_pk(
-        "Идентификатор элемента"
-        id: Int!
-    ): job
+    ): [job!]!
+    "execute function \"job_recent\" which returns \"job\""
+    job_recent(
+        "input parameters for function \"job_recent\""
+        args: job_recent_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "fetch data from the table: \"job_skills\""
+    job_skills(
+        "distinct select on columns"
+        distinct_on: [job_skills_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_skills_order_by!],
+        "filter the rows returned"
+        where: job_skills_bool_exp
+    ): [job_skills!]!
+    "fetch data from the table: \"job_skills\" using primary key columns"
+    job_skills_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_skills
+    "An array relationship"
+    job_tags(
+        "distinct select on columns"
+        distinct_on: [job_tags_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_tags_order_by!],
+        "filter the rows returned"
+        where: job_tags_bool_exp
+    ): [job_tags!]!
 }
 
 type subscription_root {
@@ -503,19 +537,6 @@ type subscription_root {
         "filter the rows returned"
         where: country_bool_exp
     ): [country!]!
-    "fetch aggregated fields from the table: \"country\""
-    country_aggregate(
-        "distinct select on columns"
-        distinct_on: [country_select_column!],
-        "limit the number of rows returned"
-        limit: Int,
-        "skip the first n rows. Use only with order_by"
-        offset: Int,
-        "sort the rows by one or more columns"
-        order_by: [country_order_by!],
-        "filter the rows returned"
-        where: country_bool_exp
-    ): country_aggregate!
     "fetch data from the table: \"country\" using primary key columns"
     country_by_pk(
         "Идентификатор страны"
@@ -534,8 +555,69 @@ type subscription_root {
         "filter the rows returned"
         where: job_bool_exp
     ): [job!]!
-    "fetch aggregated fields from the table: \"job\""
-    job_aggregate(
+    "fetch data from the table: \"job\" using primary key columns"
+    job_by_pk(
+        "Идентификатор элемента"
+        id: Int!
+    ): job
+    "fetch data from the table: \"job_contacts\""
+    job_contacts(
+        "distinct select on columns"
+        distinct_on: [job_contacts_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_contacts_order_by!],
+        "filter the rows returned"
+        where: job_contacts_bool_exp
+    ): [job_contacts!]!
+    "fetch data from the table: \"job_contacts\" using primary key columns"
+    job_contacts_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_contacts
+    "fetch data from the table: \"job_description_english\""
+    job_description_english(
+        "distinct select on columns"
+        distinct_on: [job_description_english_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_description_english_order_by!],
+        "filter the rows returned"
+        where: job_description_english_bool_exp
+    ): [job_description_english!]!
+    "fetch data from the table: \"job_description_english\" using primary key columns"
+    job_description_english_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_description_english
+    "fetch data from the table: \"job_description_russian\""
+    job_description_russian(
+        "distinct select on columns"
+        distinct_on: [job_description_russian_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_description_russian_order_by!],
+        "filter the rows returned"
+        where: job_description_russian_bool_exp
+    ): [job_description_russian!]!
+    "fetch data from the table: \"job_description_russian\" using primary key columns"
+    job_description_russian_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_description_russian
+    "execute function \"job_paginate\" which returns \"job\""
+    job_paginate(
+        "input parameters for function \"job_paginate\""
+        args: job_paginate_args!,
         "distinct select on columns"
         distinct_on: [job_select_column!],
         "limit the number of rows returned"
@@ -546,38 +628,57 @@ type subscription_root {
         order_by: [job_order_by!],
         "filter the rows returned"
         where: job_bool_exp
-    ): job_aggregate!
-    "fetch data from the table: \"job\" using primary key columns"
-    job_by_pk(
-        "Идентификатор элемента"
-        id: Int!
-    ): job
-}
-
-"unique or primary key constraints on table \"country\""
-enum country_constraint {
-    "unique or primary key constraint"
-    country_code_idx
-    "unique or primary key constraint"
-    country_pk
+    ): [job!]!
+    "execute function \"job_recent\" which returns \"job\""
+    job_recent(
+        "input parameters for function \"job_recent\""
+        args: job_recent_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
+    "fetch data from the table: \"job_skills\""
+    job_skills(
+        "distinct select on columns"
+        distinct_on: [job_skills_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_skills_order_by!],
+        "filter the rows returned"
+        where: job_skills_bool_exp
+    ): [job_skills!]!
+    "fetch data from the table: \"job_skills\" using primary key columns"
+    job_skills_by_pk(
+        "Идентификатор работы"
+        job_id: Int!
+    ): job_skills
+    "An array relationship"
+    job_tags(
+        "distinct select on columns"
+        distinct_on: [job_tags_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_tags_order_by!],
+        "filter the rows returned"
+        where: job_tags_bool_exp
+    ): [job_tags!]!
 }
 
 "select columns of table \"country\""
 enum country_select_column {
-    "column name"
-    code
-    "column name"
-    id
-    "column name"
-    latitude
-    "column name"
-    longitude
-    "column name"
-    title
-}
-
-"update columns of table \"country\""
-enum country_update_column {
     "column name"
     code
     "column name"
@@ -596,14 +697,80 @@ enum job_constraint {
     job_pkey
 }
 
-"select columns of table \"job\""
-enum job_select_column {
-    "column name"
-    company
+"unique or primary key constraints on table \"job_contacts\""
+enum job_contacts_constraint {
+    "unique or primary key constraint"
+    job_contacts_pk
+}
+
+"select columns of table \"job_contacts\""
+enum job_contacts_select_column {
     "column name"
     contacts
     "column name"
-    country
+    job_id
+}
+
+"update columns of table \"job_contacts\""
+enum job_contacts_update_column {
+    "column name"
+    contacts
+    "column name"
+    job_id
+}
+
+"unique or primary key constraints on table \"job_description_english\""
+enum job_description_english_constraint {
+    "unique or primary key constraint"
+    job_description_english_pk
+}
+
+"select columns of table \"job_description_english\""
+enum job_description_english_select_column {
+    "column name"
+    description
+    "column name"
+    job_id
+}
+
+"update columns of table \"job_description_english\""
+enum job_description_english_update_column {
+    "column name"
+    description
+    "column name"
+    job_id
+}
+
+"unique or primary key constraints on table \"job_description_russian\""
+enum job_description_russian_constraint {
+    "unique or primary key constraint"
+    job_description_russian_pk
+}
+
+"select columns of table \"job_description_russian\""
+enum job_description_russian_select_column {
+    "column name"
+    description
+    "column name"
+    job_id
+}
+
+"update columns of table \"job_description_russian\""
+enum job_description_russian_update_column {
+    "column name"
+    description
+    "column name"
+    job_id
+}
+
+"select columns of table \"job\""
+enum job_select_column {
+    "column name"
+    address
+    "column name"
+    company
+    "column name"
+    country_code
     "column name"
     created
     "column name"
@@ -613,8 +780,6 @@ enum job_select_column {
     "column name"
     employments
     "column name"
-    english_description
-    "column name"
     id
     "column name"
     levels
@@ -622,38 +787,68 @@ enum job_select_column {
     relocation
     "column name"
     remote
-    "column name"
-    russian_description
-    "column name"
-    skills
-    "column name"
-    tags
     "column name"
     title
     "column name"
     updated
 }
 
+"unique or primary key constraints on table \"job_skills\""
+enum job_skills_constraint {
+    "unique or primary key constraint"
+    job_skills_pk
+}
+
+"select columns of table \"job_skills\""
+enum job_skills_select_column {
+    "column name"
+    job_id
+    "column name"
+    skills
+}
+
+"update columns of table \"job_skills\""
+enum job_skills_update_column {
+    "column name"
+    job_id
+    "column name"
+    skills
+}
+
+"unique or primary key constraints on table \"job_tags\""
+enum job_tags_constraint {
+    "unique or primary key constraint"
+    job_tags_job_id_idx
+}
+
+"select columns of table \"job_tags\""
+enum job_tags_select_column {
+    "column name"
+    job_id
+    "column name"
+    tag
+}
+
+"update columns of table \"job_tags\""
+enum job_tags_update_column {
+    "column name"
+    job_id
+    "column name"
+    tag
+}
+
 "update columns of table \"job\""
 enum job_update_column {
     "column name"
+    address
+    "column name"
     company
     "column name"
-    contacts
-    "column name"
-    country
-    "column name"
-    created
-    "column name"
-    creator_id
+    country_code
     "column name"
     deletion_mark
     "column name"
     employments
-    "column name"
-    english_description
-    "column name"
-    id
     "column name"
     levels
     "column name"
@@ -661,15 +856,7 @@ enum job_update_column {
     "column name"
     remote
     "column name"
-    russian_description
-    "column name"
-    skills
-    "column name"
-    tags
-    "column name"
     title
-    "column name"
-    updated
 }
 
 "column ordering options"
@@ -687,6 +874,24 @@ enum order_by {
     "in descending order, nulls last"
     desc_nulls_last
 }
+
+scalar _employment
+
+scalar _int4
+
+scalar _level
+
+scalar _text
+
+scalar bpchar
+
+scalar employment
+
+scalar level
+
+scalar relocation
+
+scalar timestamp
 
 "Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'."
 input Boolean_comparison_exp {
@@ -844,37 +1049,6 @@ input country_bool_exp {
     title: String_comparison_exp
 }
 
-"input type for incrementing numeric columns in table \"country\""
-input country_inc_input {
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-}
-
-"input type for inserting data into table \"country\""
-input country_insert_input {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
-"on conflict condition type for table \"country\""
-input country_on_conflict {
-    constraint: country_constraint!
-    update_columns: [country_update_column!]! = []
-    where: country_bool_exp
-}
-
 "Ordering options when selecting data from \"country\"."
 input country_order_by {
     code: order_by
@@ -884,94 +1058,242 @@ input country_order_by {
     title: order_by
 }
 
-"primary key columns input for table: country"
-input country_pk_columns_input {
-    "Идентификатор страны"
-    id: Int!
-}
-
-"input type for updating data in table \"country\""
-input country_set_input {
-    "Двухсимвольный код страны"
-    code: bpchar
-    "Идентификатор страны"
-    id: Int
-    "Приблизительная широта"
-    latitude: Float
-    "Приблизительная долгота"
-    longitude: Float
-    "Имя страны на английском"
-    title: String
-}
-
 "Boolean expression to filter rows from the table \"job\". All fields are combined with a logical 'AND'."
 input job_bool_exp {
     _and: [job_bool_exp!]
     _not: job_bool_exp
     _or: [job_bool_exp!]
+    address: String_comparison_exp
     company: String_comparison_exp
-    contacts: _text_comparison_exp
-    country: Int_comparison_exp
+    country: country_bool_exp
+    country_code: bpchar_comparison_exp
     created: timestamp_comparison_exp
     creator_id: String_comparison_exp
     deletion_mark: Boolean_comparison_exp
+    description_english: job_description_english_bool_exp
+    description_russian: job_description_russian_bool_exp
     employments: _employment_comparison_exp
-    english_description: String_comparison_exp
     id: Int_comparison_exp
+    job_contacts: job_contacts_bool_exp
+    job_skills: job_skills_bool_exp
+    job_tags: job_tags_bool_exp
     levels: _level_comparison_exp
     relocation: relocation_comparison_exp
     remote: Boolean_comparison_exp
-    russian_description: String_comparison_exp
-    skills: _text_comparison_exp
-    tags: _text_comparison_exp
     title: String_comparison_exp
     updated: timestamp_comparison_exp
 }
 
-"input type for incrementing numeric columns in table \"job\""
-input job_inc_input {
-    "Страна"
-    country: Int
-    "Идентификатор элемента"
-    id: Int
+"Boolean expression to filter rows from the table \"job_contacts\". All fields are combined with a logical 'AND'."
+input job_contacts_bool_exp {
+    _and: [job_contacts_bool_exp!]
+    _not: job_contacts_bool_exp
+    _or: [job_contacts_bool_exp!]
+    contacts: _text_comparison_exp
+    job: job_bool_exp
+    job_id: Int_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job_contacts\""
+input job_contacts_inc_input {
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting data into table \"job_contacts\""
+input job_contacts_insert_input {
+    "Контакты для обратной связи"
+    contacts: _text
+    job: job_obj_rel_insert_input
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting object relation for remote table \"job_contacts\""
+input job_contacts_obj_rel_insert_input {
+    data: job_contacts_insert_input!
+    "on conflict condition"
+    on_conflict: job_contacts_on_conflict
+}
+
+"on conflict condition type for table \"job_contacts\""
+input job_contacts_on_conflict {
+    constraint: job_contacts_constraint!
+    update_columns: [job_contacts_update_column!]! = []
+    where: job_contacts_bool_exp
+}
+
+"Ordering options when selecting data from \"job_contacts\"."
+input job_contacts_order_by {
+    contacts: order_by
+    job: job_order_by
+    job_id: order_by
+}
+
+"primary key columns input for table: job_contacts"
+input job_contacts_pk_columns_input {
+    "Идентификатор работы"
+    job_id: Int!
+}
+
+"input type for updating data in table \"job_contacts\""
+input job_contacts_set_input {
+    "Контакты для обратной связи"
+    contacts: _text
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"Boolean expression to filter rows from the table \"job_description_english\". All fields are combined with a logical 'AND'."
+input job_description_english_bool_exp {
+    _and: [job_description_english_bool_exp!]
+    _not: job_description_english_bool_exp
+    _or: [job_description_english_bool_exp!]
+    description: String_comparison_exp
+    job: job_bool_exp
+    job_id: Int_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job_description_english\""
+input job_description_english_inc_input {
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting data into table \"job_description_english\""
+input job_description_english_insert_input {
+    "Описание"
+    description: String
+    job: job_obj_rel_insert_input
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting object relation for remote table \"job_description_english\""
+input job_description_english_obj_rel_insert_input {
+    data: job_description_english_insert_input!
+    "on conflict condition"
+    on_conflict: job_description_english_on_conflict
+}
+
+"on conflict condition type for table \"job_description_english\""
+input job_description_english_on_conflict {
+    constraint: job_description_english_constraint!
+    update_columns: [job_description_english_update_column!]! = []
+    where: job_description_english_bool_exp
+}
+
+"Ordering options when selecting data from \"job_description_english\"."
+input job_description_english_order_by {
+    description: order_by
+    job: job_order_by
+    job_id: order_by
+}
+
+"primary key columns input for table: job_description_english"
+input job_description_english_pk_columns_input {
+    "Идентификатор работы"
+    job_id: Int!
+}
+
+"input type for updating data in table \"job_description_english\""
+input job_description_english_set_input {
+    "Описание"
+    description: String
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"Boolean expression to filter rows from the table \"job_description_russian\". All fields are combined with a logical 'AND'."
+input job_description_russian_bool_exp {
+    _and: [job_description_russian_bool_exp!]
+    _not: job_description_russian_bool_exp
+    _or: [job_description_russian_bool_exp!]
+    description: String_comparison_exp
+    job: job_bool_exp
+    job_id: Int_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job_description_russian\""
+input job_description_russian_inc_input {
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting data into table \"job_description_russian\""
+input job_description_russian_insert_input {
+    "Описание"
+    description: String
+    job: job_obj_rel_insert_input
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting object relation for remote table \"job_description_russian\""
+input job_description_russian_obj_rel_insert_input {
+    data: job_description_russian_insert_input!
+    "on conflict condition"
+    on_conflict: job_description_russian_on_conflict
+}
+
+"on conflict condition type for table \"job_description_russian\""
+input job_description_russian_on_conflict {
+    constraint: job_description_russian_constraint!
+    update_columns: [job_description_russian_update_column!]! = []
+    where: job_description_russian_bool_exp
+}
+
+"Ordering options when selecting data from \"job_description_russian\"."
+input job_description_russian_order_by {
+    description: order_by
+    job: job_order_by
+    job_id: order_by
+}
+
+"primary key columns input for table: job_description_russian"
+input job_description_russian_pk_columns_input {
+    "Идентификатор работы"
+    job_id: Int!
+}
+
+"input type for updating data in table \"job_description_russian\""
+input job_description_russian_set_input {
+    "Описание"
+    description: String
+    "Идентификатор работы"
+    job_id: Int
 }
 
 "input type for inserting data into table \"job\""
 input job_insert_input {
+    "Местоположение, например: Moscow"
+    address: String
     "Компания"
     company: String
-    "Контакты для обратной связи"
-    contacts: _text
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
-    "Пометка на удаление"
-    deletion_mark: Boolean
+    "Код страны"
+    country_code: bpchar
+    description_english: job_description_english_obj_rel_insert_input
+    description_russian: job_description_russian_obj_rel_insert_input
     "Трудоустройство, занятость"
     employments: _employment
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
+    job_contacts: job_contacts_obj_rel_insert_input
+    job_skills: job_skills_obj_rel_insert_input
+    job_tags: job_tags_arr_rel_insert_input
     "Уровни разработчика"
     levels: _level
     "Релокация"
     relocation: relocation
     "Удаленная"
     remote: Boolean
-    "Описание на русском"
-    russian_description: String
-    "Навыки (Skills)"
-    skills: _text
-    "Тэги"
-    tags: _text
     "Имя вакансии"
     title: String
-    "Последнее обновление"
-    updated: timestamp
+}
+
+"input type for inserting object relation for remote table \"job\""
+input job_obj_rel_insert_input {
+    data: job_insert_input!
+    "on conflict condition"
+    on_conflict: job_on_conflict
 }
 
 "on conflict condition type for table \"job\""
@@ -983,23 +1305,36 @@ input job_on_conflict {
 
 "Ordering options when selecting data from \"job\"."
 input job_order_by {
+    address: order_by
     company: order_by
-    contacts: order_by
-    country: order_by
+    country: country_order_by
+    country_code: order_by
     created: order_by
     creator_id: order_by
     deletion_mark: order_by
+    description_english: job_description_english_order_by
+    description_russian: job_description_russian_order_by
     employments: order_by
-    english_description: order_by
     id: order_by
+    job_contacts: job_contacts_order_by
+    job_skills: job_skills_order_by
+    job_tags_aggregate: job_tags_aggregate_order_by
     levels: order_by
     relocation: order_by
     remote: order_by
-    russian_description: order_by
-    skills: order_by
-    tags: order_by
     title: order_by
     updated: order_by
+}
+
+input job_paginate_args {
+    filter_before: timestamp
+    filter_country_code: String
+    filter_employment: employment
+    filter_exclude: _int4
+    filter_level: level
+    filter_limit: Int
+    filter_relocation: Boolean
+    filter_remote: Boolean
 }
 
 "primary key columns input for table: job"
@@ -1008,42 +1343,230 @@ input job_pk_columns_input {
     id: Int!
 }
 
+input job_recent_args {
+    filter_after: timestamp
+    filter_country_code: String
+    filter_employment: employment
+    filter_exclude: _int4
+    filter_level: level
+    filter_limit: Int
+    filter_relocation: Boolean
+    filter_remote: Boolean
+}
+
 "input type for updating data in table \"job\""
 input job_set_input {
+    "Местоположение, например: Moscow"
+    address: String
     "Компания"
     company: String
-    "Контакты для обратной связи"
-    contacts: _text
-    "Страна"
-    country: Int
-    "Создание"
-    created: timestamp
-    "Идентификатор пользователя из ID token фаербейза"
-    creator_id: String
+    "Код страны"
+    country_code: bpchar
     "Пометка на удаление"
     deletion_mark: Boolean
     "Трудоустройство, занятость"
     employments: _employment
-    "Описание на английском"
-    english_description: String
-    "Идентификатор элемента"
-    id: Int
     "Уровни разработчика"
     levels: _level
     "Релокация"
     relocation: relocation
     "Удаленная"
     remote: Boolean
-    "Описание на русском"
-    russian_description: String
-    "Навыки (Skills)"
-    skills: _text
-    "Тэги"
-    tags: _text
     "Имя вакансии"
     title: String
-    "Последнее обновление"
-    updated: timestamp
+}
+
+"Boolean expression to filter rows from the table \"job_skills\". All fields are combined with a logical 'AND'."
+input job_skills_bool_exp {
+    _and: [job_skills_bool_exp!]
+    _not: job_skills_bool_exp
+    _or: [job_skills_bool_exp!]
+    job: job_bool_exp
+    job_id: Int_comparison_exp
+    skills: _text_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job_skills\""
+input job_skills_inc_input {
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting data into table \"job_skills\""
+input job_skills_insert_input {
+    job: job_obj_rel_insert_input
+    "Идентификатор работы"
+    job_id: Int
+    "Навыки (Skills)"
+    skills: _text
+}
+
+"input type for inserting object relation for remote table \"job_skills\""
+input job_skills_obj_rel_insert_input {
+    data: job_skills_insert_input!
+    "on conflict condition"
+    on_conflict: job_skills_on_conflict
+}
+
+"on conflict condition type for table \"job_skills\""
+input job_skills_on_conflict {
+    constraint: job_skills_constraint!
+    update_columns: [job_skills_update_column!]! = []
+    where: job_skills_bool_exp
+}
+
+"Ordering options when selecting data from \"job_skills\"."
+input job_skills_order_by {
+    job: job_order_by
+    job_id: order_by
+    skills: order_by
+}
+
+"primary key columns input for table: job_skills"
+input job_skills_pk_columns_input {
+    "Идентификатор работы"
+    job_id: Int!
+}
+
+"input type for updating data in table \"job_skills\""
+input job_skills_set_input {
+    "Идентификатор работы"
+    job_id: Int
+    "Навыки (Skills)"
+    skills: _text
+}
+
+"order by aggregate values of table \"job_tags\""
+input job_tags_aggregate_order_by {
+    avg: job_tags_avg_order_by
+    count: order_by
+    max: job_tags_max_order_by
+    min: job_tags_min_order_by
+    stddev: job_tags_stddev_order_by
+    stddev_pop: job_tags_stddev_pop_order_by
+    stddev_samp: job_tags_stddev_samp_order_by
+    sum: job_tags_sum_order_by
+    var_pop: job_tags_var_pop_order_by
+    var_samp: job_tags_var_samp_order_by
+    variance: job_tags_variance_order_by
+}
+
+"input type for inserting array relation for remote table \"job_tags\""
+input job_tags_arr_rel_insert_input {
+    data: [job_tags_insert_input!]!
+    "on conflict condition"
+    on_conflict: job_tags_on_conflict
+}
+
+"order by avg() on columns of table \"job_tags\""
+input job_tags_avg_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"Boolean expression to filter rows from the table \"job_tags\". All fields are combined with a logical 'AND'."
+input job_tags_bool_exp {
+    _and: [job_tags_bool_exp!]
+    _not: job_tags_bool_exp
+    _or: [job_tags_bool_exp!]
+    job: job_bool_exp
+    job_id: Int_comparison_exp
+    tag: String_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"job_tags\""
+input job_tags_inc_input {
+    "Идентификатор работы"
+    job_id: Int
+}
+
+"input type for inserting data into table \"job_tags\""
+input job_tags_insert_input {
+    job: job_obj_rel_insert_input
+    "Идентификатор работы"
+    job_id: Int
+    "Тэг"
+    tag: String
+}
+
+"order by max() on columns of table \"job_tags\""
+input job_tags_max_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+    "Тэг"
+    tag: order_by
+}
+
+"order by min() on columns of table \"job_tags\""
+input job_tags_min_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+    "Тэг"
+    tag: order_by
+}
+
+"on conflict condition type for table \"job_tags\""
+input job_tags_on_conflict {
+    constraint: job_tags_constraint!
+    update_columns: [job_tags_update_column!]! = []
+    where: job_tags_bool_exp
+}
+
+"Ordering options when selecting data from \"job_tags\"."
+input job_tags_order_by {
+    job: job_order_by
+    job_id: order_by
+    tag: order_by
+}
+
+"input type for updating data in table \"job_tags\""
+input job_tags_set_input {
+    "Идентификатор работы"
+    job_id: Int
+    "Тэг"
+    tag: String
+}
+
+"order by stddev() on columns of table \"job_tags\""
+input job_tags_stddev_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by stddev_pop() on columns of table \"job_tags\""
+input job_tags_stddev_pop_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by stddev_samp() on columns of table \"job_tags\""
+input job_tags_stddev_samp_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by sum() on columns of table \"job_tags\""
+input job_tags_sum_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by var_pop() on columns of table \"job_tags\""
+input job_tags_var_pop_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by var_samp() on columns of table \"job_tags\""
+input job_tags_var_samp_order_by {
+    "Идентификатор работы"
+    job_id: order_by
+}
+
+"order by variance() on columns of table \"job_tags\""
+input job_tags_variance_order_by {
+    "Идентификатор работы"
+    job_id: order_by
 }
 
 "Boolean expression to compare columns of type \"relocation\". All fields are combined with logical 'AND'."
@@ -1071,16 +1594,3 @@ input timestamp_comparison_exp {
     _neq: timestamp
     _nin: [timestamp!]
 }
-
-
-scalar _employment
-
-scalar _level
-
-scalar _text
-
-scalar bpchar
-
-scalar relocation
-
-scalar timestamp

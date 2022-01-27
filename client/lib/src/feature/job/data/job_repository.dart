@@ -1,10 +1,12 @@
 import 'dart:async';
-import 'dart:math' as math;
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IJobRepository {
   /// Получить новую, пустую работу с идентификатором текущего пользователя
@@ -13,9 +15,11 @@ abstract class IJobRepository {
 
   /// Запросить новейшие
   /// Получение последних записей по указаной фильтрации
+  /// exclude - список идентификаторов не включаемых в выборку
   Future<JobsChunk> getRecent({
     required final DateTime updatedAfter,
     required final JobFilter filter,
+    final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -23,6 +27,7 @@ abstract class IJobRepository {
   Future<JobsChunk> paginate({
     required final DateTime updatedBefore,
     required final JobFilter filter,
+    final List<int> exclude,
   });
 
   /// Запросить порцию старых
@@ -38,17 +43,36 @@ abstract class IJobRepository {
 
   /// Удалить работу по идентификатору
   Future<Job> deleteJob({required final Job job});
+
+  /// Запомнить фильтр
+  Future<void> saveFilter(JobFilter filter);
+
+  /// Восстановить фильтр
+  Future<JobFilter> restoreFilter();
+
+  /// Последний сохранненый фильтр
+  JobFilter get filter;
 }
 
 class JobRepositoryImpl implements IJobRepository {
-  final IJobNetworkDataProvider _networkDataProvider;
-  final FirebaseAuth _firebaseAuth;
-
   JobRepositoryImpl({
     required final IJobNetworkDataProvider networkDataProvider,
     required final FirebaseAuth firebaseAuth,
+    required final FirebaseFirestore firestore,
+    required final SharedPreferences sharedPreferences,
   })  : _networkDataProvider = networkDataProvider,
-        _firebaseAuth = firebaseAuth;
+        _firebaseAuth = firebaseAuth,
+        _firestore = firestore,
+        _sharedPreferences = sharedPreferences;
+
+  final IJobNetworkDataProvider _networkDataProvider;
+  final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore;
+  final SharedPreferences _sharedPreferences;
+
+  @override
+  JobFilter get filter => _filter;
+  JobFilter _filter = const JobFilter();
 
   @override
   Job getNewJobTemplate() => Job(
@@ -57,8 +81,26 @@ class JobRepositoryImpl implements IJobRepository {
         //weight: 0,
         created: DateTime.now(),
         updated: DateTime.now(),
-        data: JobData(
-          title: _WorkTitleRandomizer.instance().next(),
+        data: const JobData(
+          title: '',
+          company: '',
+          address: '',
+          remote: true,
+          country: Countries.unknownCode,
+          descriptions: Description(),
+          relocation: Relocation.impossible(),
+          levels: <DeveloperLevel>[
+            DeveloperLevel.junior(),
+            DeveloperLevel.middle(),
+            DeveloperLevel.senior(),
+            DeveloperLevel.lead(),
+          ],
+          employments: <Employment>[
+            Employment.fullTime(),
+          ],
+          skills: <String>[],
+          contacts: <String>[],
+          tags: <String>[],
         ),
       );
 
@@ -66,20 +108,24 @@ class JobRepositoryImpl implements IJobRepository {
   Future<JobsChunk> getRecent({
     required DateTime updatedAfter,
     required JobFilter filter,
+    final List<int> exclude = const <int>[],
   }) =>
       _networkDataProvider.getRecent(
         updatedAfter: updatedAfter,
         filter: filter,
+        exclude: exclude,
       );
 
   @override
   Future<JobsChunk> paginate({
     required DateTime updatedBefore,
     required JobFilter filter,
+    final List<int> exclude = const <int>[],
   }) =>
       _networkDataProvider.paginate(
         updatedBefore: updatedBefore,
         filter: filter,
+        exclude: exclude,
       );
 
   @override
@@ -113,24 +159,39 @@ class JobRepositoryImpl implements IJobRepository {
     }
     return _networkDataProvider.deleteJob(job: job, idToken: idToken);
   }
-}
 
-// ignore: unused_element
-class _WorkTitleRandomizer {
-  _WorkTitleRandomizer._();
-  static _WorkTitleRandomizer? _instance;
-  // ignore: unused_element
-  factory _WorkTitleRandomizer.instance() => _instance ??= _WorkTitleRandomizer._();
-  static const List<String> _variants = <String>[
-    'Best work ever',
-    "Let's work together",
-    'Dart developer required',
-    'Most wanted',
-    'Payment by cookies',
-    'Hiring for everyone',
-    'Dart goez fasta, brrr',
-  ];
-  final math.Random _rnd = math.Random();
-  final int _max = _variants.length - 1;
-  String next() => _variants[_rnd.nextInt(_max)];
+  @override
+  Future<JobFilter> restoreFilter() async {
+    final user = _firebaseAuth.currentUser;
+    JobFilter? filter;
+    if (user != null) {
+      final doc = _firestore.collection('users').doc(user.uid).collection('feed').doc('filter');
+      final snapshot = await doc.get();
+      final json = snapshot.data();
+      if (json != null) {
+        filter = JobFilter.fromJson(json);
+      }
+    }
+    if (filter == null) {
+      final jsonRaw = _sharedPreferences.getString('feed.filter');
+      if (jsonRaw != null) {
+        final json = jsonDecode(jsonRaw) as Map<String, Object?>;
+        filter = JobFilter.fromJson(json);
+      }
+    }
+    return _filter = filter ?? const JobFilter();
+  }
+
+  @override
+  Future<void> saveFilter(JobFilter filter) async {
+    _filter = filter;
+    final user = _firebaseAuth.currentUser;
+    final json = filter.toJson();
+    if (user != null) {
+      final doc = _firestore.collection('users').doc(user.uid).collection('feed').doc('filter');
+      await doc.set(json, SetOptions(merge: false));
+    }
+    final jsonRaw = jsonEncode(json);
+    await _sharedPreferences.setString('feed.filter', jsonRaw);
+  }
 }

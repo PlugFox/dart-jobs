@@ -1,8 +1,8 @@
 mutation InsertJob(
     $title: String!,
     $company: String!,
-    $country: Int!,
-    $creator_id: String!,
+    $country_code: bpchar!,
+    $address: String!,
     $remote: Boolean!,
     $relocation: relocation!,
     $english_description: String!,
@@ -11,23 +11,42 @@ mutation InsertJob(
     $employments: _employment!,
     $levels: _level,
     $skills: _text,
-    $tags: _text
 ) {
     insert_job_one(
         object: {
-            creator_id: $creator_id,
             title: $title,
             company: $company,
-            country: $country,
+            country_code: $country_code,
+            address: $address,
             remote: $remote,
             relocation: $relocation,
             employments: $employments,
             levels: $levels,
-            skills: $skills,
-            contacts: $contacts,
-            tags: $tags
-            english_description: $english_description,
-            russian_description: $russian_description
+            description_english: {
+                data: {
+                    description: $english_description
+                }
+            },
+            description_russian: {
+                data: {
+                    description: $russian_description
+                }
+            },
+            job_skills: {
+                data: {
+                    skills: $skills
+                }
+            },
+            job_contacts: {
+                data: {
+                    contacts: $contacts
+                }
+            },
+            job_tags: {
+                data: [
+                    {tag:""}
+                ]
+            }
         }
     ) {
         id,
@@ -37,15 +56,26 @@ mutation InsertJob(
         deletion_mark,
         title,
         company,
-        country,
+        country_code,
+        address,
         remote,
         relocation,
         employments,
         levels,
-        skills,
-        contacts,
-        tags,
-        russian_description,
-        english_description
+        description_english {
+            description
+        },
+        description_russian {
+            description
+        },
+        job_skills {
+            skills
+        },
+        job_contacts {
+            contacts
+        },
+        job_tags {
+            tag
+        }
     }
 }

@@ -52,6 +52,9 @@ targets:
                 name: DateTime
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/bpchar.dart'
+              graphql_type: bpchar
+              dart_type: String
             - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/text.dart'
               graphql_type: _text
               dart_type:
@@ -59,9 +62,23 @@ targets:
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
             - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/level.dart'
+              graphql_type: level
+              dart_type:
+                name: DeveloperLevel
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/level.dart'
               graphql_type: _level
               dart_type:
                 name: List<DeveloperLevel>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
+                  - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/employment.dart'
+              graphql_type: employment
+              dart_type:
+                name: Employment
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
                   - 'package:dart_jobs_shared/model.dart'
@@ -79,6 +96,12 @@ targets:
                 imports:
                   - 'package:dart_jobs_shared/util.dart'
                   - 'package:dart_jobs_shared/model.dart'
+            - custom_parser_import: 'package:dart_jobs_shared/src/graphql/parsers/int_array.dart'
+              graphql_type: _int4
+              dart_type:
+                name: List<int>
+                imports:
+                  - 'package:dart_jobs_shared/util.dart'
               #dart_type:
               #  name: MultipartFile
               #  imports:

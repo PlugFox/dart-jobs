@@ -47,9 +47,27 @@ class AuthenticationScope extends StatefulWidget {
         notAuthenticated: () => false,
       );
 
+  /// Проверить, авторизован ли текущий пользователь
+  static bool isAuthenticatedOf(final BuildContext context, {bool listen = false}) => userOf(
+        context,
+        listen: listen,
+      ).isAuthenticated;
+
+  /// Получить авторизованного пользователя из контекста или null
+  static AuthenticatedUser? authenticatedOrNullOf(final BuildContext context, {bool listen = false}) {
+    if (listen) {
+      return context.dependOnInheritedWidgetOfExactType<_InheritedAuthentication>()?.userEntity.authenticatedOrNull;
+    } else {
+      final inheritedWidget = context.getElementForInheritedWidgetOfExactType<_InheritedAuthentication>()?.widget;
+      return inheritedWidget is _InheritedAuthentication ? inheritedWidget.userEntity.authenticatedOrNull : null;
+    }
+  }
+
   /// Выполнить коллбэк если аутентифицированы
   /// Войти с помощью гугла если не вошли
   /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
+  /// !!! Внимание, внутри коллбэка нельзя использовать контекст и любые зависимости,
+  ///   которые перестанут быть актуальными к этому моменту !!!
   static void authenticateOr(
     final BuildContext context,
     final void Function(AuthenticatedUser user) callback,
@@ -120,7 +138,11 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
   void _onStateChanged(final AuthenticationState state) => state.maybeMap<void>(
         orElse: () {},
         authenticated: (final state) {
-          _analytics?.logLogin(loginMethod: state.loginMethod);
+          //final user = state.user;
+          Future<void>.delayed(
+            const Duration(seconds: 1),
+            () => _analytics?.logLogin(loginMethod: state.loginMethod),
+          );
         },
       );
 

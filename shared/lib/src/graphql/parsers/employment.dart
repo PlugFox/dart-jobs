@@ -7,10 +7,10 @@ Employment fromGraphQLemploymentToDartEmployment(String employment) => Employmen
 
 String fromDartEmploymentToGraphQLemployment(Employment employment) => employment.name;
 
-Employment? fromGraphQLemploymentNullableToDartEmploymentNullable(String? employment) =>
+Employment? fromGraphQLEmploymentNullableToDartEmploymentNullable(String? employment) =>
     employment.nullOr(Employment.fromName);
 
-String? fromDartEmploymentNullableToGraphQLemploymentNullable(Employment? employment) => employment?.name;
+String? fromDartEmploymentNullableToGraphQLEmploymentNullable(Employment? employment) => employment?.name;
 
 /* List<Employment> <-> _employment */
 

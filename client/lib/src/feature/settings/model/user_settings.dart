@@ -1,3 +1,5 @@
+import 'dart:ui' as ui show Brightness, window;
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:platform_info/platform_info.dart';
 
@@ -19,7 +21,7 @@ class UserSettings with _$UserSettings {
   // ignore: prefer_constructors_over_static_methods
   static UserSettings get initial => _initial ??= UserSettings(
         locale: platform.locale,
-        theme: 'light',
+        theme: ui.window.platformBrightness == ui.Brightness.dark ? 'dark' : 'light',
       );
 
   /// Generate Class from Map<String, dynamic>

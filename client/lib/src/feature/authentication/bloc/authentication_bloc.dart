@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
+import 'package:dart_jobs_client/src/common/bloc/bloc_set_state_mixin.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
@@ -57,10 +60,8 @@ class AuthenticationState with _$AuthenticationState {
       );
 }
 
-class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final IAuthenticationRepository _authenticationRepository;
-  StreamSubscription<void>? _authStateChangesSubscription;
-
+class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState>
+    with SetStateMixin<AuthenticationState> {
   AuthenticationBLoC({
     required final IAuthenticationRepository authenticationRepository,
     final AuthenticationState? initialState,
@@ -68,11 +69,19 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
         super(initialState ?? AuthenticationState.fromUser(authenticationRepository.currentUser)) {
     _authStateChangesSubscription = authenticationRepository.authStateChanges
         .map<AuthenticationState>(AuthenticationState.fromUser)
-        // ignore: invalid_use_of_visible_for_testing_member
-        .listen(emit, cancelOnError: false);
-    on<_SignInWithGoogleEvent>((event, emit) => _signInWithGoogle(emit));
-    on<_LogOutEvent>((event, emit) => _logOut(emit));
+        .listen(setState, cancelOnError: false);
+    on<_SignInWithGoogleEvent>(
+      (event, emit) => _signInWithGoogle(emit),
+      transformer: bloc_concurrency.droppable(),
+    );
+    on<_LogOutEvent>(
+      (event, emit) => _logOut(emit),
+      transformer: bloc_concurrency.droppable(),
+    );
   }
+
+  final IAuthenticationRepository _authenticationRepository;
+  StreamSubscription<void>? _authStateChangesSubscription;
 
   Future<void> _signInWithGoogle(Emitter emit) async {
     if (state.isAuthenticated) return;
@@ -82,8 +91,16 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState> 
       l.vvvvvv('Запросим у репозитория аутентификации аутентификацию в гугле');
       final user = await _authenticationRepository.signInWithGoogle();
       emit(AuthenticationState.fromUser(user));
-    } on Object {
-      l.w('Во время аутентификации в гугле произошла ошибка');
+    } on FirebaseAuthException catch (error, stackTrace) {
+      emit(const AuthenticationState.notAuthenticated());
+      if (error.code == 'popup-closed-by-user') {
+        l.d('Пользователь закрыл окно аутентификации');
+        return;
+      }
+      l.w('Во время аутентификации в гугле произошла ошибка Firebase: $error', stackTrace);
+      rethrow;
+    } on Object catch (error, stackTrace) {
+      l.w('Во время аутентификации в гугле произошла ошибка: $error', stackTrace);
       emit(const AuthenticationState.notAuthenticated());
       rethrow;
     }

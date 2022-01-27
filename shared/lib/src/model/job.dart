@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
+import 'package:dart_jobs_shared/src/model/country.dart';
 import 'package:dart_jobs_shared/src/model/enum.dart';
 import 'package:dart_jobs_shared/util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -98,6 +99,15 @@ class Job with _$Job, Comparable<Job> {
   /// Generate Class from Map<String, Object?>
   factory Job.fromJson(Map<String, Object?> json) => _$JobFromJson(json);
 
+  /// Создает работу по id (полезно при создании роута по идентификатору)
+  factory Job.id(int id) => Job(
+        id: id,
+        creatorId: '',
+        created: DateTime(0),
+        updated: DateTime(0),
+        data: const JobData(title: 'Empty'),
+      );
+
   /// Сортирую от новых к старым по полю [updated]
   @override
   int compareTo(Job other) => other.updated.compareTo(updated);
@@ -149,7 +159,7 @@ class JobData with _$JobData {
     /// Страна, например: Russia
     /// Идентификатор страны
     /// Выпадающее поле поиска
-    @JsonKey(name: 'country') @Default(0) final int country,
+    @JsonKey(name: 'country') @Default(Countries.unknownCode) final String country,
 
     /// Удаленная работа?
     /// Переключатель
@@ -159,10 +169,10 @@ class JobData with _$JobData {
     /// Выбор
     @JsonKey(name: 'relocation') @Default(Relocation.impossible()) final Relocation relocation,
 
-    // /// Местоположение, например: Moscow
-    // /// Максимальная длина - 256 символов
-    // /// Поле ввода
-    // @JsonKey(name: 'address') @Default('') final String address,
+    /// Местоположение, например: Moscow
+    /// Максимальная длина - 256 символов
+    /// Поле ввода
+    @JsonKey(name: 'address') @Default('') final String address,
 
     /// Описания на различных языках
     /// Ключ - локаль, например "en" или "ru"
@@ -193,6 +203,8 @@ class JobData with _$JobData {
     /// Поле ввода
     @JsonKey(name: 'tags') @Default(<String>[]) final List<String> tags,
   }) = _JobData;
+
+  Country getCountry() => Country.byCode(country);
 
   /// Generate Class from Map<String, Object?>
   factory JobData.fromJson(Map<String, Object?> json) => _$JobDataFromJson(json);
@@ -300,12 +312,43 @@ class JobFilter with _$JobFilter {
     /// Ожидаемое количество
     /// Если не указано - 100
     @JsonKey(name: 'limit') @Default(100) final int limit,
+
+    /// Удаленная работа?
+    @JsonKey(name: 'remote') @Default(null) final bool? remote,
+
+    /// Страна
+    @JsonKey(name: 'country') @Default(null) final String? country,
+
+    /// Уровни разработчика
+    @JsonKey(name: 'level') @Default(null) final DeveloperLevel? level,
+
+    /// Трудоустройство
+    @JsonKey(name: 'employment') @Default(null) final Employment? employment,
+
+    /// Возможность релокации
+    @JsonKey(name: 'relocation') @Default(null) final bool? relocation,
   }) = PaginateJobFilter;
 
   /// Generate Class from Map<String, Object?>
   factory JobFilter.fromJson(Map<String, Object?> json) => _$JobFilterFromJson(json);
 
-  Map<String, Object> toQueryParameters() => <String, Object>{
+  Map<String, Object?> toQueryParameters() => <String, Object?>{
         'limit': math.min(limit, 100),
+        'remote': remote,
+        'country': country,
+        'level': level,
+        'employment': employment,
+        'relocation': relocation,
       };
+
+  /// Количество включенных фильтров
+  int get count {
+    var i = 0;
+    remote.nullOr((_) => i++);
+    country.nullOr((_) => i++);
+    level.nullOr((_) => i++);
+    employment.nullOr((_) => i++);
+    relocation.nullOr((_) => i++);
+    return i;
+  }
 }

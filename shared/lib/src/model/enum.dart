@@ -30,12 +30,22 @@ class DeveloperLevel with _$DeveloperLevel {
 
   factory DeveloperLevel.fromJson(Map<String, Object?> json) => _$DeveloperLevelFromJson(json);
 
+  /// Представление
   String get name => map<String>(
         intern: (_) => 'INTERN',
         junior: (_) => 'JUNIOR',
         middle: (_) => 'MIDDLE',
         senior: (_) => 'SENIOR',
         lead: (_) => 'LEAD',
+      );
+
+  /// Вес опыта
+  int get value => map<int>(
+        intern: (_) => 0,
+        junior: (_) => 1,
+        middle: (_) => 2,
+        senior: (_) => 3,
+        lead: (_) => 4,
       );
 
   static DeveloperLevel fromName(String name) => values[name.trim().toUpperCase()] ?? const MiddleDeveloperLevel();

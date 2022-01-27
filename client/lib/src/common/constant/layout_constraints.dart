@@ -1,14 +1,18 @@
-/// Максимальная ширина лейаута
-const double maxScaffoldWidth = 920;
+/// Максимальная ширина колонки с основным контентом
+const double kBodyWidth = 620; // or 540
 
-/// Максимальная ширина ленты
-const double maxFeedWidth = 540;
+// /// Ширина правой колонки с дополнительным контентом
+//const double sidePaneWidth = 320; // or 256 or 316;
 
-/// Максимальная ширина ленты
-const double sideBarWidth = 240; // or 316;
+/// Отступ боковых панелей от краев экрана, между собой и от рельсы (Drawer)
+const double kSidePadding = 24;
 
-/// Отступ боковых панелей от ленты
-const double feedSidePadding = 24;
+/// Ширина выдвинутого Drawer'а в роли рельсы
+/// На планшетах, в случае выдвижения, может быть больше и достигать 400 dip
+const double kRailWidth = 320;
 
-/// Минимальная ширина экрана необходимая для отображения ленты с правой панелью
-const double feedWithRightPanel = maxFeedWidth + sideBarWidth + feedSidePadding;
+/// Максимально возможная ширина лейаута с правой панелью, но без учета Drawer'а
+const double kScaffoldWidth = kSidePadding + kBodyWidth + kSidePadding; // + sidePaneWidth + sidePadding;
+
+/// Минимальная ширина экрана для отображения выдвинутого Drawer'а в роли рельсы
+const double kScaffoldWithRail = kRailWidth + kScaffoldWidth;

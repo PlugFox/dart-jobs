@@ -1,5 +1,6 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -9,17 +10,18 @@ class NotFoundScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => AdaptiveScaffold(
         appBar: AppBar(
+          leading: const BackButton(),
           title: Text(context.localization.not_found),
         ),
         body: SafeArea(
           child: Center(
             child: TextButton(
-              onPressed: () => PageRouter.maybePop(context).then<void>(
+              onPressed: () => AppRouter.maybePop(context).then<void>(
                 (final value) {
                   if (!value) {
-                    PageRouter.goHome(context);
+                    AppRouter.goHome(context);
                   }
                 },
               ),

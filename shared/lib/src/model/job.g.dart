@@ -27,11 +27,12 @@ Map<String, dynamic> _$$_JobToJson(_$_Job instance) => <String, dynamic>{
 _$_JobData _$$_JobDataFromJson(Map<String, dynamic> json) => _$_JobData(
       title: json['title'] as String? ?? '',
       company: json['company'] as String? ?? '',
-      country: json['country'] as int? ?? 0,
+      country: json['country'] as String? ?? Countries.unknownCode,
       remote: json['remote'] as bool? ?? true,
       relocation: json['relocation'] == null
           ? const Relocation.impossible()
           : Relocation.fromJson(json['relocation'] as Map<String, dynamic>),
+      address: json['address'] as String? ?? '',
       descriptions: json['descriptions'] == null
           ? const Description()
           : Description.fromJson(json['descriptions'] as Map<String, dynamic>),
@@ -53,6 +54,7 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) => <String, dynamic>
       'country': instance.country,
       'remote': instance.remote,
       'relocation': instance.relocation.toJson(),
+      'address': instance.address,
       'descriptions': instance.descriptions.toJson(),
       'levels': instance.levels.map((e) => e.toJson()).toList(),
       'skills': instance.skills,
@@ -63,8 +65,18 @@ Map<String, dynamic> _$$_JobDataToJson(_$_JobData instance) => <String, dynamic>
 
 _$PaginateJobFilter _$$PaginateJobFilterFromJson(Map<String, dynamic> json) => _$PaginateJobFilter(
       limit: json['limit'] as int? ?? 100,
+      remote: json['remote'] as bool? ?? null,
+      country: json['country'] as String? ?? null,
+      level: json['level'] == null ? null : DeveloperLevel.fromJson(json['level'] as Map<String, dynamic>),
+      employment: json['employment'] == null ? null : Employment.fromJson(json['employment'] as Map<String, dynamic>),
+      relocation: json['relocation'] as bool? ?? null,
     );
 
 Map<String, dynamic> _$$PaginateJobFilterToJson(_$PaginateJobFilter instance) => <String, dynamic>{
       'limit': instance.limit,
+      'remote': instance.remote,
+      'country': instance.country,
+      'level': instance.level?.toJson(),
+      'employment': instance.employment?.toJson(),
+      'relocation': instance.relocation,
     };

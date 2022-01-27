@@ -3,30 +3,28 @@ import 'package:dart_jobs_client/src/feature/authentication/widget/authenticatio
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:dart_jobs_client/src/feature/settings/model/user_settings.dart';
+import 'package:dart_jobs_client/src/feature/settings/widget/platform.dart' as platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class SettingsScope extends StatefulWidget {
-  final Widget child;
   const SettingsScope({
     required this.child,
     final Key? key,
   }) : super(key: key);
 
+  final Widget child;
+
   static SettingsBLoC _blocOf(final BuildContext context) => _InheritedSettings.stateOf(context)!.settingsBLoC;
 
   /// Обновить настройки приложения
-  static void updateOf(final BuildContext context, {required final UserSettings settings}) {
-    final user = AuthenticationScope.userOf(context, listen: false).authenticatedOrNull;
-    if (user == null) return;
-    _blocOf(context).add(
-      SettingsEvent.update(
-        user,
-        settings,
-      ),
-    );
-  }
+  static void updateOf(final BuildContext context, {required final UserSettings settings}) => _blocOf(context).add(
+        SettingsEvent.update(
+          AuthenticationScope.userOf(context, listen: false),
+          settings,
+        ),
+      );
 
   /// Получить текущие настройки приложения
   static UserSettings settingsOf(final BuildContext context, {bool listen = true}) =>
@@ -60,6 +58,7 @@ class _SettingsScopeState extends State<SettingsScope> {
     settingsBLoC = SettingsBLoC(
       repository: RepositoryScope.of(context).settingsRepository,
     );
+    platform.changeTheme(settingsBLoC.state.settings.theme);
   }
 
   @override
@@ -86,8 +85,13 @@ class _SettingsScopeState extends State<SettingsScope> {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocBuilder<SettingsBLoC, SettingsState>(
+  Widget build(final BuildContext context) => BlocConsumer<SettingsBLoC, SettingsState>(
         bloc: settingsBLoC,
+        listenWhen: (prev, next) => prev.settings.theme != next.settings.theme,
+        listener: (context, state) {
+          // Изменить тему браузера
+          platform.changeTheme(state.settings.theme);
+        },
         buildWhen: (final prev, final next) => prev != next,
         builder: (final context, final state) => _InheritedSettings(
           state: this,

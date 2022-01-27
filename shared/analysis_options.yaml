@@ -3,17 +3,19 @@ include: package:lints/recommended.yaml
 analyzer:
   exclude:
     # Generated code
-    - 'lib/**.g.dart'
-    - 'lib/**.freezed.dart'
-    - 'lib/**.graphql.dart'
-    - 'lib/**.gen.dart'
+    - 'lib/src/**.g.dart'
+    - 'lib/src/**.freezed.dart'
+    - 'lib/src/graphql/api.dart'
+    - 'lib/src/graphql/**.graphql.dart'
+    - 'lib/src/graphql/**.graphql.g.dart'
+    - 'lib/src/**.gen.dart'
     - 'lib/generated_plugin_registrant.dart'
     - 'lib/pigeon.dart'
     # gRPC
-    - 'lib/**.pb.dart'
-    - 'lib/**.pbenum.dart'
-    - 'lib/**.pbgrpc.dart'
-    - 'lib/**.pbjson.dart'
+    - 'lib/src/**.pb.dart'
+    - 'lib/src/**.pbenum.dart'
+    - 'lib/src/**.pbgrpc.dart'
+    - 'lib/src/**.pbjson.dart'
     # Tests
     - 'test/**.mocks.dart'
     - '.test_coverage.dart'

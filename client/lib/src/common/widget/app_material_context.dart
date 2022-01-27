@@ -1,7 +1,7 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/configuration.dart';
-import 'package:dart_jobs_client/src/common/router/route_information_parser.dart';
-import 'package:dart_jobs_client/src/common/router/route_information_provider.dart';
+import 'package:dart_jobs_client/src/common/router/information_parser.dart';
+import 'package:dart_jobs_client/src/common/router/information_provider.dart';
 import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/settings_scope.dart';
 import 'package:flutter/material.dart';
@@ -13,30 +13,14 @@ class AppMaterialContext extends StatefulWidget {
     final Key? key,
   }) : super(key: key);
 
-  /// Для поиска _GlobalMaterialContextState в контексте
-  static _AppMaterialContextState? of(final BuildContext context) =>
-      context.findAncestorStateOfType<_AppMaterialContextState>();
-
   @override
   State<AppMaterialContext> createState() => _AppMaterialContextState();
 }
 
 class _AppMaterialContextState extends State<AppMaterialContext> {
-  final PageInformationParser _routeInformationParser = const PageInformationParser();
-  final PageInformationProvider _routeInformationProvider = PageInformationProvider(
-    initialRouteInformation: const RouteInformation(
-      location: '/',
-    ),
-  );
-  final PageRouterDelegate _routerDelegate = PageRouterDelegate(
-    initialConfiguration: const FeedPageConfiguration(),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    //final repoStore = InitializationScope.storeOf(context);
-  }
+  final RouteInformationParser<IRouteConfiguration> _routeInformationParser = const AppRouteInformationParser();
+  final AppInformationProvider _routeInformationProvider = AppInformationProvider();
+  final AppRouterDelegate _routerDelegate = AppRouterDelegate();
 
   @override
   void dispose() {
@@ -51,8 +35,10 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
     final themeData = SettingsScope.themeOf(context);
     return MaterialApp.router(
       color: Colors.blue,
+      debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateTitle: (final context) => context.localization.title,
+      restorationScopeId: 'app',
       routerDelegate: _routerDelegate,
       routeInformationParser: _routeInformationParser,
       routeInformationProvider: _routeInformationProvider,

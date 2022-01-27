@@ -7,10 +7,10 @@ DeveloperLevel fromGraphQLlevelToDartDeveloperLevel(String level) => DeveloperLe
 
 String fromDartDeveloperLevelToGraphQLlevel(DeveloperLevel level) => level.name;
 
-DeveloperLevel? fromGraphQLlevelNullableToDartDeveloperLevelNullable(String? level) =>
+DeveloperLevel? fromGraphQLLevelNullableToDartDeveloperLevelNullable(String? level) =>
     level.nullOr(DeveloperLevel.fromName);
 
-String? fromDartDeveloperLevelNullableToGraphQLlevelNullable(DeveloperLevel? level) => level?.name;
+String? fromDartDeveloperLevelNullableToGraphQLLevelNullable(DeveloperLevel? level) => level?.name;
 
 /* List<DeveloperLevel> <-> _level */
 

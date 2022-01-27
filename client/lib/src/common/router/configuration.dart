@@ -1,189 +1,200 @@
-import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/feature/authentication/widget/profile_page.dart';
-import 'package:dart_jobs_client/src/feature/feed/widget/feed_page.dart';
-import 'package:dart_jobs_client/src/feature/job/widget/job_create_page.dart';
-import 'package:dart_jobs_client/src/feature/job/widget/job_page.dart';
-import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_page.dart';
-import 'package:dart_jobs_client/src/feature/settings/widget/settings_page.dart';
-import 'package:dart_jobs_shared/model.dart';
+import 'package:collection/collection.dart';
+import 'package:dart_jobs_client/src/common/router/pages.dart';
+import 'package:dart_jobs_client/src/common/router/router_util.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
-/// Конфигурация страниц приложения
-abstract class PageConfiguration {
-  const PageConfiguration([this.state]);
-
-  /// Состояние
-  final Map<String, Object?>? state;
-
-  /// Заголовок
-  String get pageTitle;
+/// Конфигурация состояния приложения и всех его маршрутов
+@immutable
+abstract class IRouteConfiguration implements RouteInformation {
+  /// Это корневая конфигурация
+  bool get isRoot;
 
   /// Предидущая конфигурация
   /// Если null - значит это корневая конфигурация
-  PageConfiguration? get previous;
+  IRouteConfiguration? get previous;
 
-  /// Это корневая конфигурация
-  bool get isRoot => previous == null;
+  /// Представление текущего стека навигации в виде строки
+  /// См также [RouteInformation.location]
+  @override
+  String get location;
 
-  /// Преобразовать конфигурацию в uri
-  Uri toUri();
+  /// Состояние конфигурации
+  /// Где ключ хэштаблицы - [AppPage.location] страницы
+  /// А значение - хэштаблица состояния страницы
+  /// См также [RouteInformation.state]
+  @override
+  Map<String, Object?>? get state;
 
-  /// Построить страницы исходя из контекста и текущей конфигурации
-  @mustCallSuper
-  Iterable<Page<Object?>> buildPages(final BuildContext context) =>
-      previous?.buildPages(context) ?? const Iterable<Page<Object?>>.empty();
+  /// Добавить страницу, роут приложения к конфигурации
+  /// выпустив новую конфигурацию на основании текущей
+  IRouteConfiguration add(AppPage page);
+}
+
+/// Базовая конфигурация
+abstract class RouteConfigurationBase implements IRouteConfiguration {
+  const RouteConfigurationBase();
+
+  @override
+  bool get isRoot => previous != null;
+
+  @override
+  IRouteConfiguration? get previous {
+    IRouteConfiguration? getPrevious() {
+      if (location == '/' || location == 'home' || location.isEmpty) return null;
+      try {
+        final uri = Uri.parse(location);
+        final pathSegments = uri.pathSegments;
+        if (pathSegments.length == 1) {
+          return const HomeRouteConfiguration();
+        }
+        final newLocation = pathSegments.sublist(0, pathSegments.length - 1).join('/');
+        final newState = state;
+        if (newState != null) {
+          newState.remove(pathSegments.last);
+        }
+        return DynamicRouteConfiguration(
+          newLocation,
+          newState,
+        );
+      } on Object {
+        return null;
+      }
+    }
+
+    return getPrevious();
+  }
+
+  @override
+  IRouteConfiguration add(AppPage page) {
+    if (page.location.isEmpty) return this;
+    final arguments = page.arguments;
+    final newLocation = RouteInformationUtil.normalize('$location/${page.location}');
+    if (arguments is Map<String, Object?> || state != null) {
+      return DynamicRouteConfiguration(
+        newLocation,
+        <String, Object?>{
+          ...?state,
+          if (arguments is Object) page.location: arguments,
+        },
+      );
+    }
+    return DynamicRouteConfiguration(newLocation);
+  }
+
+  @override
+  String toString() => 'RouteConfiguration($location)';
+
+  @override
+  int get hashCode => Object.hash(location, state);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is IRouteConfiguration &&
+          location == other.location &&
+          const DeepCollectionEquality.unordered().equals(
+            state,
+            other.state,
+          ));
 }
 
 /// Класс для корневой конфигурации, страниц из которых нельзя вернуться на предидущую
-abstract class RootPageConfiguration implements PageConfiguration {
-  const RootPageConfiguration();
-
+mixin RootPageConfiguration on RouteConfigurationBase {
   @override
-  @nonVirtual
   bool get isRoot => true;
 
   @override
-  @nonVirtual
-  PageConfiguration? get previous => null;
-
-  @override
-  Map<String, Object?>? get state => const <String, Object?>{};
-
-  @override
-  String get pageTitle => Localized.current.title;
-
-  @override
-  Uri toUri() => Uri.parse('/');
-
-  @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) => const <Page<Object?>>[
-        FeedPage(),
-      ];
+  IRouteConfiguration? get previous => null;
 }
 
-/// Конфигурация страницы с не найденным контентом
-class NotFoundPageConfiguration extends PageConfiguration {
-  const NotFoundPageConfiguration([final PageConfiguration? previousConfiguration]) : previous = previousConfiguration;
+/// Презет конфигурации домашнего, корневого роута
+class HomeRouteConfiguration extends RouteConfigurationBase with RootPageConfiguration {
+  const HomeRouteConfiguration();
 
   @override
-  final PageConfiguration? previous;
+  String get location => 'feed';
 
   @override
-  Uri toUri() => Uri.parse('/not_found');
-
-  @override
-  String get pageTitle => '${Localized.current.title} / 404';
-
-  @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
-    yield* super.buildPages(context);
-    yield const NotFoundPage();
-  }
+  Map<String, Object?>? get state => <String, Object?>{};
 }
 
-class FeedPageConfiguration extends RootPageConfiguration {
-  const FeedPageConfiguration();
+/// Конфигурация описывающая отсутсвующий контент
+class JobRouteConfiguration extends RouteConfigurationBase {
+  const JobRouteConfiguration(int id) : location = 'feed/job-$id';
+  const JobRouteConfiguration.create() : location = 'feed/job';
+
+  @override
+  bool get isRoot => false;
+
+  @override
+  IRouteConfiguration? get previous => const HomeRouteConfiguration();
+
+  @override
+  final String location;
+
+  @override
+  Map<String, Object?>? get state => <String, Object?>{};
 }
 
-class ProfilePageConfiguration extends PageConfiguration {
-  const ProfilePageConfiguration();
+/// Конфигурация описывающая отсутсвующий контент
+class NotFoundRouteConfiguration extends RouteConfigurationBase {
+  const NotFoundRouteConfiguration();
 
   @override
-  PageConfiguration? get previous => const FeedPageConfiguration();
+  bool get isRoot => false;
 
   @override
-  Uri toUri() => Uri.parse('/profile');
+  IRouteConfiguration? get previous => const HomeRouteConfiguration();
 
   @override
-  String get pageTitle => '${Localized.current.title} / ${Localized.current.profile}';
+  String get location => 'feed/404';
 
   @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
-    yield* super.buildPages(context);
-    yield const ProfilePage();
-  }
+  Map<String, Object?>? get state => <String, Object?>{};
 }
 
-class SettingsPageConfiguration extends PageConfiguration {
-  const SettingsPageConfiguration();
+/// Конфигурация настроек
+class SettingsRouteConfiguration extends RouteConfigurationBase {
+  const SettingsRouteConfiguration();
 
   @override
-  PageConfiguration? get previous => const FeedPageConfiguration();
+  bool get isRoot => false;
 
   @override
-  Uri toUri() => Uri.parse('/settings');
+  IRouteConfiguration? get previous => const HomeRouteConfiguration();
 
   @override
-  String get pageTitle => '${Localized.current.title} / ${Localized.current.settings}';
+  String get location => 'feed/settings';
 
   @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
-    yield* super.buildPages(context);
-    yield const SettingsPage();
-  }
+  Map<String, Object?>? get state => <String, Object?>{};
 }
 
-class JobPageConfiguration extends PageConfiguration {
-  JobPageConfiguration({
-    required final this.job,
-    final this.edit = false,
-  }) : super(
-          <String, Object?>{
-            'job': <String, Object?>{
-              ...job.toJson(),
-              'edit': job.hasID && edit,
-            },
-          },
-        );
-
-  /// Работа
-  final Job job;
-
-  /// Открыть в режиме редактирования, а не просмотра
-  final bool edit;
+/// Профиль пользователя
+class ProfileRouteConfiguration extends RouteConfigurationBase {
+  const ProfileRouteConfiguration();
 
   @override
-  String get pageTitle => '${Localized.current.title} / ${job.data.title.isEmpty ? job.id : job.data.title}';
+  bool get isRoot => false;
 
   @override
-  PageConfiguration? get previous => const FeedPageConfiguration();
+  IRouteConfiguration? get previous => const HomeRouteConfiguration();
 
   @override
-  Uri toUri() => Uri.parse('/job/${job.id}');
+  String get location => 'feed/profile';
 
   @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
-    yield* super.buildPages(context);
-    yield JobPage(
-      job: job,
-      edit: edit,
-    );
-  }
+  Map<String, Object?>? get state => <String, Object?>{};
 }
 
-class JobCreatePageConfiguration extends PageConfiguration {
-  JobCreatePageConfiguration()
-      : super(
-          <String, Object?>{
-            'job': <String, Object?>{
-              'edit': true,
-            },
-          },
-        );
+/// Динамическая конфигурация, получаемая путем преобразования заданных презетов
+/// или при изменении конфигурации на платформе
+class DynamicRouteConfiguration extends RouteConfigurationBase {
+  const DynamicRouteConfiguration(this.location, [this.state]);
 
   @override
-  String get pageTitle => '${Localized.current.title} / New Job';
+  final String location;
 
   @override
-  PageConfiguration? get previous => const FeedPageConfiguration();
-
-  @override
-  Uri toUri() => Uri.parse('/job/');
-
-  @override
-  Iterable<Page<Object?>> buildPages(final BuildContext context) sync* {
-    yield* super.buildPages(context);
-    yield JobCreatePage();
-  }
+  final Map<String, Object?>? state;
 }

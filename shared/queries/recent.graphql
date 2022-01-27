@@ -1,0 +1,37 @@
+query Recent(
+    $after: timestamp!,
+    $exclude: _int4!,
+    $remote: Boolean,
+    $country: String,
+    $level: level,
+    $employment: employment,
+    $relocation: Boolean,
+    $limit: Int! = 100
+) {
+    job_recent(
+        args: {
+            filter_after: $after,
+            filter_limit: $limit,
+            filter_exclude: $exclude,
+            filter_remote: $remote,
+            filter_country_code: $country,
+            filter_level: $level,
+            filter_employment: $employment,
+            filter_relocation: $relocation
+        }
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark,
+        title,
+        company,
+        country_code,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels
+    }
+}

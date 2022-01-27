@@ -11,15 +11,26 @@ query GetJob(
         deletion_mark,
         title,
         company,
-        country,
+        country_code,
+        address,
         remote,
         relocation,
         employments,
         levels,
-        skills,
-        contacts,
-        tags,
-        russian_description,
-        english_description
+        description_english {
+            description
+        },
+        description_russian {
+            description
+        },
+        job_skills {
+            skills
+        },
+        job_contacts {
+            contacts
+        },
+        job_tags {
+            tag
+        }
     }
 }

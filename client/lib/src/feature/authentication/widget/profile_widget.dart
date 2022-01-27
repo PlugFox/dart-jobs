@@ -1,5 +1,5 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class ProfileWidget extends StatelessWidget {
     final user = AuthenticationScope.userOf(context);
     if (user is! AuthenticatedUser) {
       WidgetsBinding.instance?.addPostFrameCallback(
-        (final _) => PageRouter.pop(context),
+        (final _) => AppRouter.pop(context),
       );
       return const SizedBox.shrink();
     }
@@ -87,7 +87,7 @@ class ProfileWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: OutlinedButton(
                 onPressed: () {
-                  PageRouter.pop(context);
+                  AppRouter.pop(context);
                   AuthenticationScope.logOut(context);
                 },
                 child: Text(context.localization.log_out),

@@ -1,22 +1,24 @@
 query Paginate(
     $before: timestamp!,
+    $exclude: _int4!,
+    $remote: Boolean,
+    $country: String,
+    $level: level,
+    $employment: employment,
+    $relocation: Boolean,
     $limit: Int! = 100
 ) {
-    job(
-        where: {
-            updated: {
-                _lt: $before
-            },
-            deletion_mark: {
-                _eq: false
-            }
-        },
-        order_by: [
-            {
-                updated: desc
-            }
-        ],
-        limit: $limit
+    job_paginate(
+        args: {
+            filter_before: $before,
+            filter_limit: $limit,
+            filter_exclude: $exclude,
+            filter_remote: $remote,
+            filter_country_code: $country,
+            filter_level: $level,
+            filter_employment: $employment,
+            filter_relocation: $relocation
+        }
     ) {
         id,
         creator_id,
@@ -25,7 +27,8 @@ query Paginate(
         deletion_mark,
         title,
         company,
-        country,
+        country_code,
+        address,
         remote,
         relocation,
         employments,

@@ -13,7 +13,7 @@ extension AppLocalizationsX on BuildContext {
   MaterialLocalizations get materialLocalizations => MaterialLocalizations.of(this);
   List<Locale> get supportedLocales => AppLocalization.supportedLocales;
   String formatDate(final DateTime date, final String pattern) =>
-      AppLocalization.dateFormat(pattern, AppLocalization.localeOf(this)).format(date);
+      AppLocalization.dateFormat(pattern, AppLocalization.localeOf(this)).format(date.toLocal());
 }
 
 /// Абстрактный класс для управления локализацией

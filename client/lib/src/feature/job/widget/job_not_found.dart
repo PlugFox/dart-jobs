@@ -1,5 +1,6 @@
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
-import 'package:dart_jobs_client/src/common/router/page_router.dart';
+import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -9,8 +10,9 @@ class JobNotFound extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => AdaptiveScaffold(
         appBar: AppBar(
+          leading: const BackButton(),
           title: Text(
             context.localization.job_not_found,
             maxLines: 1,
@@ -33,9 +35,9 @@ class JobNotFound extends StatelessWidget {
                 ),
                 Center(
                   child: IconButton(
-                    onPressed: () => PageRouter.goHome(context),
+                    onPressed: () => AppRouter.goHome(context),
                     icon: Icon(
-                      Icons.home,
+                      _kHomeIcon,
                       color: Theme.of(context).primaryColor,
                     ),
                     iconSize: 48,
@@ -47,3 +49,5 @@ class JobNotFound extends StatelessWidget {
         ),
       );
 }
+
+const IconData _kHomeIcon = Icons.home;

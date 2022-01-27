@@ -264,16 +264,23 @@ class _$_Job extends _Job {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Job &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.creatorId, creatorId) || other.creatorId == creatorId) &&
-            (identical(other.created, created) || other.created == created) &&
-            (identical(other.updated, updated) || other.updated == updated) &&
-            (identical(other.data, data) || other.data == data) &&
-            (identical(other.deletionMark, deletionMark) || other.deletionMark == deletionMark));
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.creatorId, creatorId) &&
+            const DeepCollectionEquality().equals(other.created, created) &&
+            const DeepCollectionEquality().equals(other.updated, updated) &&
+            const DeepCollectionEquality().equals(other.data, data) &&
+            const DeepCollectionEquality().equals(other.deletionMark, deletionMark));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, creatorId, created, updated, data, deletionMark);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(creatorId),
+      const DeepCollectionEquality().hash(created),
+      const DeepCollectionEquality().hash(updated),
+      const DeepCollectionEquality().hash(data),
+      const DeepCollectionEquality().hash(deletionMark));
 
   @JsonKey(ignore: true)
   @override
@@ -345,9 +352,10 @@ class _$JobDataTearOff {
   _JobData call(
       {@JsonKey(name: 'title') String title = '',
       @JsonKey(name: 'company') String company = '',
-      @JsonKey(name: 'country') int country = 0,
+      @JsonKey(name: 'country') String country = Countries.unknownCode,
       @JsonKey(name: 'remote') bool remote = true,
       @JsonKey(name: 'relocation') Relocation relocation = const Relocation.impossible(),
+      @JsonKey(name: 'address') String address = '',
       @JsonKey(name: 'descriptions') Description descriptions = const Description(),
       @JsonKey(name: 'levels') List<DeveloperLevel> levels = const <DeveloperLevel>[],
       @JsonKey(name: 'skills') List<String> skills = const <String>[],
@@ -360,6 +368,7 @@ class _$JobDataTearOff {
       country: country,
       remote: remote,
       relocation: relocation,
+      address: address,
       descriptions: descriptions,
       levels: levels,
       skills: skills,
@@ -395,7 +404,7 @@ mixin _$JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  int get country => throw _privateConstructorUsedError;
+  String get country => throw _privateConstructorUsedError;
 
   /// Удаленная работа?
   /// Переключатель
@@ -405,10 +414,14 @@ mixin _$JobData {
   /// Возможность переезда
   /// Выбор
   @JsonKey(name: 'relocation')
-  Relocation get relocation => throw _privateConstructorUsedError; // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  Relocation get relocation => throw _privateConstructorUsedError;
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  String get address => throw _privateConstructorUsedError;
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -455,9 +468,10 @@ abstract class $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -483,6 +497,7 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
     Object? country = freezed,
     Object? remote = freezed,
     Object? relocation = freezed,
+    Object? address = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
@@ -502,7 +517,7 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
@@ -511,6 +526,10 @@ class _$JobDataCopyWithImpl<$Res> implements $JobDataCopyWith<$Res> {
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
               as Relocation,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -553,9 +572,10 @@ abstract class _$JobDataCopyWith<$Res> implements $JobDataCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -581,6 +601,7 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
     Object? country = freezed,
     Object? remote = freezed,
     Object? relocation = freezed,
+    Object? address = freezed,
     Object? descriptions = freezed,
     Object? levels = freezed,
     Object? skills = freezed,
@@ -600,7 +621,7 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
       country: country == freezed
           ? _value.country
           : country // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       remote: remote == freezed
           ? _value.remote
           : remote // ignore: cast_nullable_to_non_nullable
@@ -609,6 +630,10 @@ class __$JobDataCopyWithImpl<$Res> extends _$JobDataCopyWithImpl<$Res> implement
           ? _value.relocation
           : relocation // ignore: cast_nullable_to_non_nullable
               as Relocation,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
       descriptions: descriptions == freezed
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
@@ -643,9 +668,10 @@ class _$_JobData extends _JobData {
   const _$_JobData(
       {@JsonKey(name: 'title') this.title = '',
       @JsonKey(name: 'company') this.company = '',
-      @JsonKey(name: 'country') this.country = 0,
+      @JsonKey(name: 'country') this.country = Countries.unknownCode,
       @JsonKey(name: 'remote') this.remote = true,
       @JsonKey(name: 'relocation') this.relocation = const Relocation.impossible(),
+      @JsonKey(name: 'address') this.address = '',
       @JsonKey(name: 'descriptions') this.descriptions = const Description(),
       @JsonKey(name: 'levels') this.levels = const <DeveloperLevel>[],
       @JsonKey(name: 'skills') this.skills = const <String>[],
@@ -676,7 +702,7 @@ class _$_JobData extends _JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  final int country;
+  final String country;
   @override
 
   /// Удаленная работа?
@@ -689,10 +715,15 @@ class _$_JobData extends _JobData {
   /// Выбор
   @JsonKey(name: 'relocation')
   final Relocation relocation;
-  @override // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  @override
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  final String address;
+  @override
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -735,7 +766,7 @@ class _$_JobData extends _JobData {
 
   @override
   String toString() {
-    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, relocation: $relocation, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employments: $employments, tags: $tags)';
+    return 'JobData(title: $title, company: $company, country: $country, remote: $remote, relocation: $relocation, address: $address, descriptions: $descriptions, levels: $levels, skills: $skills, contacts: $contacts, employments: $employments, tags: $tags)';
   }
 
   @override
@@ -743,12 +774,13 @@ class _$_JobData extends _JobData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _JobData &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.company, company) || other.company == company) &&
-            (identical(other.country, country) || other.country == country) &&
-            (identical(other.remote, remote) || other.remote == remote) &&
-            (identical(other.relocation, relocation) || other.relocation == relocation) &&
-            (identical(other.descriptions, descriptions) || other.descriptions == descriptions) &&
+            const DeepCollectionEquality().equals(other.title, title) &&
+            const DeepCollectionEquality().equals(other.company, company) &&
+            const DeepCollectionEquality().equals(other.country, country) &&
+            const DeepCollectionEquality().equals(other.remote, remote) &&
+            const DeepCollectionEquality().equals(other.relocation, relocation) &&
+            const DeepCollectionEquality().equals(other.address, address) &&
+            const DeepCollectionEquality().equals(other.descriptions, descriptions) &&
             const DeepCollectionEquality().equals(other.levels, levels) &&
             const DeepCollectionEquality().equals(other.skills, skills) &&
             const DeepCollectionEquality().equals(other.contacts, contacts) &&
@@ -759,12 +791,13 @@ class _$_JobData extends _JobData {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      title,
-      company,
-      country,
-      remote,
-      relocation,
-      descriptions,
+      const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(company),
+      const DeepCollectionEquality().hash(country),
+      const DeepCollectionEquality().hash(remote),
+      const DeepCollectionEquality().hash(relocation),
+      const DeepCollectionEquality().hash(address),
+      const DeepCollectionEquality().hash(descriptions),
       const DeepCollectionEquality().hash(levels),
       const DeepCollectionEquality().hash(skills),
       const DeepCollectionEquality().hash(contacts),
@@ -785,9 +818,10 @@ abstract class _JobData extends JobData {
   const factory _JobData(
       {@JsonKey(name: 'title') String title,
       @JsonKey(name: 'company') String company,
-      @JsonKey(name: 'country') int country,
+      @JsonKey(name: 'country') String country,
       @JsonKey(name: 'remote') bool remote,
       @JsonKey(name: 'relocation') Relocation relocation,
+      @JsonKey(name: 'address') String address,
       @JsonKey(name: 'descriptions') Description descriptions,
       @JsonKey(name: 'levels') List<DeveloperLevel> levels,
       @JsonKey(name: 'skills') List<String> skills,
@@ -818,7 +852,7 @@ abstract class _JobData extends JobData {
   /// Идентификатор страны
   /// Выпадающее поле поиска
   @JsonKey(name: 'country')
-  int get country;
+  String get country;
   @override
 
   /// Удаленная работа?
@@ -831,10 +865,15 @@ abstract class _JobData extends JobData {
   /// Выбор
   @JsonKey(name: 'relocation')
   Relocation get relocation;
-  @override // /// Местоположение, например: Moscow
-// /// Максимальная длина - 256 символов
-// /// Поле ввода
-// @JsonKey(name: 'address') @Default('') final String address,
+  @override
+
+  /// Местоположение, например: Moscow
+  /// Максимальная длина - 256 символов
+  /// Поле ввода
+  @JsonKey(name: 'address')
+  String get address;
+  @override
+
   /// Описания на различных языках
   /// Ключ - локаль, например "en" или "ru"
   /// Максимальная длина - 2600 символов для каждого значения
@@ -887,9 +926,20 @@ JobFilter _$JobFilterFromJson(Map<String, dynamic> json) {
 class _$JobFilterTearOff {
   const _$JobFilterTearOff();
 
-  PaginateJobFilter call({@JsonKey(name: 'limit') int limit = 100}) {
+  PaginateJobFilter call(
+      {@JsonKey(name: 'limit') int limit = 100,
+      @JsonKey(name: 'remote') bool? remote = null,
+      @JsonKey(name: 'country') String? country = null,
+      @JsonKey(name: 'level') DeveloperLevel? level = null,
+      @JsonKey(name: 'employment') Employment? employment = null,
+      @JsonKey(name: 'relocation') bool? relocation = null}) {
     return PaginateJobFilter(
       limit: limit,
+      remote: remote,
+      country: country,
+      level: level,
+      employment: employment,
+      relocation: relocation,
     );
   }
 
@@ -908,6 +958,26 @@ mixin _$JobFilter {
   @JsonKey(name: 'limit')
   int get limit => throw _privateConstructorUsedError;
 
+  /// Удаленная работа?
+  @JsonKey(name: 'remote')
+  bool? get remote => throw _privateConstructorUsedError;
+
+  /// Страна
+  @JsonKey(name: 'country')
+  String? get country => throw _privateConstructorUsedError;
+
+  /// Уровни разработчика
+  @JsonKey(name: 'level')
+  DeveloperLevel? get level => throw _privateConstructorUsedError;
+
+  /// Трудоустройство
+  @JsonKey(name: 'employment')
+  Employment? get employment => throw _privateConstructorUsedError;
+
+  /// Возможность релокации
+  @JsonKey(name: 'relocation')
+  bool? get relocation => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $JobFilterCopyWith<JobFilter> get copyWith => throw _privateConstructorUsedError;
@@ -916,7 +986,16 @@ mixin _$JobFilter {
 /// @nodoc
 abstract class $JobFilterCopyWith<$Res> {
   factory $JobFilterCopyWith(JobFilter value, $Res Function(JobFilter) then) = _$JobFilterCopyWithImpl<$Res>;
-  $Res call({@JsonKey(name: 'limit') int limit});
+  $Res call(
+      {@JsonKey(name: 'limit') int limit,
+      @JsonKey(name: 'remote') bool? remote,
+      @JsonKey(name: 'country') String? country,
+      @JsonKey(name: 'level') DeveloperLevel? level,
+      @JsonKey(name: 'employment') Employment? employment,
+      @JsonKey(name: 'relocation') bool? relocation});
+
+  $DeveloperLevelCopyWith<$Res>? get level;
+  $EmploymentCopyWith<$Res>? get employment;
 }
 
 /// @nodoc
@@ -930,13 +1009,60 @@ class _$JobFilterCopyWithImpl<$Res> implements $JobFilterCopyWith<$Res> {
   @override
   $Res call({
     Object? limit = freezed,
+    Object? remote = freezed,
+    Object? country = freezed,
+    Object? level = freezed,
+    Object? employment = freezed,
+    Object? relocation = freezed,
   }) {
     return _then(_value.copyWith(
       limit: limit == freezed
           ? _value.limit
           : limit // ignore: cast_nullable_to_non_nullable
               as int,
+      remote: remote == freezed
+          ? _value.remote
+          : remote // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      country: country == freezed
+          ? _value.country
+          : country // ignore: cast_nullable_to_non_nullable
+              as String?,
+      level: level == freezed
+          ? _value.level
+          : level // ignore: cast_nullable_to_non_nullable
+              as DeveloperLevel?,
+      employment: employment == freezed
+          ? _value.employment
+          : employment // ignore: cast_nullable_to_non_nullable
+              as Employment?,
+      relocation: relocation == freezed
+          ? _value.relocation
+          : relocation // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
+  }
+
+  @override
+  $DeveloperLevelCopyWith<$Res>? get level {
+    if (_value.level == null) {
+      return null;
+    }
+
+    return $DeveloperLevelCopyWith<$Res>(_value.level!, (value) {
+      return _then(_value.copyWith(level: value));
+    });
+  }
+
+  @override
+  $EmploymentCopyWith<$Res>? get employment {
+    if (_value.employment == null) {
+      return null;
+    }
+
+    return $EmploymentCopyWith<$Res>(_value.employment!, (value) {
+      return _then(_value.copyWith(employment: value));
+    });
   }
 }
 
@@ -945,7 +1071,18 @@ abstract class $PaginateJobFilterCopyWith<$Res> implements $JobFilterCopyWith<$R
   factory $PaginateJobFilterCopyWith(PaginateJobFilter value, $Res Function(PaginateJobFilter) then) =
       _$PaginateJobFilterCopyWithImpl<$Res>;
   @override
-  $Res call({@JsonKey(name: 'limit') int limit});
+  $Res call(
+      {@JsonKey(name: 'limit') int limit,
+      @JsonKey(name: 'remote') bool? remote,
+      @JsonKey(name: 'country') String? country,
+      @JsonKey(name: 'level') DeveloperLevel? level,
+      @JsonKey(name: 'employment') Employment? employment,
+      @JsonKey(name: 'relocation') bool? relocation});
+
+  @override
+  $DeveloperLevelCopyWith<$Res>? get level;
+  @override
+  $EmploymentCopyWith<$Res>? get employment;
 }
 
 /// @nodoc
@@ -960,12 +1097,37 @@ class _$PaginateJobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res
   @override
   $Res call({
     Object? limit = freezed,
+    Object? remote = freezed,
+    Object? country = freezed,
+    Object? level = freezed,
+    Object? employment = freezed,
+    Object? relocation = freezed,
   }) {
     return _then(PaginateJobFilter(
       limit: limit == freezed
           ? _value.limit
           : limit // ignore: cast_nullable_to_non_nullable
               as int,
+      remote: remote == freezed
+          ? _value.remote
+          : remote // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      country: country == freezed
+          ? _value.country
+          : country // ignore: cast_nullable_to_non_nullable
+              as String?,
+      level: level == freezed
+          ? _value.level
+          : level // ignore: cast_nullable_to_non_nullable
+              as DeveloperLevel?,
+      employment: employment == freezed
+          ? _value.employment
+          : employment // ignore: cast_nullable_to_non_nullable
+              as Employment?,
+      relocation: relocation == freezed
+          ? _value.relocation
+          : relocation // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -973,7 +1135,14 @@ class _$PaginateJobFilterCopyWithImpl<$Res> extends _$JobFilterCopyWithImpl<$Res
 /// @nodoc
 @JsonSerializable()
 class _$PaginateJobFilter extends PaginateJobFilter {
-  const _$PaginateJobFilter({@JsonKey(name: 'limit') this.limit = 100}) : super._();
+  const _$PaginateJobFilter(
+      {@JsonKey(name: 'limit') this.limit = 100,
+      @JsonKey(name: 'remote') this.remote = null,
+      @JsonKey(name: 'country') this.country = null,
+      @JsonKey(name: 'level') this.level = null,
+      @JsonKey(name: 'employment') this.employment = null,
+      @JsonKey(name: 'relocation') this.relocation = null})
+      : super._();
 
   factory _$PaginateJobFilter.fromJson(Map<String, dynamic> json) => _$$PaginateJobFilterFromJson(json);
 
@@ -983,10 +1152,35 @@ class _$PaginateJobFilter extends PaginateJobFilter {
   /// Если не указано - 100
   @JsonKey(name: 'limit')
   final int limit;
+  @override
+
+  /// Удаленная работа?
+  @JsonKey(name: 'remote')
+  final bool? remote;
+  @override
+
+  /// Страна
+  @JsonKey(name: 'country')
+  final String? country;
+  @override
+
+  /// Уровни разработчика
+  @JsonKey(name: 'level')
+  final DeveloperLevel? level;
+  @override
+
+  /// Трудоустройство
+  @JsonKey(name: 'employment')
+  final Employment? employment;
+  @override
+
+  /// Возможность релокации
+  @JsonKey(name: 'relocation')
+  final bool? relocation;
 
   @override
   String toString() {
-    return 'JobFilter(limit: $limit)';
+    return 'JobFilter(limit: $limit, remote: $remote, country: $country, level: $level, employment: $employment, relocation: $relocation)';
   }
 
   @override
@@ -994,11 +1188,23 @@ class _$PaginateJobFilter extends PaginateJobFilter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is PaginateJobFilter &&
-            (identical(other.limit, limit) || other.limit == limit));
+            const DeepCollectionEquality().equals(other.limit, limit) &&
+            const DeepCollectionEquality().equals(other.remote, remote) &&
+            const DeepCollectionEquality().equals(other.country, country) &&
+            const DeepCollectionEquality().equals(other.level, level) &&
+            const DeepCollectionEquality().equals(other.employment, employment) &&
+            const DeepCollectionEquality().equals(other.relocation, relocation));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, limit);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(limit),
+      const DeepCollectionEquality().hash(remote),
+      const DeepCollectionEquality().hash(country),
+      const DeepCollectionEquality().hash(level),
+      const DeepCollectionEquality().hash(employment),
+      const DeepCollectionEquality().hash(relocation));
 
   @JsonKey(ignore: true)
   @override
@@ -1012,7 +1218,13 @@ class _$PaginateJobFilter extends PaginateJobFilter {
 }
 
 abstract class PaginateJobFilter extends JobFilter {
-  const factory PaginateJobFilter({@JsonKey(name: 'limit') int limit}) = _$PaginateJobFilter;
+  const factory PaginateJobFilter(
+      {@JsonKey(name: 'limit') int limit,
+      @JsonKey(name: 'remote') bool? remote,
+      @JsonKey(name: 'country') String? country,
+      @JsonKey(name: 'level') DeveloperLevel? level,
+      @JsonKey(name: 'employment') Employment? employment,
+      @JsonKey(name: 'relocation') bool? relocation}) = _$PaginateJobFilter;
   const PaginateJobFilter._() : super._();
 
   factory PaginateJobFilter.fromJson(Map<String, dynamic> json) = _$PaginateJobFilter.fromJson;
@@ -1023,6 +1235,31 @@ abstract class PaginateJobFilter extends JobFilter {
   /// Если не указано - 100
   @JsonKey(name: 'limit')
   int get limit;
+  @override
+
+  /// Удаленная работа?
+  @JsonKey(name: 'remote')
+  bool? get remote;
+  @override
+
+  /// Страна
+  @JsonKey(name: 'country')
+  String? get country;
+  @override
+
+  /// Уровни разработчика
+  @JsonKey(name: 'level')
+  DeveloperLevel? get level;
+  @override
+
+  /// Трудоустройство
+  @JsonKey(name: 'employment')
+  Employment? get employment;
+  @override
+
+  /// Возможность релокации
+  @JsonKey(name: 'relocation')
+  bool? get relocation;
   @override
   @JsonKey(ignore: true)
   $PaginateJobFilterCopyWith<PaginateJobFilter> get copyWith => throw _privateConstructorUsedError;
