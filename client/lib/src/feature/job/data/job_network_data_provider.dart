@@ -26,7 +26,6 @@ abstract class IJobNetworkDataProvider {
   Future<Job> createJob({
     required final JobData jobData,
     required final String idToken,
-    required final String creatorId,
   });
 
   /// Получить работу по идентификатору
@@ -176,7 +175,6 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   Future<Job> createJob({
     required JobData jobData,
     required String idToken,
-    required String creatorId,
   }) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     final result = await _client.execute(
@@ -209,22 +207,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       deletionMark: job.deletionMark,
       created: job.created,
       updated: job.updated,
-      data: JobData(
-        title: job.title,
-        company: job.company,
-        country: job.countryCode,
-        address: job.address,
-        remote: job.remote,
-        relocation: job.relocation,
-        employments: job.employments,
-        levels: job.levels,
-        skills: job.jobSkills?.skills ?? const <String>[],
-        contacts: job.jobContacts?.contacts ?? const <String>[],
-        descriptions: Description.fromLanguages(
-          english: job.descriptionEnglish?.description ?? '',
-          russian: job.descriptionRussian?.description ?? '',
-        ),
-      ),
+      data: jobData,
     );
   }
 

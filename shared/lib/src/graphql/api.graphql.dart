@@ -915,102 +915,6 @@ class DeleteJob$MutationRoot extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateJob$MutationRoot$Job$JobDescriptionEnglish extends JsonSerializable
-    with EquatableMixin {
-  CreateJob$MutationRoot$Job$JobDescriptionEnglish();
-
-  factory CreateJob$MutationRoot$Job$JobDescriptionEnglish.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateJob$MutationRoot$Job$JobDescriptionEnglishFromJson(json);
-
-  late String description;
-
-  @override
-  List<Object?> get props => [description];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateJob$MutationRoot$Job$JobDescriptionEnglishToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJob$MutationRoot$Job$JobDescriptionRussian extends JsonSerializable
-    with EquatableMixin {
-  CreateJob$MutationRoot$Job$JobDescriptionRussian();
-
-  factory CreateJob$MutationRoot$Job$JobDescriptionRussian.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateJob$MutationRoot$Job$JobDescriptionRussianFromJson(json);
-
-  late String description;
-
-  @override
-  List<Object?> get props => [description];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateJob$MutationRoot$Job$JobDescriptionRussianToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJob$MutationRoot$Job$JobSkills extends JsonSerializable
-    with EquatableMixin {
-  CreateJob$MutationRoot$Job$JobSkills();
-
-  factory CreateJob$MutationRoot$Job$JobSkills.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateJob$MutationRoot$Job$JobSkillsFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> skills;
-
-  @override
-  List<Object?> get props => [skills];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateJob$MutationRoot$Job$JobSkillsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJob$MutationRoot$Job$JobContacts extends JsonSerializable
-    with EquatableMixin {
-  CreateJob$MutationRoot$Job$JobContacts();
-
-  factory CreateJob$MutationRoot$Job$JobContacts.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateJob$MutationRoot$Job$JobContactsFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQL$textToDartListString,
-      toJson: fromDartListStringToGraphQL$text)
-  late List<String> contacts;
-
-  @override
-  List<Object?> get props => [contacts];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateJob$MutationRoot$Job$JobContactsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJob$MutationRoot$Job$JobTags extends JsonSerializable
-    with EquatableMixin {
-  CreateJob$MutationRoot$Job$JobTags();
-
-  factory CreateJob$MutationRoot$Job$JobTags.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateJob$MutationRoot$Job$JobTagsFromJson(json);
-
-  late String tag;
-
-  @override
-  List<Object?> get props => [tag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateJob$MutationRoot$Job$JobTagsToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class CreateJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
   CreateJob$MutationRoot$Job();
 
@@ -1064,21 +968,6 @@ class CreateJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
       toJson: fromDartListDeveloperLevelToGraphQL$level)
   late List<DeveloperLevel> levels;
 
-  @JsonKey(name: 'description_english')
-  CreateJob$MutationRoot$Job$JobDescriptionEnglish? descriptionEnglish;
-
-  @JsonKey(name: 'description_russian')
-  CreateJob$MutationRoot$Job$JobDescriptionRussian? descriptionRussian;
-
-  @JsonKey(name: 'job_skills')
-  CreateJob$MutationRoot$Job$JobSkills? jobSkills;
-
-  @JsonKey(name: 'job_contacts')
-  CreateJob$MutationRoot$Job$JobContacts? jobContacts;
-
-  @JsonKey(name: 'job_tags')
-  late List<CreateJob$MutationRoot$Job$JobTags> jobTags;
-
   @override
   List<Object?> get props => [
         id,
@@ -1093,12 +982,7 @@ class CreateJob$MutationRoot$Job extends JsonSerializable with EquatableMixin {
         remote,
         relocation,
         employments,
-        levels,
-        descriptionEnglish,
-        descriptionRussian,
-        jobSkills,
-        jobContacts,
-        jobTags
+        levels
       ];
   @override
   Map<String, dynamic> toJson() => _$CreateJob$MutationRoot$JobToJson(this);
@@ -2771,72 +2655,7 @@ final CREATE_JOB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   alias: null,
                   arguments: [],
                   directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'description_english'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'description'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'description_russian'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'description'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_skills'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'skills'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_contacts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'contacts'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'job_tags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'tag'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null)
-                  ]))
+                  selectionSet: null)
             ]))
       ]))
 ]);
