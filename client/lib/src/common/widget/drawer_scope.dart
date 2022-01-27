@@ -167,7 +167,6 @@ class AppDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 physics: const BouncingScrollPhysics(),
-                itemExtent: 56,
                 children: <Widget>[
                   _DrawerTile(
                     icon: Icons.account_circle,

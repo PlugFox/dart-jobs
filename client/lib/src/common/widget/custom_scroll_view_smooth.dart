@@ -6,48 +6,58 @@ import 'package:platform_info/platform_info.dart';
 // https://github.com/flutter/flutter/issues/83368
 @immutable
 class CustomScrollViewSmooth extends StatelessWidget {
-  CustomScrollViewSmooth({
+  const CustomScrollViewSmooth({
     required final ScrollController controller,
     required final List<Widget> slivers,
     final ScrollPhysics? physics,
-    final ScrollBehavior? scrollBehavior,
     final double? cacheExtent,
     final Key? key,
   })  : _controller = controller,
         _slivers = slivers,
-        _physics = platform.isWeb ? const NeverScrollableScrollPhysics() : physics,
-        _scrollBehavior = scrollBehavior,
+        _physics = physics,
         _cacheExtent = cacheExtent,
         super(
           key: key,
         );
 
+  static const _ScrollBehavior _scrollBehavior = _ScrollBehavior();
+
   final ScrollController _controller;
   final ScrollPhysics? _physics;
-  final ScrollBehavior? _scrollBehavior;
   final double? _cacheExtent;
   final List<Widget> _slivers;
 
   @override
-  Widget build(final BuildContext context) => _CustomScrollViewSmoothWrap(
-        controller: _controller,
-        child: CustomScrollView(
+  Widget build(final BuildContext context) => ScrollConfiguration(
+        behavior: _scrollBehavior,
+        child: _CustomScrollViewSmoothWrap(
           controller: _controller,
-          physics: _physics,
-          scrollBehavior: _scrollBehavior ??
-              ScrollConfiguration.of(context).copyWith(
-                scrollbars: false,
-                dragDevices: <PointerDeviceKind>{
-                  PointerDeviceKind.mouse,
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.stylus,
-                  PointerDeviceKind.unknown,
-                },
-              ), // _scrollBehavior,
-          cacheExtent: _cacheExtent,
-          slivers: _slivers,
+          child: CustomScrollView(
+            controller: _controller,
+            physics: _physics,
+            scrollBehavior: _scrollBehavior,
+            cacheExtent: _cacheExtent,
+            slivers: _slivers,
+          ),
         ),
       );
+}
+
+class _ScrollBehavior extends MaterialScrollBehavior {
+  const _ScrollBehavior()
+      : super(
+          androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+        );
+
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.invertedStylus,
+        PointerDeviceKind.unknown,
+      };
 }
 
 @immutable
