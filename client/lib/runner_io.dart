@@ -46,17 +46,6 @@ void run() {
         cancelOnError: false,
       );
 
-  Future<void>(() async {
-    await FirebaseCrashlytics.instance.recordError(
-      Exception('Initial exception for crashlytics'),
-      StackTrace.current,
-      fatal: false,
-      reason: 'Crashlytics initialization',
-    );
-    await FirebaseCrashlytics.instance.sendUnsentReports();
-    throw Exception('Initial exception for crashlytics');
-  });
-
   // Инициалзировать и запустить приложение
   _initAndRunApp();
 }
