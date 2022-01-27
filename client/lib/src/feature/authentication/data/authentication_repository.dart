@@ -80,8 +80,11 @@ class AuthenticationRepository implements IAuthenticationRepository {
 
     l.vvvvv('Интерактивная аутентификация в firebase');
     // Once signed in, return the UserCredential
+    // Pop up
     final userCredential = await _firebaseAuth.signInWithPopup(googleProvider);
-    // return _firebaseAuth.signInWithRedirect(googleProvider);
+    // Redirect
+    //await _firebaseAuth.signInWithRedirect(googleProvider);
+    //final userCredential = await _firebaseAuth.getRedirectResult();
 
     return UserEntity.fromFirebase(userCredential.user);
   }

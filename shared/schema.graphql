@@ -277,6 +277,21 @@ type mutation_root {
         "on conflict condition"
         on_conflict: job_tags_on_conflict
     ): job_tags
+    "execute VOLATILE function \"job_create\" which returns \"job\""
+    job_create(
+        "input parameters for function \"job_create\""
+        args: job_create_args!,
+        "distinct select on columns"
+        distinct_on: [job_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [job_order_by!],
+        "filter the rows returned"
+        where: job_bool_exp
+    ): [job!]!
     "update data of the table: \"job\""
     update_job(
         "sets the columns of the filtered rows to the given values"
@@ -1142,6 +1157,21 @@ input job_contacts_set_input {
     contacts: _text
     "Идентификатор работы"
     job_id: Int
+}
+
+input job_create_args {
+    new_address: String
+    new_company: String
+    new_contacts: _text
+    new_country_code: String
+    new_employments: _employment
+    new_english_description: String
+    new_levels: _level
+    new_relocation: relocation
+    new_remote: Boolean
+    new_russian_description: String
+    new_skills: _text
+    new_title: String
 }
 
 "Boolean expression to filter rows from the table \"job_description_english\". All fields are combined with a logical 'AND'."

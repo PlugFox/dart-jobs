@@ -1,0 +1,60 @@
+mutation CreateJob(
+    $title: String!,
+    $company: String!,
+    $country_code: String!,
+    $address: String!,
+    $remote: Boolean!,
+    $relocation: relocation!,
+    $english_description: String!,
+    $russian_description: String!,
+    $contacts: _text!,
+    $employments: _employment!,
+    $levels: _level,
+    $skills: _text,
+) {
+    job_create(
+        args: {
+            new_title: $title,
+            new_company: $company,
+            new_country_code: $country_code,
+            new_address: $address,
+            new_remote: $remote,
+            new_relocation: $relocation,
+            new_employments: $employments,
+            new_levels: $levels,
+            new_english_description: $english_description
+            new_russian_description: $russian_description
+            new_skills: $skills
+            new_contacts: $contacts
+        }
+    ) {
+        id,
+        creator_id,
+        created,
+        updated,
+        deletion_mark,
+        title,
+        company,
+        country_code,
+        address,
+        remote,
+        relocation,
+        employments,
+        levels,
+        description_english {
+            description
+        },
+        description_russian {
+            description
+        },
+        job_skills {
+            skills
+        }
+        job_contacts {
+            contacts
+        },
+        job_tags {
+            tag
+        }
+    }
+}

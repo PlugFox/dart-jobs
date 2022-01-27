@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:dart_jobs_shared/graphql.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:meta/meta.dart';
@@ -179,8 +180,8 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   }) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     final result = await _client.execute(
-      InsertJobMutation(
-        variables: InsertJobArguments(
+      CreateJobMutation(
+        variables: CreateJobArguments(
           title: jobData.title,
           company: jobData.company,
           country_code: jobData.country,
@@ -198,7 +199,7 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
       context: _addTokenToContext(idToken),
     );
     await Future<void>.delayed(Duration.zero);
-    final job = result.data?.insertJobOne;
+    final job = result.data?.jobCreate.firstOrNull;
     if (job == null) {
       throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
     }

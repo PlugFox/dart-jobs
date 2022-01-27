@@ -1,7 +1,7 @@
 # Deploy:
 # make docker-build-prod
 # make docker-push-prod
-# docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./server/docker/dart-jobs.prod.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+# docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
 
 # Logs:
 # docker --log-level debug --host "ssh://pfx@api.plugfox.dev" service logs --no-task-ids -f -n all dart-jobs-prod_service
@@ -11,7 +11,7 @@ version: '3.3'
 services:
   # Публичное API
   hasura-graphql:
-    image: hasura/graphql-engine:v2.0.10
+    image: hasura/graphql-engine:v2.1.1
     #ports:
     #  - "8080:8080"
     depends_on:
@@ -35,6 +35,7 @@ services:
       ## Аутентификация по средством внутреннего сервиса проверяющего JWT Firebase
       HASURA_GRAPHQL_AUTH_HOOK: http://jwt-validator-firebase/jwtvalidator
       HASURA_GRAPHQL_AUTH_HOOK_MODE: GET
+      HASURA_GRAPHQL_INFER_FUNCTION_PERMISSIONS: "false"
     networks:
       - traefik-public
       - postgres
