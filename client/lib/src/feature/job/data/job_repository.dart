@@ -136,7 +136,7 @@ class JobRepositoryImpl implements IJobRepository {
     if (idToken == null || uid == null || idToken.isEmpty) {
       throw NotAuthorized(StackTrace.current, 'Token not received');
     }
-    return _networkDataProvider.createJob(jobData: jobData, idToken: idToken, creatorId: uid);
+    return _networkDataProvider.createJob(jobData: jobData, idToken: idToken);
   }
 
   @override

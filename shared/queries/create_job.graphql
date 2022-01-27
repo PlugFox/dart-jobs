@@ -41,20 +41,5 @@ mutation CreateJob(
         relocation,
         employments,
         levels,
-        description_english {
-            description
-        },
-        description_russian {
-            description
-        },
-        job_skills {
-            skills
-        }
-        job_contacts {
-            contacts
-        },
-        job_tags {
-            tag
-        }
     }
 }
