@@ -14,7 +14,7 @@ query Paginate(
             filter_limit: $limit,
             filter_exclude: $exclude,
             filter_remote: $remote,
-            filter_country: $country,
+            filter_country_code: $country,
             filter_level: $level,
             filter_employment: $employment,
             filter_relocation: $relocation

@@ -70,8 +70,8 @@ class _FilterButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(3),
-            topRight: Radius.circular(9),
-            bottomRight: Radius.circular(3),
+            topRight: Radius.circular(3),
+            bottomRight: Radius.circular(9),
             bottomLeft: Radius.circular(9),
           ),
         ),
@@ -105,17 +105,20 @@ class _FilterButton extends StatelessWidget {
           ),
           SizedBox.square(
             dimension: 28,
-            child: CircleAvatar(
-              child: BlocBuilder<FeedBLoC, FeedState>(
-                buildWhen: (prev, next) => !next.isProcessed,
-                builder: (context, state) => Text(
-                  state.filter.count.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  textAlign: TextAlign.center,
-                  style: theme.primaryTextTheme.button?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            child: BlocBuilder<FeedBLoC, FeedState>(
+              buildWhen: (prev, next) => !next.isProcessed,
+              builder: (context, state) => Opacity(
+                opacity: state.filter.count == 0 ? .25 : 1,
+                child: CircleAvatar(
+                  child: Text(
+                    state.filter.count.toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.center,
+                    style: theme.primaryTextTheme.button?.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

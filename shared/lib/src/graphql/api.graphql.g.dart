@@ -572,6 +572,165 @@ Map<String, dynamic> _$Recent$QueryRootToJson(Recent$QueryRoot instance) =>
       'job_recent': instance.jobRecent.map((e) => e.toJson()).toList(),
     };
 
+DeleteJob$MutationRoot$Job _$DeleteJob$MutationRoot$JobFromJson(
+        Map<String, dynamic> json) =>
+    DeleteJob$MutationRoot$Job()
+      ..id = json['id'] as int
+      ..creatorId = json['creator_id'] as String
+      ..created = fromGraphQLTimestampToDartDateTime(json['created'] as String)
+      ..updated = fromGraphQLTimestampToDartDateTime(json['updated'] as String)
+      ..deletionMark = json['deletion_mark'] as bool
+      ..title = json['title'] as String
+      ..company = json['company'] as String
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
+      ..address = json['address'] as String
+      ..remote = json['remote'] as bool
+      ..relocation =
+          fromGraphQLRelocationToDartRelocation(json['relocation'] as String)
+      ..employments = fromGraphQL$employmentToDartListEmployment(
+          json['employments'] as Object)
+      ..levels =
+          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobToJson(
+        DeleteJob$MutationRoot$Job instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'creator_id': instance.creatorId,
+      'created': fromDartDateTimeToGraphQLTimestamp(instance.created),
+      'updated': fromDartDateTimeToGraphQLTimestamp(instance.updated),
+      'deletion_mark': instance.deletionMark,
+      'title': instance.title,
+      'company': instance.company,
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
+      'address': instance.address,
+      'remote': instance.remote,
+      'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
+      'employments':
+          fromDartListEmploymentToGraphQL$employment(instance.employments),
+      'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
+    };
+
+DeleteJob$MutationRoot$JobDescriptionEnglish
+    _$DeleteJob$MutationRoot$JobDescriptionEnglishFromJson(
+            Map<String, dynamic> json) =>
+        DeleteJob$MutationRoot$JobDescriptionEnglish()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobDescriptionEnglishToJson(
+        DeleteJob$MutationRoot$JobDescriptionEnglish instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+DeleteJob$MutationRoot$JobDescriptionRussian
+    _$DeleteJob$MutationRoot$JobDescriptionRussianFromJson(
+            Map<String, dynamic> json) =>
+        DeleteJob$MutationRoot$JobDescriptionRussian()
+          ..description = json['description'] as String;
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobDescriptionRussianToJson(
+        DeleteJob$MutationRoot$JobDescriptionRussian instance) =>
+    <String, dynamic>{
+      'description': instance.description,
+    };
+
+DeleteJob$MutationRoot$JobContacts _$DeleteJob$MutationRoot$JobContactsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteJob$MutationRoot$JobContacts()
+      ..contacts = fromGraphQL$textToDartListString(json['contacts'] as Object);
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobContactsToJson(
+        DeleteJob$MutationRoot$JobContacts instance) =>
+    <String, dynamic>{
+      'contacts': fromDartListStringToGraphQL$text(instance.contacts),
+    };
+
+DeleteJob$MutationRoot$JobSkills _$DeleteJob$MutationRoot$JobSkillsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteJob$MutationRoot$JobSkills()
+      ..skills = fromGraphQL$textToDartListString(json['skills'] as Object);
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobSkillsToJson(
+        DeleteJob$MutationRoot$JobSkills instance) =>
+    <String, dynamic>{
+      'skills': fromDartListStringToGraphQL$text(instance.skills),
+    };
+
+DeleteJob$MutationRoot$JobTagsMutationResponse$JobTags
+    _$DeleteJob$MutationRoot$JobTagsMutationResponse$JobTagsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteJob$MutationRoot$JobTagsMutationResponse$JobTags()
+          ..tag = json['tag'] as String;
+
+Map<String, dynamic>
+    _$DeleteJob$MutationRoot$JobTagsMutationResponse$JobTagsToJson(
+            DeleteJob$MutationRoot$JobTagsMutationResponse$JobTags instance) =>
+        <String, dynamic>{
+          'tag': instance.tag,
+        };
+
+DeleteJob$MutationRoot$JobTagsMutationResponse
+    _$DeleteJob$MutationRoot$JobTagsMutationResponseFromJson(
+            Map<String, dynamic> json) =>
+        DeleteJob$MutationRoot$JobTagsMutationResponse()
+          ..returning = (json['returning'] as List<dynamic>)
+              .map((e) => DeleteJob$MutationRoot$JobTagsMutationResponse$JobTags
+                  .fromJson(e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$DeleteJob$MutationRoot$JobTagsMutationResponseToJson(
+        DeleteJob$MutationRoot$JobTagsMutationResponse instance) =>
+    <String, dynamic>{
+      'returning': instance.returning.map((e) => e.toJson()).toList(),
+    };
+
+DeleteJob$MutationRoot _$DeleteJob$MutationRootFromJson(
+        Map<String, dynamic> json) =>
+    DeleteJob$MutationRoot()
+      ..updateJobByPk = json['update_job_by_pk'] == null
+          ? null
+          : DeleteJob$MutationRoot$Job.fromJson(
+              json['update_job_by_pk'] as Map<String, dynamic>)
+      ..updateJobDescriptionEnglishByPk =
+          json['update_job_description_english_by_pk'] == null
+              ? null
+              : DeleteJob$MutationRoot$JobDescriptionEnglish.fromJson(
+                  json['update_job_description_english_by_pk']
+                      as Map<String, dynamic>)
+      ..updateJobDescriptionRussianByPk =
+          json['update_job_description_russian_by_pk'] == null
+              ? null
+              : DeleteJob$MutationRoot$JobDescriptionRussian.fromJson(
+                  json['update_job_description_russian_by_pk']
+                      as Map<String, dynamic>)
+      ..updateJobContactsByPk = json['update_job_contacts_by_pk'] == null
+          ? null
+          : DeleteJob$MutationRoot$JobContacts.fromJson(
+              json['update_job_contacts_by_pk'] as Map<String, dynamic>)
+      ..updateJobSkillsByPk = json['update_job_skills_by_pk'] == null
+          ? null
+          : DeleteJob$MutationRoot$JobSkills.fromJson(
+              json['update_job_skills_by_pk'] as Map<String, dynamic>)
+      ..updateJobTags = json['update_job_tags'] == null
+          ? null
+          : DeleteJob$MutationRoot$JobTagsMutationResponse.fromJson(
+              json['update_job_tags'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$DeleteJob$MutationRootToJson(
+        DeleteJob$MutationRoot instance) =>
+    <String, dynamic>{
+      'update_job_by_pk': instance.updateJobByPk?.toJson(),
+      'update_job_description_english_by_pk':
+          instance.updateJobDescriptionEnglishByPk?.toJson(),
+      'update_job_description_russian_by_pk':
+          instance.updateJobDescriptionRussianByPk?.toJson(),
+      'update_job_contacts_by_pk': instance.updateJobContactsByPk?.toJson(),
+      'update_job_skills_by_pk': instance.updateJobSkillsByPk?.toJson(),
+      'update_job_tags': instance.updateJobTags?.toJson(),
+    };
+
 GetJobArguments _$GetJobArgumentsFromJson(Map<String, dynamic> json) =>
     GetJobArguments(
       id: json['id'] as int,
@@ -698,4 +857,14 @@ Map<String, dynamic> _$RecentArgumentsToJson(RecentArguments instance) =>
           instance.employment),
       'relocation': instance.relocation,
       'limit': instance.limit,
+    };
+
+DeleteJobArguments _$DeleteJobArgumentsFromJson(Map<String, dynamic> json) =>
+    DeleteJobArguments(
+      id: json['id'] as int,
+    );
+
+Map<String, dynamic> _$DeleteJobArgumentsToJson(DeleteJobArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

@@ -1328,7 +1328,7 @@ input job_order_by {
 
 input job_paginate_args {
     filter_before: timestamp
-    filter_country: String
+    filter_country_code: String
     filter_employment: employment
     filter_exclude: _int4
     filter_level: level
@@ -1345,7 +1345,7 @@ input job_pk_columns_input {
 
 input job_recent_args {
     filter_after: timestamp
-    filter_country: String
+    filter_country_code: String
     filter_employment: employment
     filter_exclude: _int4
     filter_level: level

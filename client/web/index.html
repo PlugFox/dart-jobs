@@ -53,8 +53,6 @@
   <meta name="full-screen" content="yes">
   <meta name="browsermode" content="application">
 
-
-
   <!-- Favicons -->
   <!-- Favicon Generator. For real. https://realfavicongenerator.net -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -181,14 +179,26 @@
     //var defaultFirestore = firebase.firestore();
   </script>
   -->
+
+  <!-- SPLASH SCREEN -->
+  <link rel="stylesheet" type="text/css" href="splash/style.css">
 </head>
 <body>
   <!-- NOSCRIPT -->
   <noscript class='noscript-center'>Your browser does not support JavaScript!</noscript>
 
+  <!-- SPLASH SCREEN -->
+  <picture id="splash">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light) or (prefers-color-scheme: no-preference)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" />
+  </picture>
+
+  <!-- OLD SPLASH
   <div class="loading">
     <div class="loader"></div>
   </div>
+  -->
 
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:

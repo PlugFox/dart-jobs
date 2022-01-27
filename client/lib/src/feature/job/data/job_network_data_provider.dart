@@ -313,14 +313,26 @@ class JobNetworkDataProviderImpl implements IJobNetworkDataProvider {
   Future<Job> deleteJob({required Job job, required String idToken}) async {
     assert(idToken.isNotEmpty, 'idToken должен быть не пустой строкой');
     assert(job.hasID, 'У работы должен быть валидный идентификатор');
-
-    final result = await updateJob(
-      job: job.copyWith(
-        deletionMark: true,
+    final result = await _client.execute(
+      DeleteJobMutation(
+        variables: DeleteJobArguments(
+          id: job.id,
+        ),
       ),
-      idToken: idToken,
+      context: _addTokenToContext(idToken),
     );
-    return result;
+    await Future<void>.delayed(Duration.zero);
+    final deletedJob = result.data?.updateJobByPk;
+    if (deletedJob == null) {
+      throw GraphQLJobException(result.errors ?? const <GraphQLError>[]);
+    }
+    return job.copyWith(
+      id: deletedJob.id,
+      updated: deletedJob.updated,
+      created: deletedJob.created,
+      deletionMark: deletedJob.deletionMark,
+      creatorId: deletedJob.creatorId,
+    );
   }
 
   Context _addTokenToContext(
