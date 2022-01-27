@@ -96,7 +96,7 @@ jobs:
             client/firebase.json
 
 
-  # Deploy web client on preview channel
+  # Deploy web client on preview / staging channel
   web-deploy:
     name: 'Deploy web client on preview channel'
     timeout-minutes: 5
@@ -122,6 +122,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DART_JOB }}'
           expires: 7d
+          channelId: stg
           projectId: dart-job
           target: dart-job
           entryPoint: ${{ env.working-directory }}

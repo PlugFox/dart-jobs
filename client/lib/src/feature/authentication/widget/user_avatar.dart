@@ -19,7 +19,7 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => IconButton(
-        onPressed: () => AuthenticationScope.userOf(context, listen: false).when(
+        onPressed: () => AuthenticationScope.userOf(context, listen: false).when<void>(
           authenticated: (user) => AppRouter.navigate(
             context,
             (final configuration) => const ProfileRouteConfiguration(),
