@@ -203,7 +203,7 @@ class FeedBLoC extends Bloc<FeedEvent, FeedState> with _CombineMixin {
         final updatedBefore = state.list.lastOrNull?.updated ?? DateTime.now().add(const Duration(days: 1));
         final exclude = <int>[];
         for (final job in state.list.reversed) {
-          if (!job.updated.isAtSameMomentAs(updatedBefore)) break;
+          if (job.updated.difference(updatedBefore).inMinutes.abs() > 1) break;
           exclude.add(job.id);
         }
         chunk = await _repository
@@ -378,44 +378,48 @@ mixin _CombineMixin on BlocBase<FeedState> {
     if (chunk.isEmpty) {
       return state.list;
     }
-    // Список обновленных и удаленных (их нужно исключить из пред идущего состояния)
-    // тк они будут или перемещены в начало ленты или исключены из выборки
-    final idsForExclusion = chunk
-        .where(
-          (e) => !e.updated.isAtSameMomentAs(e.created) || e.deletionMark,
-        )
-        .map<int>((e) => e.id)
-        .toList();
-    await Future<void>.delayed(Duration.zero);
-    // Формирую новый список из новых данных и текущего состояния
-    final list = <Job>[
+    final ids = chunk.map<int>((e) => e.id).toList(growable: false);
+    final newList = <Job>[
       ...chunk.where((e) => !e.deletionMark),
-      ...state.list.whereNot((job) {
-        for (var idx = 0; idx < idsForExclusion.length; idx++) {
-          if (job.id == idsForExclusion[idx]) {
-            idsForExclusion.removeAt(idx);
-            return true;
-          }
-        }
-        return false;
-      }),
+      ...await state.list.exclude(ids).toList(),
     ];
     await Future<void>.delayed(Duration.zero);
-    list.sort();
-    return list;
+    newList.sort();
+    await Future<void>.delayed(Duration.zero);
+    return newList;
   }
 
   Future<List<Job>> _insertAtTheEnd(JobsChunk chunk) async {
     if (chunk.isEmpty) {
       return state.list;
     }
+    final ids = chunk.map<int>((e) => e.id).toList(growable: false);
     // Формирую новый список из новых данных и текущего состояния
-    final list = <Job>[
-      ...state.list,
+    final newList = <Job>[
+      ...await state.list.exclude(ids).toList(),
       ...chunk.where((e) => !e.deletionMark),
     ];
     await Future<void>.delayed(Duration.zero);
-    list.sort();
-    return list;
+    newList.sort();
+    await Future<void>.delayed(Duration.zero);
+    return newList;
+  }
+}
+
+extension on Iterable<Job> {
+  Stream<Job> exclude(List<int> ids) async* {
+    final stopwatch = Stopwatch()..start();
+    try {
+      for (final job in this) {
+        if (stopwatch.elapsedMilliseconds > 8) {
+          await Future<void>.delayed(Duration.zero);
+          stopwatch.reset();
+        }
+        if (ids.contains(job.id)) continue;
+        yield job;
+      }
+    } finally {
+      stopwatch.stop();
+    }
   }
 }

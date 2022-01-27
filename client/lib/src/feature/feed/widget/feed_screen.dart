@@ -17,6 +17,7 @@ class FeedScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => const AdaptiveScaffold(
+        isRootPage: true,
         body: _FeedScrollable(),
       );
 }

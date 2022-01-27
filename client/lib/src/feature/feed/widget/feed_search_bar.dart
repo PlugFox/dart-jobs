@@ -63,6 +63,9 @@ class _FilterButton extends StatelessWidget {
             ),
           ),
           builder: (_) => const FeedFilterBottomSheet(),
+          routeSettings: const RouteSettings(
+            name: 'feed_filter',
+          ),
         );
         //Navigator.of(context, rootNavigator: false).push<void>(FeedFilterPageRoute());
       },

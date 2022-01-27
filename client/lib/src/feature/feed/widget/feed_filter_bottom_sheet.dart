@@ -24,6 +24,7 @@ class FeedFilterBottomSheet extends StatefulWidget {
 }
 
 class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
+  late final JobFilter filter;
   final ValueNotifier<String?> _errorNotifier = ValueNotifier<String?>(null);
   final ValueNotifier<Country> _countryController = ValueNotifier<Country>(Countries.unknown);
   final ValueNotifier<bool?> _remoteController = ValueNotifier<bool?>(null);
@@ -34,12 +35,8 @@ class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    final filter = BlocProvider.of<FeedBLoC>(context).state.filter;
-    _countryController.value = Country.byCode(filter.country);
-    _remoteController.value = filter.remote;
-    _levelController.value = filter.level;
-    _employmentController.value = filter.employment;
-    _relocationController.value = filter.relocation;
+    filter = BlocProvider.of<FeedBLoC>(context).state.filter;
+    _reset();
   }
 
   @override
@@ -54,19 +51,36 @@ class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
   }
 
   void _save(BuildContext context) {
-    FeedScope.setFilterOf(
-      context,
-
-      /// TODO: filter
-      (filter) => filter.copyWith(
-        country: _countryController.value.isExist ? _countryController.value.code : null,
-        relocation: _relocationController.value,
-        level: _levelController.value,
-        remote: _remoteController.value,
-        employment: _employmentController.value,
-      ),
+    final newFilter = filter.copyWith(
+      country: _countryController.value.isExist ? _countryController.value.code : null,
+      relocation: _relocationController.value,
+      level: _levelController.value,
+      remote: _remoteController.value,
+      employment: _employmentController.value,
     );
+    if (newFilter != filter) {
+      FeedScope.setFilterOf(
+        context,
+        (filter) => newFilter,
+      );
+    }
     Navigator.pop(context);
+  }
+
+  void _reset() {
+    _countryController.value = Country.byCode(filter.country);
+    _remoteController.value = filter.remote;
+    _levelController.value = filter.level;
+    _employmentController.value = filter.employment;
+    _relocationController.value = filter.relocation;
+  }
+
+  void _unselectAll() {
+    _countryController.value = Countries.unknown;
+    _remoteController.value = null;
+    _levelController.value = null;
+    _employmentController.value = null;
+    _relocationController.value = null;
   }
 
   @override
@@ -137,10 +151,10 @@ class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
                       style: TextButton.styleFrom(
                         textStyle: Theme.of(context).primaryTextTheme.button,
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back_outlined),
+                      onPressed: _unselectAll, // Navigator.pop(context),
+                      icon: const Icon(Icons.restore),
                       label: Text(
-                        context.materialLocalizations.backButtonTooltip,
+                        context.localization.filter_button_reset,
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.clip,
@@ -156,7 +170,7 @@ class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
                       onPressed: () => _save(context),
                       icon: const Icon(Icons.save),
                       label: Text(
-                        context.materialLocalizations.saveButtonLabel,
+                        context.localization.filter_button_search,
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.clip,
@@ -175,78 +189,3 @@ class _FeedFilterBottomSheetState extends State<FeedFilterBottomSheet> {
     );
   }
 }
-
-/*
-Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.only(
-                top: 24,
-                left: horizontalPadding,
-                right: horizontalPadding,
-                bottom: 12,
-              ),
-              physics: const ClampingScrollPhysics(),
-              children: <Widget>[
-                Placeholder(),
-                Placeholder(),
-                Placeholder(),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: SizedBox(
-              height: kToolbarHeight,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        textStyle: Theme.of(context).primaryTextTheme.button,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back_outlined),
-                      label: Text(
-                        context.materialLocalizations.backButtonTooltip,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.clip,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        textStyle: Theme.of(context).primaryTextTheme.button,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.save),
-                      label: Text(
-                        context.materialLocalizations.saveButtonLabel,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.clip,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-        ],
-      )
- */
