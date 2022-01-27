@@ -168,19 +168,15 @@ class _EditScreenState extends State<_EditScreen> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          actions: <Widget>[
-            Tooltip(
-              message: context.localization.save,
-              child: ValueListenableBuilder<TextEditingValue>(
-                valueListenable: widget.textEditingController,
-                builder: (context, value, _) => IconButton(
-                  onPressed: value.text == _initialText ? null : () => Navigator.pop(context),
-                  icon: const Icon(Icons.save),
+        ),
+        floatingActionButton: ValueListenableBuilder<TextEditingValue>(
+          valueListenable: widget.textEditingController,
+          builder: (context, value, _) => value.text == _initialText
+              ? const SizedBox.shrink()
+              : FloatingActionButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Icon(Icons.save),
                 ),
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
         ),
         body: SafeArea(
           child: Builder(
