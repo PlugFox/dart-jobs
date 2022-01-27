@@ -25,7 +25,7 @@ mixin _RestoreRouteInformationMixin on RouteInformationParser<IRouteConfiguratio
       return route;
     } on Object catch (error) {
       l.w('Ошибка навигации restoreRouteInformation: $error');
-      return const RouteInformation(location: 'home/404');
+      return const RouteInformation(location: 'feed/404');
     }
   }
 }

@@ -9,24 +9,22 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:l/l.dart';
+import 'package:sentry/sentry.dart';
 
 /// Запуск для веба
 void run() {
   setUrlStrategy(const HashUrlStrategy());
 
   // Устанавливаем идентификаторы и свойства пользователя
+  _onAuthStateChanges(FirebaseAuth.instance.currentUser);
   FirebaseAuth.instance.authStateChanges().listen(
-    (user) {
-      FirebaseAnalytics.instance.setUserId(id: user?.uid ?? '');
-      FirebaseAnalytics.instance.setUserProperty(name: 'name', value: user?.displayName);
-      FirebaseAnalytics.instance.setUserProperty(name: 'email', value: user?.email);
-    },
-    onError: (Object error, StackTrace stackTrace) => l.w(
-      'Failed set user identifier: $error',
-      stackTrace,
-    ),
-    cancelOnError: false,
-  );
+        _onAuthStateChanges,
+        onError: (Object error, StackTrace stackTrace) => l.w(
+          'Failed set user identifier: $error',
+          stackTrace,
+        ),
+        cancelOnError: false,
+      );
 
   // Инициалзировать и запустить приложение
   _initAndRunApp();
@@ -67,4 +65,16 @@ void _initAndRunApp() {
       },
     ),
   );
+}
+
+void _onAuthStateChanges(User? user) {
+  if (user?.uid.isNotEmpty ?? false) {
+    Sentry.configureScope((scope) => scope.setTag('uid', user?.uid ?? ''));
+  }
+  if (user?.email?.isNotEmpty ?? false) {
+    Sentry.configureScope((scope) => scope.setTag('email', user?.email ?? ''));
+  }
+  FirebaseAnalytics.instance.setUserId(id: user?.uid);
+  FirebaseAnalytics.instance.setUserProperty(name: 'email', value: user?.email);
+  FirebaseAnalytics.instance.setUserProperty(name: 'name', value: user?.displayName);
 }

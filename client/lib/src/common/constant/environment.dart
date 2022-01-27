@@ -9,7 +9,7 @@ import 'package:platform_info/platform_info.dart';
 String get environment => _kEnvironment.isEmpty
     ? platform.buildMode.when<String>(
         debug: () => 'development',
-        profile: () => 'staging',
+        profile: () => 'development',
         release: () => 'production',
       )
     : _kEnvironment;
@@ -30,3 +30,6 @@ const String kGraphQLEndpoint = String.fromEnvironment(
   'graphql',
   defaultValue: 'https://job.api.plugfox.dev/v1/graphql',
 );
+
+/// Расширенная аналитика, если это не продуктовый релиз
+bool get expandedAnalytics => environment != 'production';

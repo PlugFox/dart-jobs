@@ -69,6 +69,9 @@ client/coverage/
 #.firebase/
 
 client/android/keystore.properties
+client/android/keystore.p12
+client/android/keystore.pfx
+client/android/keystore.jks
 
 # SKSL shaders warm-up
 *.sksl.json

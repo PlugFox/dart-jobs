@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App [stg]" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=environment=staging --dart-define=stage=true --flavor=stage" />
+    <option name="filePath" value="$PROJECT_DIR$/client/lib/main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

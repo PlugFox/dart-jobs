@@ -47,6 +47,7 @@ abstract class AppPage<T extends Object?> extends Page<T> {
     switch (name) {
       case '':
       case '/':
+      case 'home':
       case 'feed':
         return FeedPage();
       case 'settings':

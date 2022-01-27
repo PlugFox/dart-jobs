@@ -97,7 +97,7 @@ Future<void> _appRunner() async {
     final initMessage = 'Инициализация приложения до вывода интерфейса продлилась дольше предполагаемого: '
         '${stopwatchBeforeRunApp.elapsedMilliseconds} мс\n'
         'Отложенная инициализация заняла: $ensureInitializedMs мс\n'
-        'Инициализация фаербейза заняла: $firebaseMs мс';
+        'Инициализация Firebase заняла: $firebaseMs мс';
     l.w(initMessage);
     ErrorUtil.logMessage('Long Initialization', hint: initMessage, warning: false);
   }

@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/constant/environment.dart';
 import 'package:dart_jobs_client/src/common/utils/error_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:l/l.dart';
@@ -60,6 +61,7 @@ mixin _SentryTransactionMixin {
   final Map<BlocBase, List<Object>?> _states = <BlocBase, List<Object>?>{};
 
   void _startTransaction(BlocBase bloc, Object event) {
+    if (!expandedAnalytics) return;
     try {
       _finishTransaction(bloc, true);
       _transactions[bloc] = Sentry.startTransaction(
@@ -84,9 +86,13 @@ mixin _SentryTransactionMixin {
     }
   }
 
-  void _setState(BlocBase bloc, Object state) => (_states[bloc] ??= <Object>[]).add(state);
+  void _setState(BlocBase bloc, Object state) {
+    if (!expandedAnalytics) return;
+    (_states[bloc] ??= <Object>[]).add(state);
+  }
 
   void _finishTransaction(BlocBase bloc, bool successful) {
+    if (!expandedAnalytics) return;
     try {
       if (_transactions[bloc]?.finished ?? true) return;
       final states = _states[bloc] ?? <Object>[];

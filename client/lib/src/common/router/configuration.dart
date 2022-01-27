@@ -40,7 +40,7 @@ abstract class RouteConfigurationBase implements IRouteConfiguration {
   @override
   IRouteConfiguration? get previous {
     IRouteConfiguration? getPrevious() {
-      if (location == '/' || location == 'home' || location.isEmpty) return null;
+      if (location == '/' || location == 'feed' || location == 'home' || location.isEmpty) return null;
       try {
         final uri = Uri.parse(location);
         final pathSegments = uri.pathSegments;

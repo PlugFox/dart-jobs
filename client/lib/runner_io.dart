@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
 import 'package:l/l.dart';
+import 'package:sentry/sentry.dart';
 
 /// Запуск приложения как io
 void run() {
@@ -35,19 +36,26 @@ void run() {
   }
 
   // Устанавливаем идентификаторы и свойства пользователя
+  _onAuthStateChanges(FirebaseAuth.instance.currentUser);
   FirebaseAuth.instance.authStateChanges().listen(
-    (user) {
-      FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? '');
-      FirebaseAnalytics.instance.setUserId(id: user?.uid ?? '');
-      FirebaseAnalytics.instance.setUserProperty(name: 'name', value: user?.displayName);
-      FirebaseAnalytics.instance.setUserProperty(name: 'email', value: user?.email);
-    },
-    onError: (Object error, StackTrace stackTrace) => l.w(
-      'Failed set user identifier: $error',
-      stackTrace,
-    ),
-    cancelOnError: false,
-  );
+        _onAuthStateChanges,
+        onError: (Object error, StackTrace stackTrace) => l.w(
+          'Failed set user identifier: $error',
+          stackTrace,
+        ),
+        cancelOnError: false,
+      );
+
+  Future<void>(() async {
+    await FirebaseCrashlytics.instance.recordError(
+      Exception('Initial exception for crashlytics'),
+      StackTrace.current,
+      fatal: false,
+      reason: 'Crashlytics initialization',
+    );
+    await FirebaseCrashlytics.instance.sendUnsentReports();
+    throw Exception('Initial exception for crashlytics');
+  });
 
   // Инициалзировать и запустить приложение
   _initAndRunApp();
@@ -79,4 +87,16 @@ void _initAndRunApp() {
   );
 }
 
-///crashlytics.setUserIdentifier("12345");
+void _onAuthStateChanges(User? user) {
+  if (user?.uid.isNotEmpty ?? false) {
+    FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? '');
+    Sentry.configureScope((scope) => scope..setTag('uid', user?.uid ?? ''));
+  }
+  if (user?.email?.isNotEmpty ?? false) {
+    FirebaseCrashlytics.instance.setCustomKey('email', user?.email ?? '');
+    Sentry.configureScope((scope) => scope.setTag('email', user?.email ?? ''));
+  }
+  FirebaseAnalytics.instance.setUserId(id: user?.uid);
+  FirebaseAnalytics.instance.setUserProperty(name: 'email', value: user?.email);
+  FirebaseAnalytics.instance.setUserProperty(name: 'name', value: user?.displayName);
+}

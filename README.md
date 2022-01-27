@@ -13,12 +13,12 @@
 
 Windows
 ```bash
-keytool -genkey -v -keystore ~/android/keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 50000 -alias release
+keytool -genkey -v -keystore ./android/keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 50000 -alias release
 ```
 
 Mac
 ```bash
-keytool -genkey -v -keystore ~/android/keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 50000 -alias release
+keytool -genkey -v -keystore ./android/keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 50000 -alias release
 ```
 
 
