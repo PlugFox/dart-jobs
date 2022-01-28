@@ -169,7 +169,7 @@ class _BugReportFormState extends State<_BugReportForm> {
                     controller: _descriptionController,
                     title: context.localization.bug_report_description,
                     label: context.localization.bug_report_leave_a_description,
-                    hint: context.localization.bug_report_leave_a_description,
+                    hint: '',
                     denyCyrillic: false,
                   ),
                 ],
@@ -230,37 +230,51 @@ class _BugReportDropDownButton extends StatelessWidget {
           value: value,
           icon: child,
           items: <DropdownMenuItem<BugReportType>>[
-            DropdownMenuItem(
-              value: BugReportType.feature,
-              child: Text(
-                _localizeType(context, BugReportType.feature),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            _BugReportDropdownMenuItem(
+              type: BugReportType.feature,
             ),
-            DropdownMenuItem(
-              value: BugReportType.improvement,
-              child: Text(
-                _localizeType(context, BugReportType.improvement),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            _BugReportDropdownMenuItem(
+              type: BugReportType.improvement,
             ),
-            DropdownMenuItem(
-              value: BugReportType.bug,
-              child: Text(
-                _localizeType(context, BugReportType.bug),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            _BugReportDropdownMenuItem(
+              type: BugReportType.bug,
             ),
           ],
           onChanged: (type) => typeController.value = type,
         ),
         child: const Icon(Icons.arrow_downward),
       );
+}
 
-  String _localizeType(BuildContext context, BugReportType? type) {
+@immutable
+class _BugReportDropdownMenuItem extends DropdownMenuItem<BugReportType> {
+  _BugReportDropdownMenuItem({
+    required final BugReportType type,
+    Key? key,
+  }) : super(
+          key: key,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 8,
+              bottom: 8,
+              left: 12,
+              right: 8,
+            ),
+            child: Builder(
+              builder: (context) => Text(
+                _localizeType(context, type),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          alignment: Alignment.centerLeft,
+          value: type,
+          enabled: true,
+          onTap: null,
+        );
+
+  static String _localizeType(BuildContext context, BugReportType? type) {
     switch (type) {
       case BugReportType.feature:
         return context.localization.bug_report_feature;
