@@ -164,8 +164,6 @@ linter:
     use_string_buffers: true
     valid_regexps: true
     void_checks: true
-
-    # Pedantic 1.9.0
     always_declare_return_types: true
     always_require_non_null_named_parameters: true
     annotate_overrides: true
@@ -210,8 +208,6 @@ linter:
     unrelated_type_equality_checks: true
     use_function_type_syntax_for_parameters: true
     use_rethrow_when_possible: true
-
-    # Effective_dart 1.2.0
     camel_case_types: true
     file_names: true
     non_constant_identifier_names: true

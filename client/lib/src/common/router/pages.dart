@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/profile_screen.dart';
+import 'package:dart_jobs_client/src/feature/bug_report/widget/bug_report_page.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_screen.dart';
 import 'package:dart_jobs_client/src/feature/job/widget/job_page.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
@@ -58,6 +59,8 @@ abstract class AppPage<T extends Object?> extends Page<T> {
         return AboutPage();
       case 'job':
         return JobPage('job', args.firstOrNull);
+      case 'feedback':
+        return BugReportPage('feedback');
       case '404':
       default:
         return NotFoundPage();

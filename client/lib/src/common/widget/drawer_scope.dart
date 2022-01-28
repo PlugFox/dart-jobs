@@ -168,6 +168,7 @@ class AppDrawer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 physics: const BouncingScrollPhysics(),
                 children: <Widget>[
+                  // Профиль
                   _DrawerTile(
                     icon: Icons.account_circle,
                     title: context.localization.profile,
@@ -182,6 +183,7 @@ class AppDrawer extends StatelessWidget {
                       );
                     },
                   ),
+                  // Настройки
                   _DrawerTile(
                     icon: Icons.settings,
                     title: context.localization.settings,
@@ -191,6 +193,7 @@ class AppDrawer extends StatelessWidget {
                       (configuration) => const SettingsRouteConfiguration(),
                     ),
                   ),
+                  // Создать новую работу
                   _DrawerTile(
                     icon: Icons.create,
                     title: context.localization.create_new_job,
@@ -214,14 +217,17 @@ class AppDrawer extends StatelessWidget {
                   // Отправить баг репорт
                   _DrawerTile(
                     icon: Icons.bug_report,
-                    title: context.localization.send_bug_report,
-                    onTap: null,
+                    title: context.localization.bug_report_title,
+                    shouldBeDisabled: (location) => location.endsWith('feedback'),
+                    onTap: () => AppRouter.navigate(context, (configuration) => const BugReportRouteConfiguration()),
                   ),
+                  // Отобразить лицензии
                   _DrawerTile(
                     icon: Icons.info,
                     title: context.localization.licenses,
                     onTap: () => AppRouter.showLicensePageOf(context),
                   ),
+                  // Залогиниться или разлогиниться
                   const LoginOrLogoutTile(),
                 ],
               ),

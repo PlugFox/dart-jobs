@@ -10,6 +10,7 @@ import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
+import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
 import 'package:dart_jobs_client/src/feature/initialization/data/graphql_client_creator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
@@ -128,6 +129,12 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     await repository.restoreFilter();
     return progress.copyWith(
       newJobRepository: repository,
+    );
+  },
+  'Preparing bug report repository': (final progress) async {
+    final repository = BugReportRepository();
+    return progress.copyWith(
+      newBugReportRepository: repository,
     );
   },
   'Get current settings': (final progress) async {

@@ -1,7 +1,7 @@
 name: dart_jobs_shared
 description: Dart Jobs - shared entities
 publish_to: none
-version: 0.1.0
+version: 0.5.0
 # homepage: https://www.example.com
 
 environment:

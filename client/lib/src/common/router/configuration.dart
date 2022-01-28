@@ -187,6 +187,23 @@ class ProfileRouteConfiguration extends RouteConfigurationBase {
   Map<String, Object?>? get state => <String, Object?>{};
 }
 
+/// Обратная связь
+class BugReportRouteConfiguration extends RouteConfigurationBase {
+  const BugReportRouteConfiguration();
+
+  @override
+  bool get isRoot => false;
+
+  @override
+  IRouteConfiguration? get previous => const HomeRouteConfiguration();
+
+  @override
+  String get location => 'feed/feedback';
+
+  @override
+  Map<String, Object?>? get state => <String, Object?>{};
+}
+
 /// Динамическая конфигурация, получаемая путем преобразования заданных презетов
 /// или при изменении конфигурации на платформе
 class DynamicRouteConfiguration extends RouteConfigurationBase {
