@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/pages.dart';
@@ -74,11 +76,8 @@ class _BugReportScreen extends StatelessWidget {
           child: const SafeArea(
             child: Align(
               alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: kBodyWidth,
-                child: FocusScope(
-                  child: _BugReportForm(),
-                ),
+              child: FocusScope(
+                child: _BugReportForm(),
               ),
             ),
           ),
@@ -122,91 +121,97 @@ class _BugReportFormState extends State<_BugReportForm> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(
-          top: 24,
-          left: 8,
-          right: 8,
-          bottom: 16,
-        ),
-        child: Stack(
-          children: <Positioned>[
-            Positioned.fill(
-              child: Align(
-                alignment: const Alignment(0, -.75),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) {
+    // 620 px - max width
+    final horizontalPadding = math.max<double>(
+      (MediaQuery.of(context).size.width - kBodyWidth) / 2,
+      8,
+    );
+    return Stack(
+      children: <Positioned>[
+        Positioned.fill(
+          child: Align(
+            alignment: const Alignment(0, -.66),
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              padding: EdgeInsets.only(
+                top: 14,
+                left: horizontalPadding,
+                right: horizontalPadding,
+                bottom: 80,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            context.localization.bug_report_i_would_like_to,
-                            style: Theme.of(context).textTheme.subtitle1,
-                          ),
-                          _BugReportDropDownButton(
-                            typeController: _typeController,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 48),
                       Text(
-                        context.localization.bug_report_description,
+                        context.localization.bug_report_i_would_like_to,
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      const SizedBox(height: 12),
-                      BugReportDescriptionInput(
-                        controller: _descriptionController,
-                        title: context.localization.bug_report_description,
-                        label: context.localization.bug_report_leave_a_description,
-                        hint: context.localization.bug_report_leave_a_description,
-                        denyCyrillic: false,
+                      _BugReportDropDownButton(
+                        typeController: _typeController,
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  //Text(
+                  //  context.localization.bug_report_description,
+                  //  style: Theme.of(context).textTheme.subtitle1,
+                  //),
+                  //const SizedBox(height: 12),
+                  BugReportDescriptionInput(
+                    controller: _descriptionController,
+                    title: context.localization.bug_report_description,
+                    label: context.localization.bug_report_leave_a_description,
+                    hint: context.localization.bug_report_leave_a_description,
+                    denyCyrillic: false,
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              bottom: 0,
-              left: 12,
-              right: 12,
-              height: 48,
-              child: AnimatedBuilder(
-                animation: _changeListenable,
-                builder: (context, child) => ElevatedButton(
-                  onPressed: _preparedToSend
-                      ? () {
-                          FocusScope.of(context).unfocus();
-                          final message = _descriptionController.text;
-                          final type = _typeController.value;
-                          if (message.isEmpty || type == null) return;
-                          final user = AuthenticationScope.authenticatedOrNullOf(context);
-                          BlocProvider.of<BugReportBLoC>(context).add(
-                            BugReportEvent.send(
-                              BugReportEntity(
-                                message: message,
-                                type: type,
-                                email: user?.email,
-                                userId: user?.uid,
-                              ),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: child,
-                ),
-                child: Text(context.localization.send_bug_report),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        Positioned(
+          bottom: 16,
+          left: 12,
+          right: 12,
+          height: 48,
+          child: AnimatedBuilder(
+            animation: _changeListenable,
+            builder: (context, child) => ElevatedButton(
+              onPressed: _preparedToSend
+                  ? () {
+                      FocusScope.of(context).unfocus();
+                      final message = _descriptionController.text;
+                      final type = _typeController.value;
+                      if (message.isEmpty || type == null) return;
+                      final user = AuthenticationScope.authenticatedOrNullOf(context);
+                      BlocProvider.of<BugReportBLoC>(context).add(
+                        BugReportEvent.send(
+                          BugReportEntity(
+                            message: message,
+                            type: type,
+                            email: user?.email,
+                            userId: user?.uid,
+                          ),
+                        ),
+                      );
+                    }
+                  : null,
+              child: child,
+            ),
+            child: Text(context.localization.send_bug_report),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 @immutable
