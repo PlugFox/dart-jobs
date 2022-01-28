@@ -1,10 +1,18 @@
 /* Timestamp <-> DateTime */
 
-DateTime fromGraphQLTimestampToDartDateTime(String timestamp) => DateTime.parse(timestamp).toUtc();
+DateTime fromGraphQLTimestampToDartDateTime(final String timestamp) =>
+    DateTime.parse(_normalizeTimestamp(timestamp)).toUtc();
 
-String fromDartDateTimeToGraphQLTimestamp(DateTime timestamp) => timestamp.toUtc().toIso8601String();
+String fromDartDateTimeToGraphQLTimestamp(final DateTime timestamp) => timestamp.toUtc().toIso8601String();
 
-DateTime? fromGraphQLTimestampNullableToDartDateTimeNullable(String? timestamp) =>
-    timestamp == null ? null : DateTime.tryParse(timestamp)?.toUtc();
+DateTime? fromGraphQLTimestampNullableToDartDateTimeNullable(final String? timestamp) =>
+    timestamp == null ? null : DateTime.tryParse(_normalizeTimestamp(timestamp))?.toUtc();
 
-String? fromDartDateTimeNullableToGraphQLTimestampNullable(DateTime? timestamp) => timestamp?.toUtc().toIso8601String();
+String? fromDartDateTimeNullableToGraphQLTimestampNullable(final DateTime? timestamp) =>
+    timestamp?.toUtc().toIso8601String();
+
+String _normalizeTimestamp(String timestamp) {
+  final time = timestamp.split('T').last;
+  if (time.endsWith('Z') || time.contains('+') || time.contains('-')) return timestamp;
+  return '${timestamp}Z';
+}

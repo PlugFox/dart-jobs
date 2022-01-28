@@ -70,17 +70,11 @@ class _PrimaryButton extends StatelessWidget {
                 child: Text(context.localization.job_button_create),
               );
             }
-            final allow = DateTime.now().difference(state.job.updated).inDays.abs() > 1;
-            if (allow) {
-              return ElevatedButton(
+            return _AllowedCountdown(
+              updated: state.job.updated,
+              child: ElevatedButton(
                 onPressed: () => _update(context),
                 child: Text(context.localization.job_button_update),
-              );
-            }
-            return ElevatedButton(
-              onPressed: null,
-              child: _AllowedCountdown(
-                updated: state.job.updated,
               ),
             );
           },
@@ -214,40 +208,61 @@ class _ButtonsBottomSheet extends StatelessWidget {
 class _AllowedCountdown extends StatefulWidget {
   const _AllowedCountdown({
     required final this.updated,
+    required final this.child,
     Key? key,
   }) : super(key: key);
 
   final DateTime updated;
+  final Widget child;
 
   @override
   State<_AllowedCountdown> createState() => _AllowedCountdownState();
 }
 
 class _AllowedCountdownState extends State<_AllowedCountdown> {
-  final Stream<void> _ticker = Stream<void>.periodic(const Duration(seconds: 1));
+  late final Stream<String?> _ticker;
 
-  String get _countdown {
+  @override
+  void initState() {
+    super.initState();
+    _ticker = Stream<String?>.periodic(const Duration(seconds: 1)).map<String?>(
+      (_) => _getCountdown(),
+    );
+  }
+
+  String? _getCountdown() {
     final now = DateTime.now();
     final countdown = widget.updated.add(const Duration(days: 1)).difference(now);
     if (countdown.inHours > 0) {
       return '${countdown.inHours} ${context.localization.job_form_edit_countdown_hours}';
     } else if (countdown.inMinutes > 0) {
       return '${countdown.inMinutes} ${context.localization.job_form_edit_countdown_minutes}';
-    } else {
+    } else if (countdown.inSeconds > 0) {
       return '${countdown.inSeconds} ${context.localization.job_form_edit_countdown_seconds}';
+    } else {
+      return null;
     }
   }
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        initialData: null,
+  Widget build(BuildContext context) => StreamBuilder<String?>(
+        initialData: _getCountdown(),
         stream: _ticker,
-        builder: (context, snapshot) => Text(
-          '${context.localization.job_form_edit_countdown_available}\n'
-          '$_countdown',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-        ),
+        builder: (context, snapshot) {
+          final countdown = snapshot.data;
+          if (countdown != null) {
+            return ElevatedButton(
+              onPressed: null,
+              child: Text(
+                '${context.localization.job_form_edit_countdown_available}\n'
+                '$countdown',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+          return widget.child;
+        },
       );
 }
