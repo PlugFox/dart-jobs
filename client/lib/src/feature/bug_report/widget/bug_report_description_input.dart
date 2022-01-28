@@ -52,7 +52,7 @@ class _BugReportDescriptionInputState extends State<BugReportDescriptionInput> {
       child: ValueListenableBuilder<TextEditingValue>(
         valueListenable: widget.controller,
         builder: (context, value, child) => SizedBox(
-          height: 120,
+          height: 140,
           child: InputDecorator(
             isFocused: _focus,
             expands: true,
@@ -61,11 +61,12 @@ class _BugReportDescriptionInputState extends State<BugReportDescriptionInput> {
               labelText: widget.label,
               hintText: widget.hint,
               border: const OutlineInputBorder(),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
             ),
             isEmpty: value.text.isEmpty,
             child: Text(
               value.text,
-              maxLines: 1,
+              maxLines: 5,
               overflow: TextOverflow.ellipsis,
               style: themeData.textTheme.subtitle1,
             ),
