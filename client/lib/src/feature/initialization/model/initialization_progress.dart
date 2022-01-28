@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
+import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_client/src/feature/settings/data/settings_repository.dart';
 import 'package:dart_jobs_shared/graphql.dart';
@@ -15,6 +16,7 @@ class InitializationProgress {
   final SharedPreferences? sharedPreferences;
   final ISettingsRepository? settingsRepository;
   final IJobRepository? jobRepository;
+  final IBugReportRepository? bugReportRepository;
   final AppMetadata? appMetadata;
   final GQLClient? gqlClient;
 
@@ -25,6 +27,7 @@ class InitializationProgress {
     this.sharedPreferences,
     this.settingsRepository,
     this.jobRepository,
+    this.bugReportRepository,
     this.appMetadata,
     this.gqlClient,
   });
@@ -38,6 +41,7 @@ class InitializationProgress {
     final SharedPreferences? newSharedPreferences,
     final ISettingsRepository? newSettingsRepository,
     final IJobRepository? newJobRepository,
+    final IBugReportRepository? newBugReportRepository,
     final AppMetadata? newAppMetadata,
     final GQLClient? newGQLClient,
   }) =>
@@ -49,6 +53,7 @@ class InitializationProgress {
         settingsRepository: newSettingsRepository ?? settingsRepository,
         jobRepository: newJobRepository ?? jobRepository,
         appMetadata: newAppMetadata ?? appMetadata,
+        bugReportRepository: newBugReportRepository ?? bugReportRepository,
         gqlClient: newGQLClient ?? gqlClient,
       );
 
@@ -59,6 +64,7 @@ class InitializationProgress {
         firebaseFirestore: firebaseFirestore!,
         settingsRepository: settingsRepository!,
         jobRepository: jobRepository!,
+        bugReportRepository: bugReportRepository!,
         appMetadata: appMetadata,
       );
 }
@@ -70,6 +76,7 @@ class RepositoryStore {
   final FirebaseFirestore firebaseFirestore;
   final ISettingsRepository settingsRepository;
   final IJobRepository jobRepository;
+  final IBugReportRepository bugReportRepository;
   final AppMetadata? appMetadata;
 
   const RepositoryStore._({
@@ -78,6 +85,7 @@ class RepositoryStore {
     required this.firebaseFirestore,
     required this.settingsRepository,
     required this.jobRepository,
+    required this.bugReportRepository,
     required this.appMetadata,
   });
 }

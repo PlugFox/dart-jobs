@@ -95,9 +95,9 @@
   "@irreversible_action": {
     "description": "Предупреждение о необратимом действии"
   },
-  "create_new_job": "Создать новую работу",
+  "create_new_job": "Создать вакансию",
   "@create_new_job": {
-    "description": "Создать новую работу"
+    "description": "Создать вакансию"
   },
   "log_in": "Залогиниться",
   "@log_in": {
@@ -111,9 +111,41 @@
   "@licenses": {
     "description": "Лицензии"
   },
-  "send_bug_report": "Сообщить о проблеме",
+  "bug_report_title": "Обратная связь",
+  "@bug_report_title": {
+    "description": "Обратная связь"
+  },
+  "bug_report_i_would_like_to": "Я бы хотел:",
+  "@bug_report_i_would_like_to": {
+    "description": "Я бы хотел:"
+  },
+  "bug_report_select_an_option": "Выберите опцию",
+  "@bug_report_select_an_option": {
+    "description": "Выберите опцию"
+  },
+  "bug_report_feature": "Попросить новую возможность",
+  "@bug_report_feature": {
+    "description": "Попросить новую возможность (Ask for a new feature)"
+  },
+  "bug_report_request_an_improvement": "Запросить улучшение",
+  "@bug_report_request_an_improvement": {
+    "description": "Запросить улучшение (Request an improvement)"
+  },
+  "bug_report_report_an_issue": "Сообщить о проблеме",
+  "@bug_report_report_an_issue": {
+    "description": "Сообщить о проблеме (Report an issue)"
+  },
+  "bug_report_description": "Описание",
+  "@bug_report_description": {
+    "description": "Описание (Description)"
+  },
+  "bug_report_leave_a_description": "Опишите желаемое",
+  "@bug_report_leave_a_description": {
+    "description": "Опишите желаемое (Leave a description)"
+  },
+  "send_bug_report": "Оставить обратную связь",
   "@send_bug_report": {
-    "description": "Сообщить о проблеме"
+    "description": "Отправить сообщение"
   },
   "favorite": "Избранное",
   "@favorite": {
@@ -307,13 +339,13 @@
   "@job_button_reset": {
     "description": "Сбросить изменения"
   },
-  "job_button_create": "Создать работу",
+  "job_button_create": "Создать вакансию",
   "@job_button_create": {
-    "description": "Создать работу"
+    "description": "Создать вакансию"
   },
-  "job_button_update": "Обновить работу",
+  "job_button_update": "Обновить вакансию",
   "@job_button_update": {
-    "description": "Обновить работу"
+    "description": "Обновить вакансию"
   },
   "job_button_preview": "Предварительный просмотр",
   "@job_button_preview": {

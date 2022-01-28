@@ -67,7 +67,7 @@ class AuthenticationScope extends StatefulWidget {
   /// Войти с помощью гугла если не вошли
   /// Если аутентифицировались в течении 5 секунд - также выполняем коллбэк
   /// !!! Внимание, внутри коллбэка нельзя использовать контекст и любые зависимости,
-  ///   которые перестанут быть актуальными к этому моменту !!!
+  ///   которые перестанут быть актуальными к моменту его выполнения !!!
   static void authenticateOr(
     final BuildContext context,
     final void Function(AuthenticatedUser user) callback,
@@ -124,7 +124,7 @@ class _AuthenticationScopeState extends State<AuthenticationScope> {
       authenticationRepository: RepositoryScope.of(context).authenticationRepository,
     );
     _analytics = RepositoryScope.of(context).analytics;
-    _subscription = bloc.stream.listen(_onStateChanged);
+    _subscription = bloc.stream.listen(_onStateChanged, cancelOnError: false);
     _onStateChanged(bloc.state);
   }
 
