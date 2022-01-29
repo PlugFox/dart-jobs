@@ -402,5 +402,13 @@
   "job_form_edit_countdown_seconds": "секунд",
   "@job_form_edit_countdown_seconds": {
     "description": "секунд"
+  },
+  "app_version": "Версия приложения",
+  "@app_version": {
+    "description": "Версия приложения"
+  },
+  "connection_status": "Состояние соединения",
+  "@connection_status": {
+    "description": "Состояние соединения"
   }
 }
