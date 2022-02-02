@@ -10,9 +10,9 @@ abstract class AppMigrator {
 
   static Future<void> migrate(SharedPreferences sharedPreferences) async {
     try {
-      final prevMajor = sharedPreferences.getInt(versionMajorKey);
-      final prevMinor = sharedPreferences.getInt(versionMinorKey);
-      final prevPatch = sharedPreferences.getInt(versionPatchKey);
+      final prevMajor = sharedPreferences.getInt(kVersionMajorKey);
+      final prevMinor = sharedPreferences.getInt(kVersionMinorKey);
+      final prevPatch = sharedPreferences.getInt(kVersionPatchKey);
 
       if (pubspec.major == prevMajor && pubspec.minor == prevMinor && pubspec.patch == prevPatch) {
         return;
@@ -22,9 +22,9 @@ abstract class AppMigrator {
 
       await Future.wait<void>(
         <Future<void>>[
-          sharedPreferences.setInt(versionMajorKey, pubspec.major),
-          sharedPreferences.setInt(versionMinorKey, pubspec.minor),
-          sharedPreferences.setInt(versionPatchKey, pubspec.patch),
+          sharedPreferences.setInt(kVersionMajorKey, pubspec.major),
+          sharedPreferences.setInt(kVersionMinorKey, pubspec.minor),
+          sharedPreferences.setInt(kVersionPatchKey, pubspec.patch),
         ],
       );
     } on Object {

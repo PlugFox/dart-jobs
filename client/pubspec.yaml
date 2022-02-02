@@ -1,7 +1,7 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.5.3+1643768735
+version: 0.5.3+1643782073
 
 environment:
   sdk: ">=2.15.1"
@@ -37,7 +37,7 @@ dependencies:
   firebase_crashlytics: ^2.4.5
   firebase_performance: ^0.8.0+4
   firebase_remote_config: ^1.0.4
-  #firebase_messaging: ^10.0.8
+  firebase_messaging: ^11.2.6
 
   # Utility & Helpers
   #connectivity_plus: ^2.2.0

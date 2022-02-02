@@ -75,6 +75,10 @@
   "@settings_app_language": {
     "description": "Язык приложения"
   },
+  "settings_app_allow_fcm": "Разрешить уведомления",
+  "@settings_app_allow_fcm": {
+    "description": "Разрешить уведомления"
+  },
   "profile": "Профиль",
   "@profile": {
     "description": "Профиль"

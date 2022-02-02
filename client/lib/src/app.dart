@@ -1,5 +1,6 @@
 import 'package:dart_jobs_client/src/common/widget/app_material_context.dart';
 import 'package:dart_jobs_client/src/feature/authentication/widget/authentication_scope.dart';
+import 'package:dart_jobs_client/src/feature/cloud_messaging/widget/cloud_messaging_scope.dart';
 import 'package:dart_jobs_client/src/feature/feed/widget/feed_scope.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/settings_scope.dart';
@@ -26,9 +27,11 @@ class App extends StatelessWidget {
   Widget build(final BuildContext context) => RepositoryScope(
         repositoryStore: _repositoryStore,
         builder: (context) => const AuthenticationScope(
-          child: SettingsScope(
-            child: FeedScope(
-              child: AppMaterialContext(),
+          child: CloudMessagingScope(
+            child: SettingsScope(
+              child: FeedScope(
+                child: AppMaterialContext(),
+              ),
             ),
           ),
         ),

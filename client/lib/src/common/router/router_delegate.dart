@@ -5,8 +5,8 @@ import 'package:dart_jobs_client/src/common/router/analytics_navigator_observer.
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
-import 'package:dart_jobs_client/src/common/router/snackbars_for_global_scope.dart';
 import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
+import 'package:dart_jobs_client/src/common/widget/snackbars_for_global_scope.dart';
 import 'package:dart_jobs_client/src/common/widget/statuses_overlay.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/not_found/widget/not_found_screen.dart';
