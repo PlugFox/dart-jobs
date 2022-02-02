@@ -5,4 +5,3 @@ const String storageNamespace = 'dev.plugfox.dartjobs.flutter';
 const String versionMajorKey = '$storageNamespace.version_major';
 const String versionMinorKey = '$storageNamespace.version_minor';
 const String versionPatchKey = '$storageNamespace.version_patch';
-const String versionBuildKey = '$storageNamespace.version_build';
