@@ -48,15 +48,7 @@ class JobEditFlow extends StatelessWidget {
           orElse: () => AdaptiveScaffold(
             appBar: AppBar(
               leading: const BackButton(),
-              title: BlocConsumer<JobBLoC, JobState>(
-                listener: (context, state) => state.maybeMap<void>(
-                  orElse: () {},
-                  error: (state) => ScaffoldMessenger.of(context).showSnackBar(
-                    ErrorSnackBar(
-                      error: state.message,
-                    ),
-                  ),
-                ),
+              title: BlocBuilder<JobBLoC, JobState>(
                 builder: (context, state) {
                   final title =
                       state.job.data.title.isEmpty ? context.localization.create_new_job : state.job.data.title;
@@ -67,11 +59,20 @@ class JobEditFlow extends StatelessWidget {
                 },
               ),
             ),
-            body: const SafeArea(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: FocusScope(
-                  child: JobEditForm(),
+            body: BlocListener<JobBLoC, JobState>(
+              listener: (context, state) => state.mapOrNull<void>(
+                error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+                  ErrorSnackBar(
+                    error: state.message,
+                  ),
+                ),
+              ),
+              child: const SafeArea(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: FocusScope(
+                    child: JobEditForm(),
+                  ),
                 ),
               ),
             ),

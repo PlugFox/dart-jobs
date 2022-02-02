@@ -57,8 +57,7 @@ class _BugReportScreen extends StatelessWidget {
           ),
         ),
         body: BlocListener<BugReportBLoC, BugReportState>(
-          listener: (context, state) => state.maybeMap<void>(
-            orElse: () {},
+          listener: (context, state) => state.mapOrNull<void>(
             error: (state) => ScaffoldMessenger.of(context).showSnackBar(
               ErrorSnackBar(
                 error: state.message,

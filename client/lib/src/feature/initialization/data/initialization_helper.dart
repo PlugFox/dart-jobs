@@ -5,12 +5,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
-import 'package:dart_jobs_client/src/common/constant/storage_namespace.dart';
 import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
+import 'package:dart_jobs_client/src/feature/initialization/data/app_migrator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/data/graphql_client_creator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
@@ -156,36 +156,6 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     }
     return progress.copyWith(newSettingsRepository: repository);
   },
-  'Checking the application version': (final store) async {
-    try {
-      final build = int.tryParse(pubspec.build.first);
-      final sharedPrefs = store.sharedPreferences;
-      if (sharedPrefs == null) return store;
-      if (build != null) {
-        await Future.wait<void>(
-          <Future<void>>[
-            sharedPrefs.setInt(versionMajorKey, pubspec.major),
-            sharedPrefs.setInt(versionMinorKey, pubspec.minor),
-            sharedPrefs.setInt(versionPatchKey, pubspec.patch),
-            sharedPrefs.setInt(versionBuildKey, build),
-          ],
-        );
-      } else {
-        await Future.wait<void>(
-          <Future<void>>[
-            sharedPrefs.remove(versionMajorKey),
-            sharedPrefs.remove(versionMinorKey),
-            sharedPrefs.remove(versionPatchKey),
-            sharedPrefs.remove(versionBuildKey),
-          ],
-        );
-      }
-    } on Object {
-      l.e('Ошибка миграции приложения');
-      rethrow;
-    }
-    return store;
-  },
   'Creating app metadata': (final store) async {
     final screenSize = ScreenUtil.screenSize();
     final appMetadata = AppMetadata(
@@ -217,6 +187,12 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       deviceLogicalSideMax: screenSize.max,
     );
     return store.copyWith(newAppMetadata: appMetadata);
+  },
+  'Migrate app from previous version': (store) async {
+    final sharedPrefs = store.sharedPreferences;
+    if (sharedPrefs == null) return store;
+    await AppMigrator.migrate(sharedPrefs);
+    return store;
   },
 };
 

@@ -1,7 +1,7 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.5.2+1643394637
+version: 0.5.3+1643768735
 
 environment:
   sdk: ">=2.15.1"
@@ -40,6 +40,7 @@ dependencies:
   #firebase_messaging: ^10.0.8
 
   # Utility & Helpers
+  #connectivity_plus: ^2.2.0
   stack_trace: ^1.10.0
   sentry_flutter: ^6.3.0-beta.1
   sentry: ^6.3.0-beta.1
