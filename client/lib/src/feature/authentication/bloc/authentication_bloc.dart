@@ -29,19 +29,25 @@ class AuthenticationState with _$AuthenticationState {
   const AuthenticationState._();
 
   UserEntity get user => super.map<UserEntity>(
-        notAuthenticated: (final state) => state.user,
+        notAuthenticated: (_) => const NotAuthenticatedUser(),
         progress: (final state) => state.user,
         authenticated: (final state) => state.user,
+        error: (final state) => state.user,
       );
 
   bool get isAuthenticated => user.isAuthenticated;
 
   bool get isNotAuthenticated => !isAuthenticated;
 
+  bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
+
+  bool get inProgress => maybeMap<bool>(orElse: () => true, authenticated: (_) => false, notAuthenticated: (_) => true);
+
   /// Разлогинен / Не аутентифицирован
   @literal
-  const factory AuthenticationState.notAuthenticated({@Default(UserEntity.notAuthenticated()) final UserEntity user}) =
-      _NotAuthenticatedState;
+  const factory AuthenticationState.notAuthenticated({
+    @Default(NotAuthenticatedUser()) final NotAuthenticatedUser user,
+  }) = _NotAuthenticatedState;
 
   /// Находимся в процессе аутентификации
   const factory AuthenticationState.progress({required final UserEntity user}) = _AuthenticationInProgressState;
@@ -51,6 +57,12 @@ class AuthenticationState with _$AuthenticationState {
     required final AuthenticatedUser user,
     final String? loginMethod,
   }) = _AuthenticatedState;
+
+  /// Ошибка в процессе аутентификации
+  const factory AuthenticationState.error({
+    @Default(NotAuthenticatedUser()) final UserEntity user,
+    @Default('An error occurred during authentication') final String message,
+  }) = _ErrorAuthenticationState;
 
   @factory
   // ignore: prefer_constructors_over_static_methods, invalid_factory_method_impl
@@ -83,7 +95,7 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState>
   final IAuthenticationRepository _authenticationRepository;
   StreamSubscription<void>? _authStateChangesSubscription;
 
-  Future<void> _signInWithGoogle(Emitter emit) async {
+  Future<void> _signInWithGoogle(Emitter<AuthenticationState> emit) async {
     if (state.isAuthenticated) return;
     l.vvvvvv('Начат процесс аутентификации в Google');
     emit(AuthenticationState.progress(user: state.user));
@@ -92,30 +104,46 @@ class AuthenticationBLoC extends Bloc<AuthenticationEvent, AuthenticationState>
       final user = await _authenticationRepository.signInWithGoogle();
       emit(AuthenticationState.fromUser(user));
     } on FirebaseAuthException catch (error, stackTrace) {
-      emit(const AuthenticationState.notAuthenticated());
       if (error.code == 'popup-closed-by-user') {
         l.d('Пользователь закрыл окно аутентификации');
+        emit(AuthenticationState.fromUser(_authenticationRepository.currentUser));
         return;
       }
+      emit(
+        const AuthenticationState.error(
+          message: 'An error occurred during authentication',
+        ),
+      );
+      emit(AuthenticationState.fromUser(_authenticationRepository.currentUser));
       l.w('Во время аутентификации в гугле произошла ошибка Firebase: $error', stackTrace);
       rethrow;
     } on Object catch (error, stackTrace) {
       l.w('Во время аутентификации в гугле произошла ошибка: $error', stackTrace);
-      emit(const AuthenticationState.notAuthenticated());
+      emit(
+        const AuthenticationState.error(
+          message: 'An error occurred during authentication',
+        ),
+      );
+      emit(AuthenticationState.fromUser(_authenticationRepository.currentUser));
       rethrow;
     }
   }
 
-  Future<void> _logOut(Emitter emit) async {
+  Future<void> _logOut(Emitter<AuthenticationState> emit) async {
     if (state.isNotAuthenticated) return;
     l.vvvvvv('Начат процесс разлогинивания');
     emit(AuthenticationState.progress(user: state.user));
     try {
       await _authenticationRepository.logOut();
-      emit(const AuthenticationState.notAuthenticated());
+      emit(AuthenticationState.fromUser(_authenticationRepository.currentUser));
     } on Object {
       l.w('Во время разлогина произошла ошибка');
-      emit(AuthenticationState.fromUser(state.user));
+      emit(
+        const AuthenticationState.error(
+          message: 'An error occurred during log out',
+        ),
+      );
+      emit(AuthenticationState.fromUser(_authenticationRepository.currentUser));
       rethrow;
     }
   }
