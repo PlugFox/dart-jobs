@@ -47,47 +47,105 @@ class _ThemeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = SettingsScope.settingsOf(context, listen: true);
     final isDark = settings.theme == 'dark';
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ChoiceChip(
-          tooltip: context.localization.theme_scheme_light_mode,
-          label: SizedBox(
-            width: 80,
-            child: Center(
-              child: Text(context.localization.theme_scheme_light_mode),
-            ),
-          ),
-          avatar: const Icon(Icons.light_mode),
-          selected: !isDark,
-          onSelected: isDark ? (value) => _onSelected(context, 'light') : null,
-          key: ValueKey<String>('light_${!isDark}'),
-        ),
-        const SizedBox(width: 6),
-        ChoiceChip(
-          tooltip: context.localization.theme_scheme_dark_mode,
-          label: SizedBox(
-            width: 80,
-            child: Center(
-              child: Text(context.localization.theme_scheme_dark_mode),
-            ),
-          ),
-          avatar: const Icon(Icons.dark_mode),
-          selected: isDark,
-          onSelected: isDark ? null : (value) => _onSelected(context, 'dark'),
-          key: ValueKey<String>('dark_$isDark'),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: constraints.maxWidth < 280
+            ? <Widget>[
+                _ThemeChip.min(
+                  key: ValueKey<String>('min_light_$isDark'),
+                  selected: !isDark,
+                  themeCode: 'light',
+                  iconWidget: const Icon(Icons.light_mode),
+                ),
+                const SizedBox(width: 24),
+                _ThemeChip.min(
+                  key: ValueKey<String>('min_dark_$isDark'),
+                  selected: isDark,
+                  themeCode: 'dark',
+                  iconWidget: const Icon(Icons.dark_mode),
+                ),
+              ]
+            : <Widget>[
+                _ThemeChip(
+                  key: ValueKey<String>('expanded_light_$isDark'),
+                  selected: !isDark,
+                  themeCode: 'light',
+                  theme: context.localization.theme_scheme_light_mode,
+                  iconWidget: const Icon(Icons.light_mode),
+                ),
+                const SizedBox(width: 6),
+                _ThemeChip(
+                  key: ValueKey<String>('expanded_dark_$isDark'),
+                  selected: isDark,
+                  themeCode: 'dark',
+                  theme: context.localization.theme_scheme_dark_mode,
+                  iconWidget: const Icon(Icons.dark_mode),
+                ),
+              ],
+      ),
     );
   }
+}
 
-  void _onSelected(BuildContext context, String theme) => WidgetsBinding.instance?.addPostFrameCallback(
+@immutable
+class _ThemeChip extends StatelessWidget {
+  const _ThemeChip({
+    required this.themeCode,
+    required this.theme,
+    required this.selected,
+    this.iconWidget = const SizedBox.shrink(),
+    Key? key,
+  })  : expanded = true,
+        super(key: key);
+
+  const _ThemeChip.min({
+    required this.themeCode,
+    required this.selected,
+    this.iconWidget = const SizedBox.shrink(),
+    Key? key,
+  })  : expanded = false,
+        theme = '',
+        super(key: key);
+
+  final bool expanded;
+  final String themeCode;
+  final String theme;
+  final Widget iconWidget;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) => expanded
+      ? ChoiceChip(
+          label: SizedBox(
+            width: 80,
+            child: Center(
+              child: Text(theme),
+            ),
+          ),
+          avatar: iconWidget,
+          selected: selected,
+          onSelected: selected ? null : (_) => _onSelected(context),
+        )
+      : CircleAvatar(
+          backgroundColor: selected
+              ? Theme.of(context).chipTheme.secondarySelectedColor
+              : Theme.of(context).chipTheme.backgroundColor,
+          child: IconButton(
+            icon: iconWidget,
+            visualDensity: VisualDensity.standard,
+            onPressed: selected ? null : () => _onSelected(context),
+            color: Theme.of(context).iconTheme.color,
+          ),
+        );
+
+  void _onSelected(BuildContext context) => WidgetsBinding.instance?.addPostFrameCallback(
         (_) => SettingsScope.updateOf(
           context,
           settings: SettingsScope.settingsOf(context).copyWith(
-            theme: theme,
+            theme: themeCode,
           ),
         ),
       );
@@ -102,39 +160,65 @@ class _LanguageSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageCode = Localizations.localeOf(context).languageCode;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        _LocaleChip(
-          //key: ValueKey<String>('en_${languageCode == 'en'}'),
-          selected: languageCode == 'en',
-          languageCode: 'en',
-          language: context.localization.english,
-          iconWidget: const Padding(
-            padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
-            child: CustomPaint(
-              size: Size(24, 16),
-              painter: UsaFlagPainter(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 6),
-        _LocaleChip(
-          //key: ValueKey<String>('ru_${languageCode == 'ru'}'),
-          selected: languageCode == 'ru',
-          languageCode: 'ru',
-          language: context.localization.russian,
-          iconWidget: const Padding(
-            padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
-            child: CustomPaint(
-              size: Size(24, 16),
-              painter: RussiaFlagPainter(),
-            ),
-          ),
-        ),
-      ],
+    final isEn = languageCode == 'en';
+    final isRu = languageCode == 'ru';
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: constraints.maxWidth < 280
+            ? <Widget>[
+                _LocaleChip.min(
+                  key: ValueKey<String>('min_en_$isEn'),
+                  selected: isEn,
+                  languageCode: 'en',
+                  iconWidget: const CustomPaint(
+                    size: Size(24, 16),
+                    painter: UsaFlagPainter(),
+                  ),
+                ),
+                const SizedBox(width: 24),
+                _LocaleChip.min(
+                  key: ValueKey<String>('min_ru_$isRu'),
+                  selected: isRu,
+                  languageCode: 'ru',
+                  iconWidget: const CustomPaint(
+                    size: Size(24, 16),
+                    painter: RussiaFlagPainter(),
+                  ),
+                ),
+              ]
+            : <Widget>[
+                _LocaleChip(
+                  key: ValueKey<String>('expanded_en_$isEn'),
+                  selected: isEn,
+                  languageCode: 'en',
+                  language: context.localization.english,
+                  iconWidget: const Padding(
+                    padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                    child: CustomPaint(
+                      size: Size(24, 16),
+                      painter: UsaFlagPainter(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                _LocaleChip(
+                  key: ValueKey<String>('expanded_ru_$isRu'),
+                  selected: languageCode == 'ru',
+                  languageCode: 'ru',
+                  language: context.localization.russian,
+                  iconWidget: const Padding(
+                    padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                    child: CustomPaint(
+                      size: Size(24, 16),
+                      painter: RussiaFlagPainter(),
+                    ),
+                  ),
+                ),
+              ],
+      ),
     );
   }
 }
@@ -147,25 +231,48 @@ class _LocaleChip extends StatelessWidget {
     required this.selected,
     this.iconWidget = const SizedBox.shrink(),
     Key? key,
-  }) : super(key: key);
+  })  : expanded = true,
+        super(key: key);
+
+  const _LocaleChip.min({
+    required this.languageCode,
+    required this.selected,
+    this.iconWidget = const SizedBox.shrink(),
+    Key? key,
+  })  : language = '',
+        expanded = false,
+        super(key: key);
 
   final String languageCode;
   final String language;
   final Widget iconWidget;
+  final bool expanded;
   final bool selected;
 
   @override
-  Widget build(BuildContext context) => ChoiceChip(
-        label: SizedBox(
-          width: 80,
-          child: Center(
-            child: Text(language),
+  Widget build(BuildContext context) => expanded
+      ? ChoiceChip(
+          label: SizedBox(
+            width: 80,
+            child: Center(
+              child: Text(language),
+            ),
           ),
-        ),
-        avatar: iconWidget,
-        selected: selected,
-        onSelected: selected ? null : (_) => _updateLocale(context),
-      );
+          avatar: iconWidget,
+          selected: selected,
+          onSelected: selected ? null : (_) => _updateLocale(context),
+        )
+      : CircleAvatar(
+          backgroundColor: selected
+              ? Theme.of(context).chipTheme.secondarySelectedColor
+              : Theme.of(context).chipTheme.backgroundColor,
+          child: IconButton(
+            icon: iconWidget,
+            visualDensity: VisualDensity.standard,
+            onPressed: selected ? null : () => _updateLocale(context),
+            color: Theme.of(context).iconTheme.color,
+          ),
+        );
 
   void _updateLocale(BuildContext context) => SettingsScope.updateOf(
         context,

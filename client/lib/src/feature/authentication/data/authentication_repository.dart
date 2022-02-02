@@ -17,9 +17,9 @@ abstract class IAuthenticationRepository {
 }
 
 class AuthenticationRepository implements IAuthenticationRepository {
-  final FirebaseAuth _firebaseAuth;
-
   AuthenticationRepository({required final FirebaseAuth firebaseAuth}) : _firebaseAuth = firebaseAuth;
+
+  final FirebaseAuth _firebaseAuth;
 
   @override
   UserEntity get currentUser => _mapUserToUserEntity(_firebaseAuth.currentUser);

@@ -3,8 +3,11 @@ import 'dart:math' as math;
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
+import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
+import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class JobView extends StatelessWidget {
@@ -24,12 +27,21 @@ class JobView extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        body: SafeArea(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: FocusScope(
-              child: _JobContent(
-                job: job,
+        body: BlocListener<JobBLoC, JobState>(
+          listener: (context, state) => state.mapOrNull<void>(
+            error: (state) => ScaffoldMessenger.of(context).showSnackBar(
+              ErrorSnackBar(
+                error: state.message,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: FocusScope(
+                child: _JobContent(
+                  job: job,
+                ),
               ),
             ),
           ),

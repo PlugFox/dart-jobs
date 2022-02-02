@@ -5,6 +5,7 @@ import 'package:dart_jobs_client/src/common/router/analytics_navigator_observer.
 import 'package:dart_jobs_client/src/common/router/navigator_observer.dart';
 import 'package:dart_jobs_client/src/common/router/pages_builder.dart';
 import 'package:dart_jobs_client/src/common/router/router.dart';
+import 'package:dart_jobs_client/src/common/router/snackbars_for_global_scope.dart';
 import 'package:dart_jobs_client/src/common/widget/drawer_scope.dart';
 import 'package:dart_jobs_client/src/common/widget/statuses_overlay.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
@@ -43,35 +44,37 @@ class AppRouterDelegate extends RouterDelegate<IRouteConfiguration> with ChangeN
       child: AppRouter(
         routerDelegate: this,
         child: DrawerScope(
-          child: PagesBuilder(
-            configuration: configuration,
-            builder: (context, pages, child) => Banner(
+          child: SnackBarsForGlobalScope(
+            child: Banner(
               message: '${pubspec.major}.${pubspec.minor}.${pubspec.patch}-alfa',
               location: BannerLocation.topEnd,
               child: StatusesOverlay(
-                child: Navigator(
-                  /// TODO: возможность отключать анимации через настройки
-                  /// не только для транзишенов роутов, но и целиком для MaterialApp
-                  //transitionDelegate: platform.when<TransitionDelegate<void>>(
-                  //      web: () => const NoAnimationTransitionDelegate(),
-                  //    ) ??
-                  //    const DefaultTransitionDelegate<void>(),
-                  onUnknownRoute: _onUnknownRoute,
-                  reportsRouteUpdateToEngine: true,
-                  observers: <NavigatorObserver>[
-                    pageObserver,
-                    modalObserver,
-                    if (analytics != null) AnalyticsNavigatorObserver(analytics: analytics),
-                    if (expandedAnalytics) SentryNavigatorObserver(),
-                  ],
-                  pages: pages,
-                  onPopPage: (Route<Object?> route, Object? result) {
-                    if (!route.didPop(result)) {
-                      return false;
-                    }
-                    setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
-                    return true;
-                  },
+                child: PagesBuilder(
+                  configuration: configuration,
+                  builder: (context, pages, child) => Navigator(
+                    /// TODO: возможность отключать анимации через настройки
+                    /// не только для транзишенов роутов, но и целиком для MaterialApp
+                    //transitionDelegate: platform.when<TransitionDelegate<void>>(
+                    //      web: () => const NoAnimationTransitionDelegate(),
+                    //    ) ??
+                    //    const DefaultTransitionDelegate<void>(),
+                    onUnknownRoute: _onUnknownRoute,
+                    reportsRouteUpdateToEngine: true,
+                    observers: <NavigatorObserver>[
+                      pageObserver,
+                      modalObserver,
+                      if (analytics != null) AnalyticsNavigatorObserver(analytics: analytics),
+                      if (expandedAnalytics) SentryNavigatorObserver(),
+                    ],
+                    pages: pages,
+                    onPopPage: (Route<Object?> route, Object? result) {
+                      if (!route.didPop(result)) {
+                        return false;
+                      }
+                      setNewRoutePath(configuration.previous ?? const NotFoundRouteConfiguration());
+                      return true;
+                    },
+                  ),
                 ),
               ),
             ),
