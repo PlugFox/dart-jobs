@@ -52,6 +52,9 @@ class FeedState with _$FeedState {
         idle: (_) => false,
       );
 
+  /// Есть ошибка
+  bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
+
   /// Выполняется обработка/загрузка ленты старых записей
   /// [filter] - текущий отбор
   /// [list] - текущий список
