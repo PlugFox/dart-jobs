@@ -7,6 +7,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:l/l.dart';
 import 'package:sentry/sentry.dart';
 
@@ -46,34 +47,39 @@ void run() {
         cancelOnError: false,
       );
 
-  // Инициалзировать и запустить приложение
-  _initAndRunApp();
+  // Инициализировать и запустить приложение
+  FlutterNativeSplash.removeAfter(_initAndRunApp);
 }
 
-void _initAndRunApp() {
+Future<void> _initAndRunApp() {
+  final initializationCompleter = Completer<void>();
   final initBloc = InitializationBLoC(initializationHelper: InitializationHelper())
     ..add(const InitializationEvent.initialize());
   StreamSubscription<InitializationState>? initSub;
   initSub = initBloc.stream.listen(
     (state) => state.map<void>(
       initializationInProgress: (state) {
-        // инициализируется
+        // Инициализируется
       },
       error: (state) {
-        // произошла ошибка инициализации
+        // Произошла ошибка инициализации
         initSub?.cancel();
         initBloc.close();
+        initializationCompleter.completeError(state.error, StackTrace.current);
       },
       initialized: (state) {
-        // инициализировано
-        initSub?.cancel();
-        initBloc.close();
-
         // Запустить приложение
         App.run(repositoryStore: state.result);
+
+        // Инициализировано
+        initSub?.cancel();
+        initBloc.close();
+        scheduleMicrotask(initializationCompleter.complete);
       },
     ),
+    cancelOnError: false,
   );
+  return initializationCompleter.future;
 }
 
 void _onAuthStateChanges(User? user) {
