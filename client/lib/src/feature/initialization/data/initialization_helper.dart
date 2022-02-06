@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
 import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
+import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
 import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
@@ -160,6 +161,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
     }
     return progress.copyWith(newSettingsRepository: repository);
   },
+  'App navigation': (final progress) async => progress.copyWith(newRouterDelegate: AppRouterDelegate()),
   'Creating app metadata': (final store) async {
     final screenSize = ScreenUtil.screenSize();
     final appMetadata = AppMetadata(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
+import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
 import 'package:dart_jobs_client/src/feature/cloud_messaging/data/cloud_messaging_service.dart';
@@ -19,6 +20,7 @@ class InitializationProgress {
   final ISettingsRepository? settingsRepository;
   final IJobRepository? jobRepository;
   final IBugReportRepository? bugReportRepository;
+  final AppRouterDelegate? routerDelegate;
   final AppMetadata? appMetadata;
   final GQLClient? gqlClient;
 
@@ -31,6 +33,7 @@ class InitializationProgress {
     this.settingsRepository,
     this.jobRepository,
     this.bugReportRepository,
+    this.routerDelegate,
     this.appMetadata,
     this.gqlClient,
   });
@@ -46,6 +49,7 @@ class InitializationProgress {
     final ISettingsRepository? newSettingsRepository,
     final IJobRepository? newJobRepository,
     final IBugReportRepository? newBugReportRepository,
+    final AppRouterDelegate? newRouterDelegate,
     final AppMetadata? newAppMetadata,
     final GQLClient? newGQLClient,
   }) =>
@@ -57,6 +61,7 @@ class InitializationProgress {
         sharedPreferences: newSharedPreferences ?? sharedPreferences,
         settingsRepository: newSettingsRepository ?? settingsRepository,
         jobRepository: newJobRepository ?? jobRepository,
+        routerDelegate: newRouterDelegate ?? routerDelegate,
         appMetadata: newAppMetadata ?? appMetadata,
         bugReportRepository: newBugReportRepository ?? bugReportRepository,
         gqlClient: newGQLClient ?? gqlClient,
@@ -71,7 +76,8 @@ class InitializationProgress {
         settingsRepository: settingsRepository!,
         jobRepository: jobRepository!,
         bugReportRepository: bugReportRepository!,
-        appMetadata: appMetadata,
+        routerDelegate: routerDelegate!,
+        appMetadata: appMetadata!,
       );
 }
 
@@ -84,7 +90,8 @@ class RepositoryStore {
   final ISettingsRepository settingsRepository;
   final IJobRepository jobRepository;
   final IBugReportRepository bugReportRepository;
-  final AppMetadata? appMetadata;
+  final AppRouterDelegate routerDelegate;
+  final AppMetadata appMetadata;
 
   const RepositoryStore._({
     required this.analytics,
@@ -94,6 +101,7 @@ class RepositoryStore {
     required this.settingsRepository,
     required this.jobRepository,
     required this.bugReportRepository,
+    required this.routerDelegate,
     required this.appMetadata,
   });
 }

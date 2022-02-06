@@ -1,0 +1,13 @@
+[{
+  "relation": [
+    "delegate_permission/common.handle_all_urls"
+  ],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "dev.plugfox.dartjobs",
+    "sha256_cert_fingerprints": [
+      "f5:a6:2c:02:92:8b:bc:8d:7a:bb:b6:18:c1:58:a3:6d:92:da:86:28:6c:55:dd:36:df:d2:bb:04:ad:fe:9f:c9",
+      "bb:23:a8:38:4d:52:5e:ce:56:45:00:0c:9c:52:ed:c4:37:b6:a4:10:66:f3:14:a4:b5:0d:ab:fb:aa:d3:cf:3f"
+    ]
+  }
+}]
