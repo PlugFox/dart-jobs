@@ -8,9 +8,12 @@ import 'package:dart_jobs_client/runner_stub.dart'
     if (dart.library.html) 'package:dart_jobs_client/runner_web.dart' as runner;
 import 'package:dart_jobs_client/src/common/bloc/app_bloc_observer.dart';
 import 'package:dart_jobs_client/src/common/constant/environment.dart';
-import 'package:dart_jobs_client/src/common/constant/firebase_options.dart';
+import 'package:dart_jobs_client/src/common/constant/firebase_options.dart' as firebase_options;
 import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
+import 'package:dart_jobs_client/src/common/utils/authentication_observer.dart';
 import 'package:dart_jobs_client/src/common/utils/error_util.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/foundation.dart' show FlutterError, kReleaseMode;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
@@ -72,10 +75,41 @@ Future<void> _appRunner() async {
   WidgetsFlutterBinding.ensureInitialized();
   final ensureInitializedMs = stopwatchBeforeRunApp.elapsedMilliseconds;
 
+  // Инициализируем фаербейз
+  await _initFirebase();
+  final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
+
+  // Запуск приложения в зависимости от платформы
+  await BlocOverrides.runZoned<Future<void>>(
+    runner.run,
+    blocObserver: AppBlocObserver.instance,
+    eventTransformer: bloc_concurrency.sequential<Object?>(),
+  );
+
+  final elapsedMilliseconds = (stopwatchBeforeRunApp..stop()).elapsedMilliseconds;
+  if (elapsedMilliseconds > 2000) {
+    final initMessage = 'Инициализация приложения продлилась дольше предполагаемого: '
+        '${stopwatchBeforeRunApp.elapsedMilliseconds} мс\n'
+        'Отложенная инициализация заняла: $ensureInitializedMs мс\n'
+        'Инициализация Firebase заняла: $firebaseMs мс';
+    l.w(initMessage);
+    // ignore: unawaited_futures
+    FirebaseAnalytics.instance.logEvent(
+      name: 'long_initialization',
+      parameters: <String, Object>{
+        'duration': elapsedMilliseconds,
+      },
+    );
+    ErrorUtil.logMessage('Long Initialization', hint: initMessage, warning: false);
+  }
+}
+
+/// Инициализация фаербейза
+Future<void> _initFirebase() async {
   // Инициализировать Firebase
   l.vvvvvv('Инициализируем Firebase');
   await firebase_core.Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: firebase_options.DefaultFirebaseOptions.currentPlatform,
   ).then<void>(
     (final firebaseApp) => Future.wait<void>(
       <Future<void>>[
@@ -84,23 +118,8 @@ Future<void> _appRunner() async {
       ],
     ),
   );
-  final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
-
-  // Запуск приложения в зависимости от платформы
-  BlocOverrides.runZoned(
-    runner.run,
-    blocObserver: AppBlocObserver.instance,
-    eventTransformer: bloc_concurrency.sequential<Object?>(),
-  );
-
-  if ((stopwatchBeforeRunApp..stop()).elapsedMilliseconds > 2000) {
-    final initMessage = 'Инициализация приложения до вывода интерфейса продлилась дольше предполагаемого: '
-        '${stopwatchBeforeRunApp.elapsedMilliseconds} мс\n'
-        'Отложенная инициализация заняла: $ensureInitializedMs мс\n'
-        'Инициализация Firebase заняла: $firebaseMs мс';
-    l.w(initMessage);
-    ErrorUtil.logMessage('Long Initialization', hint: initMessage, warning: false);
-  }
+  // Устанавливаем идентификаторы и свойства пользователя
+  firebase_auth.FirebaseAuth.instance.observe();
 }
 
 /// Logs message formatting
