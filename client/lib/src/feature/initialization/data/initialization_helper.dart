@@ -97,7 +97,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   },
   'Get remote config': (final progress) async {
     try {
-      final config = RemoteConfig.instance;
+      final config = FirebaseRemoteConfig.instance;
       await config.setDefaults(<String, Object?>{});
       await config.fetch().timeout(const Duration(seconds: 1));
       config.getAll();

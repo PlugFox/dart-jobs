@@ -1,7 +1,6 @@
 import 'package:dart_jobs_client/src/app.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, FlutterError;
-import 'package:flutter/widgets.dart';
 import 'package:l/l.dart';
 
 /// Запуск приложения как io

@@ -10,6 +10,25 @@ class CloudMessagingScope extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  static void request(BuildContext context, {bool ifNotAlreadyRequested = false}) =>
+      BlocProvider.of<CloudMessagingBLoC>(context, listen: false).add(
+        CloudMessagingEvent.request(ifNotAlreadyRequested: ifNotAlreadyRequested),
+      );
+
+  static void check(BuildContext context) => BlocProvider.of<CloudMessagingBLoC>(context, listen: false).add(
+        const CloudMessagingEvent.check(),
+      );
+
+  static void subscribeToCreatedTopic(BuildContext context) =>
+      BlocProvider.of<CloudMessagingBLoC>(context, listen: false).add(
+        const CloudMessagingEvent.subscribeToCreatedTopic(),
+      );
+
+  static void unsubscribeToCreatedTopic(BuildContext context) =>
+      BlocProvider.of<CloudMessagingBLoC>(context, listen: false).add(
+        const CloudMessagingEvent.unsubscribeToCreatedTopic(),
+      );
+
   final Widget child;
 
   @override

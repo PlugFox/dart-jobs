@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:dart_jobs_client/src/common/constant/layout_constraints.dart';
 import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/feature/cloud_messaging/bloc/cloud_messaging_bloc.dart';
+import 'package:dart_jobs_client/src/feature/cloud_messaging/widget/cloud_messaging_scope.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/flags/russia_flag_painter.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/flags/usa_flag_painter.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/settings_scope.dart';
@@ -35,7 +36,7 @@ class SettingsList extends StatelessWidget {
               title: Text(context.localization.settings_app_language),
               subtitle: const _LanguageSelector(),
             ),
-            if (fcmState.notAuthorized && fcmState.isSupported) ...<Widget>[
+            if (fcmState.isSupported) ...<Widget>[
               const Divider(),
               const RequestFCMPermissions(),
             ],
@@ -297,8 +298,58 @@ class RequestFCMPermissions extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => TextButton(
-        onPressed: () => BlocProvider.of<CloudMessagingBLoC>(context).add(const CloudMessagingEvent.request()),
-        child: Text(context.localization.settings_app_allow_fcm),
+  Widget build(BuildContext context) => SettingsTile(
+        leading: const Icon(Icons.notifications),
+        title: Text(context.localization.settings_app_allow_fcm),
+        subtitle: Center(
+          child: BlocBuilder<CloudMessagingBLoC, CloudMessagingState>(
+            builder: (context, state) => state.isAuthorized
+                ? ToggleButtons(
+                    isSelected: const <bool>[
+                      false,
+                      false,
+                    ],
+                    constraints: const BoxConstraints(
+                      minWidth: 100,
+                      maxWidth: 150,
+                      minHeight: 35,
+                      maxHeight: 50,
+                    ),
+                    children: <Widget>[
+                      Text(
+                        context.localization.subscribe,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        context.localization.unsubscribe,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    onPressed: (idx) {
+                      switch (idx) {
+                        case 0:
+                          CloudMessagingScope.subscribeToCreatedTopic(context);
+                          break;
+                        case 1:
+                          CloudMessagingScope.unsubscribeToCreatedTopic(context);
+                          break;
+                      }
+                    },
+                  )
+                : TextButton(
+                    onPressed: () => CloudMessagingScope.request(context),
+                    child: Text(context.localization.settings_app_allow_fcm),
+                  ),
+          ),
+        ),
       );
+
+  // TextButton(
+  //   onPressed: () => BlocProvider.of<CloudMessagingBLoC>(context).add(const CloudMessagingEvent.request()),
+  //   child: Text(context.localization.settings_app_allow_fcm),
+  // )
 }

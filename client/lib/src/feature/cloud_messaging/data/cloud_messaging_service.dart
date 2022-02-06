@@ -1,3 +1,4 @@
+import 'package:dart_jobs_client/src/common/constant/environment.dart';
 import 'package:dart_jobs_client/src/common/constant/storage_namespace.dart';
 import 'package:dart_jobs_client/src/feature/cloud_messaging/model/notification_status.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +19,12 @@ abstract class ICloudMessagingService {
 
   /// Запросить разрешение на пуши
   Future<NotificationStatus> request({bool ifNotAlreadyRequested = false});
+
+  /// Подписаться на топик создания работы
+  Future<void> subscribeToCreatedTopic();
+
+  /// Отписаться от топика создания работы
+  Future<void> unsubscribeFromCreatedTopic();
 }
 
 class CloudMessagingServiceImpl implements ICloudMessagingService {
@@ -62,5 +69,15 @@ class CloudMessagingServiceImpl implements ICloudMessagingService {
     return settings.authorizationStatus == AuthorizationStatus.authorized
         ? const NotificationStatus.authorized()
         : const NotificationStatus.notAuthorized();
+  }
+
+  @override
+  Future<void> subscribeToCreatedTopic() async {
+    await FirebaseMessaging.instance.subscribeToTopic(kFCMNotificationTopicJobCreated);
+  }
+
+  @override
+  Future<void> unsubscribeFromCreatedTopic() async {
+    await FirebaseMessaging.instance.unsubscribeFromTopic(kFCMNotificationTopicJobCreated);
   }
 }

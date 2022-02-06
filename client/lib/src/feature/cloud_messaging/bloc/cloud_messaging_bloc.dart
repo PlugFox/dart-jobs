@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:dart_jobs_client/src/feature/cloud_messaging/data/cloud_messaging_service.dart';
 import 'package:dart_jobs_client/src/feature/cloud_messaging/model/notification_status.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:l/l.dart';
 
@@ -15,6 +16,7 @@ part 'cloud_messaging_bloc.freezed.dart';
 class CloudMessagingEvent with _$CloudMessagingEvent {
   const CloudMessagingEvent._();
 
+  /// Проверить разрешения
   @Implements<ICloudMessagingEvent>()
   @With<_ProcessingStateEmitter>()
   @With<_SuccessfulStateEmitter>()
@@ -22,12 +24,29 @@ class CloudMessagingEvent with _$CloudMessagingEvent {
   @With<_IdleStateEmitter>()
   const factory CloudMessagingEvent.check() = _CheckCloudMessagingEvent;
 
+  /// Запросить разрешения
   @Implements<ICloudMessagingEvent>()
   @With<_ProcessingStateEmitter>()
   @With<_SuccessfulStateEmitter>()
   @With<_ErrorStateEmitter>()
   @With<_IdleStateEmitter>()
   const factory CloudMessagingEvent.request({@Default(false) bool ifNotAlreadyRequested}) = _RequestCloudMessagingEvent;
+
+  /// Подписаться на топик создания работ
+  @Implements<ICloudMessagingEvent>()
+  @With<_ProcessingStateEmitter>()
+  @With<_SuccessfulStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory CloudMessagingEvent.subscribeToCreatedTopic() = _SubscribeToCreatedCloudMessagingEvent;
+
+  /// Отписаться от топика создания работ
+  @Implements<ICloudMessagingEvent>()
+  @With<_ProcessingStateEmitter>()
+  @With<_SuccessfulStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory CloudMessagingEvent.unsubscribeToCreatedTopic() = _UnsubscribeFromCreatedCloudMessagingEvent;
 }
 
 /* Состояния CloudMessagingState */
@@ -99,15 +118,34 @@ class CloudMessagingBLoC extends Bloc<CloudMessagingEvent, CloudMessagingState> 
       (event, emit) => event.map<Future<void>>(
         check: (event) => _check(event, emit),
         request: (event) => _request(event, emit),
+        subscribeToCreatedTopic: (event) => _subscribeToCreated(event, emit),
+        unsubscribeToCreatedTopic: (event) => _unsubscribeFromTopic(event, emit),
       ),
       transformer: bloc_concurrency.sequential(),
       //transformer: bloc_concurrency.restartable(),
       //transformer: bloc_concurrency.droppable(),
       //transformer: bloc_concurrency.concurrent(),
     );
+    final messaging = FirebaseMessaging.instance;
+    if (messaging.isSupported()) {
+      messaging.setAutoInitEnabled(true);
+      //messaging.getInitialMessage();
+      //messaging.getToken();
+      //messaging.getAPNSToken();
+      //messaging.onTokenRefresh
+      //FirebaseMessaging.onBackgroundMessage(onBackgroundMessageStaticCallback);
+      //FirebaseMessaging.onMessageOpenedApp.listen((event) { })
+      _onMessageSub = FirebaseMessaging.onMessage.listen(
+        (message) {
+          l.s('On firebase message: ${message.notification?.title ?? message.data.toString()}');
+        },
+        cancelOnError: false,
+      );
+    }
   }
 
   final ICloudMessagingService _service;
+  StreamSubscription? _onMessageSub;
 
   ///
   Future<void> _check(_CheckCloudMessagingEvent event, Emitter<CloudMessagingState> emit) async {
@@ -137,6 +175,53 @@ class CloudMessagingBLoC extends Bloc<CloudMessagingEvent, CloudMessagingState> 
     } finally {
       emit(event.idle(state: state));
     }
+  }
+
+  ///
+  Future<void> _subscribeToCreated(
+    _SubscribeToCreatedCloudMessagingEvent event,
+    Emitter<CloudMessagingState> emit,
+  ) async {
+    try {
+      emit(event.inProgress(state: state));
+      if (state.notAuthorized) {
+        final newStatus = await _service.request(ifNotAlreadyRequested: false);
+        if (newStatus.notAuthorized) return;
+        emit(event.successful(state: state, newStatus: newStatus));
+      }
+      await _service.subscribeToCreatedTopic();
+      emit(event.successful(state: state));
+    } on Object catch (err, stackTrace) {
+      l.e('В CloudMessagingBLoC произошла ошибка: $err', stackTrace);
+      emit(event.error(state: state, message: 'An error occurred'));
+      rethrow;
+    } finally {
+      emit(event.idle(state: state));
+    }
+  }
+
+  ///
+  Future<void> _unsubscribeFromTopic(
+    _UnsubscribeFromCreatedCloudMessagingEvent event,
+    Emitter<CloudMessagingState> emit,
+  ) async {
+    try {
+      emit(event.inProgress(state: state));
+      await _service.unsubscribeFromCreatedTopic();
+      emit(event.successful(state: state));
+    } on Object catch (err, stackTrace) {
+      l.e('В CloudMessagingBLoC произошла ошибка: $err', stackTrace);
+      emit(event.error(state: state, message: 'An error occurred'));
+      rethrow;
+    } finally {
+      emit(event.idle(state: state));
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _onMessageSub?.cancel();
+    return super.close();
   }
 }
 
