@@ -1,5 +1,6 @@
 import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs_client/src/feature/authentication/bloc/authentication_bloc.dart';
+import 'package:dart_jobs_client/src/feature/cloud_messaging/bloc/cloud_messaging_bloc.dart';
 import 'package:dart_jobs_client/src/feature/feed/bloc/feed_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,15 @@ class SnackBarsForGlobalScope extends StatelessWidget {
               error: error.message,
             ),
           ),
-          child: child,
+          child: BlocListener<CloudMessagingBLoC, CloudMessagingState>(
+            listener: (context, state) => state.mapOrNull<void>(
+              error: (error) => ErrorSnackBar.show(
+                context,
+                error: error.message,
+              ),
+            ),
+            child: child,
+          ),
         ),
       );
 }

@@ -5,7 +5,9 @@ import 'package:dart_jobs_client/src/common/utils/platform/error_util_io.dart'
     if (dart.library.html) 'package:dart_jobs_client/src/common/utils/platform/error_util_web.dart' as exceptions;
 import 'package:dart_jobs_shared/graphql.dart';
 import 'package:l/l.dart';
+import 'package:meta/meta.dart';
 
+@sealed
 abstract class ErrorUtil {
   ErrorUtil._();
 
@@ -36,6 +38,8 @@ abstract class ErrorUtil {
       l.e('Произошло исключение "$error" в ErrorUtil.logMessage', stackTrace);
     }
   }
+
+  static Never throwWithStackTrace(Object error, StackTrace stackTrace) => Error.throwWithStackTrace(error, stackTrace);
 
   // ignore: long-method
   static void logGraphQLError(

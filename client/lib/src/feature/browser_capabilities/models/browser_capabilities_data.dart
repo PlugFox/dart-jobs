@@ -1,6 +1,6 @@
 import 'package:dart_jobs_client/src/feature/browser_capabilities/models/browser_capabilities_data_io.dart'
     // ignore: uri_does_not_exist
-    if (dart.library.html) 'package:dart_jobs_client/src/feature/browser_capabilities/data/models/browser_capabilities_data_web.dart';
+    if (dart.library.html) 'package:dart_jobs_client/src/feature/browser_capabilities/models/browser_capabilities_data_web.dart';
 
 abstract class BrowserCapabilitiesData {
   bool get isBrowser;

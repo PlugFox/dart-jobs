@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/app_metadata.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
+import 'package:dart_jobs_client/src/feature/cloud_messaging/data/cloud_messaging_service.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_repository.dart';
 import 'package:dart_jobs_client/src/feature/settings/data/settings_repository.dart';
 import 'package:dart_jobs_shared/graphql.dart';
@@ -13,6 +14,7 @@ class InitializationProgress {
   final FirebaseAnalytics? analytics;
   final IAuthenticationRepository? authenticationRepository;
   final FirebaseFirestore? firebaseFirestore;
+  final ICloudMessagingService? cloudMessagingService;
   final SharedPreferences? sharedPreferences;
   final ISettingsRepository? settingsRepository;
   final IJobRepository? jobRepository;
@@ -24,6 +26,7 @@ class InitializationProgress {
     this.analytics,
     this.authenticationRepository,
     this.firebaseFirestore,
+    this.cloudMessagingService,
     this.sharedPreferences,
     this.settingsRepository,
     this.jobRepository,
@@ -38,6 +41,7 @@ class InitializationProgress {
     final FirebaseAnalytics? newAnalytics,
     final IAuthenticationRepository? newAuthenticationRepository,
     final FirebaseFirestore? newFirebaseFirestore,
+    final ICloudMessagingService? newCloudMessagingService,
     final SharedPreferences? newSharedPreferences,
     final ISettingsRepository? newSettingsRepository,
     final IJobRepository? newJobRepository,
@@ -49,6 +53,7 @@ class InitializationProgress {
         analytics: newAnalytics ?? analytics,
         authenticationRepository: newAuthenticationRepository ?? authenticationRepository,
         firebaseFirestore: newFirebaseFirestore ?? firebaseFirestore,
+        cloudMessagingService: newCloudMessagingService ?? cloudMessagingService,
         sharedPreferences: newSharedPreferences ?? sharedPreferences,
         settingsRepository: newSettingsRepository ?? settingsRepository,
         jobRepository: newJobRepository ?? jobRepository,
@@ -62,6 +67,7 @@ class InitializationProgress {
         analytics: analytics,
         authenticationRepository: authenticationRepository!,
         firebaseFirestore: firebaseFirestore!,
+        cloudMessagingService: cloudMessagingService!,
         settingsRepository: settingsRepository!,
         jobRepository: jobRepository!,
         bugReportRepository: bugReportRepository!,
@@ -74,6 +80,7 @@ class RepositoryStore {
   final FirebaseAnalytics? analytics;
   final IAuthenticationRepository authenticationRepository;
   final FirebaseFirestore firebaseFirestore;
+  final ICloudMessagingService cloudMessagingService;
   final ISettingsRepository settingsRepository;
   final IJobRepository jobRepository;
   final IBugReportRepository bugReportRepository;
@@ -83,6 +90,7 @@ class RepositoryStore {
     required this.analytics,
     required this.authenticationRepository,
     required this.firebaseFirestore,
+    required this.cloudMessagingService,
     required this.settingsRepository,
     required this.jobRepository,
     required this.bugReportRepository,

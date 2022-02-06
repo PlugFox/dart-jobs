@@ -10,6 +10,7 @@ import 'package:dart_jobs_client/src/common/utils/screen_util.dart';
 import 'package:dart_jobs_client/src/feature/authentication/data/authentication_repository.dart';
 import 'package:dart_jobs_client/src/feature/authentication/model/user_entity.dart';
 import 'package:dart_jobs_client/src/feature/bug_report/logic/bug_report_repository.dart';
+import 'package:dart_jobs_client/src/feature/cloud_messaging/data/cloud_messaging_service.dart';
 import 'package:dart_jobs_client/src/feature/initialization/data/app_migrator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/data/graphql_client_creator.dart';
 import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
@@ -96,7 +97,7 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
   },
   'Get remote config': (final progress) async {
     try {
-      final config = RemoteConfig.instance;
+      final config = FirebaseRemoteConfig.instance;
       await config.setDefaults(<String, Object?>{});
       await config.fetch().timeout(const Duration(seconds: 1));
       config.getAll();
@@ -116,6 +117,9 @@ final Map<String, FutureOr<InitializationProgress> Function(InitializationProgre
       ),
   'Initializing local keystore': (final progress) => SharedPreferences.getInstance().then<InitializationProgress>(
         (final sharedPreferences) => progress.copyWith(newSharedPreferences: sharedPreferences),
+      ),
+  'Adding cloud messaging service': (final progress) => progress.copyWith(
+        newCloudMessagingService: CloudMessagingServiceImpl(sharedPreferences: progress.sharedPreferences!),
       ),
   'Create a job repository': (final progress) async {
     final repository = JobRepositoryImpl(

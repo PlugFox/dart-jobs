@@ -33,3 +33,6 @@ const String kGraphQLEndpoint = String.fromEnvironment(
 
 /// Расширенная аналитика, если это не продуктовый релиз
 bool get expandedAnalytics => environment != 'production';
+
+/// Топик FCM для подписки на создание работы
+const String kFCMNotificationTopicJobCreated = 'job_created';
