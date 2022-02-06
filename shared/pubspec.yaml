@@ -1,11 +1,11 @@
 name: dart_jobs_shared
 description: Dart Jobs - shared entities
 publish_to: none
-version: 0.5.0
+version: 0.6.0
 # homepage: https://www.example.com
 
 environment:
-  sdk: ">=2.15.0-178.1.beta"
+  sdk: '>=2.16.0'
 
 dependencies:
   # Annotation & Code-generation

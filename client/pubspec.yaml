@@ -1,11 +1,11 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.5.3+1643782073
+version: 0.6.0+1643782073
 
 environment:
-  sdk: ">=2.15.1"
-  flutter: ">=2.8.1"
+  sdk: '>=2.16.0'
+  flutter: '>=2.10.0'
 
 dependencies:
   flutter:

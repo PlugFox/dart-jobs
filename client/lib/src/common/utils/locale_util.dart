@@ -27,10 +27,10 @@ abstract class LocaleUtil {
       AppLocalization.dateFormat(pattern, AppLocalization.localeOf(context)).format(date.toLocal());
 
   /// Получить локализованные строки в зависимости от текущего языка
-  Localized localizationOf(BuildContext context) => AppLocalization.localize(context);
+  static Localized localizationOf(BuildContext context) => AppLocalization.localize(context);
 
   /// Текущая локаль
-  Locale localeOf(BuildContext context) => AppLocalization.localeOf(context);
+  static Locale localeOf(BuildContext context) => AppLocalization.localeOf(context);
 
   /// Поддерживаемые локали
   static List<Locale> get supportedLocales => AppLocalization.supportedLocales;
