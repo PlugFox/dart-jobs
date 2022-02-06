@@ -7,11 +7,14 @@
     "public": "build/web",
     "ignore": [
       "firebase.json",
-      "**/.*",
       "**/node_modules/**"
     ],
     "appAssociation": "AUTO",
     "rewrites": [
+      {
+      "source": "!/.well-known/assetlinks.json",
+      "destination": "/index.html"
+      },
       {
         "source": "/link/**",
         "dynamicLinks": true
