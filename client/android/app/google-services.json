@@ -7,56 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:174403318860:android:d9554625313e2f288230e9",
-        "android_client_info": {
-          "package_name": "dev.plugfox.dartjobs"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "174403318860-8febsjk05jafs4u5ru5te1ilu7aiiv1b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "dev.plugfox.dartjobs",
-            "certificate_hash": "45e1c39af86039dfd430661f64c0f5348e731d4b"
-          }
-        },
-        {
-          "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDE8gu9EAmneynKOrubIZAr3sLJRRYpNNk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "174403318860-2sek0ujde5onovl9o2qjsbst2ut6iljn.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "dev.plugfox.dartjobs"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:174403318860:android:c87ac081c37ac39a8230e9",
         "android_client_info": {
           "package_name": "dev.plugfox.dartjobs"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "174403318860-512s394b27tbjlr3erro181tnvp4uk2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dartjobs",
+            "certificate_hash": "7067094a83fa516be43b69b9800720e89b9a1e1d"
+          }
+        },
         {
           "client_id": "174403318860-8sop6om3u6vu58st3b1s3785kabd0m2f.apps.googleusercontent.com",
           "client_type": 1,
@@ -86,7 +50,111 @@
               "client_id": "174403318860-2sek0ujde5onovl9o2qjsbst2ut6iljn.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "dev.plugfox.dartjobs"
+                "bundle_id": "dev.plugfox.dartjob"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174403318860:android:d505bf98c88607f48230e9",
+        "android_client_info": {
+          "package_name": "dev.plugfox.dartjobs.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174403318860-0fi4enmupcep2n5h956inrtcgvlns64f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dartjobs.dev",
+            "certificate_hash": "7067094a83fa516be43b69b9800720e89b9a1e1d"
+          }
+        },
+        {
+          "client_id": "174403318860-g3r9k226muc5qd85709gs4at5cicueq1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dartjobs.dev",
+            "certificate_hash": "45e1c39af86039dfd430661f64c0f5348e731d4b"
+          }
+        },
+        {
+          "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE8gu9EAmneynKOrubIZAr3sLJRRYpNNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "174403318860-2sek0ujde5onovl9o2qjsbst2ut6iljn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.plugfox.dartjob"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174403318860:android:65bc76e77b854a848230e9",
+        "android_client_info": {
+          "package_name": "dev.plugfox.dartjobs.stg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174403318860-6k2rou5u66guv9d5hlgn1s5p0684q9s7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dartjobs.stg",
+            "certificate_hash": "7067094a83fa516be43b69b9800720e89b9a1e1d"
+          }
+        },
+        {
+          "client_id": "174403318860-d0r2ba9g78vcbfmulcjb1d2s7gjolsm4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.plugfox.dartjobs.stg",
+            "certificate_hash": "45e1c39af86039dfd430661f64c0f5348e731d4b"
+          }
+        },
+        {
+          "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE8gu9EAmneynKOrubIZAr3sLJRRYpNNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174403318860-4pksrndnff5ppktu5o4c8nnnbrcrksr6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "174403318860-2sek0ujde5onovl9o2qjsbst2ut6iljn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.plugfox.dartjob"
               }
             }
           ]
