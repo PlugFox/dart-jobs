@@ -12,6 +12,7 @@ class AdaptiveScaffold extends StatefulWidget {
     final this.appBar,
     final this.maintainBottomViewPadding = false,
     final this.isRootPage = false,
+    final this.floatingActionButton,
     Key? key,
   }) : super(key: key);
 
@@ -30,6 +31,8 @@ class AdaptiveScaffold extends StatefulWidget {
   /// Шапка экрана
   /// Если AppBar не указан - верхний отступ у SafeArea использоваться не будет
   final PreferredSizeWidget? appBar;
+
+  final Widget? floatingActionButton;
 
   /// Specifies whether the SafeArea should maintain the MediaQueryData.viewPadding
   /// instead of the MediaQueryData.padding when consumed by the MediaQueryData.viewInsets
@@ -85,6 +88,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
               : const _DrawerCloser(
                   child: AppDrawer(),
                 ),
+          floatingActionButton: widget.floatingActionButton,
           body: SafeArea(
             top: widget.appBar != null,
             maintainBottomViewPadding: widget.maintainBottomViewPadding,

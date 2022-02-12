@@ -5,10 +5,12 @@ import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/widget/adaptive_scaffold.dart';
 import 'package:dart_jobs_client/src/common/widget/error_snackbar.dart';
 import 'package:dart_jobs_client/src/feature/job/bloc/job_bloc.dart';
+import 'package:dart_jobs_client/src/feature/job/widget/view/share_button.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Просмотр существующей работы
 @immutable
 class JobView extends StatelessWidget {
   const JobView({
@@ -27,6 +29,7 @@ class JobView extends StatelessWidget {
             maxLines: 1,
           ),
         ),
+        floatingActionButton: ShareButton(job: job),
         body: BlocListener<JobBLoC, JobState>(
           listener: (context, state) => state.mapOrNull<void>(
             error: (state) => ScaffoldMessenger.of(context).showSnackBar(
@@ -42,6 +45,39 @@ class JobView extends StatelessWidget {
                 child: _JobContent(
                   job: job,
                 ),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+/// Предпросмотр редактируемой работы
+@immutable
+class JobPreview extends StatelessWidget {
+  const JobPreview({
+    required final this.job,
+    Key? key,
+  }) : super(key: key);
+
+  final Job job;
+
+  @override
+  Widget build(BuildContext context) => AdaptiveScaffold(
+        appBar: AppBar(
+          leading: const BackButton(),
+          title: Text(
+            job.data.title,
+            maxLines: 1,
+          ),
+        ),
+        floatingActionButton: ShareButton(job: job),
+        body: SafeArea(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: FocusScope(
+              child: _JobContent(
+                job: job,
               ),
             ),
           ),
