@@ -76,11 +76,23 @@ class _ShareButtonState extends State<_ShareButton> with SingleTickerProviderSta
   }
   //endregion
 
+  void toggle() {
+    switch (_controller.status) {
+      case AnimationStatus.dismissed:
+      case AnimationStatus.reverse:
+        _controller.forward();
+        break;
+      case AnimationStatus.completed:
+      case AnimationStatus.forward:
+        _controller.reverse();
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, constraints) => SizedBox(
-          width: constraints.biggest.shortestSide,
-          height: constraints.biggest.shortestSide,
+        builder: (context, constraints) => SizedBox.square(
+          dimension: constraints.biggest.shortestSide,
           child: Align(
             alignment: Alignment.bottomRight,
             child: Flow(
@@ -88,18 +100,16 @@ class _ShareButtonState extends State<_ShareButton> with SingleTickerProviderSta
               children: <Widget>[
                 AnimatedBuilder(
                   animation: _controller,
-                  builder: (context, _) => AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 350),
-                    firstChild: FloatingActionButton(
-                      onPressed: _controller.reverse,
-                      backgroundColor: Colors.blueGrey,
-                      child: const Icon(Icons.close),
+                  builder: (context, _) => FloatingActionButton(
+                    onPressed: toggle,
+                    backgroundColor:
+                        opened ? Colors.blueGrey : Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                    child: AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 350),
+                      firstChild: const Icon(Icons.close),
+                      secondChild: const Icon(Icons.share),
+                      crossFadeState: opened ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                     ),
-                    secondChild: FloatingActionButton(
-                      onPressed: _controller.forward,
-                      child: const Icon(Icons.share),
-                    ),
-                    crossFadeState: opened ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                   ),
                 ),
                 ..._actions,
@@ -120,11 +130,12 @@ class _ShareButtonFlowDelegate extends FlowDelegate {
     final totalCount = context.childCount;
     if (totalCount == 0) return;
     const iconSize = _ShareButtonState._iconSize;
+    const padding = 12;
     const offset = iconSize * 1.75;
     final size = context.size;
 
-    final centerX = size.width - iconSize;
-    final centerY = size.height - iconSize;
+    final centerX = size.width - iconSize - padding;
+    final centerY = size.height - iconSize - padding;
 
     context.paintChild(
       0,

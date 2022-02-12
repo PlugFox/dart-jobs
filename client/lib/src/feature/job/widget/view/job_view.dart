@@ -29,7 +29,7 @@ class JobView extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        floatingActionButton: ShareButton(job: job),
+        customFAB: ShareButton(job: job),
         body: BlocListener<JobBLoC, JobState>(
           listener: (context, state) => state.mapOrNull<void>(
             error: (state) => ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +71,7 @@ class JobPreview extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        floatingActionButton: ShareButton(job: job),
+        customFAB: ShareButton(job: job),
         body: SafeArea(
           child: Align(
             alignment: Alignment.topCenter,
