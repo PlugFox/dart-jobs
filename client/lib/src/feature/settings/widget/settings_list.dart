@@ -36,10 +36,11 @@ class SettingsList extends StatelessWidget {
               title: Text(context.localization.settings_app_language),
               subtitle: const _LanguageSelector(),
             ),
-            if (fcmState.isSupported) ...<Widget>[
-              const Divider(),
-              const RequestFCMPermissions(),
-            ],
+            // Пока отключил пуши для всех платформ
+            //if (fcmState.isSupported) ...<Widget>[
+            //  const Divider(),
+            //  const RequestFCMPermissions(),
+            //],
             const Divider(),
           ],
         ),
