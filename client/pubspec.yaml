@@ -42,6 +42,7 @@ dependencies:
 
   # Utility & Helpers
   #connectivity_plus: ^2.2.0
+  share_plus: 3.0.4
   stack_trace: ^1.10.0
   sentry_flutter: 6.3.0
   sentry: 6.3.0
