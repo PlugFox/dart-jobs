@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_jobs_client/src/common/model/exceptions.dart';
+import 'package:dart_jobs_client/src/common/utils/error_util.dart';
 import 'package:dart_jobs_client/src/feature/job/data/job_network_data_provider.dart';
 import 'package:dart_jobs_shared/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -162,24 +163,30 @@ class JobRepositoryImpl implements IJobRepository {
 
   @override
   Future<JobFilter> restoreFilter() async {
-    final user = _firebaseAuth.currentUser;
-    JobFilter? filter;
-    if (user != null) {
-      final doc = _firestore.collection('users').doc(user.uid).collection('feed').doc('filter');
-      final snapshot = await doc.get();
-      final json = snapshot.data();
-      if (json != null) {
-        filter = JobFilter.fromJson(json);
+    JobFilter? newFilter;
+    String? uid;
+    try {
+      uid = _firebaseAuth.currentUser?.uid;
+      if (uid != null) {
+        final doc = _firestore.collection('users').doc(uid).collection('feed').doc('filter');
+        final snapshot = await doc.get();
+        final json = snapshot.data();
+        if (json != null) {
+          newFilter = JobFilter.fromJson(json);
+        }
       }
-    }
-    if (filter == null) {
-      final jsonRaw = _sharedPreferences.getString('feed.filter');
-      if (jsonRaw != null) {
-        final json = jsonDecode(jsonRaw) as Map<String, Object?>;
-        filter = JobFilter.fromJson(json);
+      if (newFilter == null) {
+        final jsonRaw = _sharedPreferences.getString('feed.filter');
+        if (jsonRaw != null) {
+          final json = jsonDecode(jsonRaw) as Map<String, Object?>;
+          newFilter = JobFilter.fromJson(json);
+        }
       }
+      return _filter = newFilter ?? const JobFilter();
+    } on Object catch (exception, stackTrace) {
+      ErrorUtil.logError(exception, stackTrace: stackTrace, hint: 'Ошибка восстановления фильтра пользователя');
+      return _filter = newFilter ?? const JobFilter();
     }
-    return _filter = filter ?? const JobFilter();
   }
 
   @override

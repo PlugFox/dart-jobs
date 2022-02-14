@@ -47,6 +47,10 @@
   "@unsubscribe": {
     "description": "Отписаться (Unsubscribe)"
   },
+  "share": "Share",
+  "@share": {
+    "description": "Поделиться (Share)"
+  },
   "next": "Next",
   "@next": {
     "description": "Далее"
