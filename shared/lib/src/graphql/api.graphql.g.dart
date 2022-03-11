@@ -7,6 +7,57 @@ part of 'api.graphql.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Recent$QueryRoot$Job _$Recent$QueryRoot$JobFromJson(
+        Map<String, dynamic> json) =>
+    Recent$QueryRoot$Job()
+      ..id = json['id'] as int
+      ..creatorId = json['creator_id'] as String
+      ..created = fromGraphQLTimestampToDartDateTime(json['created'] as String)
+      ..updated = fromGraphQLTimestampToDartDateTime(json['updated'] as String)
+      ..deletionMark = json['deletion_mark'] as bool
+      ..title = json['title'] as String
+      ..company = json['company'] as String
+      ..countryCode =
+          fromGraphQLBpcharToDartString(json['country_code'] as String)
+      ..address = json['address'] as String
+      ..remote = json['remote'] as bool
+      ..relocation =
+          fromGraphQLRelocationToDartRelocation(json['relocation'] as String)
+      ..employments = fromGraphQL$employmentToDartListEmployment(
+          json['employments'] as Object)
+      ..levels =
+          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
+
+Map<String, dynamic> _$Recent$QueryRoot$JobToJson(
+        Recent$QueryRoot$Job instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'creator_id': instance.creatorId,
+      'created': fromDartDateTimeToGraphQLTimestamp(instance.created),
+      'updated': fromDartDateTimeToGraphQLTimestamp(instance.updated),
+      'deletion_mark': instance.deletionMark,
+      'title': instance.title,
+      'company': instance.company,
+      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
+      'address': instance.address,
+      'remote': instance.remote,
+      'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
+      'employments':
+          fromDartListEmploymentToGraphQL$employment(instance.employments),
+      'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
+    };
+
+Recent$QueryRoot _$Recent$QueryRootFromJson(Map<String, dynamic> json) =>
+    Recent$QueryRoot()
+      ..jobRecent = (json['job_recent'] as List<dynamic>)
+          .map((e) => Recent$QueryRoot$Job.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$Recent$QueryRootToJson(Recent$QueryRoot instance) =>
+    <String, dynamic>{
+      'job_recent': instance.jobRecent.map((e) => e.toJson()).toList(),
+    };
+
 GetJob$QueryRoot$Job$JobDescriptionEnglish
     _$GetJob$QueryRoot$Job$JobDescriptionEnglishFromJson(
             Map<String, dynamic> json) =>
@@ -384,9 +435,9 @@ Map<String, dynamic> _$JobSetInputToJson(JobSetInput instance) =>
       'title': instance.title,
     };
 
-Recent$QueryRoot$Job _$Recent$QueryRoot$JobFromJson(
+CreateJob$MutationRoot$Job _$CreateJob$MutationRoot$JobFromJson(
         Map<String, dynamic> json) =>
-    Recent$QueryRoot$Job()
+    CreateJob$MutationRoot$Job()
       ..id = json['id'] as int
       ..creatorId = json['creator_id'] as String
       ..created = fromGraphQLTimestampToDartDateTime(json['created'] as String)
@@ -405,8 +456,8 @@ Recent$QueryRoot$Job _$Recent$QueryRoot$JobFromJson(
       ..levels =
           fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
 
-Map<String, dynamic> _$Recent$QueryRoot$JobToJson(
-        Recent$QueryRoot$Job instance) =>
+Map<String, dynamic> _$CreateJob$MutationRoot$JobToJson(
+        CreateJob$MutationRoot$Job instance) =>
     <String, dynamic>{
       'id': instance.id,
       'creator_id': instance.creatorId,
@@ -424,15 +475,18 @@ Map<String, dynamic> _$Recent$QueryRoot$JobToJson(
       'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
     };
 
-Recent$QueryRoot _$Recent$QueryRootFromJson(Map<String, dynamic> json) =>
-    Recent$QueryRoot()
-      ..jobRecent = (json['job_recent'] as List<dynamic>)
-          .map((e) => Recent$QueryRoot$Job.fromJson(e as Map<String, dynamic>))
+CreateJob$MutationRoot _$CreateJob$MutationRootFromJson(
+        Map<String, dynamic> json) =>
+    CreateJob$MutationRoot()
+      ..jobCreate = (json['job_create'] as List<dynamic>)
+          .map((e) =>
+              CreateJob$MutationRoot$Job.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$Recent$QueryRootToJson(Recent$QueryRoot instance) =>
+Map<String, dynamic> _$CreateJob$MutationRootToJson(
+        CreateJob$MutationRoot instance) =>
     <String, dynamic>{
-      'job_recent': instance.jobRecent.map((e) => e.toJson()).toList(),
+      'job_create': instance.jobCreate.map((e) => e.toJson()).toList(),
     };
 
 DeleteJob$MutationRoot$Job _$DeleteJob$MutationRoot$JobFromJson(
@@ -594,58 +648,32 @@ Map<String, dynamic> _$DeleteJob$MutationRootToJson(
       'update_job_tags': instance.updateJobTags?.toJson(),
     };
 
-CreateJob$MutationRoot$Job _$CreateJob$MutationRoot$JobFromJson(
-        Map<String, dynamic> json) =>
-    CreateJob$MutationRoot$Job()
-      ..id = json['id'] as int
-      ..creatorId = json['creator_id'] as String
-      ..created = fromGraphQLTimestampToDartDateTime(json['created'] as String)
-      ..updated = fromGraphQLTimestampToDartDateTime(json['updated'] as String)
-      ..deletionMark = json['deletion_mark'] as bool
-      ..title = json['title'] as String
-      ..company = json['company'] as String
-      ..countryCode =
-          fromGraphQLBpcharToDartString(json['country_code'] as String)
-      ..address = json['address'] as String
-      ..remote = json['remote'] as bool
-      ..relocation =
-          fromGraphQLRelocationToDartRelocation(json['relocation'] as String)
-      ..employments = fromGraphQL$employmentToDartListEmployment(
-          json['employments'] as Object)
-      ..levels =
-          fromGraphQL$levelToDartListDeveloperLevel(json['levels'] as Object);
+RecentArguments _$RecentArgumentsFromJson(Map<String, dynamic> json) =>
+    RecentArguments(
+      after: fromGraphQLTimestampToDartDateTime(json['after'] as String),
+      exclude: fromGraphQL$int4ToDartListint(json['exclude'] as Object),
+      remote: json['remote'] as bool?,
+      country: json['country'] as String?,
+      level: fromGraphQLLevelNullableToDartDeveloperLevelNullable(
+          json['level'] as String?),
+      employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
+          json['employment'] as String?),
+      relocation: json['relocation'] as bool?,
+      limit: json['limit'] as int,
+    );
 
-Map<String, dynamic> _$CreateJob$MutationRoot$JobToJson(
-        CreateJob$MutationRoot$Job instance) =>
+Map<String, dynamic> _$RecentArgumentsToJson(RecentArguments instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'creator_id': instance.creatorId,
-      'created': fromDartDateTimeToGraphQLTimestamp(instance.created),
-      'updated': fromDartDateTimeToGraphQLTimestamp(instance.updated),
-      'deletion_mark': instance.deletionMark,
-      'title': instance.title,
-      'company': instance.company,
-      'country_code': fromDartStringToGraphQLBpchar(instance.countryCode),
-      'address': instance.address,
+      'after': fromDartDateTimeToGraphQLTimestamp(instance.after),
+      'exclude': fromDartListintToGraphQL$int4(instance.exclude),
       'remote': instance.remote,
-      'relocation': fromDartRelocationToGraphQLRelocation(instance.relocation),
-      'employments':
-          fromDartListEmploymentToGraphQL$employment(instance.employments),
-      'levels': fromDartListDeveloperLevelToGraphQL$level(instance.levels),
-    };
-
-CreateJob$MutationRoot _$CreateJob$MutationRootFromJson(
-        Map<String, dynamic> json) =>
-    CreateJob$MutationRoot()
-      ..jobCreate = (json['job_create'] as List<dynamic>)
-          .map((e) =>
-              CreateJob$MutationRoot$Job.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$CreateJob$MutationRootToJson(
-        CreateJob$MutationRoot instance) =>
-    <String, dynamic>{
-      'job_create': instance.jobCreate.map((e) => e.toJson()).toList(),
+      'country': instance.country,
+      'level':
+          fromDartDeveloperLevelNullableToGraphQLLevelNullable(instance.level),
+      'employment': fromDartEmploymentNullableToGraphQLEmploymentNullable(
+          instance.employment),
+      'relocation': instance.relocation,
+      'limit': instance.limit,
     };
 
 GetJobArguments _$GetJobArgumentsFromJson(Map<String, dynamic> json) =>
@@ -709,44 +737,6 @@ Map<String, dynamic> _$UpdateJobArgumentsToJson(UpdateJobArguments instance) =>
           fromDartListNullableStringToGraphQL$textNullable(instance.skills),
     };
 
-RecentArguments _$RecentArgumentsFromJson(Map<String, dynamic> json) =>
-    RecentArguments(
-      after: fromGraphQLTimestampToDartDateTime(json['after'] as String),
-      exclude: fromGraphQL$int4ToDartListint(json['exclude'] as Object),
-      remote: json['remote'] as bool?,
-      country: json['country'] as String?,
-      level: fromGraphQLLevelNullableToDartDeveloperLevelNullable(
-          json['level'] as String?),
-      employment: fromGraphQLEmploymentNullableToDartEmploymentNullable(
-          json['employment'] as String?),
-      relocation: json['relocation'] as bool?,
-      limit: json['limit'] as int,
-    );
-
-Map<String, dynamic> _$RecentArgumentsToJson(RecentArguments instance) =>
-    <String, dynamic>{
-      'after': fromDartDateTimeToGraphQLTimestamp(instance.after),
-      'exclude': fromDartListintToGraphQL$int4(instance.exclude),
-      'remote': instance.remote,
-      'country': instance.country,
-      'level':
-          fromDartDeveloperLevelNullableToGraphQLLevelNullable(instance.level),
-      'employment': fromDartEmploymentNullableToGraphQLEmploymentNullable(
-          instance.employment),
-      'relocation': instance.relocation,
-      'limit': instance.limit,
-    };
-
-DeleteJobArguments _$DeleteJobArgumentsFromJson(Map<String, dynamic> json) =>
-    DeleteJobArguments(
-      id: json['id'] as int,
-    );
-
-Map<String, dynamic> _$DeleteJobArgumentsToJson(DeleteJobArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
 CreateJobArguments _$CreateJobArgumentsFromJson(Map<String, dynamic> json) =>
     CreateJobArguments(
       title: json['title'] as String,
@@ -783,4 +773,14 @@ Map<String, dynamic> _$CreateJobArgumentsToJson(CreateJobArguments instance) =>
           instance.levels),
       'skills':
           fromDartListNullableStringToGraphQL$textNullable(instance.skills),
+    };
+
+DeleteJobArguments _$DeleteJobArgumentsFromJson(Map<String, dynamic> json) =>
+    DeleteJobArguments(
+      id: json['id'] as int,
+    );
+
+Map<String, dynamic> _$DeleteJobArgumentsToJson(DeleteJobArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

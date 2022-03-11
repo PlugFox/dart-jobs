@@ -18,11 +18,11 @@ dependencies:
 
   # GraphQL
   http: ^0.13.4
-  gql: 0.13.1-alpha+1642769088298
+  gql: ^0.13.1-alpha+1645425888336
   gql_exec: 0.3.2-alpha+1635885531651
   gql_link: 0.4.2-alpha+1635885531659
   gql_dedupe_link: 2.0.2-alpha+1635885531760
-  artemis: 7.3.1-beta
+  artemis: ^7.3.2-beta
   #graphql: any
   #gql_http_link: ^0.4.0
 

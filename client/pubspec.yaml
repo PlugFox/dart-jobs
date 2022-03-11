@@ -1,7 +1,7 @@
 name: dart_jobs_client
 description: Dart Jobs
 publish_to: 'none'
-version: 0.6.0+1644171501
+version: 0.6.0+1647014449
 
 environment:
   sdk: '>=2.16.0'
@@ -14,63 +14,63 @@ dependencies:
     sdk: flutter
 
   # Localization
-  intl: ^0.17.0
+  intl: 0.17.0
 
   # Annotation & Code-generation
-  meta: ^1.7.0
+  meta: 1.7.0
   json_annotation: ^4.3.0
   freezed_annotation: ^1.0.0
 
   # State manager & Inversion of Control
-  bloc: ^8.0.2
-  flutter_bloc: ^8.0.1
-  bloc_concurrency: ^0.2.0
+  bloc: ^8.0.3
+  flutter_bloc: 8.0.1
+  bloc_concurrency: 0.2.0
 
   # Storage and SQL
   shared_preferences: 2.0.13
 
   # Firebase
-  firebase_core: 1.12.0
-  firebase_analytics: 9.1.0
-  firebase_auth: 3.3.6
-  cloud_firestore: 3.1.7
-  firebase_crashlytics: 2.5.0
-  firebase_performance: 0.8.0+5
-  firebase_remote_config: 2.0.0
-  firebase_messaging: ^11.2.6
-  firebase_dynamic_links: ^4.0.5
+  firebase_core: 1.13.1
+  firebase_analytics: 9.1.2
+  firebase_auth: 3.3.10
+  cloud_firestore: 3.1.10
+  firebase_crashlytics: 2.5.3
+  firebase_performance: 0.8.0+7
+  firebase_remote_config: 2.0.2
+  firebase_messaging: ^11.2.10
+  firebase_dynamic_links: ^4.1.0
 
   # Utility & Helpers
-  #connectivity_plus: ^2.2.0
-  share_plus: 3.0.4
-  stack_trace: ^1.10.0
+  #connectivity_plus: 2.2.0
+  share_plus: 3.1.0
+  stack_trace: 1.10.0
   sentry_flutter: 6.3.0
   sentry: 6.3.0
-  platform_info: ^3.1.0
-  platform_detect: ^2.0.3
-  l: ^3.0.1
-  url_launcher: ^6.0.3
-  path_provider: ^2.0.2
+  platform_info: 3.1.0
+  platform_detect: 2.0.3
+  l: ^3.1.0
+  url_launcher: ^6.0.20
+  path_provider: ^2.0.9
   path: ^1.7.0
-  #multiline: ^3.0.0
-  #geolocator: ^7.0.3
-  #permission_handler: ^8.0.0+2
+  #multiline: 3.0.0
+  #geolocator: 7.0.3
+  #permission_handler: 8.0.0+2
   async: ^2.6.1
-  collection: ^1.15.0
-  #money2: ^3.0.0-beta.6
-  fixnum: ^1.0.0
+  collection: 1.15.0
+  #money2: 3.0.0-beta.6
+  fixnum: 1.0.0
   dart_jobs_shared:
     path: ../shared
 
   # Transformers
-  rxdart: ^0.27.0
+  rxdart: ^0.27.3
 
   # Authentication
-  google_sign_in: ^5.0.3
+  google_sign_in: ^5.2.4
 
   # UI & Widgets
-  #google_fonts: ^2.1.0
-  #flutterfire_ui: ^0.2.0+2
+  #google_fonts: 2.1.0
+  #flutterfire_ui: 0.2.0+2
 
 dev_dependencies:
   flutter_test:
