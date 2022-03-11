@@ -1,3 +1,6 @@
+# docker build
+# docker pull registry.plugfox.dev/dart-jobs-jwt-validator-firebase
+
 # Base
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
