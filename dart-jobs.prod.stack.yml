@@ -1,4 +1,5 @@
 # Deploy:
+# docker login registry.plugfox.dev
 # make docker-build-prod
 # make docker-push-prod
 # docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
@@ -19,17 +20,17 @@ services:
     #restart: always
     environment:
       ## postgres database to store Hasura metadata
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/hasura
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://hasura:<PG DB PASSWORD>@postgres:5432/hasura
       ## Переменные с помощью которых можно добавить соединение с базой данных
-      HASURA_PG_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/hasura
-      DARTJOBS_PG_DATABASE_URL: postgres://hasura:jCOXM0tLMyEBeRuN9ddj7DbZ@postgres:5432/dart_jobs
+      HASURA_PG_DATABASE_URL: postgres://hasura:<PG DB PASSWORD>@postgres:5432/hasura
+      DARTJOBS_PG_DATABASE_URL: postgres://hasura:<PG DB PASSWORD>@postgres:5432/dart_jobs
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
-      HASURA_GRAPHQL_ADMIN_SECRET: 7E7B072W0we4pGRdA9p1kMsp
+      HASURA_GRAPHQL_ADMIN_SECRET: <ADMIN SECRET>
       ## Разрешить неавторизованный логин
       #HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       ## Аутентификация по средством внутреннего сервиса проверяющего JWT Firebase

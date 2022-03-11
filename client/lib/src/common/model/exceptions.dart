@@ -3,8 +3,10 @@ import 'package:meta/meta.dart';
 /// Исключение содержащее исходный StackTrace
 @immutable
 abstract class Throwable implements Exception {
+  Throwable([StackTrace? stackTrace]) : stackTrace = stackTrace ?? StackTrace.current;
+
   /// Исходный стектрейс
-  StackTrace get stackTrace;
+  final StackTrace stackTrace;
 }
 
 /// Не важные, предсказуемые исключения

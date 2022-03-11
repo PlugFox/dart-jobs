@@ -108,7 +108,7 @@ class _SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) => ElevatedButton(
         onPressed: () => JobBottomSheet.show(
           context: context,
-          height: 56 * 4,
+          height: 56 * 5,
           child: _ButtonsBottomSheet(
             reset: () {
               JobEditForm.reset(context);
@@ -116,15 +116,16 @@ class _SecondaryButton extends StatelessWidget {
               FocusScope.of(context).unfocus();
             },
             view: () {
-              FocusScope.of(context).unfocus();
               final jobData = JobEditForm.getJobDataOrNull(context);
               if (jobData == null) {
                 return;
               }
-              final job = BlocProvider.of<JobBLoC>(context).state.job.copyWith(data: jobData);
+              final job = BlocProvider.of<JobBLoC>(context, listen: false).state.job.copyWith(data: jobData);
+              FocusScope.of(context).unfocus();
               AppRouter.push(
                 context,
-                (context) => JobView(job: job),
+                (context) => JobPreview(job: job),
+                name: 'job_preview',
               );
             },
           ),
@@ -184,7 +185,7 @@ class _ButtonsBottomSheet extends StatelessWidget {
           onTap: view,
         ),
 
-        /// Поднять в выдаче
+        /// Поднять в выдаче (активно только если работа уже создана)
         ListTile(
           contentPadding: contentPadding,
           enabled: false,
@@ -192,11 +193,19 @@ class _ButtonsBottomSheet extends StatelessWidget {
           onTap: null,
         ),
 
-        /// Удалить
+        /// Удалить (активно только если работа уже создана)
         ListTile(
           contentPadding: contentPadding,
           enabled: false,
           title: Text(context.localization.job_button_delete),
+          onTap: null,
+        ),
+
+        /// Поделится (активно только если работа уже создана)
+        ListTile(
+          contentPadding: contentPadding,
+          enabled: false,
+          title: Text(context.localization.share),
           onTap: null,
         ),
       ],

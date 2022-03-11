@@ -14,27 +14,27 @@ services:
       context: ./
       dockerfile: ./dockerfiles/jwt_validator_firebase.dockerfile
 
-  site:
-    hostname: dart-jobs-site
-    container_name: dart-jobs-site
-    image: registry.plugfox.dev/dart-jobs-site
-    restart: unless-stopped
-    ports:
-      - '80:80'
-    build:
-      context: ./
-      dockerfile: dockerfiles/site.dockerfile
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-    deploy:
-      replicas: 1
-      resources:
-        reservations:
-          cpus: '0.10'
-          memory: 64M
-        limits:
-          cpus: '0.25'
-          memory: 256M
+  #site:
+  #  hostname: dart-jobs-site
+  #  container_name: dart-jobs-site
+  #  image: registry.plugfox.dev/dart-jobs-site
+  #  restart: unless-stopped
+  #  ports:
+  #    - '80:80'
+  #  build:
+  #    context: ./
+  #    dockerfile: dockerfiles/site.dockerfile
+  #  healthcheck:
+  #    test: ["CMD", "curl", "-f", "http://localhost:80"]
+  #    interval: 60s
+  #    timeout: 10s
+  #    retries: 3
+  #  deploy:
+  #    replicas: 1
+  #    resources:
+  #      reservations:
+  #        cpus: '0.10'
+  #        memory: 64M
+  #      limits:
+  #        cpus: '0.25'
+  #        memory: 256M

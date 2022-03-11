@@ -61,6 +61,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <link href="/.well-known/assetlinks.json">
 
   <!-- Manifest -->
   <link rel="manifest" href="/manifest.json">
@@ -220,6 +221,8 @@
     if ('serviceWorker' in navigator) {
       // Service workers are supported. Use them.
       window.addEventListener('load', function () {
+        //register firebase-messaging service worker
+        navigator.serviceWorker.register("/js/firebase-messaging-sw.js");
         // Wait for registration to finish before dropping the <script> tag.
         // Otherwise, the browser will load the script multiple times,
         // potentially different versions.

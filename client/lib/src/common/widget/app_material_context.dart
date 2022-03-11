@@ -2,7 +2,7 @@ import 'package:dart_jobs_client/src/common/localization/localizations.dart';
 import 'package:dart_jobs_client/src/common/router/configuration.dart';
 import 'package:dart_jobs_client/src/common/router/information_parser.dart';
 import 'package:dart_jobs_client/src/common/router/information_provider.dart';
-import 'package:dart_jobs_client/src/common/router/router_delegate.dart';
+import 'package:dart_jobs_client/src/feature/initialization/widget/repository_scope.dart';
 import 'package:dart_jobs_client/src/feature/settings/widget/settings_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,12 +20,10 @@ class AppMaterialContext extends StatefulWidget {
 class _AppMaterialContextState extends State<AppMaterialContext> {
   final RouteInformationParser<IRouteConfiguration> _routeInformationParser = const AppRouteInformationParser();
   final AppInformationProvider _routeInformationProvider = AppInformationProvider();
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate();
 
   @override
   void dispose() {
     _routeInformationProvider.dispose();
-    _routerDelegate.dispose();
     super.dispose();
   }
 
@@ -39,7 +37,7 @@ class _AppMaterialContextState extends State<AppMaterialContext> {
       theme: themeData,
       onGenerateTitle: (final context) => context.localization.title,
       restorationScopeId: 'app',
-      routerDelegate: _routerDelegate,
+      routerDelegate: RepositoryScope.of(context).routerDelegate,
       routeInformationParser: _routeInformationParser,
       routeInformationProvider: _routeInformationProvider,
       localeResolutionCallback: (final deviceLocale, final supportedLocales) {

@@ -31,6 +31,26 @@
   "@selected": {
     "description": "Выбрано"
   },
+  "enable": "Enable",
+  "@enable": {
+    "description": "Включить (Enable)"
+  },
+  "disable": "Disable",
+  "@disable": {
+    "description": "Выключить (Disable)"
+  },
+  "subscribe": "Subscribe",
+  "@subscribe": {
+    "description": "Подписаться (Subscribe)"
+  },
+  "unsubscribe": "Unsubscribe",
+  "@unsubscribe": {
+    "description": "Отписаться (Unsubscribe)"
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Поделиться (Share)"
+  },
   "next": "Next",
   "@next": {
     "description": "Далее"
@@ -74,6 +94,14 @@
   "settings_app_language": "Language",
   "@settings_app_language": {
     "description": "Язык приложения"
+  },
+  "settings_app_allow_fcm": "Allow notifications",
+  "@settings_app_allow_fcm": {
+    "description": "Разрешить уведомления"
+  },
+  "settings_app_notification_new_job": "Уведомления о новых вакансиях",
+  "@settings_app_notification_new_job": {
+    "description": "Уведомления о новых вакансиях (Notifications about new vacancies)"
   },
   "profile": "Profile",
   "@profile": {
