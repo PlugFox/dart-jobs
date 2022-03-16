@@ -1,5 +1,5 @@
 # DART JOBS
-[![Build & Deploy](https://github.com/PlugFox/dart-jobs/actions/workflows/build-and-deploy.yml/badge.svg?branch=master)](https://github.com/PlugFox/dart-jobs/actions/workflows/build-and-deploy.yml)
+[![CLIENT / DEPLOY](https://github.com/PlugFox/dart-jobs/actions/workflows/client_deploy_production.yml/badge.svg)](https://github.com/PlugFox/dart-jobs/actions/workflows/client_deploy_production.yml)
 [![Effective Dart](https://img.shields.io/badge/Style-effective_dart-40c4ff.svg)](https://github.com/tenhobi/effective_dart)
 [![License: Proprietary](https://img.shields.io/badge/License-proprietary-red.svg)](https://en.wikipedia.org/wiki/Proprietary_software)
 [![Localizely](https://img.shields.io/badge/Localizely-projects-ab47bc.svg)](https://app.localizely.com/projects/)
