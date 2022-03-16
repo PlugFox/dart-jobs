@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     container:
-      image: plugfox/flutter:2.10.0
+      image: plugfox/flutter:2.10.3
       options: --user root
     env:
       working-directory: ./client

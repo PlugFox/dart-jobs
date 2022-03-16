@@ -129,3 +129,4 @@ Logs/
 
 .vs/*
 /server/jwt_validator_firebase/.vs/*
+/server/jwt_validator_firebase/JwtValidatorFirebase/dart-job-jwt-validator-firebase.json
