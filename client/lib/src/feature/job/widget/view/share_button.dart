@@ -44,9 +44,9 @@ class _ShareButtonState extends State<_ShareButton> with SingleTickerProviderSta
   late final FlowDelegate _flowDelegate;
 
   final List<Widget> _actions = <Widget>[
-    _ShareText(),
-    _CopyText(),
-    if (platform.isIO && platform.isMobile) _ShareQR(),
+    const _ShareText(),
+    const _CopyText(),
+    if (platform.isIO && platform.isMobile) const _ShareQR(),
   ];
 
   bool get opened {
@@ -182,7 +182,7 @@ class _ShareText extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton(
+  Widget build(BuildContext context) => _FloatingRadialButton(
         onPressed: () async {
           try {
             final job = context.findAncestorWidgetOfExactType<ShareButton>()?.job;
@@ -205,7 +205,7 @@ class _CopyText extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton(
+  Widget build(BuildContext context) => _FloatingRadialButton(
         onPressed: () async {
           try {
             final job = context.findAncestorWidgetOfExactType<ShareButton>()?.job;
@@ -230,7 +230,7 @@ class _ShareQR extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton(
+  Widget build(BuildContext context) => _FloatingRadialButton(
         onPressed: () async {
           try {
             final job = context.findAncestorWidgetOfExactType<ShareButton>()?.job;
@@ -341,4 +341,27 @@ String _getText(Job job, Localized localized) {
     ..writeln()
     ..writeln('https://dartjob.dev/#feed/job-${job.id}');
   return buffer.toString();
+}
+
+@immutable
+class _FloatingRadialButton extends StatelessWidget {
+  const _FloatingRadialButton({
+    required this.child,
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  final Widget child;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => CircleAvatar(
+        radius: 28,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: IconButton(
+          icon: Center(child: child),
+          onPressed: onPressed,
+          padding: EdgeInsets.zero,
+        ),
+      );
 }
