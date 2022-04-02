@@ -1,5 +1,5 @@
 # docker build
-# docker pull registry.plugfox.dev/dart-jobs-jwt-validator-firebase
+# docker pull registry.plugfox.dev/dart-job-auth
 
 # Base
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
@@ -27,7 +27,7 @@ COPY --from=publish /app/publish .
 ADD server/jwt_validator_firebase/JwtValidatorFirebase/dart-job-jwt-validator-firebase.json dart-job-jwt-validator-firebase.json
 
 # Add lables
-LABEL name="registry.plugfox.dev/dart-jobs-jwt-validator-firebase" \
+LABEL name="registry.plugfox.dev/dart-job-auth" \
       vcs-url="https://github.com/PlugFox/dart-jobs" \
       github="https://github.com/PlugFox/dart-jobs" \
       maintainer="Plague Fox <plugfox@gmail.com>" \

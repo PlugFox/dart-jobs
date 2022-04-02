@@ -22,22 +22,18 @@ upgrade: get
 
 build-server:
 	@echo "Build release docker images"
-	docker-compose -f ./dart-jobs.prod.compose.yml build --no-cache --force-rm --compress --parallel
+	@docker-compose -f ./docker-compose.yml build --no-cache --force-rm --compress --parallel
 
 push-server:
 	@echo "Push release docker images"
-	docker-compose -f ./dart-jobs.prod.compose.yml push
+	@docker-compose -f ./docker-compose.yml push
 
 start-server:
 	@echo "Run local server"
-	docker-compose -f ./dart-jobs.prod.compose.yml up --detach
+	@docker-compose -f ./docker-compose.yml up --detach
 
 stop-server:
 	@echo "Stop local server"
-	docker-compose -f ./dart-jobs.prod.compose.yml down
-
-redeploy-server:
-	@echo "Deploy release into docker swarm"
-	docker --log-level debug --host "ssh://pfx@api.plugfox.dev" stack deploy --compose-file ./dart-jobs.prod.stack.yml --orchestrator swarm --prune --with-registry-auth dart-jobs-prod
+	@docker-compose -f ./docker-compose.yml down
 
 build-and-push-server: build-server push-server

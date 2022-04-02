@@ -2,8 +2,8 @@ name: CLIENT / DEPLOY
 
 
 on:
-  workflow_dispatch:
 # Только ручной деплой в продакшен по кнопке:
+  workflow_dispatch:
 #  push:
 #    branches:
 #      - master

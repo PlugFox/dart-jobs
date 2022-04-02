@@ -1,20 +1,34 @@
-# docker compose -f ./dart-jobs.prod.compose.yml up -d site
+# docker compose -f ./docker-compose.yml up -d dart-job-auth
 
 version: '3.9'
 
 services:
-  dart-jobs-jwt-validator-firebase:
-    hostname: 'dart-jobs-jwt-validator-firebase'
-    container_name: 'dart-jobs-jwt-validator-firebase'
-    image: registry.plugfox.dev/dart-jobs-jwt-validator-firebase
+  dart-job-auth:
+    hostname: dart-jobs-auth
+    container_name: dart-job-auth
+    image: registry.plugfox.dev/dart-job-auth:v1.0.0
     restart: unless-stopped
     ports:
       - '888:80'
+    #command:
+    #  - dotnet JwtValidatorFirebase.dll
+    #healthcheck:
+    #  test: curl --fail -s http://127.0.0.1:80/healthcheck || exit 1
+    #  interval: 30s
+    #  timeout: 15s
+    #  retries: 3
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        failure_action: rollback
+        parallelism: 1
+        delay: 10s
     build:
       context: ./
-      dockerfile: ./dockerfiles/jwt_validator_firebase.dockerfile
+      dockerfile: ./dockerfiles/dart-job-auth.dockerfile
 
-  #site:
+  #dart-jobs-site:
   #  hostname: dart-jobs-site
   #  container_name: dart-jobs-site
   #  image: registry.plugfox.dev/dart-jobs-site
