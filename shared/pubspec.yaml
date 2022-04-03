@@ -22,12 +22,12 @@ dependencies:
   gql_exec: 0.3.2-alpha+1635885531651
   gql_link: 0.4.2-alpha+1635885531659
   gql_dedupe_link: 2.0.2-alpha+1635885531760
-  artemis: ^7.3.2-beta
+  artemis: ^7.5.0-beta
   #graphql: any
   #gql_http_link: ^0.4.0
 
   # Utils
-  sentry: 6.3.0
+  sentry: ^6.4.0
   l: ^3.0.1
   #path: ^1.8.0
   #fixnum: ^1.0.0

@@ -36,7 +36,7 @@ upgrade-major: get
 	@flutter pub upgrade --major-versions
 
 outdated:
-	@flutter pub outdated
+	@flutter pub outdated --transitive --show-all --dev-dependencies --dependency-overrides
 
 codegen: get
 	@echo "Running codegeneration"
@@ -47,10 +47,16 @@ codegen: get
 build: codegen build-site
 
 build-site:
-	@flutter build web --release --no-source-maps --pwa-strategy offline-first --web-renderer auto --base-href /
+	@flutter build web --release --no-source-maps --pwa-strategy \
+		offline-first --web-renderer auto --base-href / \
+		--dart-define=environment=production
 
 deploy:
 	@firebase deploy
 
-serve:
+serve-firebase:
 	@firebase serve --only hosting -p 80
+
+serve-flutter: codegen
+	@echo "Serve as web app"
+	flutter run -d web-server --dart-define=environment=development

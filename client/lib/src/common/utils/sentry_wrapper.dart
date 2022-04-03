@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:dart_jobs_client/src/common/constant/environment.dart';
-import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart' as pubspec;
+import 'package:dart_jobs_client/src/common/constant/pubspec.yaml.g.dart'
+    as pubspec;
 import 'package:dart_jobs_client/src/common/utils/error_util.dart';
 import 'package:l/l.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -14,12 +15,14 @@ abstract class SentryUtil {
         () async {
           await SentryFlutter.init(
             (options) => options
-              ..dsn = 'https://eb1d8e1345ab4892aebbf4af76bb714a@sentry.plugfox.dev/1'
+              ..dsn = kSentryEndpoint
               ..release = pubspec.version
               ..environment = environment
               ..maxBreadcrumbs = 100
               ..attachStacktrace = true
-              ..tracesSampleRate = 1
+              // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+              // We recommend adjusting this value in production.
+              ..tracesSampleRate = 1.0
               ..debug = false,
           );
           _loggerToSentryBreadcrumb();
@@ -82,3 +85,33 @@ abstract class SentryUtil {
         cancelOnError: false,
       );
 }
+
+
+/*
+import 'package:sentry/sentry.dart';
+
+final transaction = Sentry.startTransaction('processOrderBatch()', 'task');
+
+try {
+  await processOrderBatch(transaction);
+} catch (exception) {
+  transaction.throwable = exception;
+  transaction.status = SpanStatus.internalError();
+} finally {
+  await transaction.finish();
+}
+
+Future<void> processOrderBatch(ISentrySpan span) async {
+  // span operation: task, span description: operation
+  final innerSpan = span.startChild('task', description: 'operation');
+
+  try {
+    // omitted code
+  } catch (exception) {
+    innerSpan.throwable = exception;
+    innerSpan.status = SpanStatus.notFound();
+  } finally {
+    await innerSpan.finish();
+  }
+}
+*/

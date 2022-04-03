@@ -18,7 +18,10 @@ import 'package:l/l.dart';
 void main() => l.capture<void>(
       () => SentryUtil.wrap(_appRunner),
       const LogOptions(
-        outputInRelease: bool.fromEnvironment('show_logs', defaultValue: false),
+        outputInRelease: bool.fromEnvironment(
+          'show_logs',
+          defaultValue: false,
+        ),
         messageFormatting: _messageFormatting,
         handlePrint: true,
       ),
@@ -44,15 +47,18 @@ Future<void> _appRunner() async {
 
   // Инициализируем фаербейз
   await FirebaseInitializer.initialize();
-  final firebaseMs = stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
+  final firebaseMs =
+      stopwatchBeforeRunApp.elapsedMilliseconds - ensureInitializedMs;
 
   // Запуск приложения в зависимости от платформы
   await AppBlocObserver.runZoned(runner.run);
 
-  final elapsedMilliseconds = (stopwatchBeforeRunApp..stop()).elapsedMilliseconds;
+  final elapsedMilliseconds =
+      (stopwatchBeforeRunApp..stop()).elapsedMilliseconds;
 
   if (elapsedMilliseconds > 2000) {
-    final initMessage = 'Инициализация приложения продлилась дольше предполагаемого: '
+    final initMessage =
+        'Инициализация приложения продлилась дольше предполагаемого: '
         '${stopwatchBeforeRunApp.elapsedMilliseconds} мс\n'
         'Отложенная инициализация заняла: $ensureInitializedMs мс\n'
         'Инициализация Firebase заняла: $firebaseMs мс';
@@ -62,12 +68,17 @@ Future<void> _appRunner() async {
       name: 'long_initialization',
       parameters: <String, Object>{'duration': elapsedMilliseconds},
     );
-    ErrorUtil.logMessage('Long Initialization', hint: initMessage, warning: false);
+    ErrorUtil.logMessage(
+      'Long Initialization',
+      hint: initMessage,
+      warning: false,
+    );
   }
 }
 
 /// Logs message formatting
-Object _messageFormatting(Object message, LogLevel logLevel, DateTime dt) => '${dt.hour.toString().padLeft(2, '0')}:'
+Object _messageFormatting(Object message, LogLevel logLevel, DateTime dt) =>
+    '${dt.hour.toString().padLeft(2, '0')}:'
     '${dt.minute.toString().padLeft(2, '0')}:'
     '${dt.second.toString().padLeft(2, '0')} '
     '$message';
