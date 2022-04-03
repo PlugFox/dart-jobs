@@ -25,10 +25,17 @@ const bool kFake = bool.fromEnvironment(
   defaultValue: false,
 );
 
-/// Эндпоинт графкл
+/// Эндпоинт graphql
 const String kGraphQLEndpoint = String.fromEnvironment(
   'graphql',
-  defaultValue: 'https://job.api.plugfox.dev/v1/graphql',
+  defaultValue: 'https://api.dartjob.dev/v1/graphql',
+);
+
+/// Эндпоинт sentry
+const String kSentryEndpoint = String.fromEnvironment(
+  'sentry',
+  defaultValue:
+      'https://ca4fedc846d846a09bdcb7db9e643dce@o1186838.ingest.sentry.io/6306648',
 );
 
 /// Расширенная аналитика, если это не продуктовый релиз

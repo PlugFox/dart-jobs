@@ -2,12 +2,12 @@
 # docker pull registry.plugfox.dev/dart-job-auth
 
 # Base
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80/tcp
 
 # Build
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY server/jwt_validator_firebase/JwtValidatorFirebase/JwtValidatorFirebase.csproj JwtValidatorFirebase/
 RUN dotnet restore "JwtValidatorFirebase/JwtValidatorFirebase.csproj"

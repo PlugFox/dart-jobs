@@ -6,10 +6,13 @@ services:
   dart-job-auth:
     hostname: dart-jobs-auth
     container_name: dart-job-auth
-    image: registry.plugfox.dev/dart-job-auth:v1.0.0
+    image: registry.plugfox.dev/dart-job-auth:latest
     restart: unless-stopped
-    ports:
-      - '888:80'
+    networks:
+      - internal
+      - traefik-public
+    #ports:
+    #  - '888:80'
     #command:
     #  - dotnet JwtValidatorFirebase.dll
     #healthcheck:

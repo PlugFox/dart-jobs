@@ -10,19 +10,23 @@ using Google.Apis.Auth.OAuth2;
 using JwtValidatorFirebase.Enums;
 using JwtValidatorFirebase.Interfaces;
 using JwtValidatorFirebase.Models;
+using Microsoft.Extensions.Logging;
 
 namespace JwtValidatorFirebase.Services
 {
     public class JwtValidatorService : IJwtValidatorService, IDisposable
     {
-        public const string TokenHeaderName = "Authorization";
+        public const string kTokenHeaderName = "Authorization";
         private ConcurrentDictionary<string, ValidatorResponse> ResponseCache { get; set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Task _clearTask;
         private readonly ValidatorResponse _anonymousUser;
+        private readonly ILogger<JwtValidatorService> _logger;
 
-        public JwtValidatorService()
+        public JwtValidatorService(ILogger<JwtValidatorService> logger)
         {
+            _logger = logger;
+
             _anonymousUser = new ValidatorResponse();
             _anonymousUser.SetAnonymous();
 
@@ -90,7 +94,10 @@ namespace JwtValidatorFirebase.Services
             }
             catch (FirebaseAdmin.Auth.FirebaseAuthException e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogWarning(e, "Firebase validation failed");
+                #if DEBUG
+                _logger.LogInformation($"Token: {rawJwt}");
+                #endif
                 response.SetError(e.Message);
             }
 
