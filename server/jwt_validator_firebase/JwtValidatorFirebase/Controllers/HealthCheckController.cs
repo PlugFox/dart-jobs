@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Sentry;
 namespace JwtValidatorFirebase.Controllers
 {
     [ApiController]
@@ -18,17 +19,28 @@ namespace JwtValidatorFirebase.Controllers
         };
 
         private readonly ILogger<HealthCheckController> _logger;
+        private readonly IHub _sentryHub;
 
-        public HealthCheckController(ILogger<HealthCheckController> logger)
+        public HealthCheckController(ILogger<HealthCheckController> logger, IHub sentryHub)
         {
             _logger = logger;
+            _sentryHub = sentryHub;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var rng = new Random();
-            return Ok(Summaries[rng.Next(Summaries.Length)]);
+            try {
+                #if DEBUG
+                _logger.LogDebug("Health check");
+                #endif
+                var rng = new Random();
+                return Ok(Summaries[rng.Next(Summaries.Length)]);
+            } catch (Exception e) {
+                _sentryHub.CaptureException(e);
+                _logger.LogError(e, "Error occurred while health check");
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }
