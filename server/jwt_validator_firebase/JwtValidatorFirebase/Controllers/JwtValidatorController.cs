@@ -19,6 +19,8 @@ namespace JwtValidatorFirebase.Controllers
 
         private readonly IHub _sentryHub;
 
+        private const string kContentTypeHeaderKey = "Content-Type";
+
         public JwtValidatorController(ILogger<HealthCheckController> logger, IJwtValidatorService jwtValidatorService, IHub sentryHub)
         {
             _logger = logger;
@@ -36,30 +38,28 @@ namespace JwtValidatorFirebase.Controllers
         {
 
             var childSpan = _sentryHub.GetSpan()?.StartChild("get-validator-result");
+            Response.Headers.Add(kContentTypeHeaderKey, "application/json; charset=utf-8");
             try
             {
                 #if DEBUG
                 _logger.LogDebug("Get validation result");
                 #endif
-                Response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                Request.Headers.TryGetValue(JwtValidatorService.TokenHeaderName, out var jwtToken);
+                Request.Headers.TryGetValue(JwtValidatorService.kTokenHeaderName, out var jwtToken);
                 var validatedResult = await _jwtValidatorService.ValidateIdTokenAsync(jwtToken);
                 Response.StatusCode = validatedResult.IsValidated ? 200 : 401;
-                var result = Content(
+                childSpan?.Finish(SpanStatus.Ok);
+                return Content(
                     System.Text.Json.JsonSerializer.Serialize(
                         validatedResult,
                         _jsonSerializerOptions
                     )
-                );
-                childSpan?.Finish(SpanStatus.Ok);
-                return result;
+                );;
             }
             catch (Exception e)
             {
-                childSpan?.Finish(e);
-                Response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                Response.StatusCode = 401;
                 _logger.LogError(e, "Error while validating token");
+                Response.StatusCode = 401;
+                childSpan?.Finish(e);
                 return Content($"{{\"X-JWT-Error\":\"{e.Message}\"}}"); 
             }
         }
@@ -77,20 +77,20 @@ namespace JwtValidatorFirebase.Controllers
         public IActionResult GetCacheSize()
         {
             var childSpan = _sentryHub.GetSpan()?.StartChild("get-cache-size");
+            Response.Headers.Add(kContentTypeHeaderKey, "application/json; charset=utf-8");
             try {
                 #if DEBUG
                 _logger.LogDebug("Get cache size");
                 #endif
-                Response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                Response.StatusCode = 200;
                 var size = _jwtValidatorService.GetCacheSize();
+                Response.StatusCode = 200;
                 var result = Content($"{{\"X-Cache-Size\":\"{size}\"}}");
+                childSpan?.Finish(SpanStatus.Ok);
                 return result;
             } catch (Exception e) {
-                childSpan?.Finish(e);
-                Response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                Response.StatusCode = 500;
                 _logger.LogError(e, "Error while getting cache size");
+                Response.StatusCode = 500;
+                childSpan?.Finish(e);
                 return Content($"{{\"X-JWT-Error\":\"{e.Message}\"}}"); 
             }
         }
